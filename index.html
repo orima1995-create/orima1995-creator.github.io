@@ -1,11 +1,73 @@
 <!DOCTYPE html>
-<html>
+<html lang="ja">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>コレクション展示</title>
+  <style>
+    body { font-family: system-ui, -apple-system, "Hiragino Sans", "Noto Sans JP", sans-serif; margin: 24px; line-height: 1.7; }
+    h1 { margin: 0 0 8px; }
+    .hint { color:#666; margin:0 0 16px; font-size:14px; }
+    ul { padding-left: 18px; }
+    li { margin: 10px 0; }
+    a { text-decoration: none; }
+  </style>
 </head>
 <body>
   <h1>コレクション展示</h1>
-  <a href="posts/＜そのファイル名＞.md">最新投稿を見る</a>
+  <p class="hint">最新投稿一覧（<code>/posts</code> 配下の .md 全部）。タップで開きます。</p>
+  <ul id="list"><li>読み込み中…</li></ul>
+
+  <script>
+    // ←あなたのユーザー名とリポジトリ名に合わせて！
+    const OWNER = "orima1995-create";
+    const REPO  = "orima1995-creator.github.io";
+
+    // GitHub API で /posts 配下を再帰的に一覧取得
+    async function fetchTree(path = "posts") {
+      const url = `https://api.github.com/repos/${OWNER}/${REPO}/contents/${encodeURIComponent(path)}`;
+      const res = await fetch(url);
+      if (!res.ok) throw new Error("GitHub API error");
+      const items = await res.json();
+
+      // ディレクトリは再帰、.md はリンクとして返す
+      const results = [];
+      for (const it of items) {
+        if (it.type === "dir") {
+          results.push(...await fetchTree(it.path));
+        } else if (it.type === "file" && /\.md$/i.test(it.name)) {
+          results.push(it.path); // 例: "posts/cyma/xxxx.md"
+        }
+      }
+      return results;
+    }
+
+    // 表示名をいい感じに（ファイル名から拡張子抜いて / と - をスペースに）
+    function toTitle(p) {
+      const base = p.split("/").pop().replace(/\.md$/i, "");
+      return decodeURIComponent(base).replace(/[-_]+/g, " ");
+    }
+
+    (async () => {
+      const list = document.getElementById("list");
+      try {
+        const files = await fetchTree("posts");
+        if (files.length === 0) {
+          list.innerHTML = "<li>まだ投稿がありません。</li>";
+          return;
+        }
+        // 新しい順にしたい場合はファイル名末尾の数字や時刻を使って並べ替え
+        files.sort().reverse();
+
+        list.innerHTML = files.map(p => {
+          // 重要：トップからの **相対パス** でリンクする（先頭に / を付けない）
+          return `<li><a href="${p}">${toTitle(p)}</a></li>`;
+        }).join("");
+      } catch (e) {
+        list.innerHTML = `<li>読み込みに失敗しました。時間をおいて再読み込みしてください。</li>`;
+        console.error(e);
+      }
+    })();
+  </script>
 </body>
 </html>
