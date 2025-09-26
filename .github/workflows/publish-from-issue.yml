@@ -1,92 +1,182 @@
 name: Post from Issue
-
 on:
   issues:
-    types: [opened]
+    types: [opened, edited]
 
 permissions:
   contents: write
   issues: read
 
 jobs:
-  build_post:
-    if: contains(github.event.issue.labels.*.name, 'post')
+  build-post:
+    if: |
+      github.event.issue.state == 'open' &&
+      contains(join(github.event.issue.labels.*.name, ','), 'post')
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Create Jekyll post from issue
-        id: build
+      - name: Generate post from issue form
+        env:
+          TITLE: ${{ github.event.issue.title }}
+          BODY: ${{ github.event.issue.body }}
+          AUTHOR: ${{ github.event.issue.user.login }}
+          REPO: ${{ github.repository }}
         run: |
-          TITLE="${{ github.event.issue.title }}"
-          NUMBER="${{ github.event.issue.number }}"
-          DATE=$(date +"%Y-%m-%d %H:%M:%S %z")
-          SLUG=$(echo "$TITLE" | tr '[:upper:]' '[:lower:]' | sed -e 's/ /-/g' -e 's/[^a-z0-9\-]//g')
-          FILE="_posts/$(date +%Y-%m-%d)-${SLUG}-${NUMBER}.md"
+          set -euo pipefail
 
-          BODY="${{ github.event.issue.body }}"
+          # -------- helpers --------
+          get_field () {
+            # 直後の行を1つ拾う（Issue Formsは「ラベル行の次行に値」が入る）
+            awk -v key="$1" '
+              $0 ~ "^"key"$" {getline; print; exit}
+            ' <<<"$BODY" | sed 's/\r$//'
+          }
 
-          # 画像と動画を抽出
-          MAIN_PHOTO=$(echo "$BODY" | grep -oE 'https?://[^ )]+(jpg|jpeg|png|gif)' | head -n1 || true)
-          GALLERY=$(echo "$BODY" | grep -oE 'https?://[^ )]+(jpg|jpeg|png|gif)' | tail -n +2 || true)
-          VIDEO=$(echo "$BODY" | grep -oE 'https?://[^ )]+(mp4|mov|webm|gifv)' | head -n1 || true)
+          get_block () {
+            # ラベル行の次行から空行 or 次の見出しまでをまとめて拾う
+            awk -v key="$1" '
+              $0 ~ "^"key"$" {flag=1; next}
+              flag && NF {print; next}
+              flag && !NF {exit}
+            ' <<<"$BODY" | sed 's/\r$//'
+          }
 
-          # Condition欄を抽出（あれば）
-          CONDITION=$(echo "$BODY" | sed -n '/Condition/,$p')
+          # -------- extract --------
+          BRAND=$(get_field "ブランド")
+          MODEL=$(get_field "モデル名")
+          CALIBER=$(get_field "キャリバー")
+          WINDING=$(get_field "巻き上げ方式")
+          CASE=$(get_field "ケース径（mm）")
+          LUG=$(get_field "ラグ幅（mm）")
+          MATERIAL=$(get_field "素材")
+          ERA=$(get_field "製造年代")
+          CATCH=$(get_field "キャッチコピー（1行）")
+          PRICE_REF=$(get_field "参考市場価格（任意）")
+          VIDEO=$(get_field "動画URL（任意）")
+          OWNER=$(get_field "展示者（任意）")
 
-          # Markdown本文生成
-          cat > "$FILE" <<MD
----
-layout: post
-title: "${TITLE}"
-date: ${DATE}
-categories: watch
-tags: [Vintage, Alarm, Chronometre]
----
+          FUNCS=$(get_block "機能（該当をチェック）" | tr '\n' ',' | sed 's/,$//')
+          PHOTOS_BLOCK=$(get_block "画像（スマホから添付OK）")
+          COND_SRC=$(get_field "仕入れ")
+          COND_STATE=$(get_field "状態")
+          COND_NOTE=$(get_block "特記事項")
+          COND_LAST=$(get_field "最終整備")
+          COND_NEXT=$(get_field "推奨次回OH")
+          COMMENT=$(get_block "オーナーコメント")
 
-# ${TITLE}
+          # -------- photos (pick first as main, list all as gallery) --------
+          # マークダウン画像 ![](URL) or 直接URL（jpg/png/gif/webp）
+          all_urls=$(echo "$PHOTOS_BLOCK" | grep -Eo '!\[[^]]*\]\(([^)]+)\)|https?://[^ )>"]+\.(jpg|jpeg|png|gif|webp)' | sed -E 's/!\[[^]]*\]\(([^)]+)\)/\1/g')
+          MAIN_PHOTO=$(echo "$all_urls" | head -n1 || true)
+          GALLERY=""
+          if [ -n "$all_urls" ]; then
+            while IFS= read -r u; do
+              [ "$u" = "$MAIN_PHOTO" ] && continue
+              GALLERY="${GALLERY}\n![Photo](${u})"
+            done <<< "$all_urls"
+          fi
 
-${MAIN_PHOTO:+![Main Photo](${MAIN_PHOTO})}
+          # -------- video (YouTube shortlink -> embed) --------
+          VIDEO_MD=""
+          if [ -n "$VIDEO" ]; then
+            VIDEO_MD="[▶ 見る](${VIDEO})"
+          else
+            VIDEO_MD="（未投稿）"
+          fi
+
+          # -------- condition block --------
+          COND_BLOCK=""
+          if [ -n "${COND_SRC}${COND_STATE}${COND_NOTE}${COND_LAST}${COND_NEXT}" ]; then
+            COND_BLOCK=$(
+              printf "\n---\n\n## 🔍 Condition\n"
+              [ -n "$COND_SRC"   ] && printf "- 仕入れ：%s\n"     "$COND_SRC"
+              [ -n "$COND_STATE" ] && printf "- 状態：%s\n"       "$COND_STATE"
+              [ -n "$COND_NOTE"  ] && printf "- 特記事項：%s\n"   "$COND_NOTE"
+              [ -n "$COND_LAST"  ] && printf "- 最終整備：%s\n"   "$COND_LAST"
+              [ -n "$COND_NEXT"  ] && printf "- 推奨次回OH：%s\n" "$COND_NEXT"
+            )
+          fi
+
+          # -------- slug / path --------
+          ts=$(date +%s%3N)
+          safe () { echo "$1" | tr '[:upper:]' '[:lower:]' | sed -E 's/[^a-z0-9]+/-/g;s/^-+|-+$//g'; }
+          brand_slug=$(safe "$BRAND")
+          model_slug=$(safe "$MODEL")
+          cal_slug=$(safe "$CALIBER")
+          slug="${brand_slug}-${model_slug}-${cal_slug}-${ts}"
+          dir="posts/${brand_slug}"
+          file="${dir}/${slug}.md"
+
+          mkdir -p "$dir"
+
+          # -------- template --------
+          PRICE_LINE="${PRICE_REF:-(参考価格記載なし)}"
+          FUNCS_LINE="${FUNCS:-（未記入）}"
+          CATCH_LINE="${CATCH:-}"
+
+          cat > "$file" <<MD
+# ${BRAND} ${MODEL}
+
+$( [ -n "$MAIN_PHOTO" ] && printf '![Main](%s)\n\n' "$MAIN_PHOTO" )
+
+${CATCH_LINE:+**${CATCH_LINE}**}
+
+参考市場価格：${PRICE_LINE}
 
 ---
 
 ## 📋 スペック
-${BODY}
+- ブランド：${BRAND}
+- モデル：${MODEL}
+- キャリバー：${CALIBER:-（未記入）}
+- 巻き上げ方式：${WINDING:-（未記入）}
+- ケース径：${CASE}mm
+- ラグ幅：${LUG:-（未記入）}mm
+- 素材：${MATERIAL}
+- 製造年代：${ERA:-（未記入）}
+- 機能：${FUNCS_LINE}
 
 ---
 
 ## 📸 ギャラリー
-${GALLERY:+$(echo "$GALLERY" | sed 's|^|![](|; s|$|)|')}
+${GALLERY:-（画像は1枚のみ）}
 
 ---
 
 ## 🎥 動画
-${VIDEO:+[▶ 再生リンク](${VIDEO})}
-
-${CONDITION:+
----
-## 🔍 Condition
-${CONDITION}
-}
+${VIDEO_MD}
+${COND_BLOCK}
 
 ---
 
 ## 🗣 オーナーコメント
-> （Issue本文のコメント欄を引用）
+> ${COMMENT:-（未記入）}
 
----
-
-## 🔗 関連リンク
-- [さらに詳しい研究ノートはこちら](/blog/)
+展示者：${OWNER:-匿名}
 MD
 
-          echo "file=$FILE" >> $GITHUB_OUTPUT
+          # -------- posts/index.md 更新（先頭に追加）--------
+          idx="posts/index.md"
+          titleline="- [${BRAND} ${MODEL}](/${file})"
+          if [ -f "$idx" ]; then
+            # 先頭に差し込み（重複防止）
+            grep -qF "$titleline" "$idx" || (printf "%s\n\n" "$titleline" | cat - "$idx" > "$idx.tmp" && mv "$idx.tmp" "$idx")
+          else
+            mkdir -p "posts"
+            printf "# 最新投稿\n\n%s\n" "$titleline" > "$idx"
+          fi
 
-      - name: Commit & push
-        run: |
-          git config user.name "github-actions[bot]"
+          # -------- commit & push --------
+          git config user.name  "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add _posts/
-          git commit -m "Add post from issue #${{ github.event.issue.number }}" || echo "nothing to commit"
+          git add "$file" "$idx"
+          git commit -m "post: ${BRAND} ${MODEL} (${slug})" || true
           git push
+
+      - name: Comment with link
+        env:
+          REPO: ${{ github.repository }}
+        run: |
+          url="https://raw.githubusercontent.com/${REPO}/main/posts/index.md"
+          echo "生成と一覧更新が完了しました: ${url}"
