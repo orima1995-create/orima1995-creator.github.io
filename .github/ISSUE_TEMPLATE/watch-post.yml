@@ -1,5 +1,5 @@
-name: "Watch Post（スマホOK）"
-description: "コレクションを記事化するフォーム（スマホ対応）"
+name: "Watch Post (スマホOK)"
+description: "コレクションを記事化するフォーム（スマホ用）"
 title: "[新規投稿] タイトルを入力してください"
 labels: ["post"]
 
@@ -7,54 +7,47 @@ body:
   - type: input
     id: model
     attributes:
-      label: モデル名（例: Cyma Time-O-Vox 18K Chronomètre）
-      placeholder: 例）Cyma Time-O-Vox 18K Chronomètre
+      label: "モデル名（例: Cyma Time-O-Vox 18K Chronomètre）"
+      placeholder: "例）Cyma Time-O-Vox 18K Chronomètre"
     validations:
       required: true
 
   - type: textarea
     id: overview
     attributes:
-      label: 概要 / キャッチ
-      description: 魅力や一言キャッチを短く
-      placeholder: 例）静かな秒針の囁きと金無垢の柔らかな光…
+      label: "概要（1〜2行で）"
+      placeholder: "例）1950年代製 18K 金無垢 クロノメーター仕様のアラームウォッチ"
+    validations:
+      required: true
+
+  - type: textarea
+    id: details
+    attributes:
+      label: "詳細説明"
+      placeholder: "技術・背景・魅力などを自由に記入してください（Markdown対応）"
     validations:
       required: true
 
   - type: textarea
     id: specs
     attributes:
-      label: スペック
-      description: 箇条書きOK（ブランド/キャリバー/素材/ケース径/年代など）
-      placeholder: |
-        ブランド: Cyma
-        キャリバー: R464
-        巻き上げ: 手巻き
-        素材: 18K
-        ケース径: 34mm
-        年代: 1950s
+      label: "スペック"
+      placeholder: "ケース径: 35mm\nムーブメント: Cal.R.464\n素材: 18K Gold\n機能: アラーム・時分秒"
     validations:
       required: false
 
   - type: textarea
-    id: photos
+    id: images
     attributes:
-      label: 写真（URLを1行ずつ）
-      description: 画像URL（Googleフォト/Drive/Imgur など）を1行1枚
-      placeholder: |
-        https://example.com/photo1.jpg
-        https://example.com/photo2.jpg
+      label: "画像リンク"
+      placeholder: "例）Google Drive / Imgur / GitHub Upload のURLを貼ってください"
     validations:
       required: false
 
-  - type: input
-    id: video
-    attributes:
-      label: 動画URL（任意）
-      placeholder: https://youtu.be/xxxx
-
   - type: textarea
-    id: condition
+    id: notes
     attributes:
-      label: コンディション/特記事項（任意）
-      placeholder: 仕入れ：／状態：／最終整備：／推奨次回OH：
+      label: "備考"
+      placeholder: "メモや補足があれば自由に記入してください"
+    validations:
+      required: false
