@@ -1,36 +1,60 @@
-name: "Watch Post (スマホOK)"
-description: "コレクションを記事化するフォーム"
+name: "Watch Post（スマホOK）"
+description: "コレクションを記事化するフォーム（スマホ対応）"
 title: "[新規投稿] タイトルを入力してください"
-labels:
-  - post
+labels: ["post"]
 
 body:
   - type: input
-    id: title
+    id: model
     attributes:
-      label: モデル名
-      description: 例: Cyma Time-O-Vox 18K Chronomètre
-      placeholder: 入力してください
+      label: モデル名（例: Cyma Time-O-Vox 18K Chronomètre）
+      placeholder: 例）Cyma Time-O-Vox 18K Chronomètre
     validations:
       required: true
 
   - type: textarea
     id: overview
     attributes:
-      label: 概要
-      description: ブランド・キャリバー・素材など
-      placeholder: ブランド、モデル、素材、キャリバー...
+      label: 概要 / キャッチ
+      description: 魅力や一言キャッチを短く
+      placeholder: 例）静かな秒針の囁きと金無垢の柔らかな光…
     validations:
       required: true
 
   - type: textarea
-    id: photos
+    id: specs
     attributes:
-      label: 写真
-      description: 画像をここにアップロードしてください
+      label: スペック
+      description: 箇条書きOK（ブランド/キャリバー/素材/ケース径/年代など）
+      placeholder: |
+        ブランド: Cyma
+        キャリバー: R464
+        巻き上げ: 手巻き
+        素材: 18K
+        ケース径: 34mm
+        年代: 1950s
+    validations:
+      required: false
 
   - type: textarea
-    id: comment
+    id: photos
     attributes:
-      label: オーナーコメント
-      description: 自由に一言をどうぞ
+      label: 写真（URLを1行ずつ）
+      description: 画像URL（Googleフォト/Drive/Imgur など）を1行1枚
+      placeholder: |
+        https://example.com/photo1.jpg
+        https://example.com/photo2.jpg
+    validations:
+      required: false
+
+  - type: input
+    id: video
+    attributes:
+      label: 動画URL（任意）
+      placeholder: https://youtu.be/xxxx
+
+  - type: textarea
+    id: condition
+    attributes:
+      label: コンディション/特記事項（任意）
+      placeholder: 仕入れ：／状態：／最終整備：／推奨次回OH：
