@@ -6,74 +6,44 @@ labels: ["post"]
 body:
   - type: input
     id: brand
-    attributes:
-      label: ブランド
-      placeholder: "Cyma"
+    attributes: { label: ブランド, placeholder: "Cyma" }
     validations: { required: true }
 
   - type: input
     id: model
-    attributes:
-      label: モデル名
-      placeholder: "Time-O-Vox 18K Chronomètre"
+    attributes: { label: モデル名, placeholder: "Time-O-Vox 18K Chronomètre" }
     validations: { required: true }
 
   - type: input
     id: caliber
-    attributes:
-      label: キャリバー
-      placeholder: "R.464 / 870 など"
+    attributes: { label: キャリバー, placeholder: "R.464 / 870 など" }
 
   - type: dropdown
     id: winding
     attributes:
       label: 巻き上げ方式
-      options:
-        - 手巻き
-        - 自動巻き
-        - 手巻きアラーム
-        - 自動巻きアラーム
-        - クォーツ
-        - 手巻きクロノグラフ
-        - 自動巻きクロノグラフ
-        - 手巻き・手溜め（アラーム別ゼンマイ）
-        - その他
+      options: [手巻き, 自動巻き, 手巻きアラーム, 自動巻きアラーム, クォーツ, その他]
       default: 0
 
   - type: input
     id: case_mm
-    attributes:
-      label: ケース径（mm）
-      placeholder: "35"
-      description: "半角数字のみ（例: 35）"
+    attributes: { label: ケース径（mm）, placeholder: "35", description: "半角数字のみ（例: 35）" }
     validations: { required: true }
 
   - type: input
     id: lug_mm
-    attributes:
-      label: ラグ幅（mm）
-      placeholder: "18"
+    attributes: { label: ラグ幅（mm）, placeholder: "18" }
 
   - type: dropdown
     id: material
     attributes:
       label: 素材
-      options:
-        - 18K Gold
-        - 14K Gold
-        - 9K Gold
-        - Stainless Steel
-        - Gold Filled
-        - Gold Plated
-        - Two-Tone
-        - Other
+      options: [18K Gold, 14K Gold, 9K Gold, Stainless Steel, Gold Filled, Gold Plated, Two-Tone, Other]
       default: 0
 
   - type: input
     id: era
-    attributes:
-      label: 製造年代
-      placeholder: "1950s / 1960-65 など"
+    attributes: { label: 製造年代, placeholder: "1950s / 1960-65 など" }
 
   - type: checkboxes
     id: functions
@@ -92,74 +62,59 @@ body:
         - label: GMT/デュアルタイム
         - label: 回転ベゼル
         - label: ねじ込みリューズ
-        - label: その他
-    validations: { required: false }
+        - label: その他（自由記述あり）
+  - type: input
+    id: functions_other
+    attributes: { label: 機能（その他の詳細）, placeholder: "例：デュアルアラーム / パワーリザーブ表示 など" }
 
   - type: input
     id: catch
-    attributes:
-      label: キャッチコピー（1行）
-      placeholder: "黄金のアラームが刻む“朝の一撃”"
+    attributes: { label: キャッチコピー（1行）, placeholder: "黄金のアラームが刻む“6秒の音環”" }
 
   - type: input
     id: price_ref
-    attributes:
-      label: 参考市場価格（任意）
-      placeholder: "¥450,000〜¥600,000 / $4,500–$6,000 など"
+    attributes: { label: 参考市場価格（任意）, placeholder: "¥450,000〜¥600,000 / $4,500–$6,000 など" }
 
   - type: textarea
     id: photos
     attributes:
       label: 画像（スマホから添付OK）
-      description: "📎で画像を添付 → 自動で本文にURLが入ります。画像URLを1行ずつでもOK。"
-      placeholder: "（画像URLを1行ずつ、または添付）"
+      description: "📎で添付 → 自動でURL化。画像URLを1行ずつでもOK。最初の1枚がヒーローになります。"
+      placeholder: "（添付 or 画像URLを1行ずつ）"
     validations: { required: true }
 
   - type: input
     id: video
     attributes:
       label: 動画URL（任意）
-      placeholder: "https://youtu.be/... など"
+      description: "YouTube/Drive/Dropbox/直リンク(mp4/webm)。直接アップロードは不可。"
+      placeholder: "https://youtu.be/... / https://.../video.mp4"
 
-  # --- Condition（構造化）---
+  # Condition（構造化）
   - type: input
     id: cond_source
-    attributes:
-      label: 仕入れ
-      placeholder: "国内/海外/個人蔵 など"
-
+    attributes: { label: 仕入れ, placeholder: "国内/海外/個人蔵 など" }
   - type: dropdown
     id: cond_state
     attributes:
       label: 状態
       options: [New Old Stock, Mint, Very Good, Good, Fair, For Parts]
-
   - type: textarea
     id: cond_note
-    attributes:
-      label: 特記事項
-      placeholder: "風防/文字盤/ケース/針/ブレス 等の補足"
-
+    attributes: { label: 特記事項, placeholder: "風防/文字盤/ケース/針/ブレス 等の補足" }
   - type: input
     id: cond_last
-    attributes:
-      label: 最終整備
-      placeholder: "2024-08 など"
-
+    attributes: { label: 最終整備, placeholder: "2024-08 など" }
   - type: input
     id: cond_next
-    attributes:
-      label: 推奨次回OH
-      placeholder: "2026-08 など"
+    attributes: { label: 推奨次回OH, placeholder: "2026-08 など" }
 
   - type: textarea
     id: comment
     attributes:
-      label: オーナーコメント
-      placeholder: "推しポイントを1〜3行で。ヴィンテージ的魅力を端的に。"
+      label: オーナーコメント（推しポイント）
+      placeholder: "通なコレクター向け：音環・18Kの丸い鳴り・裏蓋叩き系じゃない差分などを端的に。"
 
   - type: input
     id: owner
-    attributes:
-      label: 展示者（任意）
-      placeholder: "orima1995-create など"
+    attributes: { label: 展示者（任意）, placeholder: "orima1995-create など" }
