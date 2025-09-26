@@ -1,53 +1,165 @@
-name: "Watch Post (スマホOK)"
-description: "コレクションを記事化するフォーム（スマホ用）"
-title: "[新規投稿] タイトルを入力してください"
+name: "Watch Post（スマホOK）"
+description: "スマホ入力（選択/数値/添付）→ 自動で販売ページ風に生成"
+title: "[新規投稿] タイトル（例: Cyma Time-O-Vox 18K Chronomètre）"
 labels: ["post"]
 
 body:
   - type: input
+    id: brand
+    attributes:
+      label: ブランド
+      placeholder: "Cyma"
+    validations: { required: true }
+
+  - type: input
     id: model
     attributes:
-      label: "モデル名（例: Cyma Time-O-Vox 18K Chronomètre）"
-      placeholder: "例）Cyma Time-O-Vox 18K Chronomètre"
-    validations:
-      required: true
+      label: モデル名
+      placeholder: "Time-O-Vox 18K Chronomètre"
+    validations: { required: true }
+
+  - type: input
+    id: caliber
+    attributes:
+      label: キャリバー
+      placeholder: "R.464 / 870 など"
+
+  - type: dropdown
+    id: winding
+    attributes:
+      label: 巻き上げ方式
+      options:
+        - 手巻き
+        - 自動巻き
+        - 手巻きアラーム
+        - 自動巻きアラーム
+        - クォーツ
+        - 手巻きクロノグラフ
+        - 自動巻きクロノグラフ
+        - 手巻き・手溜め（アラーム別ゼンマイ）
+        - その他
+      default: 0
+
+  - type: input
+    id: case_mm
+    attributes:
+      label: ケース径（mm）
+      placeholder: "35"
+      description: "半角数字のみ（例: 35）"
+    validations: { required: true }
+
+  - type: input
+    id: lug_mm
+    attributes:
+      label: ラグ幅（mm）
+      placeholder: "18"
+
+  - type: dropdown
+    id: material
+    attributes:
+      label: 素材
+      options:
+        - 18K Gold
+        - 14K Gold
+        - 9K Gold
+        - Stainless Steel
+        - Gold Filled
+        - Gold Plated
+        - Two-Tone
+        - Other
+      default: 0
+
+  - type: input
+    id: era
+    attributes:
+      label: 製造年代
+      placeholder: "1950s / 1960-65 など"
+
+  - type: checkboxes
+    id: functions
+    attributes:
+      label: 機能（該当をチェック）
+      options:
+        - label: アラーム
+        - label: クロノメーター
+        - label: デイト
+        - label: デイデイト
+        - label: スモールセコンド
+        - label: 中三針
+        - label: 秒停止
+        - label: 24時間表示
+        - label: クロノグラフ
+        - label: GMT/デュアルタイム
+        - label: 回転ベゼル
+        - label: ねじ込みリューズ
+        - label: その他
+    validations: { required: false }
+
+  - type: input
+    id: catch
+    attributes:
+      label: キャッチコピー（1行）
+      placeholder: "黄金のアラームが刻む“朝の一撃”"
+
+  - type: input
+    id: price_ref
+    attributes:
+      label: 参考市場価格（任意）
+      placeholder: "¥450,000〜¥600,000 / $4,500–$6,000 など"
 
   - type: textarea
-    id: overview
+    id: photos
     attributes:
-      label: "概要（1〜2行で）"
-      placeholder: "例）1950年代製 18K 金無垢 クロノメーター仕様のアラームウォッチ"
-    validations:
-      required: true
+      label: 画像（スマホから添付OK）
+      description: "📎で画像を添付 → 自動で本文にURLが入ります。画像URLを1行ずつでもOK。"
+      placeholder: "（画像URLを1行ずつ、または添付）"
+    validations: { required: true }
+
+  - type: input
+    id: video
+    attributes:
+      label: 動画URL（任意）
+      placeholder: "https://youtu.be/... など"
+
+  # --- Condition（構造化）---
+  - type: input
+    id: cond_source
+    attributes:
+      label: 仕入れ
+      placeholder: "国内/海外/個人蔵 など"
+
+  - type: dropdown
+    id: cond_state
+    attributes:
+      label: 状態
+      options: [New Old Stock, Mint, Very Good, Good, Fair, For Parts]
 
   - type: textarea
-    id: details
+    id: cond_note
     attributes:
-      label: "詳細説明"
-      placeholder: "技術・背景・魅力などを自由に記入してください（Markdown対応）"
-    validations:
-      required: true
+      label: 特記事項
+      placeholder: "風防/文字盤/ケース/針/ブレス 等の補足"
+
+  - type: input
+    id: cond_last
+    attributes:
+      label: 最終整備
+      placeholder: "2024-08 など"
+
+  - type: input
+    id: cond_next
+    attributes:
+      label: 推奨次回OH
+      placeholder: "2026-08 など"
 
   - type: textarea
-    id: specs
+    id: comment
     attributes:
-      label: "スペック"
-      placeholder: "ケース径: 35mm\nムーブメント: Cal.R.464\n素材: 18K Gold\n機能: アラーム・時分秒"
-    validations:
-      required: false
+      label: オーナーコメント
+      placeholder: "推しポイントを1〜3行で。ヴィンテージ的魅力を端的に。"
 
-  - type: textarea
-    id: images
+  - type: input
+    id: owner
     attributes:
-      label: "画像リンク"
-      placeholder: "例）Google Drive / Imgur / GitHub Upload のURLを貼ってください"
-    validations:
-      required: false
-
-  - type: textarea
-    id: notes
-    attributes:
-      label: "備考"
-      placeholder: "メモや補足があれば自由に記入してください"
-    validations:
-      required: false
+      label: 展示者（任意）
+      placeholder: "orima1995-create など"
