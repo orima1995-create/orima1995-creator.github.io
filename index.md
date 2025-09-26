@@ -1,2 +1,3 @@
-# Hello World
-My Cyma Time-O-Vox Page
+# コレクション展示
+
+- 最新投稿を見る → [/posts](./posts/)
