@@ -1,0 +1,138 @@
+name: Publish from Issue (Watch)
+
+on:
+  issues:
+    types: [opened, edited, labeled]
+
+permissions:
+  contents: write
+  issues: read
+
+jobs:
+  build:
+    if: |
+      github.event.issue.state == 'open' &&
+      (
+        contains(github.event.issue.labels.*.name, 'publish')
+      )
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Compose Markdown from Issue
+        id: compose
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const issue = context.payload.issue;
+            const body = issue.body || '';
+
+            // 便利パーサ：`### 項目名` の次の段落を抜く
+            function sect(label){
+              const re = new RegExp(`(?<=${label}\\s*)[\\s\\S]*?(?=\\n\\n###|$)`,'i');
+              const m = body.match(re); return m ? m[0].trim() : '';
+            }
+
+            // フォームの自動付与フィールド（上のwatch.ymlのIDと合わせる）
+            const get = id => {
+              const re = new RegExp(`(?<=${id}:\\s*)[\\s\\S]*?(?=\\n\\n\\w+:|$)`,'i');
+              const m = body.match(re); return m ? m[0].trim() : '';
+            };
+
+            // GitHubフォームは本文に下記のようなヘッダを付けます。保険として見出しパターンも拾う
+            const brandModel = get('ブランド／モデル名') || sect('ブランド／モデル名') || '';
+            const caliber    = get('キャリバー') || sect('キャリバー') || '';
+            const winding    = get('巻き上げ方式') || sect('巻き上げ方式') || '';
+            const material   = get('ケース素材') || sect('ケース素材') || '';
+            const caseSize   = get('ケース径（mm）') || sect('ケース径（mm）') || '';
+            const lug        = get('ラグ幅（mm）') || sect('ラグ幅（mm）') || '';
+            const year       = get('製造年代') || sect('製造年代') || '';
+            const tagline    = get('キャッチコピー（1行）') || sect('キャッチコピー') || '';
+            const owner      = get('展示者名（任意）') || sect('展示者名') || '';
+            const comment    = get('自由コメント（魅力中心）') || sect('自由コメント') || '';
+            const provenance = get('仕入れ経路（任意）') || sect('仕入れ経路') || '';
+            const cond       = get('状態（任意）') || sect('状態') || '';
+            const notes      = get('特記事項（任意）') || sect('特記事項') || '';
+            const lastServ   = get('最終整備歴（任意）') || sect('最終整備歴') || '';
+            const nextServ   = get('次回OH推奨時期（任意）') || sect('次回OH推奨時期') || '';
+            const video      = get('動画URL（任意）') || sect('動画') || '';
+
+            // 画像URL抽出（Issue本文に貼った画像 `![](...)` をギャラリーとして利用）
+            const imgUrls = [...body.matchAll(/!\[[^\]]*\]\((https?:\/\/[^\s)]+)\)/g)].map(m => m[1]);
+            const photosBlock = imgUrls.map(url => `![Photo](${url})`).join('\n');
+
+            // スラッグ：半角英数・ハイフンに正規化
+            const toSlug = s => (s || '').toLowerCase()
+              .replace(/[^\p{Letter}\p{Number}]+/gu,'-')
+              .replace(/^-+|-+$/g,'');
+            const slug = `${toSlug(brandModel || 'watch')}-${toSlug(caliber)}-${issue.number}`;
+
+            // Condition（任意表示）
+            let conditionMd = '';
+            const condLines = [];
+            if (provenance) condLines.push(`- 仕入れ：${provenance}`);
+            if (cond)       condLines.push(`- 状態：${cond}`);
+            if (notes)      condLines.push(`- 特記事項：${notes}`);
+            if (lastServ)   condLines.push(`- 最終整備：${lastServ}`);
+            if (nextServ)   condLines.push(`- 推奨次回OH：${nextServ}`);
+            if (condLines.length) {
+              conditionMd = `\n\n---\n\n## 🔍 Condition\n${condLines.join('\n')}\n`;
+            }
+
+            // メインフォト（先頭）
+            const mainPhoto = imgUrls[0] ? `\n\n![Main Photo](${imgUrls[0]})\n` : '';
+
+            // フロントマター + 本文（JekyllがHTML化）
+            const content = `---\ntitle: ${brandModel}\nlayout: default\n---\n\n# ${brandModel}\n${mainPhoto}\n**${tagline}**\n\n参考市場価格：$4,500〜$6,000\n\n---\n\n## 📋 スペック\n- ブランド：${brandModel.split(' ')[0] || ''}\n- キャリバー：${caliber}\n- 巻き上げ方式：${winding}\n- ケース素材：${material}\n- ケース径：${caseSize}mm\n- ラグ幅：${lug}mm\n- 製造年代：${year}\n\n---\n\n## 📸 ギャラリー\n${photosBlock || '（準備中）'}\n\n---\n\n## ▶ 動画\n${video ? `[▶ 見る](${video})` : '（未投稿）'}\n${conditionMd}\n\n---\n\n## 🗣 オーナーコメント\n${comment || '（準備中）'}\n\n展示者：${owner || '匿名'}\n`;
+
+            core.setOutput('filename', `posts/${slug}.md`);
+            core.setOutput('content', Buffer.from(content, 'utf8').toString('base64'));
+            core.setOutput('slug', slug);
+
+      - name: Create or update post file
+        uses: peter-evans/create-or-update-file@v3
+        with:
+          path: ${{ steps.compose.outputs.filename }}
+          message: "post: ${{ steps.compose.outputs.slug }}"
+          content: ${{ steps.compose.outputs.content }}
+          encoding: base64
+
+      - name: Rebuild posts index
+        id: rebuild
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const {owner, repo} = context.repo;
+            async function list(dir) {
+              const { data } = await github.rest.repos.getContent({owner, repo, path: dir});
+              let files = [];
+              for (const item of data) {
+                if (item.type === 'dir') {
+                  files = files.concat(await list(item.path));
+                } else if (item.type === 'file' && item.name.endsWith('.md')) {
+                  files.push(item.path);
+                }
+              }
+              return files;
+            }
+            const files = (await list('posts')).sort();
+            const lines = [
+              '---',
+              'title: Posts',
+              'layout: default',
+              '---',
+              '',
+              '# 最新投稿',
+              ''
+            ];
+            for (const p of files.reverse()) lines.push(`- [${decodeURI(p.split('/').pop().replace(/\\.md$/,''))}](/${p.replace(/^/,'')})`);
+            const indexMd = lines.join('\n') + '\n';
+            return { content: Buffer.from(indexMd,'utf8').toString('base64') };
+
+      - name: Update posts/index.md
+        uses: peter-evans/create-or-update-file@v3
+        with:
+          path: posts/index.md
+          message: "chore: rebuild posts index"
+          content: ${{ steps.rebuild.outputs.result.content }}
+          encoding: base64
