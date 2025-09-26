@@ -1,0 +1,28 @@
+name: "Watch Post (スマホOK)"
+description: "新しいコレクション投稿を作る"
+title: "[Watch] "
+labels: ["post"]
+
+body:
+  - type: input
+    id: title
+    attributes:
+      label: タイトル
+      placeholder: "例: Cyma Time-O-Vox 18K Chronomètre"
+    validations:
+      required: true
+
+  - type: textarea
+    id: content
+    attributes:
+      label: 内容
+      description: "本文をここに入力してください"
+      placeholder: "Markdown記法が使えます"
+    validations:
+      required: true
+
+  - type: input
+    id: images
+    attributes:
+      label: 画像リンク（任意）
+      placeholder: "https://..."
