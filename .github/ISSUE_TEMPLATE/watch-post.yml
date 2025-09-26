@@ -1,7 +1,7 @@
 name: "Watch Post (スマホOK)"
 description: "コレクションを記事化するフォーム"
 title: "[新規投稿] タイトルを入力してください"
-labels: 
+labels:
   - post
 
 body:
