@@ -63,12 +63,25 @@
 - 本文へ見た目調整だけを目的とした `<br>` を追加しない。
 - タイトルやキャッチなど意図した行単位は構造側で固定する。
 
+## 検索・公開の最低基準
+
+- TOP / HISTORY / WATCH / SMARTWATCHは、それぞれ固有の `title` と `description` を持つ。
+- 公開ページには canonical URL を付ける。
+- OGP / Twitter Cardの基本メタデータを付ける。利用できる実画像があるページは `og:image` を設定する。
+- `robots.txt` でクロールを許可し、`sitemap.xml` を明示する。
+- 検索対象ページを追加したら `sitemap.xml` にURLを追加する。
+- TOPは `WebSite`、HISTORYは `Article`、WATCH / SMARTWATCHは `CreativeWork` を基本に構造化データを付ける。階層ページには `BreadcrumbList` を付ける。
+- 検索用タイトルやdescriptionに未確認事項・過剰主張を追加しない。
+- SEO目的で本文を水増ししない。本文の編集品質と検索メタデータを分離する。
+
 ## 公開前確認
 
 - Astro build成功。
 - TOP / HISTORY / WATCH / SMARTWATCHの必要ページが生成される。
 - WATCHではタイトル、OWNER'S NOTE、SPEC、動画、DEEP DIVE、出典が存在する。
 - HISTORYからWATCH、WATCHからHISTORYの往復リンクが存在する。
+- `robots.txt` と `sitemap.xml` が生成物に存在する。
+- canonical / description / OGP / 構造化データが主要ページに存在する。
 - `data:image/...base64` を生成HTMLへ残さない。
 - `word-break: break-all` を生成物へ入れない。
 - 既存ページの原文を意図なく変更していない。
