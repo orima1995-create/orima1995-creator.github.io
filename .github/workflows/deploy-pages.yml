@@ -32,3 +32,15 @@ jobs:
       - name: Deploy
         id: deployment
         uses: actions/deploy-pages@v4
+      - name: Verify Pierce page
+        run: |
+          url="${{ steps.deployment.outputs.page_url }}pierce-duofon/"
+          for attempt in {1..12}; do
+            if curl -fsSL "$url" | grep -q "<title>PIERCE DUOFON"; then
+              echo "Verified: $url"
+              exit 0
+            fi
+            sleep 5
+          done
+          echo "Verification failed: $url"
+          exit 1
