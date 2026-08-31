@@ -25,18 +25,18 @@ details[open]>summary::after{content:"－"}
 .summary-label{min-width:0;text-wrap:pretty}
 .plain{margin-top:24px}
 .plain summary{font-size:17px}
-.prose{line-break:strict;word-break:normal;overflow-wrap:break-word;hyphens:none;text-wrap:pretty}
+.prose{line-break:strict;word-break:normal;overflow-wrap:normal;hyphens:none;text-wrap:pretty}
 .copy,.owner-copy{padding:2px 0 28px 41px;color:var(--soft);font-size:17px;line-height:2}
-.copy p,.owner-copy p{margin:0 0 1.45em;max-inline-size:46em}
+.copy p,.owner-copy p{margin:0 0 1.45em;max-inline-size:46em;text-wrap:pretty}
 .copy p:last-child,.owner-copy p:last-child{margin-bottom:0}
-.copy h3,.owner-copy h3{margin:0 0 1.2em;color:var(--ink);font-size:19px;font-weight:500;line-height:1.75}
+.copy h3,.owner-copy h3{margin:0 0 1.2em;color:var(--ink);font-size:19px;font-weight:500;line-height:1.75;text-wrap:balance}
 .owner-copy{padding-top:20px}
 .owner-lead{margin-bottom:30px;color:var(--ink)}
 .owner-lead p{margin-bottom:.25em}
-.guide-list{margin:0 0 34px;padding-left:1.5em}
-.guide-list li{margin-bottom:.85em;padding-left:.2em}
+.guide-list{list-style:none;margin:0 0 34px;padding:0}
+.guide-list li{margin-bottom:.85em;padding:0;line-break:strict;word-break:normal;text-wrap:pretty}
 .number{flex:0 0 28px;color:var(--soft);font-family:Georgia,"Times New Roman",serif;font-size:16px}
-h2{margin:0 0 34px;font-family:Georgia,"Times New Roman",serif;font-size:clamp(30px,8vw,46px);font-weight:400;letter-spacing:.025em}
+h2{margin:0 0 34px;font-family:Georgia,"Times New Roman",serif;font-size:clamp(30px,8vw,46px);font-weight:400;letter-spacing:.025em;text-wrap:balance}
 .specs{margin:0;border-top:1px solid var(--rule)}
 .specs div{display:grid;grid-template-columns:104px minmax(0,1fr);gap:18px;padding:16px 0;border-bottom:1px solid var(--rule)}
 .specs dt{color:var(--soft);font-size:16px}
