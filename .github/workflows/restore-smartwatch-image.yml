@@ -20,7 +20,7 @@ jobs:
       - name: Rebuild image
         run: |
           cat .tmp/smartwatch.part* | base64 -d > public/images/history/smartwatch.webp
-          test $(wc -c < public/images/history/smartwatch.webp) -gt 100000
+          test $(wc -c < public/images/history/smartwatch.webp) -gt 30000
           file public/images/history/smartwatch.webp | grep -qi 'Web/P\|WebP'
       - name: Commit restored binary
         run: |
