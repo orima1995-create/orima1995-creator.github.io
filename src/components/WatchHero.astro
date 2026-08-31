@@ -1,0 +1,10 @@
+---
+const { brand, model, catchLines, ownerNumber } = Astro.props;
+---
+<header class="shell mast"><span>VINTAGE ALARM</span><span>OWNER'S NOTE / {ownerNumber}</span></header>
+<section class="shell hero">
+  <h1><span>{brand}</span><span>{model}</span></h1>
+  <div class="catch">
+    {catchLines.map((line: string) => <p>{line}</p>)}
+  </div>
+</section>

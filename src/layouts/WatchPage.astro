@@ -1,0 +1,33 @@
+---
+import WatchHero from '../components/WatchHero.astro';
+import OwnersNote from '../components/OwnersNote.astro';
+import WatchSpec from '../components/WatchSpec.astro';
+import AlarmVideo from '../components/AlarmVideo.astro';
+import DeepDive from '../components/DeepDive.astro';
+import Sources from '../components/Sources.astro';
+import '../styles/site.css';
+
+const { watch } = Astro.props;
+const pageTitle = `${watch.brand} ${watch.model}｜VINTAGE ALARM`;
+---
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#f3eee4" />
+    <title>{pageTitle}</title>
+  </head>
+  <body>
+    <main>
+      <WatchHero brand={watch.brand} model={watch.model} catchLines={watch.catch} ownerNumber={watch.ownerNumber} />
+      <div class="shell owners-grid">
+        <OwnersNote data={watch.ownersNote} />
+        <WatchSpec spec={watch.spec} />
+      </div>
+      <AlarmVideo video={watch.video} title={`${watch.brand} ${watch.model}`} />
+      <DeepDive items={watch.deepDive} />
+      <Sources sources={watch.sources} />
+    </main>
+  </body>
+</html>

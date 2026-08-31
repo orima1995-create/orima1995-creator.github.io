@@ -1,0 +1,11 @@
+---
+const { sources } = Astro.props;
+---
+<section class="section shell sources" aria-label="参考資料・出典">
+  <details>
+    <summary>参考資料・出典</summary>
+    <ul>
+      {sources.map((source: string) => <li>{source}</li>)}
+    </ul>
+  </details>
+</section>

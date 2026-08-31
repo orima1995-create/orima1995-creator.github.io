@@ -1,0 +1,38 @@
+name: Astro foundation check
+
+on:
+  push:
+    branches: ["refactor/astro-foundation"]
+  pull_request:
+    branches: ["main"]
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: package-lock.json
+      - name: Install
+        run: |
+          if [ -f package-lock.json ]; then npm ci; else npm install; fi
+      - name: Build
+        run: npm run build
+      - name: Verify Duofon output
+        run: |
+          test -f dist/pierce-duofon/index.html
+          grep -q "PIERCE" dist/pierce-duofon/index.html
+          grep -q "DUOFON" dist/pierce-duofon/index.html
+          grep -q "xkecjZqr7BY" dist/pierce-duofon/index.html
+          grep -q "Pierce Cal.135" dist/pierce-duofon/index.html
+          grep -q "Gruen Duotoneとの関係" dist/pierce-duofon/index.html
+          if grep -q "data:image/.*base64" dist/pierce-duofon/index.html; then
+            echo "Embedded base64 image remains in generated HTML"
+            exit 1
+          fi

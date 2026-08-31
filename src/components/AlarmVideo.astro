@@ -1,0 +1,17 @@
+---
+const { video, title } = Astro.props;
+const embed = `https://www.youtube.com/embed/${video.youtubeId}`;
+---
+<section class="section shell" aria-labelledby="listen">
+  <h2 id="listen">実機鳴動</h2>
+  <div class="video-frame">
+    <iframe
+      src={embed}
+      title={`${title} 実機鳴動`}
+      loading="lazy"
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+      referrerpolicy="strict-origin-when-cross-origin"
+      allowfullscreen></iframe>
+  </div>
+  <a class="x-link" href={video.xUrl} target="_blank" rel="noopener">Original post on X →</a>
+</section>
