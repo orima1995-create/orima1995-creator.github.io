@@ -12,7 +12,7 @@ permissions:
 
 concurrency:
   group: pages
-  cancel-in-progress: false
+  cancel-in-progress: true
 
 jobs:
   deploy:
@@ -32,6 +32,20 @@ jobs:
         run: npm ci
       - name: Build Astro site
         run: npm run build
+      - name: Verify build output
+        run: |
+          test -f dist/index.html
+          test -f dist/history/index.html
+          test -f dist/history/smartwatch/index.html
+          test -f dist/pierce-duofon/index.html
+          test -f dist/robots.txt
+          test -f dist/sitemap.xml
+          grep -q 'rel="canonical"' dist/index.html
+          grep -q 'application/ld+json' dist/history/index.html
+          grep -q '1950s。正解が、一つじゃなくなる。' dist/history/index.html
+          grep -q 'raw.githubusercontent.com/orima1995-create/orima1995-creator.github.io/main/public/images/history/smartwatch.webp' dist/history/smartwatch/index.html
+          grep -q 'Die Wecker-Armbanduhr Duofon mit zwei Lautstärken' dist/pierce-duofon/index.html
+          ! grep -R -q 'word-break: break-all' dist
       - name: Configure Pages
         uses: actions/configure-pages@v5
       - name: Upload site
@@ -41,16 +55,27 @@ jobs:
       - name: Deploy
         id: deployment
         uses: actions/deploy-pages@v4
-      - name: Verify Pierce page
+      - name: Verify live site
         run: |
-          url="${{ steps.deployment.outputs.page_url }}pierce-duofon/"
+          root="${{ steps.deployment.outputs.page_url }}"
+          pierce="${root}pierce-duofon/"
+          history="${root}history/"
+          smart="${root}history/smartwatch/"
+          sitemap="${root}sitemap.xml"
           for attempt in {1..12}; do
-            html=$(curl -fsSL "$url" || true)
-            if grep -q "PIERCE" <<<"$html" && grep -q "xkecjZqr7BY" <<<"$html"; then
-              echo "Verified: $url"
+            pierce_html=$(curl -fsSL "$pierce" || true)
+            history_html=$(curl -fsSL "$history" || true)
+            smart_html=$(curl -fsSL "$smart" || true)
+            sitemap_xml=$(curl -fsSL "$sitemap" || true)
+            if grep -q "xkecjZqr7BY" <<<"$pierce_html" \
+              && grep -q "正解が、一つじゃなくなる" <<<"$history_html" \
+              && grep -q "smartwatch.webp" <<<"$smart_html" \
+              && grep -q "pierce-duofon" <<<"$sitemap_xml"; then
+              curl -fsSI "https://raw.githubusercontent.com/orima1995-create/orima1995-creator.github.io/main/public/images/history/smartwatch.webp" >/dev/null
+              echo "Verified live site: $root"
               exit 0
             fi
             sleep 5
           done
-          echo "Verification failed: $url"
+          echo "Live verification failed: $root"
           exit 1
