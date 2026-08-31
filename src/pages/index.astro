@@ -1,6 +1,17 @@
 ---
+import SeoHead from '../components/SeoHead.astro';
 import '../styles/site.css';
 const base = import.meta.env.BASE_URL;
+const title = 'VINTAGE ALARM｜機械式アラーム腕時計の歴史・実機・資料';
+const description = '機械式アラーム腕時計を、歴史・実機・音・資料から読むオンライン誌。Pierce Duofonをはじめ、各時代のアラーム腕時計と機構を整理する。';
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  name: 'VINTAGE ALARM',
+  url: 'https://orima1995-create.github.io/orima1995-creator.github.io/',
+  description,
+  inLanguage: 'ja'
+};
 ---
 <!doctype html>
 <html lang="ja">
@@ -8,8 +19,7 @@ const base = import.meta.env.BASE_URL;
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="theme-color" content="#f3eee4" />
-    <title>VINTAGE ALARM</title>
-    <meta name="description" content="機械式アラーム腕時計を、歴史・テーマ・実機から読む。" />
+    <SeoHead title={title} description={description} path="" schema={schema} />
   </head>
   <body>
     <header class="shell mast"><span>VINTAGE ALARM</span><span>ALARM WRISTWATCHES</span></header>
@@ -22,7 +32,7 @@ const base = import.meta.env.BASE_URL;
       <nav class="shell home-nav" aria-label="VINTAGE ALARM メインコンテンツ">
         <a href={`${base}history/`}>
           <span class="home-no">01</span>
-          <div><strong>HISTORY</strong><small>アラーム腕時計の歴史</small></div>
+          <div><strong>HISTORY</strong><small>アラーム腕時計は、どうやって腕に載った？</small></div>
           <b>→</b>
         </a>
 
@@ -34,7 +44,7 @@ const base = import.meta.env.BASE_URL;
 
         <a href={`${base}pierce-duofon/`}>
           <span class="home-no">03</span>
-          <div><strong>OWNER'S NOTES</strong><small>実機から読む</small></div>
+          <div><strong>OWNER'S NOTES</strong><small>実機・操作・音から読む</small></div>
           <b>→</b>
         </a>
       </nav>
