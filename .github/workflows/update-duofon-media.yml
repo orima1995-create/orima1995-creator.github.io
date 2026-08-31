@@ -1,0 +1,42 @@
+name: One-off Duofon media update
+
+on:
+  push:
+    paths:
+      - '.github/workflows/update-duofon-media.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  patch-duofon:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Embed alarm video and source post
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          path = Path('pierce-duofon/index.html')
+          text = path.read_text(encoding='utf-8')
+
+          old = '<section class="section shell" aria-labelledby="listen"><h2 id="listen">実機鳴動</h2><div class="video"><span class="play">▷</span></div><a class="x" href="https://x.com/Rimacroissant/status/2067230444031209527" target="_blank" rel="noopener">Original post on X →</a></section>'
+          new = '<section class="section shell" aria-labelledby="listen"><h2 id="listen">実機鳴動</h2><div class="video" style="aspect-ratio:9/16;max-width:420px;margin-inline:auto"><iframe src="https://www.youtube.com/embed/xkecjZqr7BY" title="Pierce Duofon 実機鳴動" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen style="width:100%;height:100%;border:0;display:block"></iframe></div><a class="x" href="https://x.com/rimacroissant/status/2067230444031209527" target="_blank" rel="noopener">Original post on X →</a></section>'
+
+          count = text.count(old)
+          if count != 1:
+              raise SystemExit(f'Expected exactly one target block, found {count}')
+
+          path.write_text(text.replace(old, new, 1), encoding='utf-8')
+          PY
+
+      - name: Commit update and remove one-off workflow
+        run: |
+          rm .github/workflows/update-duofon-media.yml
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add pierce-duofon/index.html .github/workflows/update-duofon-media.yml
+          git commit -m "feat: embed Duofon alarm video and X source"
+          git push
