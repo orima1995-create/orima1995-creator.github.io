@@ -1,6 +1,44 @@
 ---
+import SeoHead from '../../components/SeoHead.astro';
 import '../../styles/site.css';
+import '../../styles/history-magazine.css';
 const base = import.meta.env.BASE_URL;
+const title = 'アラーム腕時計の歴史｜Eterna・Cricket・Duofonから現在まで｜VINTAGE ALARM';
+const description = 'アラームを腕へ載せるために、時計は何を解決してきたのか。1914年のEterna、Vulcain Cricket、1950年代のPierce DuofonやCyma Time-O-Vox、電子化、そして現在までを辿る。';
+const schema = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'Article',
+      headline: 'アラーム腕時計の歴史',
+      description,
+      inLanguage: 'ja',
+      mainEntityOfPage: 'https://orima1995-create.github.io/orima1995-creator.github.io/history/',
+      isPartOf: {
+        '@type': 'WebSite',
+        name: 'VINTAGE ALARM',
+        url: 'https://orima1995-create.github.io/orima1995-creator.github.io/'
+      }
+    },
+    {
+      '@type': 'BreadcrumbList',
+      itemListElement: [
+        {
+          '@type': 'ListItem',
+          position: 1,
+          name: 'VINTAGE ALARM',
+          item: 'https://orima1995-create.github.io/orima1995-creator.github.io/'
+        },
+        {
+          '@type': 'ListItem',
+          position: 2,
+          name: 'HISTORY',
+          item: 'https://orima1995-create.github.io/orima1995-creator.github.io/history/'
+        }
+      ]
+    }
+  ]
+};
 ---
 <!doctype html>
 <html lang="ja">
@@ -8,8 +46,7 @@ const base = import.meta.env.BASE_URL;
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="theme-color" content="#f3eee4" />
-    <title>アラーム腕時計の歴史｜VINTAGE ALARM</title>
-    <meta name="description" content="アラーム機構が腕時計へ載り、機械式から電子式、そしてスマートウォッチへ至るまでを辿る。" />
+    <SeoHead title={title} description={description} path="history/" type="article" schema={schema} />
   </head>
   <body>
     <header class="shell mast">
@@ -23,18 +60,41 @@ const base = import.meta.env.BASE_URL;
         <h1>アラームを、腕へ。</h1>
         <p class="history-kicker">問題は、小さくすることだけではなかった。</p>
         <p class="history-lead">
-          アラーム機構を腕時計へ載せるには、時刻機構とアラーム機構を小さなケースへ収めるだけでなく、腕に着けた状態でも聞こえる音をどう作るかという問題があった。
+          アラーム機構を腕時計へ載せるには、機構を小さくするだけでは足りなかった。鳴らす。腕に着けても聞こえるようにする。水と埃から守る。腕時計になるほど、問題は増えた。
         </p>
       </section>
 
+      <section class="shell history-problems" aria-label="アラーム腕時計が解決した問題">
+        <article class="history-problem">
+          <span>01 / SMALL</span>
+          <strong>小さくする。</strong>
+          <p>時刻機構に、アラーム機構を収める。</p>
+        </article>
+        <article class="history-problem">
+          <span>02 / SOUND</span>
+          <strong>鳴らす。</strong>
+          <p>小さなケースの中で、ハンマーを動かす。</p>
+        </article>
+        <article class="history-problem">
+          <span>03 / AUDIBLE</span>
+          <strong>聞こえる。</strong>
+          <p>腕に着けた状態でも、音を届かせる。</p>
+        </article>
+        <article class="history-problem">
+          <span>04 / SEALED</span>
+          <strong>守る。</strong>
+          <p>音量を確保しながら、水と埃から機構を守る。</p>
+        </article>
+      </section>
+
       <nav class="shell history-index" aria-label="歴史の目次">
-        <a href="#before"><span>00</span><strong>腕へ載せる前</strong></a>
-        <a href="#eterna"><span>01</span><strong>1914 / ETERNA</strong></a>
-        <a href="#cricket"><span>02</span><strong>1947 / CRICKET</strong></a>
-        <a href="#1950s"><span>03</span><strong>1950s / 答えが増える</strong></a>
-        <a href="#mature"><span>04</span><strong>1960–70s / 成熟と拡張</strong></a>
-        <a href="#electronic"><span>05</span><strong>QUARTZ / DIGITAL</strong></a>
-        <a href="#current"><span>06</span><strong>現状の到達点</strong></a>
+        <a href="#before"><span>00</span><strong>鳴らす時計は、腕時計より先にあった。</strong></a>
+        <a href="#eterna"><span>01</span><strong>1914 — アラームが腕へ。</strong></a>
+        <a href="#cricket"><span>02</span><strong>1947 — 音を、ケース構造で稼ぐ。</strong></a>
+        <a href="#1950s"><span>03</span><strong>1950s — 正解が、一つじゃなくなる。</strong></a>
+        <a href="#mature"><span>04</span><strong>1960–70s — 防水・自動巻・ダイバーズへ。</strong></a>
+        <a href="#electronic"><span>05</span><strong>QUARTZ / DIGITAL — ハンマーがなくても鳴らせる。</strong></a>
+        <a href="#current"><span>06</span><strong>現状の到達点。</strong></a>
       </nav>
 
       <section class="history-band" id="before">
@@ -42,8 +102,8 @@ const base = import.meta.env.BASE_URL;
           <div class="history-no">00</div>
           <div>
             <p class="history-era">BEFORE THE WRIST</p>
-            <h2>腕へ載せる前。</h2>
-            <p>16世紀には、すでに卓上時計にアラーム機構が使われていた。機構は携帯時計、懐中時計へ移り、腕時計が定着すると、同じ機能をさらに小さなケースへ収める試みが始まる。</p>
+            <p class="history-hook">鳴らす時計は、腕時計より先にあった。</p>
+            <p class="history-body">16世紀には、すでに卓上時計にアラーム機構が使われていた。機構は携帯時計、懐中時計へ移り、腕時計が定着すると、同じ機能をさらに小さなケースへ収める試みが始まる。</p>
           </div>
         </div>
       </section>
@@ -53,8 +113,8 @@ const base = import.meta.env.BASE_URL;
           <div class="history-no">01</div>
           <div>
             <p class="history-era">1914 / ETERNA</p>
-            <h2>最初のシリーズ生産。</h2>
-            <p>Eterna（Gebrüder Schild &amp; Co.）は1914年からアラーム腕時計を製造した。初期系列は時刻機構とアラームを1つの香箱で駆動し、ベルを打って音を出す。専門文献では、Eternaを最初のシリーズ生産アラーム腕時計として位置づけている。</p>
+            <p class="history-hook">1914。アラームが腕へ来る。</p>
+            <p class="history-body">Eterna（Gebrüder Schild &amp; Co.）は1914年からアラーム腕時計を製造した。初期系列は時刻機構とアラームを1つの香箱で駆動し、ベルを打って音を出す。専門文献では、Eternaを最初のシリーズ生産アラーム腕時計として位置づけている。</p>
           </div>
         </div>
       </section>
@@ -64,8 +124,8 @@ const base = import.meta.env.BASE_URL;
           <div class="history-no">02</div>
           <div>
             <p class="history-era">1947 / VULCAIN CRICKET</p>
-            <h2>腕の上で、聞こえる音へ。</h2>
-            <p>1947年に登場したVulcain Cricketは、二重底の音響構造を採用した。腕に着けた状態でも裏蓋側を振動させ、アラーム音を聞き取りやすくするための構造だった。</p>
+            <p class="history-hook">1947。小さな時計で、音量を稼ぐ。</p>
+            <p class="history-body">1947年に登場したVulcain Cricketは、二重底の音響構造を採用した。腕に着けた状態でも裏蓋側を振動させ、アラーム音を聞き取りやすくするための構造だった。</p>
           </div>
         </div>
       </section>
@@ -75,25 +135,28 @@ const base = import.meta.env.BASE_URL;
           <div class="history-no">03</div>
           <div>
             <p class="history-era">1950s</p>
-            <h2>答えが増える。</h2>
-            <p>1950年代には、アラーム腕時計の構造が一つではなくなる。音の出し方、動力の分け方、操作方法、知らせ方。それぞれのメーカーが異なる構成を採った。</p>
+            <p class="history-hook">1950s。正解が、一つじゃなくなる。</p>
+            <p class="history-body">音の出し方、動力の分け方、操作方法、知らせ方。1950年代には、メーカーごとに異なる構成のアラーム腕時計が並んだ。</p>
 
             <div class="history-watch-grid">
               <article class="history-watch-card">
                 <span>VULCAIN</span>
                 <h3>CRICKET</h3>
+                <b class="history-answer">響かせる</b>
                 <p>二重底を使い、腕の上でも音を響かせる。</p>
               </article>
 
               <article class="history-watch-card">
                 <span>JAEGER-LECOULTRE</span>
                 <h3>MEMOVOX</h3>
+                <b class="history-answer">動力を分ける</b>
                 <p>1951年にバーゼルで登場。時刻用とアラーム用に独立した香箱と操作系を持つ。</p>
               </article>
 
               <a class="history-watch-card history-watch-link" href={`${base}pierce-duofon/`}>
                 <span>PIERCE</span>
                 <h3>DUOFON</h3>
+                <b class="history-answer">知らせ方を選ぶ</b>
                 <p>WECKER / SIGNALを切り替え、鳴らし方を選ぶ。</p>
                 <b>時計を見る →</b>
               </a>
@@ -101,12 +164,14 @@ const base = import.meta.env.BASE_URL;
               <article class="history-watch-card">
                 <span>CYMA</span>
                 <h3>TIME-O-VOX</h3>
+                <b class="history-answer">1香箱でまとめる</b>
                 <p>Cal.464は1香箱で時刻とアラームを駆動し、音響ばねを打つ。</p>
               </article>
 
               <article class="history-watch-card">
                 <span>CITIZEN</span>
                 <h3>ALARM</h3>
+                <b class="history-answer">日本製アラームへ</b>
                 <p>日本では1959年頃、Cal.980を搭載する初期Citizen Alarmが記録されている。</p>
               </article>
             </div>
@@ -119,8 +184,8 @@ const base = import.meta.env.BASE_URL;
           <div class="history-no">04</div>
           <div>
             <p class="history-era">1960s–70s</p>
-            <h2>成熟と拡張。</h2>
-            <p>アラームは日付、自動巻、防水ケース、ダイバーズへ広がった。1960年代にはVulcain Cricket Nauticalのような高防水モデルが登場し、Citizen Alarm Dateにも50m防水の個体が記録されている。</p>
+            <p class="history-hook">アラームは、用途を広げた。</p>
+            <p class="history-body">アラームは日付、自動巻、防水ケース、ダイバーズへ広がった。1960年代にはVulcain Cricket Nauticalのような高防水モデルが登場し、Citizen Alarm Dateにも50m防水の個体が記録されている。</p>
           </div>
         </div>
       </section>
@@ -130,8 +195,8 @@ const base = import.meta.env.BASE_URL;
           <div class="history-no">05</div>
           <div>
             <p class="history-era">QUARTZ / DIGITAL</p>
-            <h2>鳴らすための機械が、必須ではなくなる。</h2>
-            <p>電子化によって、アラームは機械式のハンマーや音響体から離れていく。Citizenは1972年に液晶表示とアラーム機能を備えた腕時計を市場へ投入した。クォーツ化は、機械式アラームを支えていた多くのムーブメントにも大きな転換をもたらした。</p>
+            <p class="history-hook">ハンマーがなくても、鳴らせる。</p>
+            <p class="history-body">電子化によって、アラームは機械式のハンマーや音響体から離れていく。Citizenは1972年に液晶表示とアラーム機能を備えた腕時計を市場へ投入した。クォーツ化は、機械式アラームを支えていた多くのムーブメントにも大きな転換をもたらした。</p>
           </div>
         </div>
       </section>
@@ -141,8 +206,8 @@ const base = import.meta.env.BASE_URL;
           <div class="history-no">06</div>
           <div>
             <p class="history-era">CURRENT</p>
-            <h2>現状の到達点。</h2>
-            <p>アラーム、通知、健康、通信。腕時計は、さらに多くの情報を扱うようになった。</p>
+            <p class="history-hook">現状の到達点。</p>
+            <p class="history-body">アラーム、通知、健康、通信。腕時計は、さらに多くの情報を扱うようになった。</p>
             <a class="history-next" href={`${base}history/smartwatch/`}>SMARTWATCH →</a>
           </div>
         </div>
@@ -152,9 +217,9 @@ const base = import.meta.env.BASE_URL;
         <details>
           <summary>参考資料・出典</summary>
           <ul>
-            <li>B. Humbert, Die Armband-Weckeruhr（Schweizerische Uhrmacher-Zeitung 1958–1963掲載記事の復刻）</li>
-            <li>Michael Philip Horlbeck, The Alarm Wristwatch</li>
-            <li>Leonhard Beitl, Alarm am Arm</li>
+            <li>Michael Philip Horlbeck, The Alarm Wristwatch (Schiffer Publishing, 2007), pp. 11–31（アラーム腕時計の発展史）</li>
+            <li>Leonhard Beitl, Alarm am Arm (2009), pp. 15–38（発展史）, pp. 122–125（Citizen）, pp. 159–169（Eterna）, pp. 430–491（Vulcain）</li>
+            <li>B. Humbert, Die Armband-Weckeruhr, Alarm am Arm収録 pp. 527–621</li>
           </ul>
         </details>
       </section>
