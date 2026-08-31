@@ -3,7 +3,7 @@ import SeoHead from '../../../components/SeoHead.astro';
 import '../../../styles/site.css';
 import '../../../styles/history-magazine.css';
 const base = import.meta.env.BASE_URL;
-const artwork = 'https://raw.githubusercontent.com/orima1995-create/orima1995-creator.github.io/main/public/images/history/smartwatch.webp';
+const artwork = `${base}images/history/smartwatch.webp`;
 const title = '現状の到達点：SMARTWATCH｜アラーム腕時計の歴史｜VINTAGE ALARM';
 const description = 'アラーム腕時計の歴史の現在地。機械式アラームから電子化を経て、腕時計が通知・健康・通信まで扱うSMARTWATCHへ到達した先を見る。';
 const schema = {
@@ -14,7 +14,7 @@ const schema = {
       name: '現状の到達点：SMARTWATCH',
       description,
       inLanguage: 'ja',
-      image: artwork,
+      image: 'https://orima1995-create.github.io/orima1995-creator.github.io/images/history/smartwatch.webp',
       url: 'https://orima1995-create.github.io/orima1995-creator.github.io/history/smartwatch/',
       isPartOf: {
         '@type': 'WebPage',
@@ -54,7 +54,7 @@ const schema = {
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="theme-color" content="#f3eee4" />
-    <SeoHead title={title} description={description} path="history/smartwatch/" image={artwork} type="article" schema={schema} />
+    <SeoHead title={title} description={description} path="history/smartwatch/" image="https://orima1995-create.github.io/orima1995-creator.github.io/images/history/smartwatch.webp" type="article" schema={schema} />
   </head>
   <body>
     <header class="shell mast">
@@ -65,17 +65,14 @@ const schema = {
     <main>
       <section class="shell smartwatch-hero">
         <div class="eyebrow">HISTORY OF ALARM WRISTWATCHES</div>
-        <p class="history-era">CURRENT</p>
         <h1>現状の到達点。</h1>
         <p class="smartwatch-title">SMARTWATCH</p>
       </section>
 
       <section class="smartwatch-stage" aria-label="スマートウォッチと通知の現在">
-        <img class="smartwatch-art" src={artwork} alt="通知機能が過密に並ぶスマートウォッチを描いたVINTAGE ALARMのページ" loading="eager" fetchpriority="high" />
-      </section>
-
-      <section class="smartwatch-return">
-        <a href={`${base}history/`}>← アラーム腕時計の歴史に戻る</a>
+        <a class="smartwatch-art-link" href={`${base}history/`} aria-label="アラーム腕時計の歴史に戻る">
+          <img class="smartwatch-art" src={artwork} width="720" height="1080" alt="通知が過密に並ぶスマートウォッチと、もっと静かな時代へ戻るというVINTAGE ALARMのエピローグ" loading="eager" fetchpriority="high" />
+        </a>
       </section>
     </main>
   </body>
