@@ -1,0 +1,101 @@
+media:
+  input: public/images
+  output: /images
+  rename: false
+  categories: [image]
+
+content:
+  - name: watches
+    label: Watches
+    type: collection
+    path: src/content/watches
+    fields:
+      - name: slug
+        label: Slug
+        type: string
+        required: true
+        readonly: true
+      - name: ownerNumber
+        label: OWNER'S NOTE No.
+        type: string
+        required: true
+      - name: brand
+        label: Brand
+        type: string
+        required: true
+      - name: model
+        label: Model
+        type: string
+        required: true
+      - name: catch
+        label: Catch
+        type: string
+        list:
+          min: 2
+          max: 2
+      - name: ownersNote
+        label: OWNER'S NOTE
+        type: object
+        fields:
+          - name: image
+            label: Artwork
+            type: image
+            required: true
+          - name: lead
+            label: Lead
+            type: text
+            list: true
+          - name: guideTitle
+            label: Guide title
+            type: string
+          - name: guide
+            label: Guide
+            type: text
+            list: true
+          - name: noteTitle
+            label: Note title
+            type: string
+          - name: note
+            label: Note
+            type: text
+            list: true
+      - name: spec
+        label: SPEC
+        type: object
+        fields:
+          - { name: era, label: 年代, type: string }
+          - { name: caseSize, label: ケースサイズ, type: string }
+          - { name: caliber, label: Cal, type: string }
+          - { name: jewels, label: 石, type: string }
+          - { name: frequency, label: 振動, type: string }
+          - { name: barrels, label: 香箱, type: string }
+          - { name: winding, label: 手巻き, type: string }
+          - { name: acoustic, label: 音響, type: string }
+          - { name: notes, label: 特記事項, type: text }
+      - name: video
+        label: 実機鳴動
+        type: object
+        fields:
+          - { name: youtubeId, label: YouTube ID, type: string }
+          - { name: xUrl, label: Original post on X, type: string }
+      - name: deepDive
+        label: DEEP DIVE
+        type: object
+        list:
+          min: 1
+          max: 8
+          collapsible:
+            collapsed: true
+            summary: "{number}｜{title}"
+        fields:
+          - { name: number, label: No., type: string }
+          - { name: title, label: Title, type: string }
+          - { name: subtitle, label: Subtitle, type: string }
+          - name: paragraphs
+            label: Paragraphs
+            type: text
+            list: true
+      - name: sources
+        label: 参考資料・出典
+        type: string
+        list: true

@@ -1,0 +1,43 @@
+---
+import '../styles/site.css';
+const base = import.meta.env.BASE_URL;
+---
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#f3eee4" />
+    <title>VINTAGE ALARM</title>
+    <meta name="description" content="機械式アラーム腕時計を、歴史・テーマ・実機から読む。" />
+  </head>
+  <body>
+    <header class="shell mast"><span>VINTAGE ALARM</span><span>ALARM WRISTWATCHES</span></header>
+    <main>
+      <section class="shell home-hero">
+        <h1><span>VINTAGE</span><span>ALARM</span></h1>
+        <p>アラームを、腕へ。</p>
+      </section>
+
+      <nav class="shell home-nav" aria-label="VINTAGE ALARM メインコンテンツ">
+        <a href={`${base}history/`}>
+          <span class="home-no">01</span>
+          <div><strong>HISTORY</strong><small>アラーム腕時計の歴史</small></div>
+          <b>→</b>
+        </a>
+
+        <div class="home-nav-disabled" aria-disabled="true">
+          <span class="home-no">02</span>
+          <div><strong>THEMES</strong><small>音・防水・香箱・通知</small></div>
+          <em>準備中</em>
+        </div>
+
+        <a href={`${base}pierce-duofon/`}>
+          <span class="home-no">03</span>
+          <div><strong>OWNER'S NOTES</strong><small>実機から読む</small></div>
+          <b>→</b>
+        </a>
+      </nav>
+    </main>
+  </body>
+</html>

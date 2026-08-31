@@ -1,0 +1,20 @@
+---
+const { spec } = Astro.props;
+const rows = [
+  ['年代', spec.era],
+  ['ケースサイズ', spec.caseSize],
+  ['Cal', spec.caliber],
+  ['石', spec.jewels],
+  ['振動', spec.frequency],
+  ['香箱', spec.barrels],
+  ['手巻き', spec.winding],
+  ['音響', spec.acoustic],
+  ['特記事項', spec.notes]
+];
+---
+<section class="section spec-section" aria-labelledby="spec">
+  <h2 id="spec">SPEC</h2>
+  <dl class="specs">
+    {rows.map(([label, value]) => <div><dt>{label}</dt><dd>{value}</dd></div>)}
+  </dl>
+</section>

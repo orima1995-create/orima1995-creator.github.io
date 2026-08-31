@@ -1,0 +1,17 @@
+---
+const { items } = Astro.props;
+---
+<section class="section shell" aria-labelledby="deep">
+  <h2 id="deep">さらに詳しく</h2>
+  <div class="deep-list">
+    {items.map((item: any) => (
+      <details>
+        <summary><span class="number">{item.number}</span><span class="summary-label">{item.title}</span></summary>
+        <div class="copy prose">
+          {item.subtitle && <h3>{item.subtitle}</h3>}
+          {item.paragraphs.map((paragraph: string) => <p>{paragraph}</p>)}
+        </div>
+      </details>
+    ))}
+  </div>
+</section>

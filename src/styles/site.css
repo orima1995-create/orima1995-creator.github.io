@@ -1,0 +1,167 @@
+:root{--paper:#f3eee4;--ink:#241f1a;--soft:#625a51;--rule:#a79d91;--red:#912f29;--white:#eee9df}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%;text-size-adjust:100%}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:"Yu Mincho","Hiragino Mincho ProN","Noto Serif JP",serif;line-height:1.9;line-break:strict;word-break:normal;overflow-wrap:normal}
+img{display:block;max-width:100%;height:auto}
+a{color:inherit}
+.shell{width:min(calc(100% - 40px),980px);margin-inline:auto}
+.section{padding-block:76px;border-top:1px solid var(--rule)}
+.mast{display:flex;justify-content:space-between;gap:16px;padding-top:24px;color:var(--soft);font-size:11px;letter-spacing:.17em;white-space:nowrap}
+.mast-link{text-decoration:none}
+.hero{padding:74px 0 92px}
+.hero h1{margin:0;font-family:Georgia,"Times New Roman",serif;font-size:clamp(52px,12vw,84px);font-weight:400;line-height:.92;letter-spacing:.015em}
+.hero h1 span{display:block}
+.catch{margin-top:38px;font-size:clamp(18px,5.4vw,32px);line-height:1.65}
+.catch p{margin:0;white-space:nowrap}
+.eyebrow{margin-bottom:26px;font-family:Georgia,"Times New Roman",serif;font-size:14px;letter-spacing:.22em}
+.note-link{display:block;position:relative;width:100%;margin:auto;border:1px solid var(--rule);background:#ebe3d7}
+.note-link:focus-visible{outline:2px solid var(--ink);outline-offset:5px}
+.zoom{position:absolute;right:12px;bottom:12px;width:44px;height:44px;display:grid;place-items:center;border:1px solid rgba(36,31,26,.5);border-radius:50%;background:rgba(243,238,228,.88);font-family:sans-serif;font-size:22px}
+details{border-top:1px solid var(--ink)}
+details:last-child{border-bottom:1px solid var(--ink)}
+summary{display:flex;align-items:baseline;gap:13px;min-height:68px;padding:19px 0;cursor:pointer;list-style:none;font-size:18px;line-height:1.55;line-break:strict;word-break:normal}
+summary::-webkit-details-marker{display:none}
+summary::after{content:"＋";margin-left:auto;flex:0 0 auto;font-family:sans-serif;font-weight:300}
+details[open]>summary::after{content:"－"}
+.summary-label{min-width:0;text-wrap:pretty}
+.plain{margin-top:24px}
+.plain summary{font-size:17px}
+.prose{line-break:strict;word-break:normal;overflow-wrap:normal;hyphens:none;text-wrap:pretty}
+.copy,.owner-copy{padding:2px 0 28px 41px;color:var(--soft);font-size:17px;line-height:2}
+.copy p,.owner-copy p{margin:0 0 1.45em;max-inline-size:46em;text-wrap:pretty}
+.copy p:last-child,.owner-copy p:last-child{margin-bottom:0}
+.copy h3,.owner-copy h3{margin:0 0 1.2em;color:var(--ink);font-size:19px;font-weight:500;line-height:1.75;text-wrap:balance}
+.owner-copy{padding-top:20px}
+.owner-lead{margin-bottom:30px;color:var(--ink)}
+.owner-lead p{margin-bottom:.25em}
+.guide-list{list-style:none;margin:0 0 34px;padding:0}
+.guide-list li{margin-bottom:.85em;padding:0;line-break:strict;word-break:normal;text-wrap:pretty}
+.number{flex:0 0 28px;color:var(--soft);font-family:Georgia,"Times New Roman",serif;font-size:16px}
+h2{margin:0 0 34px;font-family:Georgia,"Times New Roman",serif;font-size:clamp(30px,8vw,46px);font-weight:400;letter-spacing:.025em;text-wrap:balance}
+.specs{margin:0;border-top:1px solid var(--rule)}
+.specs div{display:grid;grid-template-columns:104px minmax(0,1fr);gap:18px;padding:16px 0;border-bottom:1px solid var(--rule)}
+.specs dt{color:var(--soft);font-size:16px}
+.specs dd{min-width:0;margin:0;font-size:17px;line-height:1.7;line-break:strict;word-break:normal;overflow-wrap:break-word}
+.video-frame{aspect-ratio:9/16;width:min(100%,420px);margin-inline:auto;background:#27231f}
+.video-frame iframe{display:block;width:100%;height:100%;border:0}
+.x-link{display:inline-block;margin-top:18px;padding-bottom:4px;border-bottom:1px solid currentColor;text-decoration:none;font-family:Georgia,"Times New Roman",serif;font-size:16px}
+.sources{padding-bottom:70px}
+.sources ul{margin:0;padding:5px 0 25px 61px;color:var(--soft);font-size:17px;line-height:1.9}
+.archive{padding-block:72px}
+.archive h1{font-family:Georgia,"Times New Roman",serif;font-weight:400}
+.watch-back{padding:4px 0 88px}
+.watch-back a{display:inline-block;padding-bottom:5px;border-bottom:1px solid currentColor;text-decoration:none;font-size:16px}
+.home-hero{padding:100px 0 90px}
+.home-hero h1{margin:0;font-family:Georgia,"Times New Roman",serif;font-size:clamp(64px,13vw,116px);font-weight:400;line-height:.82;letter-spacing:-.025em}
+.home-hero h1 span{display:block}
+.home-hero p{margin:44px 0 0;font-size:clamp(21px,4vw,34px);letter-spacing:.05em}
+.home-nav{padding-bottom:100px;border-top:1px solid var(--ink)}
+.home-nav>a,.home-nav-disabled{display:grid;grid-template-columns:56px minmax(0,1fr) auto;gap:20px;align-items:center;min-height:112px;padding:24px 0;border-bottom:1px solid var(--ink);text-decoration:none}
+.home-nav strong{display:block;font-family:Georgia,"Times New Roman",serif;font-size:clamp(25px,4vw,38px);font-weight:400;line-height:1.1;letter-spacing:.02em}
+.home-nav small{display:block;margin-top:10px;color:var(--soft);font-size:15px}
+.home-no{color:var(--soft);font-family:Georgia,"Times New Roman",serif;font-size:14px}
+.home-nav b{font-family:Georgia,"Times New Roman",serif;font-size:28px;font-weight:400}
+.home-nav-disabled{color:#8b8278}
+.home-nav-disabled em{font-size:12px;font-style:normal;letter-spacing:.12em}
+.history-hero{padding:96px 0 82px}
+.history-hero h1{margin:0;font-size:clamp(46px,9vw,78px);font-weight:500;line-height:1.2;letter-spacing:.025em;text-wrap:balance}
+.history-kicker{margin:30px 0 0;font-size:clamp(21px,4vw,31px);line-height:1.65}
+.history-lead{max-width:46em;margin:38px 0 0;color:var(--soft);font-size:18px;line-height:2;text-wrap:pretty}
+.history-index{padding-bottom:72px;border-top:1px solid var(--ink)}
+.history-index a{display:grid;grid-template-columns:50px minmax(0,1fr);gap:16px;padding:16px 0;border-bottom:1px solid var(--rule);text-decoration:none}
+.history-index span{color:var(--soft);font-family:Georgia,"Times New Roman",serif;font-size:14px}
+.history-index strong{font-size:17px;font-weight:500;letter-spacing:.02em}
+.history-band{border-top:1px solid var(--rule)}
+.history-chapter{display:grid;grid-template-columns:70px minmax(0,1fr);gap:34px;padding-block:86px}
+.history-chapter-wide{padding-bottom:98px}
+.history-no{padding-top:4px;color:var(--soft);font-family:Georgia,"Times New Roman",serif;font-size:17px;letter-spacing:.12em}
+.history-era{margin:0 0 12px;color:var(--soft);font-family:Georgia,"Times New Roman",serif;font-size:13px;letter-spacing:.18em}
+.history-chapter h2{margin-bottom:28px}
+.history-chapter>div:last-child>p:not(.history-era){max-width:46em;margin:0;color:var(--soft);font-size:17px;line-height:2;text-wrap:pretty}
+.history-fifties{background:#eee7da}
+.history-watch-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0;margin-top:54px;border-top:1px solid var(--ink);border-left:1px solid var(--ink)}
+.history-watch-card{min-width:0;min-height:240px;padding:28px;border-right:1px solid var(--ink);border-bottom:1px solid var(--ink);background:rgba(243,238,228,.35)}
+.history-watch-card>span{display:block;color:var(--soft);font-family:Georgia,"Times New Roman",serif;font-size:12px;letter-spacing:.15em}
+.history-watch-card h3{margin:14px 0 24px;font-family:Georgia,"Times New Roman",serif;font-size:28px;font-weight:400;line-height:1.05;text-wrap:balance}
+.history-watch-card p{margin:0;color:var(--soft);font-size:15px;line-height:1.8;text-wrap:pretty}
+.history-watch-link{position:relative;text-decoration:none}
+.history-watch-link b{display:inline-block;margin-top:26px;padding-bottom:3px;border-bottom:1px solid currentColor;font-size:14px;font-weight:500}
+.history-current{border-bottom:1px solid var(--rule)}
+.history-next{display:inline-block;margin-top:36px;padding:13px 0 7px;border-bottom:1px solid var(--ink);font-family:Georgia,"Times New Roman",serif;font-size:22px;text-decoration:none}
+.history-sources{padding:70px 0 90px}
+.history-sources ul{margin:0;padding:5px 0 25px 1.4em;color:var(--soft);font-size:15px;line-height:1.9}
+.smartwatch-hero{padding:92px 0 76px}
+.smartwatch-hero h1{margin:0;font-size:clamp(43px,8vw,72px);font-weight:500;line-height:1.25;text-wrap:balance}
+.smartwatch-title{margin:28px 0 0;font-family:Georgia,"Times New Roman",serif;font-size:clamp(48px,10vw,92px);line-height:.95;letter-spacing:-.02em}
+.smartwatch-stage{padding:48px 20px 0;background:#000}
+.smartwatch-art{width:min(100%,640px);margin-inline:auto}
+.smartwatch-return{display:flex;justify-content:center;padding:42px 20px 70px;background:#000;color:#f5efe5}
+.smartwatch-return a{padding:14px 22px;border:1px solid rgba(245,239,229,.72);text-decoration:none;font-size:16px}
+@media(min-width:760px){
+  .mast{font-size:12px}
+  .owners-grid{display:grid;grid-template-columns:minmax(0,1.03fr) minmax(0,.97fr);gap:72px;align-items:start}
+  .note-link{width:100%}
+  .spec-section{padding-top:0;border-top:0}
+  .hero{padding-top:100px}
+  .copy,.owner-copy{padding-right:42px}
+}
+@media(max-width:480px){
+  .shell{width:calc(100% - 32px)}
+  .section{padding-block:58px}
+  .mast{gap:10px;padding-top:20px;font-size:10px;letter-spacing:.08em}
+  .hero{padding:58px 0 70px}
+  .hero h1{font-size:clamp(48px,15vw,64px);line-height:.9}
+  .catch{margin-top:30px;font-size:clamp(17px,5.25vw,21px);line-height:1.6}
+  h2{margin-bottom:28px;font-size:clamp(29px,8.5vw,38px)}
+  summary{gap:10px;min-height:62px;padding:17px 0;font-size:17px}
+  .copy,.owner-copy{padding-left:0;padding-right:0;font-size:16px;line-height:1.95}
+  .copy h3,.owner-copy h3{font-size:18px}
+  .specs div{grid-template-columns:88px minmax(0,1fr);gap:12px;padding:14px 0}
+  .specs dt{font-size:15px}
+  .specs dd{font-size:16px;line-height:1.65}
+  .sources ul{padding-left:1.25em;font-size:16px}
+  .watch-back{padding-bottom:68px}
+  .home-hero{padding:74px 0 64px}
+  .home-hero h1{font-size:clamp(58px,18vw,78px)}
+  .home-hero p{margin-top:34px;font-size:21px}
+  .home-nav{padding-bottom:72px}
+  .home-nav>a,.home-nav-disabled{grid-template-columns:34px minmax(0,1fr) auto;gap:10px;min-height:92px;padding:20px 0}
+  .home-nav strong{font-size:24px}
+  .home-nav small{margin-top:7px;font-size:13px}
+  .home-nav b{font-size:22px}
+  .home-nav-disabled em{font-size:10px;letter-spacing:.06em}
+  .history-hero{padding:70px 0 64px}
+  .history-hero .eyebrow{font-size:11px;letter-spacing:.13em}
+  .history-hero h1{font-size:clamp(38px,11vw,49px)}
+  .history-kicker{margin-top:26px;font-size:20px}
+  .history-lead{margin-top:30px;font-size:16px;line-height:1.95}
+  .history-index{padding-bottom:52px}
+  .history-index a{grid-template-columns:36px minmax(0,1fr);gap:10px;padding:14px 0}
+  .history-index strong{font-size:15px}
+  .history-chapter{grid-template-columns:1fr;gap:12px;padding-block:62px}
+  .history-no{font-size:14px}
+  .history-chapter h2{margin-bottom:23px}
+  .history-chapter>div:last-child>p:not(.history-era){font-size:16px;line-height:1.95}
+  .history-watch-grid{grid-template-columns:1fr;margin-top:42px}
+  .history-watch-card{min-height:0;padding:24px}
+  .history-watch-card h3{font-size:26px}
+  .history-next{margin-top:30px;font-size:20px}
+  .history-sources{padding:56px 0 70px}
+  .smartwatch-hero{padding:68px 0 58px}
+  .smartwatch-hero .eyebrow{font-size:11px;letter-spacing:.13em}
+  .smartwatch-hero h1{font-size:clamp(36px,10vw,46px)}
+  .smartwatch-title{margin-top:24px;font-size:clamp(45px,14vw,60px)}
+  .smartwatch-stage{padding:24px 0 0}
+  .smartwatch-art{width:100%}
+  .smartwatch-return{padding:30px 16px 52px}
+  .smartwatch-return a{width:100%;max-width:360px;text-align:center;font-size:15px}
+}
+@media(max-width:340px){
+  .shell{width:calc(100% - 24px)}
+  .mast{font-size:9px}
+  .catch{font-size:16px}
+  .home-nav strong{font-size:21px}
+  .home-nav small{font-size:12px}
+  .history-hero h1{font-size:36px}
+  .history-index strong{font-size:14px}
+}

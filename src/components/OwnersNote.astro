@@ -1,0 +1,26 @@
+---
+const { data } = Astro.props;
+const base = import.meta.env.BASE_URL;
+const imageSrc = `${base}${data.image.replace(/^\//, '')}`;
+---
+<section class="section" aria-labelledby="owners-note">
+  <div class="eyebrow" id="owners-note">OWNER'S NOTE</div>
+  <a class="note-link" href={imageSrc} target="_blank" rel="noopener">
+    <img src={imageSrc} alt="Pierce Duofon OWNER'S NOTE" loading="eager" />
+    <span class="zoom" aria-hidden="true">↗</span>
+  </a>
+  <details class="plain">
+    <summary>テキストで読む</summary>
+    <div class="owner-copy prose">
+      <div class="owner-lead">
+        {data.lead.map((line: string) => <p>{line}</p>)}
+      </div>
+      <h3>{data.guideTitle}</h3>
+      <ul class="guide-list">
+        {data.guide.map((line: string) => <li>{line}</li>)}
+      </ul>
+      <h3>{data.noteTitle}</h3>
+      {data.note.map((paragraph: string) => <p>{paragraph}</p>)}
+    </div>
+  </details>
+</section>

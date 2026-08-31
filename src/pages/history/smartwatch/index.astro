@@ -1,0 +1,38 @@
+---
+import '../../../styles/site.css';
+const base = import.meta.env.BASE_URL;
+const artwork = `${base}images/history/smartwatch.webp`;
+---
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#f3eee4" />
+    <title>現状の到達点｜VINTAGE ALARM</title>
+    <meta name="description" content="HISTORY OF ALARM WRISTWATCHES — 現状の到達点。SMARTWATCH。" />
+  </head>
+  <body>
+    <header class="shell mast">
+      <a class="mast-link" href={base}>VINTAGE ALARM</a>
+      <span>HISTORY / CURRENT</span>
+    </header>
+
+    <main>
+      <section class="shell smartwatch-hero">
+        <div class="eyebrow">HISTORY OF ALARM WRISTWATCHES</div>
+        <p class="history-era">CURRENT</p>
+        <h1>現状の到達点。</h1>
+        <p class="smartwatch-title">SMARTWATCH</p>
+      </section>
+
+      <section class="smartwatch-stage" aria-label="スマートウォッチと通知の現在">
+        <img class="smartwatch-art" src={artwork} alt="通知機能が過密に並ぶスマートウォッチを描いたVINTAGE ALARMのページ" />
+      </section>
+
+      <section class="smartwatch-return">
+        <a href={`${base}history/`}>← アラーム腕時計の歴史に戻る</a>
+      </section>
+    </main>
+  </body>
+</html>
