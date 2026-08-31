@@ -1,0 +1,41 @@
+---
+interface Props {
+  title: string;
+  description: string;
+  path?: string;
+  image?: string;
+  type?: 'website' | 'article';
+  schema?: Record<string, unknown> | Array<Record<string, unknown>>;
+}
+
+const {
+  title,
+  description,
+  path = '',
+  image,
+  type = 'website',
+  schema
+} = Astro.props;
+
+const siteRoot = 'https://orima1995-create.github.io/orima1995-creator.github.io/';
+const canonical = new URL(path.replace(/^\//, ''), siteRoot).toString();
+const ogImage = image
+  ? (image.startsWith('http') ? image : new URL(image.replace(/^\//, ''), siteRoot).toString())
+  : undefined;
+---
+<title>{title}</title>
+<meta name="description" content={description} />
+<meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1" />
+<link rel="canonical" href={canonical} />
+<meta property="og:locale" content="ja_JP" />
+<meta property="og:site_name" content="VINTAGE ALARM" />
+<meta property="og:type" content={type} />
+<meta property="og:title" content={title} />
+<meta property="og:description" content={description} />
+<meta property="og:url" content={canonical} />
+{ogImage && <meta property="og:image" content={ogImage} />}
+<meta name="twitter:card" content={ogImage ? 'summary_large_image' : 'summary'} />
+<meta name="twitter:title" content={title} />
+<meta name="twitter:description" content={description} />
+{ogImage && <meta name="twitter:image" content={ogImage} />}
+{schema && <script type="application/ld+json" set:html={JSON.stringify(schema)} />}
