@@ -68,9 +68,7 @@ deepDive:
       - "GruenではPierce Cal.135をベースとするムーブメントをCal.920 SSとして採用し、Duo-Tone Precisionに搭載している。記録されている一例は33.1mmの金色ケースと圧入式スチール裏蓋を備え、ムーブメントにはGruenによる追加仕上げと署名が施されている。"
       - "Duo-Toneでも、4時位置のリューズから二段階のアラームを切り替える構造が使われている。ムーブメントの基礎はPierce Cal.135で、GruenではCal.920 SSとして扱われた。"
 sources:
-  - "Alarm am Arm"
-  - "The Alarm Wristwatch"
-  - "Pierce / Cal.135関連資料"
-  - "当時資料"
-  - "必要なWeb資料"
+  - "Pierce AG, Biel, “Die Wecker-Armbanduhr Duofon mit zwei Lautstärken” (30.8.1955), Leonhard Beitl『Alarm am Arm』(2009) pp.353–355収録"
+  - "Leonhard Beitl, 『Alarm am Arm』(2009), pp.356–358（Pierce Duo Fonのモデル例・Cal.135）, pp.198–199（Gruen Duo-Tone Precision / Cal.920 SS）"
+  - "Michael Philip Horlbeck, 『The Alarm Wristwatch』(Schiffer Publishing, 2007), pp.20, 130–131, 189–190, 218–221（Duofon / Pierce Cal.135 / 可変アラーム音量）"
 ---
