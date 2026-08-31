@@ -46,7 +46,7 @@ jobs:
           grep -q 'rel="canonical"' dist/index.html
           grep -q 'application/ld+json' dist/history/index.html
           grep -q 'アラーム腕時計が、一気に面白くなる。' dist/history/index.html
-          grep -q 'OWNER.S NOTE / SPEC / 実機鳴動 / DEEP DIVE' dist/history/index.html
+          grep -q 'OWNED / ARCHIVED' dist/history/index.html
           grep -q '/orima1995-creator.github.io/images/history/smartwatch.webp' dist/history/smartwatch/index.html
           grep -q '現状の到達点。' dist/history/smartwatch/index.html
           grep -q 'Die Wecker-Armbanduhr Duofon mit zwei Lautstärken' dist/pierce-duofon/index.html
