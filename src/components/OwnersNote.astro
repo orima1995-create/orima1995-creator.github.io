@@ -16,9 +16,9 @@ const imageSrc = `${base}${data.image.replace(/^\//, '')}`;
         {data.lead.map((line: string) => <p>{line}</p>)}
       </div>
       <h3>{data.guideTitle}</h3>
-      <ol class="guide-list">
-        {data.guide.map((line: string) => <li>{line.replace(/^[①②③④⑤]\s*/, '')}</li>)}
-      </ol>
+      <ul class="guide-list">
+        {data.guide.map((line: string) => <li>{line}</li>)}
+      </ul>
       <h3>{data.noteTitle}</h3>
       {data.note.map((paragraph: string) => <p>{paragraph}</p>)}
     </div>
