@@ -22,9 +22,14 @@ jobs:
         run: npm ci
       - name: Build
         run: npm run build
-      - name: Verify Duofon output
+      - name: Verify site output
         run: |
+          test -f dist/index.html
           test -f dist/pierce-duofon/index.html
+          test -f dist/history/index.html
+          test -f dist/history/smartwatch/index.html
+          test -f dist/images/history/smartwatch.webp
+
           grep -q "PIERCE" dist/pierce-duofon/index.html
           grep -q "DUOFON" dist/pierce-duofon/index.html
           grep -q "マナーモードの祖先!?" dist/pierce-duofon/index.html
@@ -32,7 +37,21 @@ jobs:
           grep -q "xkecjZqr7BY" dist/pierce-duofon/index.html
           grep -q "Pierce Cal.135" dist/pierce-duofon/index.html
           grep -q "Gruen Duotoneとの関係" dist/pierce-duofon/index.html
-          if grep -q "data:image/.*base64" dist/pierce-duofon/index.html; then
+          grep -q "1950年代のアラーム腕時計へ戻る" dist/pierce-duofon/index.html
+
+          grep -q "アラームを、腕へ。" dist/history/index.html
+          grep -q "1950s / 答えが増える" dist/history/index.html
+          grep -q "PIERCE" dist/history/index.html
+          grep -q "DUOFON" dist/history/index.html
+          grep -q "現状の到達点" dist/history/index.html
+          grep -q "history/smartwatch/" dist/history/index.html
+
+          grep -q "現状の到達点。" dist/history/smartwatch/index.html
+          grep -q "SMARTWATCH" dist/history/smartwatch/index.html
+          grep -q "smartwatch.webp" dist/history/smartwatch/index.html
+          grep -q "アラーム腕時計の歴史に戻る" dist/history/smartwatch/index.html
+
+          if grep -R -q "data:image/.*base64" dist; then
             echo "Embedded base64 image remains in generated HTML"
             exit 1
           fi
