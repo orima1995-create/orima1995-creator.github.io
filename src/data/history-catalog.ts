@@ -1,4 +1,5 @@
 export type HistoryCatalogGroup = 'milestone' | 'owner' | 'research';
+export type HistoryHrefKind = 'hash' | 'site';
 
 export interface HistoryCatalogEntry {
   id: string;
@@ -7,10 +8,13 @@ export interface HistoryCatalogEntry {
   sort: number;
   meta: string;
   name: string;
-  hook: string;
-  summary: string;
-  status: string;
+  hook?: string;
+  cardSummary?: string;
+  cardStatus?: string;
+  indexSummary: string;
+  indexStatus?: string;
   href: string;
+  hrefKind: HistoryHrefKind;
   featured: boolean;
 }
 
@@ -20,6 +24,8 @@ export interface HistoryCatalogEntry {
  * Step 1A では既存表示へ接続しない。
  * まず「同じ事実を複数箇所へ手入力しない」ための単一ソースを用意し、
  * Step 1B で現行HTMLと出力一致を確認しながら段階的に置き換える。
+ *
+ * card* と index* は、現在の画面で意図的に文量が異なるため分離する。
  */
 export const historyCatalog: HistoryCatalogEntry[] = [
   {
@@ -30,9 +36,11 @@ export const historyCatalog: HistoryCatalogEntry[] = [
     meta: '1914 / ETERNA',
     name: 'ETERNA ALARM',
     hook: 'アラームを、腕時計のサイズへ。',
-    summary: '最初期の量産アラーム腕時計。',
-    status: 'MILESTONE',
+    cardSummary: '一つの香箱から時刻とアラームを動かす、最初期の量産アラーム腕時計。',
+    cardStatus: 'MILESTONE',
+    indexSummary: '最初期の量産アラーム腕時計',
     href: '#1910s',
+    hrefKind: 'hash',
     featured: true
   },
   {
@@ -43,9 +51,11 @@ export const historyCatalog: HistoryCatalogEntry[] = [
     meta: '1947 / VULCAIN',
     name: 'CRICKET',
     hook: '腕につけたまま、聞こえる音を。',
-    summary: '装着時の音響を大きく前進させた代表的なアラーム腕時計。',
-    status: 'MILESTONE',
+    cardSummary: '二重底の音響構造で、装着時のアラーム音を実用的なレベルへ押し上げた。',
+    cardStatus: 'MILESTONE',
+    indexSummary: '装着時の音響を大きく前進',
     href: '#1940s',
+    hrefKind: 'hash',
     featured: true
   },
   {
@@ -55,10 +65,12 @@ export const historyCatalog: HistoryCatalogEntry[] = [
     sort: 25,
     meta: '1948 / BASIS',
     name: 'BASIS ALARM / BFG 90',
-    hook: '安価な構成でも、腕から知らせる。',
-    summary: '実用と量産性を優先した機械式アラームの実機。',
-    status: "OWNER'S NOTE / NEXT",
+    hook: '高級機だけが、アラームではない。',
+    cardSummary: '2香箱と巻上げ表示窓を持つBFG 90。実用品としてのアラーム腕時計を見る一例。',
+    cardStatus: "OWNER'S NOTE / NEXT",
+    indexSummary: "OWNER'S NOTE / NEXT",
     href: '#1940s',
+    hrefKind: 'hash',
     featured: true
   },
   {
@@ -69,9 +81,11 @@ export const historyCatalog: HistoryCatalogEntry[] = [
     meta: '1951 / JAEGER-LECOULTRE',
     name: 'MEMOVOX',
     hook: 'アラーム専用の動力を持つ。',
-    summary: '時刻用とアラーム用に独立した2つの香箱を持つ、代表的な二香箱構成。',
-    status: 'MILESTONE',
+    cardSummary: '時刻用とアラーム用に独立した2つの香箱を持つ、代表的な二香箱構成。',
+    cardStatus: 'MILESTONE',
+    indexSummary: '独立したアラーム動力',
     href: '#1950s',
+    hrefKind: 'hash',
     featured: true
   },
   {
@@ -82,9 +96,11 @@ export const historyCatalog: HistoryCatalogEntry[] = [
     meta: '1954 / A. SCHILD',
     name: 'AS 1475',
     hook: 'アラームを、もっと多くの腕へ。',
-    summary: '多数のブランドへ広がり、アラーム腕時計の裾野を大きく広げた量産ムーブメント。',
-    status: 'MILESTONE',
+    cardSummary: '多数のブランドへ広がり、アラーム腕時計の裾野を大きく広げた量産ムーブメント。',
+    cardStatus: 'MILESTONE',
+    indexSummary: '量産ムーブメントとして広がる',
     href: '#1950s',
+    hrefKind: 'hash',
     featured: true
   },
   {
@@ -95,9 +111,11 @@ export const historyCatalog: HistoryCatalogEntry[] = [
     meta: 'PIERCE',
     name: 'PIERCE DUOFON',
     hook: '鳴らすか。控えめに知らせるか。',
-    summary: '2香箱とWECKER / SIGNALの切替を持つ実機。',
-    status: "OWNER'S NOTE →",
-    href: '/pierce-duofon/',
+    cardSummary: '2香箱とWECKER / SIGNALの切替を持つ実機。',
+    cardStatus: "OWNER'S NOTE →",
+    indexSummary: "OWNER'S NOTE →",
+    href: 'pierce-duofon/',
+    hrefKind: 'site',
     featured: true
   },
   {
@@ -108,9 +126,11 @@ export const historyCatalog: HistoryCatalogEntry[] = [
     meta: 'CYMA',
     name: 'TIME-O-VOX',
     hook: '一つの香箱で、時刻とアラームを。',
-    summary: 'Cal.R.464を搭載する18K Chronomètre表記の実機を記録中。',
-    status: "OWNER'S NOTE / NEXT",
+    cardSummary: 'Cal.R.464を搭載する18K Chronomètre表記の実機を記録中。',
+    cardStatus: "OWNER'S NOTE / NEXT",
+    indexSummary: "OWNER'S NOTE / NEXT",
     href: '#1950s',
+    hrefKind: 'hash',
     featured: true
   },
   {
@@ -121,9 +141,11 @@ export const historyCatalog: HistoryCatalogEntry[] = [
     meta: 'CITIZEN',
     name: 'CITIZEN ALARM',
     hook: 'アラーム腕時計が、日本へ。',
-    summary: '1950年代末に現れる国産機械式アラームの実機。',
-    status: "OWNER'S NOTE / NEXT",
+    cardSummary: '1950年代末に現れる国産機械式アラームの実機。',
+    cardStatus: "OWNER'S NOTE / NEXT",
+    indexSummary: "OWNER'S NOTE / NEXT",
     href: '#1950s',
+    hrefKind: 'hash',
     featured: true
   },
   {
@@ -134,10 +156,24 @@ export const historyCatalog: HistoryCatalogEntry[] = [
     meta: '1957 / JLC PARKING PATENT',
     name: 'PARKING WATCH',
     hook: '駐車時間まで、腕が知らせる。',
-    summary: 'アラームを「起こす」以外の生活用途へ使う、気になる系譜。',
-    status: 'RESEARCHING →',
+    cardSummary: 'アラームを「起こす」以外の生活用途へ使う、気になる系譜。',
+    cardStatus: 'RESEARCHING →',
+    indexSummary: 'RESEARCHING',
     href: '#1950s',
+    hrefKind: 'hash',
     featured: true
+  },
+  {
+    id: 'automatic-diver-travel',
+    group: 'milestone',
+    era: '1960s',
+    sort: 90,
+    meta: '1960s–70s',
+    name: 'AUTOMATIC / DIVER / TRAVEL',
+    indexSummary: '用途と複合機能へ',
+    href: '#1960s',
+    hrefKind: 'hash',
+    featured: false
   }
 ];
 
