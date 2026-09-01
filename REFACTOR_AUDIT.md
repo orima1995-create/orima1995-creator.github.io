@@ -75,6 +75,31 @@
 - リスク: 未使用データファイル追加のみのため極小
 - 次: Step 1Bで、まずINDEXだけをこのデータから生成し、出力一致を監査する。その後カード側へ広げる
 
+### Step 1B — WATCH / RESEARCH INDEXをカタログから生成
+
+- 変更: `src/pages/history/index.astro`
+- 対象: HISTORY下部の `WATCH / RESEARCH INDEX` だけ
+- `src/data/history-catalog.ts` の `historyCatalogByGroup` から MILESTONES / OWNER'S NOTES / RESEARCH の各項目を静的生成するようにした
+- `hrefKind: 'hash'` は従来のページ内アンカーをそのまま使用し、`hrefKind: 'site'` は従来どおり `BASE_URL` を付与する
+- INDEXのセクションID、見出し、レイアウト構造は変更していない
+- Astroのビルド時にだけ展開されるため、クライアントJavaScriptの追加はない
+
+#### Step 1B 監査結果
+
+- 変更前ビルド: `npm run build` 成功（4ページ）
+- 変更後ビルド: `npm run build` 成功（4ページ）
+- 生成HTML: 変更前後の `dist/history/index.html` を全ページ比較し、タグ間の整形空白を正規化してHTMLエンティティを復号すると完全一致
+- 生HTMLでの差は、動的出力による整形空白と、Astroがアポストロフを `&#39;` へエスケープする点のみ。DOMの意味と表示文字は同一
+- 項目数 / 順序: MILESTONES 5件、OWNER'S NOTES 4件、RESEARCH 1件で完全一致
+- 項目内容: `meta` / 名称 / INDEX文言 / `href` を全件照合し、完全一致
+- URL / anchor: `#1910s` / `#1940s` / `#1950s` / `#1960s` と `pierce-duofon/` の生成URLは変更なし
+- SEO: title / description / canonical / structured dataを含む全ページ意味比較で変更なし
+- CSS変更: なし
+- JavaScript変更: なし
+- ライブラリ追加: なし
+- main / 本番: 変更なし
+- 次: MILESTONEカード側へ移行する前に、本Stepの差分を独立して保持する
+
 ## 方針
 
 速度改善のためにフレームワークやライブラリを増やさない。

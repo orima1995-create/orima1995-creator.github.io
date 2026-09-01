@@ -1,8 +1,31 @@
 ---
 import SeoHead from '../../components/SeoHead.astro';
+import { historyCatalogByGroup } from '../../data/history-catalog';
 import '../../styles/site.css';
 import '../../styles/history-magazine.css';
 const base = import.meta.env.BASE_URL;
+const historyIndexGroups = [
+  {
+    id: 'index-milestones',
+    label: 'MILESTONES',
+    title: '歴史上の節目',
+    entries: historyCatalogByGroup.milestones
+  },
+  {
+    id: 'index-owners',
+    label: "OWNER'S NOTES",
+    title: '実機から見る時計',
+    entries: historyCatalogByGroup.owners
+  },
+  {
+    id: 'index-interests',
+    label: 'RESEARCH',
+    title: '調査個体',
+    entries: historyCatalogByGroup.research
+  }
+];
+const historyIndexHref = (href: string, hrefKind: 'hash' | 'site') =>
+  hrefKind === 'site' ? `${base}${href}` : href;
 const title = 'アラーム腕時計の歴史｜Eterna・Cricket・Memovox・Duofon・Time-O-Vox｜VINTAGE ALARM';
 const description = '鐘で共有された時間から、懐中時計、アラーム腕時計へ。Eterna、Vulcain Cricket、Memovox、AS 1475、Pierce Duofon、Cyma Time-O-Vox、Parking Watch、電子化まで、「時間を知らせる」腕時計の歴史を辿る。';
 const schema = {
@@ -439,36 +462,22 @@ const schema = {
           <div class="shell history-directory-inner">
             <p class="history-directory-intro">ここは歴史本文を全部並べ直すデータベースではない。HISTORYで表舞台に置くカードは4〜6件程度に絞り、増えた時計やテーマはこのINDEXから独立して探せるようにする。個別ページがあるものは通常のリンクで直接開く。</p>
             <div class="history-directory-grid">
-              <section class="history-directory-group" id="index-milestones">
-                <span>MILESTONES</span>
-                <h3>歴史上の節目</h3>
-                <div class="history-directory-list">
-                  <a class="history-directory-item" href="#1910s"><small>1914 / ETERNA</small><strong>ETERNA ALARM</strong><em>最初期の量産アラーム腕時計</em></a>
-                  <a class="history-directory-item" href="#1940s"><small>1947 / VULCAIN</small><strong>CRICKET</strong><em>装着時の音響を大きく前進</em></a>
-                  <a class="history-directory-item" href="#1950s"><small>1951 / JAEGER-LECOULTRE</small><strong>MEMOVOX</strong><em>独立したアラーム動力</em></a>
-                  <a class="history-directory-item" href="#1950s"><small>1954 / A. SCHILD</small><strong>AS 1475</strong><em>量産ムーブメントとして広がる</em></a>
-                  <a class="history-directory-item" href="#1960s"><small>1960s–70s</small><strong>AUTOMATIC / DIVER / TRAVEL</strong><em>用途と複合機能へ</em></a>
-                </div>
-              </section>
-
-              <section class="history-directory-group" id="index-owners">
-                <span>OWNER'S NOTES</span>
-                <h3>実機から見る時計</h3>
-                <div class="history-directory-list">
-                  <a class="history-directory-item" href="#1940s"><small>1948 / BASIS</small><strong>BASIS ALARM / BFG 90</strong><em>OWNER'S NOTE / NEXT</em></a>
-                  <a class="history-directory-item" href={`${base}pierce-duofon/`}><small>PIERCE</small><strong>PIERCE DUOFON</strong><em>OWNER'S NOTE →</em></a>
-                  <a class="history-directory-item" href="#1950s"><small>CYMA</small><strong>TIME-O-VOX</strong><em>OWNER'S NOTE / NEXT</em></a>
-                  <a class="history-directory-item" href="#1950s"><small>CITIZEN</small><strong>CITIZEN ALARM</strong><em>OWNER'S NOTE / NEXT</em></a>
-                </div>
-              </section>
-
-              <section class="history-directory-group" id="index-interests">
-                <span>RESEARCH</span>
-                <h3>調査個体</h3>
-                <div class="history-directory-list">
-                  <a class="history-directory-item" href="#1950s"><small>1957 / JLC PARKING PATENT</small><strong>PARKING WATCH</strong><em>RESEARCHING</em></a>
-                </div>
-              </section>
+              {historyIndexGroups.map((group) => (
+                <section class="history-directory-group" id={group.id}>
+                  <span>{group.label}</span>
+                  <h3>{group.title}</h3>
+                  <div class="history-directory-list">
+                    {group.entries.map((entry) => (
+                      <a
+                        class="history-directory-item"
+                        href={historyIndexHref(entry.href, entry.hrefKind)}
+                      >
+                        <small>{entry.meta}</small><strong>{entry.name}</strong><em>{entry.indexStatus ?? entry.indexSummary}</em>
+                      </a>
+                    ))}
+                  </div>
+                </section>
+              ))}
             </div>
           </div>
         </div>
