@@ -1,5 +1,6 @@
 ---
 import SeoHead from '../components/SeoHead.astro';
+import SectionMast from '../components/SectionMast.astro';
 import '../styles/site.css';
 const base = import.meta.env.BASE_URL;
 const title = 'VINTAGE ALARM｜機械式アラーム腕時計の歴史・実機・資料';
@@ -20,39 +21,9 @@ const schema = {
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="theme-color" content="#f3eee4" />
     <SeoHead title={title} description={description} path="" schema={schema} />
-    <style is:inline>
-      .home-mast-left{display:flex;align-items:center;gap:12px}
-      .home-menu{position:relative;border:0!important}
-      .home-menu:last-child{border-bottom:0!important}
-      .home-menu>summary{display:grid;place-items:center;width:30px;height:30px;min-height:0;padding:0;border:1px solid var(--rule);font-family:sans-serif;font-size:18px;line-height:1;letter-spacing:0;cursor:pointer}
-      .home-menu>summary::after{content:none!important}
-      .home-menu-panel{position:absolute;z-index:20;top:38px;left:0;width:min(78vw,280px);padding:9px;border:1px solid var(--ink);background:var(--paper);box-shadow:0 16px 38px rgba(36,31,26,.14)}
-      .home-menu-panel a{display:flex;justify-content:space-between;gap:18px;padding:13px 11px;border-bottom:1px solid var(--rule);color:var(--ink);font-size:13px;letter-spacing:.04em;text-decoration:none;white-space:normal}
-      .home-menu-panel a:last-child{border-bottom:0}
-      .home-menu-panel a::after{content:'→';font-family:Georgia,"Times New Roman",serif}
-      @media(max-width:480px){
-        .home-mast-left{gap:9px}
-        .home-menu>summary{width:28px;height:28px;font-size:17px}
-        .home-menu-panel{top:35px;width:min(84vw,280px)}
-      }
-    </style>
   </head>
   <body>
-    <header class="shell mast">
-      <div class="home-mast-left">
-        <details class="home-menu">
-          <summary aria-label="セクションメニュー">≡</summary>
-          <nav class="home-menu-panel" aria-label="VINTAGE ALARM セクションメニュー">
-            <a href={`${base}history/`}>歴史</a>
-            <a href={`${base}history/#index-milestones`}>マイルストーン</a>
-            <a href={`${base}history/#index-owners`}>オーナーズノート</a>
-            <a href={`${base}history/#index-interests`}>調査個体</a>
-          </nav>
-        </details>
-        <span>VINTAGE ALARM</span>
-      </div>
-      <span>ALARM WRISTWATCHES</span>
-    </header>
+    <SectionMast rightLabel="ALARM WRISTWATCHES" />
     <main>
       <section class="shell home-hero">
         <h1><span>VINTAGE</span><span>ALARM</span></h1>
