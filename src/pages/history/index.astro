@@ -57,7 +57,7 @@ const schema = {
       .history-directory-inner{padding-block:68px 78px}
       .history-directory-intro{max-width:46em;margin:0 0 44px;color:var(--soft);font-size:15px;line-height:1.9}
       .history-directory-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}
-      .history-directory-group{padding:22px;border:1px solid var(--ink);background:rgba(243,238,228,.52)}
+      .history-directory-group{scroll-margin-top:18px;padding:22px;border:1px solid var(--ink);background:rgba(243,238,228,.52)}
       .history-directory-group>span{display:block;margin-bottom:7px;color:var(--red);font-family:Georgia,"Times New Roman",serif;font-size:10px;letter-spacing:.15em}
       .history-directory-group h3{margin:0 0 24px;font-size:22px;font-weight:500;line-height:1.4}
       .history-directory-list{display:grid;border-top:1px solid rgba(36,31,26,.36)}
@@ -66,6 +66,17 @@ const schema = {
       .history-directory-item small{color:var(--soft);font-family:Georgia,"Times New Roman",serif;font-size:9px;letter-spacing:.12em}
       .history-directory-item strong{font-size:14px;font-weight:600;line-height:1.5}
       .history-directory-item em{color:var(--soft);font-size:11px;font-style:normal;line-height:1.5}
+
+      .history-mast-left{display:flex;align-items:center;gap:12px}
+      .history-menu{position:relative;border:0!important}
+      .history-menu:last-child{border-bottom:0!important}
+      .history-menu>summary{display:grid;place-items:center;width:30px;height:30px;min-height:0;padding:0;border:1px solid var(--rule);font-family:sans-serif;font-size:18px;line-height:1;letter-spacing:0;cursor:pointer}
+      .history-menu>summary::after{content:none!important}
+      .history-menu-panel{position:absolute;z-index:20;top:38px;left:0;width:min(78vw,280px);padding:9px;border:1px solid var(--ink);background:var(--paper);box-shadow:0 16px 38px rgba(36,31,26,.14)}
+      .history-menu-panel a{display:flex;justify-content:space-between;gap:18px;padding:13px 11px;border-bottom:1px solid var(--rule);color:var(--ink);font-size:13px;letter-spacing:.04em;text-decoration:none;white-space:normal}
+      .history-menu-panel a:last-child{border-bottom:0}
+      .history-menu-panel a::after{content:'→';font-family:Georgia,"Times New Roman",serif}
+
       @media(max-width:760px){.history-directory-grid{grid-template-columns:1fr}}
       @media(max-width:480px){
         .history-decade-thesis{font-size:28px!important}
@@ -73,12 +84,26 @@ const schema = {
         .history-view-all{min-height:34px;font-size:9px}
         .history-directory-inner{padding-block:52px 60px}
         .history-directory-group{padding:18px}
+        .history-mast-left{gap:9px}
+        .history-menu>summary{width:28px;height:28px;font-size:17px}
+        .history-menu-panel{top:35px;width:min(84vw,280px)}
       }
     </style>
   </head>
   <body>
     <header class="shell mast">
-      <a class="mast-link" href={base}>VINTAGE ALARM</a>
+      <div class="history-mast-left">
+        <details class="history-menu">
+          <summary aria-label="セクションメニュー">≡</summary>
+          <nav class="history-menu-panel" aria-label="HISTORYセクションメニュー">
+            <a href={`${base}history/`}>歴史</a>
+            <a href="#index-milestones">マイルストーン</a>
+            <a href="#index-owners">オーナーズノート</a>
+            <a href="#index-interests">調査個体</a>
+          </nav>
+        </details>
+        <a class="mast-link" href={base}>VINTAGE ALARM</a>
+      </div>
       <span>HISTORY</span>
     </header>
 
@@ -100,10 +125,9 @@ const schema = {
         <a href="#1910s"><span>01</span><strong>1910s — アラームを、腕時計のサイズへ。</strong></a>
         <a href="#1940s"><span>02</span><strong>1940s — 腕につけたまま、聞こえる音を。</strong></a>
         <a href="#1950s"><span>03</span><strong>1950s — 様々な進化と個性。正解が、一つじゃなくなる。</strong></a>
-        <a href="#uses"><span>04</span><strong>1957–70s — 「何を知らせるか」へ。</strong></a>
+        <a href="#1960s"><span>04</span><strong>1960s–70s — 用途と複合機能へ。</strong></a>
         <a href="#electronic"><span>05</span><strong>QUARTZ / DIGITAL — アラームが標準機能になる。</strong></a>
         <a href="#current"><span>06</span><strong>現状の到達点。</strong></a>
-        <a href="#watch-index"><span>INDEX</span><strong>WATCH INDEX — 時計とテーマを独立して見る。</strong></a>
       </nav>
 
       <div class="history-chapters">
@@ -159,11 +183,8 @@ const schema = {
 
             <div class="shell history-shelf" data-shelf>
               <div class="history-shelf-head">
-                <div>
-                  <span>MILESTONES</span>
-                  <p>歴史上の節目</p>
-                </div>
-                <div class="history-shelf-actions"><a class="history-view-all" href="#watch-index">VIEW ALL →</a></div>
+                <div><span>MILESTONES</span><p>歴史上の節目</p></div>
+                <div class="history-shelf-actions"><a class="history-view-all" href="#index-milestones">VIEW ALL →</a></div>
               </div>
               <div class="history-card-track" data-track>
                 <article class="history-card history-card-milestone">
@@ -205,11 +226,8 @@ const schema = {
 
             <div class="shell history-shelf" data-shelf>
               <div class="history-shelf-head">
-                <div>
-                  <span>MILESTONES</span>
-                  <p>歴史上の節目</p>
-                </div>
-                <div class="history-shelf-actions"><a class="history-view-all" href="#watch-index">VIEW ALL →</a></div>
+                <div><span>MILESTONES</span><p>歴史上の節目</p></div>
+                <div class="history-shelf-actions"><a class="history-view-all" href="#index-milestones">VIEW ALL →</a></div>
               </div>
               <div class="history-card-track" data-track>
                 <article class="history-card history-card-milestone">
@@ -224,11 +242,8 @@ const schema = {
 
             <div class="shell history-shelf history-shelf-owner" data-shelf>
               <div class="history-shelf-head">
-                <div>
-                  <span>OWNER'S NOTES</span>
-                  <p>実機から見る、その時代</p>
-                </div>
-                <div class="history-shelf-actions"><a class="history-view-all" href="#watch-index">VIEW ALL →</a></div>
+                <div><span>OWNER'S NOTES</span><p>実機から見る、その時代</p></div>
+                <div class="history-shelf-actions"><a class="history-view-all" href="#index-owners">VIEW ALL →</a></div>
               </div>
               <div class="history-card-track" data-track>
                 <article class="history-card history-card-owner">
@@ -243,7 +258,7 @@ const schema = {
           </div>
         </details>
 
-        <details class="history-chapter history-chapter-golden" id="1950s">
+        <details class="history-chapter" id="1950s">
           <summary class="shell history-chapter-summary">
             <span class="history-chapter-no">03</span>
             <span class="history-chapter-heading">
@@ -253,7 +268,7 @@ const schema = {
             <span class="history-chapter-teaser">正解が、一つじゃなくなる。音、動力、操作、知らせ方に違う答えが並び始める。</span>
             <span class="history-chapter-toggle" aria-hidden="true">＋</span>
           </summary>
-          <div class="history-chapter-body history-chapter-golden-body">
+          <div class="history-chapter-body">
             <div class="shell history-decade-intro">
               <p class="history-decade-thesis">正解が、一つじゃなくなる。</p>
               <p class="history-golden-lead">音の出し方。動力の分け方。操作方法。そして、どう知らせるか。1950年代には、同じ「腕から知らせる」という目的に、異なる設計が並んだ。</p>
@@ -262,12 +277,9 @@ const schema = {
 
             <div class="shell history-shelf" data-shelf>
               <div class="history-shelf-head">
-                <div>
-                  <span>MILESTONES</span>
-                  <p>歴史上の節目 / 年代順</p>
-                </div>
+                <div><span>MILESTONES</span><p>歴史上の節目 / 年代順</p></div>
                 <div class="history-shelf-actions">
-                  <a class="history-view-all" href="#watch-index">VIEW ALL →</a>
+                  <a class="history-view-all" href="#index-milestones">VIEW ALL →</a>
                   <div class="history-shelf-controls" aria-label="マイルストーンを横に移動">
                     <button type="button" data-prev aria-label="前へ">←</button>
                     <button type="button" data-next aria-label="次へ">→</button>
@@ -294,12 +306,9 @@ const schema = {
 
             <div class="shell history-shelf history-shelf-owner" data-shelf>
               <div class="history-shelf-head">
-                <div>
-                  <span>OWNER'S NOTES</span>
-                  <p>実機から見る、その時代</p>
-                </div>
+                <div><span>OWNER'S NOTES</span><p>実機から見る、その時代</p></div>
                 <div class="history-shelf-actions">
-                  <a class="history-view-all" href="#watch-index">VIEW ALL →</a>
+                  <a class="history-view-all" href="#index-owners">VIEW ALL →</a>
                   <div class="history-shelf-controls" aria-label="オーナーズノートを横に移動">
                     <button type="button" data-prev aria-label="前へ">←</button>
                     <button type="button" data-next aria-label="次へ">→</button>
@@ -333,18 +342,15 @@ const schema = {
 
             <div class="shell history-shelf history-shelf-interest" data-shelf>
               <div class="history-shelf-head">
-                <div>
-                  <span>気になっているもの</span>
-                  <p>調査・探索を続けたい時計</p>
-                </div>
-                <div class="history-shelf-actions"><a class="history-view-all" href="#watch-index">VIEW ALL →</a></div>
+                <div><span>気になっているもの</span><p>調査・探索を続けたい時計</p></div>
+                <div class="history-shelf-actions"><a class="history-view-all" href="#index-interests">VIEW ALL →</a></div>
               </div>
               <div class="history-card-track" data-track>
-                <a class="history-card history-card-interest history-card-link" href="#uses">
-                  <small>1957– / SPECIAL WATCH</small>
+                <a class="history-card history-card-interest history-card-link" href="#index-interests">
+                  <small>1957 / JLC PARKING PATENT</small>
                   <h3>PARKING WATCH</h3>
                   <p class="history-card-hook">駐車時間まで、腕が知らせる。</p>
-                  <p>アラームが「起こす」以外の生活用途へ枝分かれした、かなり面白い系譜。</p>
+                  <p>アラームを「起こす」以外の生活用途へ使う、気になる系譜。</p>
                   <span class="history-card-status">RESEARCHING →</span>
                 </a>
               </div>
@@ -352,29 +358,26 @@ const schema = {
           </div>
         </details>
 
-        <details class="history-chapter" id="uses">
+        <details class="history-chapter" id="1960s">
           <summary class="shell history-chapter-summary">
             <span class="history-chapter-no">04</span>
             <span class="history-chapter-heading">
-              <small>1957–70s</small>
-              <strong>「何を知らせるか」へ。</strong>
+              <small>1960s–70s</small>
+              <strong>用途と複合機能へ。</strong>
             </span>
-            <span class="history-chapter-teaser">駐車、潜水、旅行。アラームは用途そのものを広げていく。</span>
+            <span class="history-chapter-teaser">自動巻、日付、潜水、第二時間帯。アラームは他の機能と結びついていく。</span>
             <span class="history-chapter-toggle" aria-hidden="true">＋</span>
           </summary>
           <div class="history-chapter-body history-chapter-paper">
             <div class="shell history-decade-intro">
-              <p>基本的な構造が揃うと、アラームは別の機能や用途と結びついていった。</p>
+              <p>1950年代までに多様な基本構成が現れ、その後はアラームを自動巻、日付、スポーツ用途、旅行用途などと組み合わせる展開が広がった。</p>
             </div>
 
             <div class="shell history-shelf" data-shelf>
               <div class="history-shelf-head">
-                <div>
-                  <span>MILESTONES / BRANCHES</span>
-                  <p>用途へ枝分かれしたアラーム</p>
-                </div>
+                <div><span>BRANCHES</span><p>用途と複合機能へ</p></div>
                 <div class="history-shelf-actions">
-                  <a class="history-view-all" href="#watch-index">VIEW ALL →</a>
+                  <a class="history-view-all" href="#index-milestones">VIEW ALL →</a>
                   <div class="history-shelf-controls" aria-label="用途のカードを横に移動">
                     <button type="button" data-prev aria-label="前へ">←</button>
                     <button type="button" data-next aria-label="次へ">→</button>
@@ -383,17 +386,10 @@ const schema = {
               </div>
               <div class="history-card-track" data-track>
                 <article class="history-card history-card-milestone">
-                  <small>1957– / SPECIAL WATCH</small>
-                  <h3>PARKING WATCH</h3>
-                  <p class="history-card-hook">駐車時間まで、腕が知らせる。</p>
-                  <p>Benedict Park-O-Phon、Framont Parking、Memovox Parkingなど。アラームは「忘れないための時計」へ。</p>
-                  <span class="history-card-status">RESEARCHING</span>
-                </article>
-                <article class="history-card history-card-milestone">
                   <small>AUTOMATIC / DATE</small>
                   <h3>DAILY USE</h3>
                   <p class="history-card-hook">巻く手間を減らし、日常機能を足す。</p>
-                  <p>自動巻や日付と組み合わされ、アラームは日常時計の一機能へ近づいていく。</p>
+                  <p>自動巻や日付との組み合わせで、アラームは日常時計の一機能へ近づいていく。</p>
                   <span class="history-card-status">BRANCH</span>
                 </article>
                 <article class="history-card history-card-milestone">
@@ -433,17 +429,17 @@ const schema = {
         <summary class="shell history-chapter-summary">
           <span class="history-chapter-no">INDEX</span>
           <span class="history-chapter-heading">
-            <small>WATCH / THEME INDEX</small>
+            <small>WATCH / RESEARCH INDEX</small>
             <strong>時計とテーマを、独立して見る。</strong>
           </span>
-          <span class="history-chapter-teaser">HISTORYの流れとは別に、マイルストーン、OWNER'S NOTE、気になっているものを一覧する。</span>
+          <span class="history-chapter-teaser">HISTORYの流れとは別に、マイルストーン、OWNER'S NOTE、調査個体を一覧する。</span>
           <span class="history-chapter-toggle" aria-hidden="true">＋</span>
         </summary>
         <div class="history-chapter-body">
           <div class="shell history-directory-inner">
             <p class="history-directory-intro">ここは歴史本文を全部並べ直すデータベースではない。HISTORYで表舞台に置くカードは4〜6件程度に絞り、増えた時計やテーマはこのINDEXから独立して探せるようにする。個別ページがあるものは通常のリンクで直接開く。</p>
             <div class="history-directory-grid">
-              <section class="history-directory-group">
+              <section class="history-directory-group" id="index-milestones">
                 <span>MILESTONES</span>
                 <h3>歴史上の節目</h3>
                 <div class="history-directory-list">
@@ -451,11 +447,11 @@ const schema = {
                   <a class="history-directory-item" href="#1940s"><small>1947 / VULCAIN</small><strong>CRICKET</strong><em>装着時の音響を大きく前進</em></a>
                   <a class="history-directory-item" href="#1950s"><small>1951 / JAEGER-LECOULTRE</small><strong>MEMOVOX</strong><em>独立したアラーム動力</em></a>
                   <a class="history-directory-item" href="#1950s"><small>1954 / A. SCHILD</small><strong>AS 1475</strong><em>量産ムーブメントとして広がる</em></a>
-                  <a class="history-directory-item" href="#uses"><small>1957– / SPECIAL WATCH</small><strong>PARKING WATCH</strong><em>用途へ枝分かれしたアラーム</em></a>
+                  <a class="history-directory-item" href="#1960s"><small>1960s–70s</small><strong>AUTOMATIC / DIVER / TRAVEL</strong><em>用途と複合機能へ</em></a>
                 </div>
               </section>
 
-              <section class="history-directory-group">
+              <section class="history-directory-group" id="index-owners">
                 <span>OWNER'S NOTES</span>
                 <h3>実機から見る時計</h3>
                 <div class="history-directory-list">
@@ -466,11 +462,11 @@ const schema = {
                 </div>
               </section>
 
-              <section class="history-directory-group">
-                <span>INTERESTS</span>
-                <h3>気になっているもの</h3>
+              <section class="history-directory-group" id="index-interests">
+                <span>RESEARCH</span>
+                <h3>調査個体</h3>
                 <div class="history-directory-list">
-                  <a class="history-directory-item" href="#uses"><small>SPECIAL WATCH</small><strong>PARKING WATCH</strong><em>RESEARCHING</em></a>
+                  <a class="history-directory-item" href="#1950s"><small>1957 / JLC PARKING PATENT</small><strong>PARKING WATCH</strong><em>RESEARCHING</em></a>
                 </div>
               </section>
             </div>
@@ -507,16 +503,27 @@ const schema = {
       const openHashChapter = () => {
         if (!location.hash) return;
         const target = document.querySelector(location.hash);
-        if (!(target instanceof HTMLDetailsElement) || !target.classList.contains('history-chapter')) return;
-        chapters.forEach((chapter) => {
-          if (chapter !== target) chapter.open = false;
+        if (!(target instanceof Element)) return;
+        const chapter = target instanceof HTMLDetailsElement && target.classList.contains('history-chapter')
+          ? target
+          : target.closest('.history-chapter');
+        if (!(chapter instanceof HTMLDetailsElement)) return;
+        chapters.forEach((item) => {
+          if (item !== chapter) item.open = false;
         });
-        target.open = true;
+        chapter.open = true;
         requestAnimationFrame(() => target.scrollIntoView({ block: 'start', behavior: 'smooth' }));
       };
 
       window.addEventListener('hashchange', openHashChapter);
       window.addEventListener('DOMContentLoaded', openHashChapter);
+
+      document.querySelectorAll('.history-menu-panel a').forEach((link) => {
+        link.addEventListener('click', () => {
+          const menu = link.closest('.history-menu');
+          if (menu instanceof HTMLDetailsElement) menu.open = false;
+        });
+      });
 
       document.querySelectorAll('[data-shelf]').forEach((shelf) => {
         const track = shelf.querySelector('[data-track]');
