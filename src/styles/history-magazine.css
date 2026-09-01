@@ -115,15 +115,16 @@
 }
 
 @media(max-width:480px){
-  .history-hero-magazine{padding:68px 0 56px}
+  .history-hero-magazine{padding:48px 0 50px}
   .history-hero-magazine .eyebrow{font-size:10px;letter-spacing:.12em}
-  .history-hero-magazine h1{font-size:clamp(2.2rem,11vw,3.25rem);line-height:1}
+  .history-hero-magazine h1{font-size:clamp(1.95rem,9.6vw,2.65rem);line-height:1;letter-spacing:-.015em;white-space:nowrap;text-wrap:nowrap}
   .history-title-break{display:block}
   .history-hero-magazine .history-kicker{margin-top:27px;font-size:clamp(1.25rem,5.4vw,1.4rem);line-height:1.5}
   .history-hero-magazine .history-lead{margin-top:27px;font-size:clamp(.96rem,4vw,1rem);line-height:1.85}
   .history-index-magazine{padding-bottom:58px}
-  .history-index-magazine a{grid-template-columns:31px minmax(0,1fr) auto;gap:9px;padding:14px 0}
-  .history-index-magazine strong{font-size:clamp(.82rem,3.6vw,.9rem);line-height:1.5}
+  .history-index-magazine a{grid-template-columns:31px minmax(0,1fr) auto;gap:9px;align-items:center;padding:14px 0}
+  .history-index-magazine strong{font-size:clamp(.82rem,3.6vw,.9rem);line-height:1.45;text-wrap:pretty}
+  .history-index-magazine a:nth-child(1) strong,.history-index-magazine a:nth-child(6) strong{overflow-wrap:normal;word-break:keep-all;text-wrap:wrap}
 
   .history-chapter-summary{grid-template-columns:28px minmax(0,1fr) 32px;gap:10px;padding-block:25px}
   .history-chapter-no{font-size:11px}
@@ -176,7 +177,7 @@
 }
 
 @media(max-width:340px){
-  .history-hero-magazine h1{font-size:2.2rem}
+  .history-hero-magazine h1{font-size:1.9rem}
   .history-index-magazine strong{font-size:.8rem}
   .history-chapter-heading strong{font-size:1.45rem}
   .history-card-track{grid-auto-columns:clamp(250px,86vw,320px)}
