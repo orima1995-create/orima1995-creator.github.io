@@ -52,22 +52,28 @@ jobs:
             dist/images/cyma-time-o-vox/owners-note-4.webp \
             dist/robots.txt \
             dist/sitemap.xml; do
-            test -f "$f"
+            test -f "$f" || { echo "missing file: $f"; exit 1; }
           done
           for f in dist/images/history/smartwatch-part-*.webp dist/images/cyma-time-o-vox/owners-note-*.webp; do
-            file "$f" | grep -q 'Web/P image'
-            test "$(wc -c < "$f")" -gt 4000
+            bytes=$(wc -c < "$f")
+            echo "$f: ${bytes} bytes"
+            test "$bytes" -gt 4000 || { echo "image too small: $f"; exit 1; }
           done
-          grep -Fq '自分のために知らせる' dist/history/index.html
-          grep -Fq 'PARKING WATCH' dist/history/index.html
-          grep -Fq 'PIERCE DUOFON' dist/history/index.html
-          grep -Fq 'smartwatch-part-4.webp' dist/history/smartwatch/index.html
-          grep -Fq 'もっと静かな時代へ戻る' dist/history/smartwatch/index.html
-          grep -Fq '一つの香箱なのに、リューズは回らない。' dist/cyma-time-o-vox/index.html
-          grep -Fq '6〜10秒' dist/cyma-time-o-vox/index.html
-          grep -Fq '約9時間分のパワーリザーブ' dist/cyma-time-o-vox/index.html
-          grep -Fq 'owners-note-4.webp' dist/cyma-time-o-vox/index.html
-          grep -Fq 'cyma-time-o-vox' dist/sitemap.xml
+          check_text() {
+            needle="$1"
+            file="$2"
+            grep -Fq "$needle" "$file" || { echo "missing text [$needle] in $file"; exit 1; }
+          }
+          check_text '自分のために知らせる' dist/history/index.html
+          check_text 'PARKING WATCH' dist/history/index.html
+          check_text 'PIERCE DUOFON' dist/history/index.html
+          check_text 'smartwatch-part-4.webp' dist/history/smartwatch/index.html
+          check_text 'もっと静かな時代へ戻る' dist/history/smartwatch/index.html
+          check_text '一つの香箱なのに、リューズは回らない。' dist/cyma-time-o-vox/index.html
+          check_text '6〜10秒' dist/cyma-time-o-vox/index.html
+          check_text '約9時間分のパワーリザーブ' dist/cyma-time-o-vox/index.html
+          check_text 'owners-note-4.webp' dist/cyma-time-o-vox/index.html
+          check_text 'cyma-time-o-vox' dist/sitemap.xml
       - name: Configure Pages
         uses: actions/configure-pages@v5
       - name: Upload site
