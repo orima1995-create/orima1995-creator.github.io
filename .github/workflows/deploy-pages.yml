@@ -40,16 +40,17 @@ jobs:
             dist/history/index.html \
             dist/history/smartwatch/index.html \
             dist/pierce-duofon/index.html \
-            dist/images/history/smartwatch.webp \
+            dist/images/history/smartwatch-current.svg \
             dist/robots.txt \
             dist/sitemap.xml; do
             test -f "$f"
           done
-          test "$(wc -c < dist/images/history/smartwatch.webp)" -gt 30000
+          test "$(wc -c < dist/images/history/smartwatch-current.svg)" -gt 100000
           grep -q '自分のために知らせる' dist/history/index.html
           grep -q 'PARKING WATCH' dist/history/index.html
           grep -q 'PIERCE DUOFON' dist/history/index.html
-          grep -q 'smartwatch.webp' dist/history/smartwatch/index.html
+          grep -q 'smartwatch-current.svg' dist/history/smartwatch/index.html
+          grep -q 'もっと静かな時代へ戻る' dist/history/smartwatch/index.html
           grep -q 'pierce-duofon' dist/sitemap.xml
       - name: Configure Pages
         uses: actions/configure-pages@v5
@@ -65,15 +66,16 @@ jobs:
           root="${{ steps.deployment.outputs.page_url }}"
           history="${root}history/"
           smart="${root}history/smartwatch/"
-          artwork="${root}images/history/smartwatch.webp"
+          artwork="${root}images/history/smartwatch-current.svg"
           for attempt in {1..12}; do
             history_html=$(curl -fsSL "$history" || true)
             smart_html=$(curl -fsSL "$smart" || true)
             art_size=$(curl -fsSL "$artwork" 2>/dev/null | wc -c || true)
             if grep -q "自分のために知らせる" <<<"$history_html" \
               && grep -q "PARKING WATCH" <<<"$history_html" \
-              && grep -q "smartwatch.webp" <<<"$smart_html" \
-              && [ "${art_size:-0}" -gt 30000 ]; then
+              && grep -q "smartwatch-current.svg" <<<"$smart_html" \
+              && grep -q "もっと静かな時代へ戻る" <<<"$smart_html" \
+              && [ "${art_size:-0}" -gt 100000 ]; then
               echo "Verified live site and smartwatch artwork: $root"
               exit 0
             fi
