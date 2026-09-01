@@ -3,7 +3,8 @@ import SeoHead from '../../../components/SeoHead.astro';
 import '../../../styles/site.css';
 import '../../../styles/history-magazine.css';
 const base = import.meta.env.BASE_URL;
-const artwork = `${base}images/history/smartwatch.webp`;
+const artwork = `${base}images/history/smartwatch-current.svg`;
+const artworkUrl = 'https://orima1995-create.github.io/orima1995-creator.github.io/images/history/smartwatch-current.svg';
 const title = '現状の到達点：SMARTWATCH｜アラーム腕時計の歴史｜VINTAGE ALARM';
 const description = 'アラーム腕時計の歴史の現在地。機械式アラームから電子化を経て、腕時計が通知・健康・通信まで扱うSMARTWATCHへ到達した先を見る。';
 const schema = {
@@ -14,7 +15,7 @@ const schema = {
       name: '現状の到達点：SMARTWATCH',
       description,
       inLanguage: 'ja',
-      image: 'https://orima1995-create.github.io/orima1995-creator.github.io/images/history/smartwatch.webp',
+      image: artworkUrl,
       url: 'https://orima1995-create.github.io/orima1995-creator.github.io/history/smartwatch/',
       isPartOf: {
         '@type': 'WebPage',
@@ -53,26 +54,27 @@ const schema = {
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#f3eee4" />
-    <SeoHead title={title} description={description} path="history/smartwatch/" image="https://orima1995-create.github.io/orima1995-creator.github.io/images/history/smartwatch.webp" type="article" schema={schema} />
+    <meta name="theme-color" content="#000000" />
+    <SeoHead title={title} description={description} path="history/smartwatch/" image={artworkUrl} type="article" schema={schema} />
+    <style is:inline>
+      html,body{margin:0;background:#000}
+      .smartwatch-finale{background:#000}
+      .smartwatch-finale-inner{position:relative;width:min(100%,1024px);margin-inline:auto;background:#000}
+      .smartwatch-finale-art{display:block;width:100%;height:auto;margin:0}
+      .smartwatch-finale-back{position:absolute;z-index:2;left:43.5%;top:90.4%;width:50%;height:5.2%;display:block;border-radius:8px;text-decoration:none}
+      .smartwatch-finale-back:focus-visible{outline:2px solid #d4a55f;outline-offset:4px;background:rgba(212,165,95,.08)}
+      @media(max-width:480px){
+        .smartwatch-finale-back{left:42.5%;top:90.2%;width:52%;height:5.5%}
+      }
+    </style>
   </head>
   <body>
-    <header class="shell mast">
-      <a class="mast-link" href={base}>VINTAGE ALARM</a>
-      <span>HISTORY / CURRENT</span>
-    </header>
-
     <main>
-      <section class="shell smartwatch-hero">
-        <div class="eyebrow">HISTORY OF ALARM WRISTWATCHES</div>
-        <h1>現状の到達点。</h1>
-        <p class="smartwatch-title">SMARTWATCH</p>
-      </section>
-
-      <section class="smartwatch-stage" aria-label="スマートウォッチと通知の現在">
-        <a class="smartwatch-art-link" href={`${base}history/`} aria-label="アラーム腕時計の歴史に戻る">
-          <img class="smartwatch-art" src={artwork} width="720" height="1080" alt="通知が過密に並ぶスマートウォッチと、もっと静かな時代へ戻るというVINTAGE ALARMのエピローグ" loading="eager" fetchpriority="high" />
-        </a>
+      <section class="smartwatch-finale" aria-label="スマートウォッチと通知の現在">
+        <div class="smartwatch-finale-inner">
+          <img class="smartwatch-finale-art" src={artwork} width="1024" height="1536" alt="通知が過密に並ぶスマートウォッチと、通知に疲れましたか、もっと静かな時代へ戻るというVINTAGE ALARMのエピローグ" loading="eager" fetchpriority="high" />
+          <a class="smartwatch-finale-back" href={`${base}history/`} aria-label="もっと静かな時代へ戻る" title="もっと静かな時代へ戻る"></a>
+        </div>
       </section>
     </main>
   </body>
