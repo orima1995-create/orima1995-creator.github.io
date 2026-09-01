@@ -35,23 +35,40 @@ jobs:
       - name: Verify build output
         run: |
           set -e
-          for f in \
-            dist/index.html \
-            dist/history/index.html \
-            dist/history/smartwatch/index.html \
-            dist/pierce-duofon/index.html \
-            dist/images/history/smartwatch-current.svg \
-            dist/robots.txt \
-            dist/sitemap.xml; do
-            test -f "$f"
-          done
-          test "$(wc -c < dist/images/history/smartwatch-current.svg)" -gt 100000
-          grep -q '自分のために知らせる' dist/history/index.html
-          grep -q 'PARKING WATCH' dist/history/index.html
-          grep -q 'PIERCE DUOFON' dist/history/index.html
-          grep -q 'smartwatch-current.svg' dist/history/smartwatch/index.html
-          grep -q 'もっと静かな時代へ戻る' dist/history/smartwatch/index.html
-          grep -q 'pierce-duofon' dist/sitemap.xml
+          check_file() {
+            if [ -f "$1" ]; then
+              echo "OK file: $1"
+            else
+              echo "FAIL missing: $1"
+              exit 1
+            fi
+          }
+          check_text() {
+            if grep -Fq "$1" "$2"; then
+              echo "OK text: $1"
+            else
+              echo "FAIL text: $1 in $2"
+              exit 1
+            fi
+          }
+          check_file dist/index.html
+          check_file dist/history/index.html
+          check_file dist/history/smartwatch/index.html
+          check_file dist/pierce-duofon/index.html
+          check_file dist/images/history/smartwatch-current.svg
+          check_file dist/robots.txt
+          check_file dist/sitemap.xml
+
+          art_size=$(wc -c < dist/images/history/smartwatch-current.svg)
+          echo "Artwork bytes: $art_size"
+          [ "$art_size" -gt 100000 ] || { echo "FAIL artwork too small"; exit 1; }
+
+          check_text '自分のために知らせる' dist/history/index.html
+          check_text 'PARKING WATCH' dist/history/index.html
+          check_text 'PIERCE DUOFON' dist/history/index.html
+          check_text 'smartwatch-current.svg' dist/history/smartwatch/index.html
+          check_text 'もっと静かな時代へ戻る' dist/history/smartwatch/index.html
+          check_text 'pierce-duofon' dist/sitemap.xml
       - name: Configure Pages
         uses: actions/configure-pages@v5
       - name: Upload site
@@ -71,10 +88,10 @@ jobs:
             history_html=$(curl -fsSL "$history" || true)
             smart_html=$(curl -fsSL "$smart" || true)
             art_size=$(curl -fsSL "$artwork" 2>/dev/null | wc -c || true)
-            if grep -q "自分のために知らせる" <<<"$history_html" \
-              && grep -q "PARKING WATCH" <<<"$history_html" \
-              && grep -q "smartwatch-current.svg" <<<"$smart_html" \
-              && grep -q "もっと静かな時代へ戻る" <<<"$smart_html" \
+            if grep -Fq "自分のために知らせる" <<<"$history_html" \
+              && grep -Fq "PARKING WATCH" <<<"$history_html" \
+              && grep -Fq "smartwatch-current.svg" <<<"$smart_html" \
+              && grep -Fq "もっと静かな時代へ戻る" <<<"$smart_html" \
               && [ "${art_size:-0}" -gt 100000 ]; then
               echo "Verified live site and smartwatch artwork: $root"
               exit 0
