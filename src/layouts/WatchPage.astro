@@ -1,5 +1,6 @@
 ---
 import SeoHead from '../components/SeoHead.astro';
+import SectionMast from '../components/SectionMast.astro';
 import WatchHero from '../components/WatchHero.astro';
 import OwnersNote from '../components/OwnersNote.astro';
 import WatchSpec from '../components/WatchSpec.astro';
@@ -66,6 +67,7 @@ const schema = {
     <SeoHead title={pageTitle} description={description} path={pagePath} image={watch.ownersNote.image} type="article" schema={schema} />
   </head>
   <body>
+    <SectionMast rightLabel="OWNER'S NOTE" />
     <main>
       <WatchHero brand={watch.brand} model={watch.model} catchLines={watch.catch} ownerNumber={watch.ownerNumber} />
       <div class="shell owners-grid">
