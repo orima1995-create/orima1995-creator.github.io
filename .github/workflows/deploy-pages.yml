@@ -35,41 +35,29 @@ jobs:
       - name: Verify build output
         run: |
           set -e
-          check_file() {
-            if [ -f "$1" ]; then
-              echo "OK file: $1"
-            else
-              echo "FAIL missing: $1"
-              exit 1
-            fi
-          }
-          check_text() {
-            if grep -Fq "$1" "$2"; then
-              echo "OK text: $1"
-            else
-              echo "FAIL text: $1 in $2"
-              exit 1
-            fi
-          }
-          check_file dist/index.html
-          check_file dist/history/index.html
-          check_file dist/history/smartwatch/index.html
-          check_file dist/pierce-duofon/index.html
-          check_file dist/images/history/smartwatch-current.webp
-          check_file dist/robots.txt
-          check_file dist/sitemap.xml
-
-          art_size=$(wc -c < dist/images/history/smartwatch-current.webp)
-          echo "Artwork bytes: $art_size"
-          [ "$art_size" -gt 30000 ] || { echo "FAIL artwork too small"; exit 1; }
-          file dist/images/history/smartwatch-current.webp | grep -q 'Web/P image'
-
-          check_text '自分のために知らせる' dist/history/index.html
-          check_text 'PARKING WATCH' dist/history/index.html
-          check_text 'PIERCE DUOFON' dist/history/index.html
-          check_text 'smartwatch-current.webp' dist/history/smartwatch/index.html
-          check_text 'もっと静かな時代へ戻る' dist/history/smartwatch/index.html
-          check_text 'pierce-duofon' dist/sitemap.xml
+          for f in \
+            dist/index.html \
+            dist/history/index.html \
+            dist/history/smartwatch/index.html \
+            dist/pierce-duofon/index.html \
+            dist/images/history/smartwatch-part-1.webp \
+            dist/images/history/smartwatch-part-2.webp \
+            dist/images/history/smartwatch-part-3.webp \
+            dist/images/history/smartwatch-part-4.webp \
+            dist/robots.txt \
+            dist/sitemap.xml; do
+            test -f "$f"
+          done
+          for f in dist/images/history/smartwatch-part-*.webp; do
+            file "$f" | grep -q 'Web/P image'
+            test "$(wc -c < "$f")" -gt 4000
+          done
+          grep -Fq '自分のために知らせる' dist/history/index.html
+          grep -Fq 'PARKING WATCH' dist/history/index.html
+          grep -Fq 'PIERCE DUOFON' dist/history/index.html
+          grep -Fq 'smartwatch-part-4.webp' dist/history/smartwatch/index.html
+          grep -Fq 'もっと静かな時代へ戻る' dist/history/smartwatch/index.html
+          grep -Fq 'pierce-duofon' dist/sitemap.xml
       - name: Configure Pages
         uses: actions/configure-pages@v5
       - name: Upload site
@@ -84,17 +72,20 @@ jobs:
           root="${{ steps.deployment.outputs.page_url }}"
           history="${root}history/"
           smart="${root}history/smartwatch/"
-          artwork="${root}images/history/smartwatch-current.webp"
           for attempt in {1..12}; do
             history_html=$(curl -fsSL "$history" || true)
             smart_html=$(curl -fsSL "$smart" || true)
-            art_size=$(curl -fsSL "$artwork" 2>/dev/null | wc -c || true)
+            parts_ok=1
+            for n in 1 2 3 4; do
+              size=$(curl -fsSL "${root}images/history/smartwatch-part-${n}.webp" 2>/dev/null | wc -c || true)
+              [ "${size:-0}" -gt 4000 ] || parts_ok=0
+            done
             if grep -Fq "自分のために知らせる" <<<"$history_html" \
               && grep -Fq "PARKING WATCH" <<<"$history_html" \
-              && grep -Fq "smartwatch-current.webp" <<<"$smart_html" \
+              && grep -Fq "smartwatch-part-4.webp" <<<"$smart_html" \
               && grep -Fq "もっと静かな時代へ戻る" <<<"$smart_html" \
-              && [ "${art_size:-0}" -gt 30000 ]; then
-              echo "Verified live site and smartwatch artwork: $root"
+              && [ "$parts_ok" -eq 1 ]; then
+              echo "Verified live site and four smartwatch image parts: $root"
               exit 0
             fi
             sleep 5
