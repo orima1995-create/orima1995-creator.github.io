@@ -2,6 +2,9 @@
 .history-hero-magazine h1{max-width:none;margin:0;font-size:clamp(50px,9vw,86px);font-weight:500;line-height:1.12;letter-spacing:.015em}
 .history-hero-magazine .history-kicker{max-width:25em;margin:34px 0 0;font-size:clamp(24px,4.2vw,38px);line-height:1.55}
 .history-hero-magazine .history-lead{max-width:42em;margin:38px 0 0;color:var(--soft);font-size:17px;line-height:2}
+.history-hero-magazine .history-lead p{margin:0 0 .75em}
+.history-hero-magazine .history-lead p:last-child{margin-bottom:0}
+.history-hero-magazine .history-lead strong{color:var(--ink);font-weight:600}
 .history-title-break{display:none}
 
 .history-index-magazine{padding-bottom:88px;border-top:1px solid var(--ink)}
@@ -19,6 +22,10 @@
 .history-story-title{max-width:13em;margin:0 0 46px;font-size:clamp(40px,6.2vw,66px);font-weight:500;line-height:1.28;letter-spacing:.015em}
 .history-story-copy{max-width:46em;margin-left:min(14vw,130px)}
 .history-story-copy p{margin:0 0 1.55em;color:var(--soft);font-size:17px;line-height:2;text-wrap:pretty}
+.history-story-copy p strong{color:var(--ink);font-weight:600}
+.history-story-copy-follow{margin-top:66px}
+.history-subhead{margin:0 0 22px;color:var(--ink);font-size:clamp(24px,3.3vw,34px);font-weight:500;line-height:1.5}
+.history-subhead:not(:first-child){margin-top:54px}
 .history-turn{margin:74px 0 0;font-size:clamp(27px,4.5vw,46px);line-height:1.5}
 .history-turn strong{font-weight:500}
 
@@ -35,6 +42,8 @@
 .history-golden-head{padding:108px 0 72px}
 .history-golden-title{max-width:13em;margin:0;font-size:clamp(45px,7vw,78px);font-weight:500;line-height:1.2;letter-spacing:.01em}
 .history-golden-lead{max-width:44em;margin:42px 0 0;color:var(--soft);font-size:18px;line-height:2}
+.history-editorial-rule{max-width:47em;margin:28px 0 0;padding-top:28px;border-top:1px solid rgba(36,31,26,.4);color:var(--soft);font-size:15px;line-height:1.9}
+.history-editorial-rule strong{color:var(--ink);font-weight:600}
 .history-feature-list{padding-bottom:105px}
 .history-feature{display:grid;grid-template-columns:minmax(180px,.72fr) minmax(0,1.65fr);gap:52px;padding:56px 0;border-top:1px solid var(--ink)}
 .history-feature:last-child{border-bottom:1px solid var(--ink)}
@@ -42,9 +51,10 @@
 .history-feature-id h3{margin:12px 0 0;font-family:Georgia,"Times New Roman",serif;font-size:clamp(27px,3.2vw,39px);font-weight:400;line-height:1.02;overflow-wrap:anywhere}
 .history-feature-id em{display:inline-block;margin-top:22px;padding:5px 8px;border:1px solid var(--red);color:var(--red);font-family:Georgia,"Times New Roman",serif;font-size:10px;font-style:normal;letter-spacing:.13em}
 .history-feature-copy{min-width:0}
-.history-feature-hook{margin:0 0 24px;color:var(--ink);font-size:clamp(23px,3vw,34px);font-weight:500;line-height:1.5;text-wrap:balance}
-.history-feature-copy>p:not(.history-feature-hook){max-width:44em;margin:0 0 1.35em;color:var(--soft);font-size:16px;line-height:2;text-wrap:pretty}
-.owner-bridge{display:grid;gap:5px;margin-top:34px;padding:20px 22px;border:1px solid var(--ink);background:rgba(243,238,228,.46)}
+.history-feature-hook{margin:0 0 20px;color:var(--ink);font-size:clamp(23px,3vw,34px);font-weight:500;line-height:1.5;text-wrap:balance}
+.history-feature-copy>p:not(.history-feature-hook){max-width:44em;margin:0 0 1.2em;color:var(--soft);font-size:16px;line-height:1.95;text-wrap:pretty}
+.history-feature-copy>p strong{color:var(--ink);font-weight:600}
+.owner-bridge{display:grid;gap:5px;margin-top:25px;padding:17px 20px;border:1px solid var(--ink);background:rgba(243,238,228,.46)}
 .owner-bridge span{color:var(--red);font-family:Georgia,"Times New Roman",serif;font-size:10px;letter-spacing:.16em}
 .owner-bridge strong{font-family:Georgia,"Times New Roman",serif;font-size:19px;font-weight:400;line-height:1.35}
 .owner-bridge small{color:var(--soft);font-size:13px;line-height:1.6}
@@ -54,8 +64,9 @@
 
 .history-after{border-top:1px solid var(--rule)}
 .history-after-inner{padding-block:106px}
-.history-after-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));margin-top:60px;border-top:1px solid var(--ink);border-left:1px solid var(--ink)}
-.history-after-grid>div{min-height:260px;padding:26px;border-right:1px solid var(--ink);border-bottom:1px solid var(--ink)}
+.history-parking{margin-top:58px;border-bottom:1px solid var(--ink)}
+.history-after-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));margin-top:48px;border-top:1px solid var(--ink);border-left:1px solid var(--ink)}
+.history-after-grid>div{min-height:220px;padding:26px;border-right:1px solid var(--ink);border-bottom:1px solid var(--ink)}
 .history-after-grid span{display:block;margin-bottom:28px;color:var(--red);font-family:Georgia,"Times New Roman",serif;font-size:11px;letter-spacing:.14em}
 .history-after-grid p{margin:0;color:var(--soft);font-size:15px;line-height:1.9}
 .history-open-note{margin:36px 0 0;color:var(--soft);font-size:14px}
@@ -98,6 +109,9 @@
   .history-story-title{margin-bottom:34px;font-size:clamp(35px,10vw,44px);line-height:1.3}
   .history-story-copy{margin-left:0}
   .history-story-copy p{font-size:16px;line-height:1.95}
+  .history-story-copy-follow{margin-top:48px}
+  .history-subhead{font-size:24px;line-height:1.55}
+  .history-subhead:not(:first-child){margin-top:42px}
   .history-turn{margin-top:48px;font-size:27px;line-height:1.55}
   .history-problem-title{margin-bottom:40px;font-size:clamp(38px,11vw,47px)}
   .history-problem-lines{grid-template-columns:1fr}
@@ -106,15 +120,17 @@
   .history-golden-head{padding:76px 0 52px}
   .history-golden-title{font-size:clamp(39px,11vw,49px);line-height:1.25}
   .history-golden-lead{margin-top:31px;font-size:16px;line-height:1.95}
+  .history-editorial-rule{font-size:14px;line-height:1.85}
   .history-feature-list{padding-bottom:72px}
-  .history-feature{gap:24px;padding:44px 0}
+  .history-feature{gap:24px;padding:42px 0}
   .history-feature-id h3{font-size:31px}
   .history-feature-id em{margin-top:17px}
-  .history-feature-hook{margin-bottom:20px;font-size:23px;line-height:1.55}
-  .history-feature-copy>p:not(.history-feature-hook){font-size:16px;line-height:1.95}
-  .owner-bridge{margin-top:28px;padding:18px}
+  .history-feature-hook{margin-bottom:17px;font-size:23px;line-height:1.55}
+  .history-feature-copy>p:not(.history-feature-hook){font-size:16px;line-height:1.9}
+  .owner-bridge{margin-top:22px;padding:16px 18px}
   .owner-bridge strong{font-size:18px}
-  .history-after-grid{margin-top:40px}
+  .history-parking{margin-top:42px}
+  .history-after-grid{margin-top:36px}
   .history-after-grid>div{padding:22px}
   .history-current-inner{padding-block:72px}
   .history-current h2{font-size:40px}
