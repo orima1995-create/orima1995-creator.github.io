@@ -45,8 +45,10 @@ jobs:
           file dist/images/history/smartwatch.webp | grep -qi 'Web/P\|WebP'
           grep -q 'rel="canonical"' dist/index.html
           grep -q 'application/ld+json' dist/history/index.html
+          grep -q '自分のために知らせる' dist/history/index.html
           grep -q 'アラーム腕時計が、一気に面白くなる。' dist/history/index.html
-          grep -q 'OWNED / ARCHIVED' dist/history/index.html
+          grep -q 'PARKING WATCH' dist/history/index.html
+          grep -q "OWNER'S NOTE" dist/history/index.html
           grep -q '/orima1995-creator.github.io/images/history/smartwatch.webp' dist/history/smartwatch/index.html
           grep -q '現状の到達点。' dist/history/smartwatch/index.html
           grep -q 'Die Wecker-Armbanduhr Duofon mit zwei Lautstärken' dist/pierce-duofon/index.html
@@ -75,8 +77,8 @@ jobs:
             sitemap_xml=$(curl -fsSL "$sitemap" || true)
             art_size=$(curl -fsSL "$artwork" 2>/dev/null | wc -c || true)
             if grep -q "xkecjZqr7BY" <<<"$pierce_html" \
-              && grep -q "アラーム腕時計が、一気に面白くなる" <<<"$history_html" \
-              && grep -q "OWNED / ARCHIVED" <<<"$history_html" \
+              && grep -q "自分のために知らせる" <<<"$history_html" \
+              && grep -q "PARKING WATCH" <<<"$history_html" \
               && grep -q "smartwatch.webp" <<<"$smart_html" \
               && grep -q "pierce-duofon" <<<"$sitemap_xml" \
               && [ "${art_size:-0}" -gt 30000 ]; then
