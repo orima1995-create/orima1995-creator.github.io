@@ -135,6 +135,32 @@
 - スマホ幅: 390pxで1960s–70s章を開き、本文が見出しの下に配置されることを確認
 - 表示文言 / 時計カード / URL / anchor / SEO / JavaScript: 変更なし
 
+### Step 1E — 最終監査で数字始まりの年代リンクを修正
+
+- 最終採用前のトップページ実操作で、`#1910s` / `#1940s` / `#1950s` / `#1960s` へ移動しても対象章が自動で開かない問題を検出
+- 原因: 数字で始まるIDを `document.querySelector('#1910s')` の形で検索し、無効なCSSセレクタとして例外になっていた
+- 対応: hash値を `document.getElementById()` へ渡す方式に変更し、数字始まりのIDも安全に取得する
+
+#### Step 1E 監査結果
+
+- トップページの MILESTONES / OWNER'S NOTES / RESEARCH を実際にクリックし、`#1910s` / `#1940s` / `#1950s` へ移動して対象章が開くことを確認
+- HISTORY目次から BEFORE / 1910s / 1940s / 1950s / 1960s–70s / QUARTZ・DIGITAL の全6章を開き、URL・開閉状態・縦積みレイアウトを再確認
+- 上記9導線のコンソールエラー: 0件
+
+### 本採用前最終監査
+
+- PR #5: mainより8コミット先行、0コミット遅延、GitHub上で競合なし
+- ビルド: `npm run build` 成功（4ページ）
+- 内部ページリンク: 16件照合、エラー0件
+- アンカーリンク: 11件照合、エラー0件
+- 削除済みINDEXへの参照: ソースと生成物の両方で0件
+- SEO: title / description / canonical / structured data はmain相当の変更前出力と完全一致
+- `SeoHead.astro` / `package.json` / `package-lock.json`: 変更なし
+- クライアントscript: 1ブロックのまま、1,874文字から1,614文字へ減少
+- 視覚監査: PC幅で全6章、390px幅で1960s–70s章を開き、重なりなし
+- GitHub CI status: リポジトリ側のstatus checkは未設定（0件）
+- 結論: 本採用を妨げる問題なし
+
 ## 方針
 
 速度改善のためにフレームワークやライブラリを増やさない。

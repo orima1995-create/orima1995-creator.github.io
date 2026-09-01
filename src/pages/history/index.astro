@@ -401,7 +401,7 @@ const schema = {
 
       const openHashChapter = () => {
         if (!location.hash) return;
-        const target = document.querySelector(location.hash);
+        const target = document.getElementById(location.hash.slice(1));
         if (!(target instanceof Element)) return;
         const chapter = target instanceof HTMLDetailsElement && target.classList.contains('history-chapter')
           ? target
