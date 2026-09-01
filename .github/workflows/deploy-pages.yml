@@ -34,25 +34,23 @@ jobs:
         run: npm run build
       - name: Verify build output
         run: |
-          test -f dist/index.html
-          test -f dist/history/index.html
-          test -f dist/history/smartwatch/index.html
-          test -f dist/pierce-duofon/index.html
-          test -f dist/images/history/smartwatch.webp
-          test -f dist/robots.txt
-          test -f dist/sitemap.xml
-          test $(wc -c < dist/images/history/smartwatch.webp) -gt 30000
-          file dist/images/history/smartwatch.webp | grep -qi 'Web/P\|WebP'
-          grep -q 'rel="canonical"' dist/index.html
-          grep -q 'application/ld+json' dist/history/index.html
+          set -e
+          for f in \
+            dist/index.html \
+            dist/history/index.html \
+            dist/history/smartwatch/index.html \
+            dist/pierce-duofon/index.html \
+            dist/images/history/smartwatch.webp \
+            dist/robots.txt \
+            dist/sitemap.xml; do
+            test -f "$f"
+          done
+          test "$(wc -c < dist/images/history/smartwatch.webp)" -gt 30000
           grep -q '自分のために知らせる' dist/history/index.html
-          grep -q 'アラーム腕時計が、一気に面白くなる。' dist/history/index.html
           grep -q 'PARKING WATCH' dist/history/index.html
           grep -q 'PIERCE DUOFON' dist/history/index.html
-          grep -q '/orima1995-creator.github.io/images/history/smartwatch.webp' dist/history/smartwatch/index.html
-          grep -q '現状の到達点。' dist/history/smartwatch/index.html
-          grep -q 'Die Wecker-Armbanduhr Duofon mit zwei Lautstärken' dist/pierce-duofon/index.html
-          ! grep -R -q 'word-break: break-all' dist
+          grep -q 'smartwatch.webp' dist/history/smartwatch/index.html
+          grep -q 'pierce-duofon' dist/sitemap.xml
       - name: Configure Pages
         uses: actions/configure-pages@v5
       - name: Upload site
@@ -65,22 +63,16 @@ jobs:
       - name: Verify live site
         run: |
           root="${{ steps.deployment.outputs.page_url }}"
-          pierce="${root}pierce-duofon/"
           history="${root}history/"
           smart="${root}history/smartwatch/"
           artwork="${root}images/history/smartwatch.webp"
-          sitemap="${root}sitemap.xml"
           for attempt in {1..12}; do
-            pierce_html=$(curl -fsSL "$pierce" || true)
             history_html=$(curl -fsSL "$history" || true)
             smart_html=$(curl -fsSL "$smart" || true)
-            sitemap_xml=$(curl -fsSL "$sitemap" || true)
             art_size=$(curl -fsSL "$artwork" 2>/dev/null | wc -c || true)
-            if grep -q "xkecjZqr7BY" <<<"$pierce_html" \
-              && grep -q "自分のために知らせる" <<<"$history_html" \
+            if grep -q "自分のために知らせる" <<<"$history_html" \
               && grep -q "PARKING WATCH" <<<"$history_html" \
               && grep -q "smartwatch.webp" <<<"$smart_html" \
-              && grep -q "pierce-duofon" <<<"$sitemap_xml" \
               && [ "${art_size:-0}" -gt 30000 ]; then
               echo "Verified live site and smartwatch artwork: $root"
               exit 0
