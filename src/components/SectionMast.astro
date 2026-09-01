@@ -1,0 +1,36 @@
+---
+const { rightLabel = 'ALARM WRISTWATCHES' } = Astro.props;
+const base = import.meta.env.BASE_URL;
+---
+<header class="shell mast section-mast">
+  <div class="section-mast-left">
+    <details class="section-menu">
+      <summary aria-label="セクションメニュー">≡</summary>
+      <nav class="section-menu-panel" aria-label="VINTAGE ALARM セクションメニュー">
+        <a href={`${base}history/`}>歴史</a>
+        <a href={`${base}history/#index-milestones`}>マイルストーン</a>
+        <a href={`${base}history/#index-owners`}>オーナーズノート</a>
+        <a href={`${base}history/#index-interests`}>調査個体</a>
+      </nav>
+    </details>
+    <a class="mast-link" href={base}>VINTAGE ALARM</a>
+  </div>
+  <span>{rightLabel}</span>
+</header>
+
+<style>
+  .section-mast-left{display:flex;align-items:center;gap:12px}
+  .section-menu{position:relative;border:0!important}
+  .section-menu:last-child{border-bottom:0!important}
+  .section-menu>summary{display:grid;place-items:center;width:30px;height:30px;min-height:0;padding:0;border:1px solid var(--rule);font-family:sans-serif;font-size:18px;line-height:1;letter-spacing:0;cursor:pointer}
+  .section-menu>summary::after{content:none!important}
+  .section-menu-panel{position:absolute;z-index:50;top:38px;left:0;width:min(78vw,280px);padding:9px;border:1px solid var(--ink);background:var(--paper);box-shadow:0 16px 38px rgba(36,31,26,.14)}
+  .section-menu-panel a{display:flex;justify-content:space-between;gap:18px;padding:13px 11px;border-bottom:1px solid var(--rule);color:var(--ink);font-size:13px;letter-spacing:.04em;text-decoration:none;white-space:normal}
+  .section-menu-panel a:last-child{border-bottom:0}
+  .section-menu-panel a::after{content:'→';font-family:Georgia,"Times New Roman",serif}
+  @media(max-width:480px){
+    .section-mast-left{gap:9px}
+    .section-menu>summary{width:28px;height:28px;font-size:17px}
+    .section-menu-panel{top:35px;width:min(84vw,280px)}
+  }
+</style>
