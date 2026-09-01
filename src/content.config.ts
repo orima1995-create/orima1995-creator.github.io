@@ -12,6 +12,8 @@ const watches = defineCollection({
     catch: z.array(z.string()).length(2),
     ownersNote: z.object({
       image: z.string(),
+      imageParts: z.array(z.string()).optional(),
+      zoomHref: z.string().optional(),
       lead: z.array(z.string()),
       guideTitle: z.string(),
       guide: z.array(z.string()),
@@ -32,7 +34,7 @@ const watches = defineCollection({
     video: z.object({
       youtubeId: z.string(),
       xUrl: z.string().url()
-    }),
+    }).optional(),
     deepDive: z.array(z.object({
       number: z.string(),
       title: z.string(),

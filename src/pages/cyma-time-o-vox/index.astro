@@ -1,0 +1,9 @@
+---
+import { getCollection } from 'astro:content';
+import WatchPage from '../../layouts/WatchPage.astro';
+
+const watches = await getCollection('watches');
+const entry = watches.find((item) => item.data.slug === 'cyma-time-o-vox');
+if (!entry) throw new Error('Cyma Time-O-Vox content was not found');
+---
+<WatchPage watch={entry.data} />

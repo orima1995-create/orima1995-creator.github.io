@@ -11,19 +11,24 @@ import '../styles/site.css';
 
 const { watch } = Astro.props;
 const base = import.meta.env.BASE_URL;
+const siteRoot = 'https://orima1995-create.github.io/orima1995-creator.github.io/';
 const pageTitle = watch.slug === 'pierce-duofon'
   ? 'Pierce Duofon｜Cal.135・2段階アラーム・実機音｜VINTAGE ALARM'
-  : `${watch.brand} ${watch.model}｜VINTAGE ALARM`;
-const description = `${watch.brand} ${watch.model}。${watch.spec.caliber}、${watch.spec.barrels}、${watch.spec.acoustic}。OWNER'S NOTE、SPEC、実機鳴動、資料に基づくDEEP DIVEを掲載。`;
+  : watch.slug === 'cyma-time-o-vox'
+    ? 'Cyma Time-O-Vox 18K Chronomètre｜Cal.R.464・1香箱｜VINTAGE ALARM'
+    : `${watch.brand} ${watch.model}｜VINTAGE ALARM`;
+const description = watch.slug === 'cyma-time-o-vox'
+  ? 'Cyma Time-O-Vox 18K Chronomètre。Cal.R.464、1香箱、2プッシャー、透かしラグ。OWNER\'S NOTE、SPEC、R.464機構とケース仕様のDEEP DIVEを掲載。'
+  : `${watch.brand} ${watch.model}。${watch.spec.caliber}、${watch.spec.barrels}、${watch.spec.acoustic}。OWNER'S NOTE、SPEC、${watch.video ? '実機鳴動、' : ''}資料に基づくDEEP DIVEを掲載。`;
 const pagePath = `${watch.slug}/`;
-const pageUrl = `https://orima1995-create.github.io/orima1995-creator.github.io/${watch.slug}/`;
-const imageUrl = `https://orima1995-create.github.io/orima1995-creator.github.io${watch.ownersNote.image}`;
+const pageUrl = new URL(pagePath, siteRoot).href;
+const imageUrl = new URL(watch.ownersNote.image.replace(/^\//, ''), siteRoot).href;
 const schema = {
   '@context': 'https://schema.org',
   '@graph': [
     {
       '@type': 'CreativeWork',
-      name: `${watch.brand} ${watch.model}`,
+      name: watch.slug === 'cyma-time-o-vox' ? 'CYMA TIME-O-VOX 18K CHRONOMÈTRE' : `${watch.brand} ${watch.model}`,
       description,
       inLanguage: 'ja',
       url: pageUrl,
@@ -35,7 +40,7 @@ const schema = {
       isPartOf: {
         '@type': 'WebSite',
         name: 'VINTAGE ALARM',
-        url: 'https://orima1995-create.github.io/orima1995-creator.github.io/'
+        url: siteRoot
       }
     },
     {
@@ -45,7 +50,7 @@ const schema = {
           '@type': 'ListItem',
           position: 1,
           name: 'VINTAGE ALARM',
-          item: 'https://orima1995-create.github.io/orima1995-creator.github.io/'
+          item: siteRoot
         },
         {
           '@type': 'ListItem',
@@ -71,10 +76,10 @@ const schema = {
     <main>
       <WatchHero brand={watch.brand} model={watch.model} catchLines={watch.catch} ownerNumber={watch.ownerNumber} />
       <div class="shell owners-grid">
-        <OwnersNote data={watch.ownersNote} />
+        <OwnersNote data={watch.ownersNote} alt={`${watch.brand} ${watch.model} OWNER'S NOTE`} />
         <WatchSpec spec={watch.spec} />
       </div>
-      <AlarmVideo video={watch.video} title={`${watch.brand} ${watch.model}`} />
+      {watch.video && <AlarmVideo video={watch.video} title={`${watch.brand} ${watch.model}`} />}
       <DeepDive items={watch.deepDive} />
       <Sources sources={watch.sources} />
       <nav class="shell watch-back" aria-label="歴史ページへ戻る">
