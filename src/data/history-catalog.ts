@@ -11,21 +11,16 @@ export interface HistoryCatalogEntry {
   hook?: string;
   cardSummary?: string;
   cardStatus?: string;
-  indexSummary: string;
-  indexStatus?: string;
   href: string;
   hrefKind: HistoryHrefKind;
   featured: boolean;
 }
 
 /**
- * HISTORY のカード／INDEXで共有する時計・テーマのマスターデータ。
+ * HISTORY のカードで共有する時計・テーマのマスターデータ。
  *
- * Step 1A では既存表示へ接続しない。
- * まず「同じ事実を複数箇所へ手入力しない」ための単一ソースを用意し、
- * Step 1B で現行HTMLと出力一致を確認しながら段階的に置き換える。
- *
- * card* と index* は、現在の画面で意図的に文量が異なるため分離する。
+ * WATCH / RESEARCH INDEX は視覚レビュ後に削除したため、
+ * カード移行が始まるまで既存表示からは参照しない。
  */
 export const historyCatalog: HistoryCatalogEntry[] = [
   {
@@ -38,7 +33,6 @@ export const historyCatalog: HistoryCatalogEntry[] = [
     hook: 'アラームを、腕時計のサイズへ。',
     cardSummary: '一つの香箱から時刻とアラームを動かす、最初期の量産アラーム腕時計。',
     cardStatus: 'MILESTONE',
-    indexSummary: '最初期の量産アラーム腕時計',
     href: '#1910s',
     hrefKind: 'hash',
     featured: true
@@ -53,7 +47,6 @@ export const historyCatalog: HistoryCatalogEntry[] = [
     hook: '腕につけたまま、聞こえる音を。',
     cardSummary: '二重底の音響構造で、装着時のアラーム音を実用的なレベルへ押し上げた。',
     cardStatus: 'MILESTONE',
-    indexSummary: '装着時の音響を大きく前進',
     href: '#1940s',
     hrefKind: 'hash',
     featured: true
@@ -68,7 +61,6 @@ export const historyCatalog: HistoryCatalogEntry[] = [
     hook: '高級機だけが、アラームではない。',
     cardSummary: '2香箱と巻上げ表示窓を持つBFG 90。実用品としてのアラーム腕時計を見る一例。',
     cardStatus: "OWNER'S NOTE / NEXT",
-    indexSummary: "OWNER'S NOTE / NEXT",
     href: '#1940s',
     hrefKind: 'hash',
     featured: true
@@ -83,7 +75,6 @@ export const historyCatalog: HistoryCatalogEntry[] = [
     hook: 'アラーム専用の動力を持つ。',
     cardSummary: '時刻用とアラーム用に独立した2つの香箱を持つ、代表的な二香箱構成。',
     cardStatus: 'MILESTONE',
-    indexSummary: '独立したアラーム動力',
     href: '#1950s',
     hrefKind: 'hash',
     featured: true
@@ -98,7 +89,6 @@ export const historyCatalog: HistoryCatalogEntry[] = [
     hook: 'アラームを、もっと多くの腕へ。',
     cardSummary: '多数のブランドへ広がり、アラーム腕時計の裾野を大きく広げた量産ムーブメント。',
     cardStatus: 'MILESTONE',
-    indexSummary: '量産ムーブメントとして広がる',
     href: '#1950s',
     hrefKind: 'hash',
     featured: true
@@ -113,7 +103,6 @@ export const historyCatalog: HistoryCatalogEntry[] = [
     hook: '鳴らすか。控えめに知らせるか。',
     cardSummary: '2香箱とWECKER / SIGNALの切替を持つ実機。',
     cardStatus: "OWNER'S NOTE →",
-    indexSummary: "OWNER'S NOTE →",
     href: 'pierce-duofon/',
     hrefKind: 'site',
     featured: true
@@ -128,7 +117,6 @@ export const historyCatalog: HistoryCatalogEntry[] = [
     hook: '一つの香箱で、時刻とアラームを。',
     cardSummary: 'Cal.R.464を搭載する18K Chronomètre表記の実機を記録中。',
     cardStatus: "OWNER'S NOTE / NEXT",
-    indexSummary: "OWNER'S NOTE / NEXT",
     href: '#1950s',
     hrefKind: 'hash',
     featured: true
@@ -143,7 +131,6 @@ export const historyCatalog: HistoryCatalogEntry[] = [
     hook: 'アラーム腕時計が、日本へ。',
     cardSummary: '1950年代末に現れる国産機械式アラームの実機。',
     cardStatus: "OWNER'S NOTE / NEXT",
-    indexSummary: "OWNER'S NOTE / NEXT",
     href: '#1950s',
     hrefKind: 'hash',
     featured: true
@@ -158,7 +145,6 @@ export const historyCatalog: HistoryCatalogEntry[] = [
     hook: '駐車時間まで、腕が知らせる。',
     cardSummary: 'アラームを「起こす」以外の生活用途へ使う、気になる系譜。',
     cardStatus: 'RESEARCHING →',
-    indexSummary: 'RESEARCHING',
     href: '#1950s',
     hrefKind: 'hash',
     featured: true
@@ -170,7 +156,6 @@ export const historyCatalog: HistoryCatalogEntry[] = [
     sort: 90,
     meta: '1960s–70s',
     name: 'AUTOMATIC / DIVER / TRAVEL',
-    indexSummary: '用途と複合機能へ',
     href: '#1960s',
     hrefKind: 'hash',
     featured: false

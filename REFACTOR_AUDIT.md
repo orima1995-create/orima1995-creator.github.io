@@ -16,8 +16,8 @@
 ## 改善順序
 
 1. HISTORY内の重複データを一元化する
-   - MILESTONES / OWNER'S NOTES / RESEARCH / INDEX の同一情報を1か所で管理
-   - HISTORYのカードとINDEXを同じデータから生成
+   - MILESTONES / OWNER'S NOTES / RESEARCH の同一情報を1か所で管理
+   - HISTORYのカードを同じデータから生成
    - 既存の文言・順序・リンクを変えない
 
 2. HISTORY本文とUI構造を分離する
@@ -99,6 +99,27 @@
 - ライブラリ追加: なし
 - main / 本番: 変更なし
 - 次: MILESTONEカード側へ移行する前に、本Stepの差分を独立して保持する
+
+### Step 1C — 視覚レビュー後にWATCH / RESEARCH INDEXを削除
+
+- 実画面レビューで、INDEXの見出しがディレクトリ本文に重なる表示不具合を確認
+- INDEX自体が不要という編集判断に基づき、`#watch-index` セクションを全削除
+- 存在しなくなった `#index-*` を指すヘッダーメニュー、`VIEW ALL`、PARKING WATCHのリンクを削除
+- トップページの MILESTONES / OWNER'S NOTES / RESEARCH 導線は、存在する `#1910s` / `#1940s` / `#1950s` へ付け替え
+- PARKING WATCHカード本体とRESEARCH文言は残し、非リンク化に合わせてステータスの矢印だけを削除
+- INDEX専用CSS、ヘッダーメニュー専用CSS / JavaScript、INDEXデータのページ側importも削除
+- `src/data/history-catalog.ts` からINDEX専用の `indexSummary` / `indexStatus` を削除し、将来のカード移行用データだけを保持
+
+#### Step 1C 監査結果
+
+- ビルド: `npm run build` 成功（4ページ）
+- 実画面: `#watch-index` 要素0件、サイト全体で `#index-*` へのリンク0件を確認
+- HISTORYの年代本文・時計カードは維持し、年代セクションの後は `CURRENT / SMARTWATCH` へ直接つながる
+- SEO title / description / canonical / structured data: 変更なし
+- 公開ページURL: 変更なし
+- JavaScript量: ヘッダーメニュー用処理の削除により減少
+- main / 本番: 変更なし
+- 次: INDEXは復活させず、必要な時計情報は年代内カードをマスターデータ化する
 
 ## 方針
 
