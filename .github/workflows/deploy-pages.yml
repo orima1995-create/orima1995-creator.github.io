@@ -40,15 +40,21 @@ jobs:
             dist/history/index.html \
             dist/history/smartwatch/index.html \
             dist/pierce-duofon/index.html \
+            dist/cyma-time-o-vox/index.html \
+            dist/cyma-time-o-vox/owners-note/index.html \
             dist/images/history/smartwatch-part-1.webp \
             dist/images/history/smartwatch-part-2.webp \
             dist/images/history/smartwatch-part-3.webp \
             dist/images/history/smartwatch-part-4.webp \
+            dist/images/cyma-time-o-vox/owners-note-1.webp \
+            dist/images/cyma-time-o-vox/owners-note-2.webp \
+            dist/images/cyma-time-o-vox/owners-note-3.webp \
+            dist/images/cyma-time-o-vox/owners-note-4.webp \
             dist/robots.txt \
             dist/sitemap.xml; do
             test -f "$f"
           done
-          for f in dist/images/history/smartwatch-part-*.webp; do
+          for f in dist/images/history/smartwatch-part-*.webp dist/images/cyma-time-o-vox/owners-note-*.webp; do
             file "$f" | grep -q 'Web/P image'
             test "$(wc -c < "$f")" -gt 4000
           done
@@ -57,7 +63,11 @@ jobs:
           grep -Fq 'PIERCE DUOFON' dist/history/index.html
           grep -Fq 'smartwatch-part-4.webp' dist/history/smartwatch/index.html
           grep -Fq 'もっと静かな時代へ戻る' dist/history/smartwatch/index.html
-          grep -Fq 'pierce-duofon' dist/sitemap.xml
+          grep -Fq '一つの香箱なのに、リューズは回らない。' dist/cyma-time-o-vox/index.html
+          grep -Fq '6〜10秒' dist/cyma-time-o-vox/index.html
+          grep -Fq '約9時間分のパワーリザーブ' dist/cyma-time-o-vox/index.html
+          grep -Fq 'owners-note-4.webp' dist/cyma-time-o-vox/index.html
+          grep -Fq 'cyma-time-o-vox' dist/sitemap.xml
       - name: Configure Pages
         uses: actions/configure-pages@v5
       - name: Upload site
@@ -72,20 +82,27 @@ jobs:
           root="${{ steps.deployment.outputs.page_url }}"
           history="${root}history/"
           smart="${root}history/smartwatch/"
+          cyma="${root}cyma-time-o-vox/"
           for attempt in {1..12}; do
             history_html=$(curl -fsSL "$history" || true)
             smart_html=$(curl -fsSL "$smart" || true)
+            cyma_html=$(curl -fsSL "$cyma" || true)
             parts_ok=1
             for n in 1 2 3 4; do
               size=$(curl -fsSL "${root}images/history/smartwatch-part-${n}.webp" 2>/dev/null | wc -c || true)
               [ "${size:-0}" -gt 4000 ] || parts_ok=0
+              cyma_size=$(curl -fsSL "${root}images/cyma-time-o-vox/owners-note-${n}.webp" 2>/dev/null | wc -c || true)
+              [ "${cyma_size:-0}" -gt 4000 ] || parts_ok=0
             done
             if grep -Fq "自分のために知らせる" <<<"$history_html" \
               && grep -Fq "PARKING WATCH" <<<"$history_html" \
               && grep -Fq "smartwatch-part-4.webp" <<<"$smart_html" \
               && grep -Fq "もっと静かな時代へ戻る" <<<"$smart_html" \
+              && grep -Fq "一つの香箱なのに、リューズは回らない。" <<<"$cyma_html" \
+              && grep -Fq "約9時間分のパワーリザーブ" <<<"$cyma_html" \
+              && grep -Fq "owners-note-4.webp" <<<"$cyma_html" \
               && [ "$parts_ok" -eq 1 ]; then
-              echo "Verified live site and four smartwatch image parts: $root"
+              echo "Verified live site, smartwatch artwork, and Cyma owner note: $root"
               exit 0
             fi
             sleep 5
