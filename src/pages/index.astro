@@ -32,19 +32,25 @@ const schema = {
       <nav class="shell home-nav" aria-label="VINTAGE ALARM メインコンテンツ">
         <a href={`${base}history/`}>
           <span class="home-no">01</span>
-          <div><strong>HISTORY</strong><small>アラーム腕時計は、どうやって腕に載った？</small></div>
+          <div><strong>HISTORY</strong><small>鐘から現在まで。アラーム腕時計の歴史を読む</small></div>
           <b>→</b>
         </a>
 
-        <div class="home-nav-disabled" aria-disabled="true">
+        <a href={`${base}history/#index-milestones`}>
           <span class="home-no">02</span>
-          <div><strong>THEMES</strong><small>音・防水・香箱・通知</small></div>
-          <em>準備中</em>
-        </div>
+          <div><strong>MILESTONES</strong><small>歴史の節目になったアラーム腕時計</small></div>
+          <b>→</b>
+        </a>
 
-        <a href={`${base}pierce-duofon/`}>
+        <a href={`${base}history/#index-owners`}>
           <span class="home-no">03</span>
-          <div><strong>OWNER'S NOTES</strong><small>実機・操作・音から読む</small></div>
+          <div><strong>OWNER'S NOTES</strong><small>所有個体を、実機・操作・音から読む</small></div>
+          <b>→</b>
+        </a>
+
+        <a href={`${base}history/#index-interests`}>
+          <span class="home-no">04</span>
+          <div><strong>RESEARCH</strong><small>気になっているもの、調査中の個体</small></div>
           <b>→</b>
         </a>
       </nav>
