@@ -15,11 +15,13 @@
 .history-index-magazine strong{font-size:16px;font-weight:500;line-height:1.55;text-wrap:balance;overflow-wrap:break-word;word-break:normal;line-break:strict}
 
 .history-chapters{border-bottom:1px solid var(--ink)}
-.history-chapter{scroll-margin-top:14px;border-top:1px solid var(--ink);background:var(--paper)}
+.history-chapter{display:block;scroll-margin-top:14px;padding-block:0;border-top:1px solid var(--ink);background:var(--paper)}
 .history-chapter:first-child{border-top:1px solid var(--ink)}
 .history-chapter summary{list-style:none}
 .history-chapter summary::-webkit-details-marker{display:none}
 .history-chapter-summary{display:grid;grid-template-columns:54px minmax(250px,.8fr) minmax(260px,1fr) 34px;gap:24px;align-items:center;padding-block:34px;cursor:pointer;user-select:none}
+.history-chapter-summary::after{content:none}
+.history-chapter[open]>.history-chapter-summary::after{content:none}
 .history-chapter-summary:hover .history-chapter-heading strong{text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:5px}
 .history-chapter-no{color:var(--soft);font-family:Georgia,"Times New Roman",serif;font-size:14px;letter-spacing:.12em}
 .history-chapter-heading{display:grid;gap:8px;min-width:0}

@@ -121,6 +121,20 @@
 - main / 本番: 変更なし
 - 次: INDEXは復活させず、必要な時計情報は年代内カードをマスターデータ化する
 
+### Step 1D — PCで章を開いたときの重なりを修正
+
+- 原因: `site.css` の旧 `.history-chapter` 用2カラム指定が、同じクラスを使う新しい `<details>` 章にPC幅で適用されていた
+- 章を開くと `summary` と本文が横並びになり、章見出し・章番号・トグルが本文へ重なっていた
+- `history-magazine.css` 側で `.history-chapter` を `display: block` / `padding-block: 0` に明示し、見出しの下に本文が縦に積まれるようにした
+- 共通 `summary::after` が追加する重複の開閉記号も無効化し、HISTORY専用の円形トグルだけを残した
+
+#### Step 1D 監査結果
+
+- PC幅: BEFORE / 1910s / 1940s / 1950s / 1960s–70s / QUARTZ・DIGITAL の全6章を実際に開いて確認
+- 全6章で `display: block`、本文上端が見出し下端以下、重複擬似要素なし
+- スマホ幅: 390pxで1960s–70s章を開き、本文が見出しの下に配置されることを確認
+- 表示文言 / 時計カード / URL / anchor / SEO / JavaScript: 変更なし
+
 ## 方針
 
 速度改善のためにフレームワークやライブラリを増やさない。
