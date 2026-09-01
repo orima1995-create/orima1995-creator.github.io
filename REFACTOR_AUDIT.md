@@ -53,6 +53,28 @@
 - JavaScript量が増えていないか
 - 同じ事実を複数箇所へ手入力していないか
 
+## 監査ログ
+
+### Step 1A — HISTORYカタログの単一ソースを追加
+
+- 追加: `src/data/history-catalog.ts`
+- 対象: MILESTONES / OWNER'S NOTES / RESEARCH / INDEX で重複する時計・テーマ情報
+- 現行HISTORYのカード文言とINDEX文言を別フィールドで保持し、既存表示を変更せず移行できる形にした
+- `PIERCE DUOFON` の2香箱表記を現行表示どおり保持
+- この段階では `history/index.astro` から未参照。公開HTML・URL・SEO・CSS・JSには変更なし
+
+#### Step 1A 監査結果
+
+- 公開HTML変更: なし
+- URL / anchor変更: なし
+- SEO変更: なし
+- CSS変更: なし
+- JavaScript変更: なし
+- 表示文言変更: なし
+- ライブラリ追加: なし
+- リスク: 未使用データファイル追加のみのため極小
+- 次: Step 1Bで、まずINDEXだけをこのデータから生成し、出力一致を監査する。その後カード側へ広げる
+
 ## 方針
 
 速度改善のためにフレームワークやライブラリを増やさない。
