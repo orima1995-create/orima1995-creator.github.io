@@ -3,8 +3,8 @@ import SeoHead from '../../../components/SeoHead.astro';
 import '../../../styles/site.css';
 import '../../../styles/history-magazine.css';
 const base = import.meta.env.BASE_URL;
-const artwork = `${base}images/history/smartwatch-current.svg`;
-const artworkUrl = 'https://orima1995-create.github.io/orima1995-creator.github.io/images/history/smartwatch-current.svg';
+const artwork = `${base}images/history/smartwatch-current.webp`;
+const artworkUrl = 'https://orima1995-create.github.io/orima1995-creator.github.io/images/history/smartwatch-current.webp';
 const title = '現状の到達点：SMARTWATCH｜アラーム腕時計の歴史｜VINTAGE ALARM';
 const description = 'アラーム腕時計の歴史の現在地。機械式アラームから電子化を経て、腕時計が通知・健康・通信まで扱うSMARTWATCHへ到達した先を見る。';
 const schema = {
@@ -72,7 +72,7 @@ const schema = {
     <main>
       <section class="smartwatch-finale" aria-label="スマートウォッチと通知の現在">
         <div class="smartwatch-finale-inner">
-          <img class="smartwatch-finale-art" src={artwork} width="1024" height="1536" alt="通知が過密に並ぶスマートウォッチと、通知に疲れましたか、もっと静かな時代へ戻るというVINTAGE ALARMのエピローグ" loading="eager" fetchpriority="high" />
+          <img class="smartwatch-finale-art" src={artwork} width="480" height="720" alt="通知が過密に並ぶスマートウォッチと、通知に疲れましたか、もっと静かな時代へ戻るというVINTAGE ALARMのエピローグ" loading="eager" fetchpriority="high" />
           <a class="smartwatch-finale-back" href={`${base}history/`} aria-label="もっと静かな時代へ戻る" title="もっと静かな時代へ戻る"></a>
         </div>
       </section>
