@@ -39,6 +39,7 @@ jobs:
             dist/index.html \
             dist/history/index.html \
             dist/history/smartwatch/index.html \
+            dist/owners-notes/index.html \
             dist/pierce-duofon/index.html \
             dist/cyma-time-o-vox/index.html \
             dist/cyma-time-o-vox/owners-note/index.html \
@@ -67,12 +68,16 @@ jobs:
           check_text '自分のために知らせる' dist/history/index.html
           check_text 'PARKING WATCH' dist/history/index.html
           check_text 'PIERCE DUOFON' dist/history/index.html
+          check_text 'owners-notes/' dist/index.html
+          check_text 'CYMA TIME-O-VOX 18K CHRONOMÈTRE' dist/owners-notes/index.html
+          check_text 'cyma-time-o-vox/owners-note/' dist/owners-notes/index.html
           check_text 'smartwatch-part-4.webp' dist/history/smartwatch/index.html
           check_text 'もっと静かな時代へ戻る' dist/history/smartwatch/index.html
           check_text '一つの香箱なのに、リューズは回らない。' dist/cyma-time-o-vox/index.html
           check_text '6〜10秒' dist/cyma-time-o-vox/index.html
           check_text '約9時間分のパワーリザーブ' dist/cyma-time-o-vox/index.html
           check_text 'owners-note-4.webp' dist/cyma-time-o-vox/index.html
+          check_text 'owners-notes' dist/sitemap.xml
           check_text 'cyma-time-o-vox' dist/sitemap.xml
       - name: Configure Pages
         uses: actions/configure-pages@v5
@@ -86,11 +91,15 @@ jobs:
       - name: Verify live site
         run: |
           root="${{ steps.deployment.outputs.page_url }}"
+          home="${root}"
           history="${root}history/"
+          owners="${root}owners-notes/"
           smart="${root}history/smartwatch/"
           cyma="${root}cyma-time-o-vox/"
           for attempt in {1..12}; do
+            home_html=$(curl -fsSL "$home" || true)
             history_html=$(curl -fsSL "$history" || true)
+            owners_html=$(curl -fsSL "$owners" || true)
             smart_html=$(curl -fsSL "$smart" || true)
             cyma_html=$(curl -fsSL "$cyma" || true)
             parts_ok=1
@@ -100,15 +109,18 @@ jobs:
               cyma_size=$(curl -fsSL "${root}images/cyma-time-o-vox/owners-note-${n}.webp" 2>/dev/null | wc -c || true)
               [ "${cyma_size:-0}" -gt 4000 ] || parts_ok=0
             done
-            if grep -Fq "自分のために知らせる" <<<"$history_html" \
+            if grep -Fq "owners-notes/" <<<"$home_html" \
+              && grep -Fq "自分のために知らせる" <<<"$history_html" \
               && grep -Fq "PARKING WATCH" <<<"$history_html" \
+              && grep -Fq "CYMA TIME-O-VOX 18K CHRONOMÈTRE" <<<"$owners_html" \
+              && grep -Fq "cyma-time-o-vox/owners-note/" <<<"$owners_html" \
               && grep -Fq "smartwatch-part-4.webp" <<<"$smart_html" \
               && grep -Fq "もっと静かな時代へ戻る" <<<"$smart_html" \
               && grep -Fq "一つの香箱なのに、リューズは回らない。" <<<"$cyma_html" \
               && grep -Fq "約9時間分のパワーリザーブ" <<<"$cyma_html" \
               && grep -Fq "owners-note-4.webp" <<<"$cyma_html" \
               && [ "$parts_ok" -eq 1 ]; then
-              echo "Verified live site, smartwatch artwork, and Cyma owner note: $root"
+              echo "Verified live site, owners notes directory, smartwatch artwork, and Cyma owner note: $root"
               exit 0
             fi
             sleep 5
