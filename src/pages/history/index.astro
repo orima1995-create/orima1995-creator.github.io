@@ -5,10 +5,15 @@ import { historyCatalogByGroup } from '../../data/history-catalog';
 import { historyContent } from '../../data/history-content';
 import '../../styles/site.css';
 import '../../styles/history-magazine.css';
+
 const base = import.meta.env.BASE_URL;
-const milestoneCards = (era: '1910s' | '1940s' | '1950s') => historyCatalogByGroup.milestones.filter((entry) => entry.era === era && entry.featured);
-const ownerCards = (era: '1940s' | '1950s') => historyCatalogByGroup.owners.filter((entry) => entry.era === era && entry.featured);
-const researchCards = (era: '1950s') => historyCatalogByGroup.research.filter((entry) => entry.era === era && entry.featured);
+const milestoneCards = (era: '1910s' | '1940s' | '1950s' | '1960s' | 'electronic') =>
+  historyCatalogByGroup.milestones.filter((entry) => entry.era === era && entry.featured);
+const ownerCards = (era: '1940s' | '1950s') =>
+  historyCatalogByGroup.owners.filter((entry) => entry.era === era && entry.featured);
+const researchCards = (era: '1950s') =>
+  historyCatalogByGroup.research.filter((entry) => entry.era === era && entry.featured);
+
 const hero = historyContent.hero;
 const before = historyContent.before;
 const era1910s = historyContent.era1910s;
@@ -18,17 +23,19 @@ const era1960s = historyContent.era1960s;
 const electronic = historyContent.electronic;
 const current = historyContent.current;
 const sources = historyContent.sources;
+
 const historyIndex = [
   { href: '#before', no: before.chapterNo, label: `${before.label} — ${before.title}` },
   { href: '#1910s', no: era1910s.chapterNo, label: `${era1910s.label} — ${era1910s.title}` },
   { href: '#1940s', no: era1940s.chapterNo, label: `${era1940s.label} — ${era1940s.title}` },
-  { href: '#1950s', no: era1950s.chapterNo, label: `${era1950s.label} — ${era1950s.title}${era1950s.thesis}` },
+  { href: '#1950s', no: era1950s.chapterNo, label: `${era1950s.label} — ${era1950s.title}` },
   { href: '#1960s', no: era1960s.chapterNo, label: `${era1960s.label} — ${era1960s.title}` },
   { href: '#electronic', no: electronic.chapterNo, label: `${electronic.label} — ${electronic.indexTitle}` },
   { href: '#current', no: current.chapterNo, label: current.title }
 ] as const;
+
 const title = 'アラーム腕時計の歴史｜Eterna・Cricket・Memovox・Duofon・Time-O-Vox｜VINTAGE ALARM';
-const description = '鐘で共有された時間から、懐中時計、アラーム腕時計へ。Eterna、Vulcain Cricket、Memovox、AS 1475、Pierce Duofon、Cyma Time-O-Vox、Parking Watch、電子化まで、「時間を知らせる」腕時計の歴史を辿る。';
+const description = '鐘や携帯時計から、Eterna、Vulcain Cricket、Memovox、AS 1475、Pierce Duofon、Omega Memomatic、電子式アラームまで。「時間を知らせる」腕時計の歴史を辿る。';
 const schema = {
   '@context': 'https://schema.org',
   '@graph': [
@@ -72,12 +79,8 @@ const schema = {
     <meta name="theme-color" content="#f3eee4" />
     <SeoHead title={title} description={description} path="history/" type="article" schema={schema} />
     <style is:inline>
-      .history-decade-thesis{max-width:20em!important;margin-top:10px!important;color:var(--ink)!important;font-size:clamp(28px,4vw,44px)!important;font-weight:500;line-height:1.45!important}
       .history-shelf-actions{display:flex;align-items:center;gap:12px;flex:0 0 auto}
-      @media(max-width:480px){
-        .history-decade-thesis{font-size:28px!important}
-        .history-shelf-actions{gap:8px}
-      }
+      @media(max-width:480px){.history-shelf-actions{gap:8px}}
     </style>
   </head>
   <body>
@@ -90,8 +93,6 @@ const schema = {
         <p class="history-kicker">{hero.kicker[0]}<br class="history-title-break" />{hero.kicker[1]}</p>
         <div class="history-lead">
           {hero.lead.map((paragraph) => <p>{paragraph}</p>)}
-          <p>{hero.emphasisLead}<strong>{hero.emphasis}</strong></p>
-          <p>{hero.tail}</p>
         </div>
       </section>
 
@@ -105,10 +106,7 @@ const schema = {
         <details class="history-chapter" id="before">
           <summary class="shell history-chapter-summary">
             <span class="history-chapter-no">{before.chapterNo}</span>
-            <span class="history-chapter-heading">
-              <small>{before.label}</small>
-              <strong>{before.title}</strong>
-            </span>
+            <span class="history-chapter-heading"><small>{before.label}</small><strong>{before.title}</strong></span>
             <span class="history-chapter-teaser">{before.teaser}</span>
             <span class="history-chapter-toggle" aria-hidden="true">＋</span>
           </summary>
@@ -117,18 +115,6 @@ const schema = {
               <p class="history-overline">{before.overline}</p>
               <div class="history-story-copy history-story-copy-flat">
                 {before.intro.map((paragraph) => <p>{paragraph}</p>)}
-                <p><strong>{before.infrastructureEmphasis}</strong></p>
-              </div>
-
-              <p class="history-turn">{before.turnLead}<br /><strong>{before.turnStrong}</strong></p>
-
-              <div class="history-story-copy history-story-copy-follow history-story-copy-flat">
-                <h3 class="history-subhead">{before.portableTitle}</h3>
-                {before.portable.map((paragraph) => <p>{paragraph}</p>)}
-                <p><strong>{before.portableEmphasis}</strong></p>
-
-                <h3 class="history-subhead">{before.alarmTitle}</h3>
-                {before.alarm.map((paragraph) => <p>{paragraph}</p>)}
               </div>
             </div>
           </div>
@@ -137,10 +123,7 @@ const schema = {
         <details class="history-chapter" id="1910s">
           <summary class="shell history-chapter-summary">
             <span class="history-chapter-no">{era1910s.chapterNo}</span>
-            <span class="history-chapter-heading">
-              <small>{era1910s.label}</small>
-              <strong>{era1910s.title}</strong>
-            </span>
+            <span class="history-chapter-heading"><small>{era1910s.label}</small><strong>{era1910s.title}</strong></span>
             <span class="history-chapter-teaser">{era1910s.teaser}</span>
             <span class="history-chapter-toggle" aria-hidden="true">＋</span>
           </summary>
@@ -150,18 +133,17 @@ const schema = {
               <p>{era1910s.intro}</p>
             </div>
 
-            <div class="shell history-shelf" id="milestones" data-shelf>
+            <div class="shell history-shelf" data-shelf>
               <div class="history-shelf-head">
                 <div><span>MILESTONES</span><p>歴史上の節目</p></div>
+                {milestoneCards('1910s').length > 1 && (
+                  <div class="history-shelf-actions"><div class="history-shelf-controls" aria-label="マイルストーンを横に移動"><button type="button" data-prev aria-label="前へ">←</button><button type="button" data-next aria-label="次へ">→</button></div></div>
+                )}
               </div>
               <div class="history-card-track" data-track>
                 {milestoneCards('1910s').map((entry) => (
                   <article class="history-card history-card-milestone">
-                    <small>{entry.meta}</small>
-                    <h3>{entry.name}</h3>
-                    <p class="history-card-hook">{entry.hook}</p>
-                    <p>{entry.cardSummary}</p>
-                    <span class="history-card-status">{entry.cardStatus}</span>
+                    <small>{entry.meta}</small><h3>{entry.name}</h3><p class="history-card-hook">{entry.hook}</p><p>{entry.cardSummary}</p><span class="history-card-status">{entry.cardStatus}</span>
                   </article>
                 ))}
               </div>
@@ -172,64 +154,43 @@ const schema = {
         <details class="history-chapter" id="1940s">
           <summary class="shell history-chapter-summary">
             <span class="history-chapter-no">{era1940s.chapterNo}</span>
-            <span class="history-chapter-heading">
-              <small>{era1940s.label}</small>
-              <strong>{era1940s.title}</strong>
-            </span>
+            <span class="history-chapter-heading"><small>{era1940s.label}</small><strong>{era1940s.title}</strong></span>
             <span class="history-chapter-teaser">{era1940s.teaser}</span>
             <span class="history-chapter-toggle" aria-hidden="true">＋</span>
           </summary>
           <div class="history-chapter-body">
-            <div class="history-problem-stage history-problem-stage-nested">
-              <div class="shell history-problem-stage-inner">
-                <p class="history-overline">{era1940s.overline}</p>
-                <h2 class="history-problem-title">{era1940s.problemTitleLead}<br />{era1940s.problemTitleStrong}</h2>
-                <div class="history-problem-lines" aria-label="腕時計化で生じた問題">
-                  {era1940s.problemLines.map((line) => <span>{line}</span>)}
-                  <strong>{era1940s.problemStrong}</strong>
-                </div>
-                <p class="history-problem-copy">{era1940s.problemCopy}</p>
-              </div>
+            <div class="shell history-decade-intro">
+              <p class="history-overline">{era1940s.overline}</p>
+              <p>{era1940s.intro}</p>
             </div>
 
             <div class="shell history-shelf" data-shelf>
               <div class="history-shelf-head">
                 <div><span>MILESTONES</span><p>歴史上の節目</p></div>
+                {milestoneCards('1940s').length > 1 && (
+                  <div class="history-shelf-actions"><div class="history-shelf-controls" aria-label="マイルストーンを横に移動"><button type="button" data-prev aria-label="前へ">←</button><button type="button" data-next aria-label="次へ">→</button></div></div>
+                )}
               </div>
               <div class="history-card-track" data-track>
                 {milestoneCards('1940s').map((entry) => (
                   <article class="history-card history-card-milestone">
-                    <small>{entry.meta}</small>
-                    <h3>{entry.name}</h3>
-                    <p class="history-card-hook">{entry.hook}</p>
-                    <p>{entry.cardSummary}</p>
-                    <span class="history-card-status">{entry.cardStatus}</span>
+                    <small>{entry.meta}</small><h3>{entry.name}</h3><p class="history-card-hook">{entry.hook}</p><p>{entry.cardSummary}</p><span class="history-card-status">{entry.cardStatus}</span>
                   </article>
                 ))}
               </div>
             </div>
 
             <div class="shell history-shelf history-shelf-owner" data-shelf>
-              <div class="history-shelf-head">
-                <div><span>OWNER'S NOTES</span><p>実機から見る、その時代</p></div>
-              </div>
+              <div class="history-shelf-head"><div><span>OWNER'S NOTES</span><p>実機から見る、その時代</p></div></div>
               <div class="history-card-track" data-track>
                 {ownerCards('1940s').map((entry) => (
                   entry.hrefKind === 'site' ? (
                     <a class="history-card history-card-owner history-card-link" href={`${base}${entry.href}`}>
-                      <small>{entry.meta}</small>
-                      <h3>{entry.name}</h3>
-                      <p class="history-card-hook">{entry.hook}</p>
-                      <p>{entry.cardSummary}</p>
-                      <span class="history-card-status">{entry.cardStatus}</span>
+                      <small>{entry.meta}</small><h3>{entry.name}</h3><p class="history-card-hook">{entry.hook}</p><p>{entry.cardSummary}</p><span class="history-card-status">{entry.cardStatus}</span>
                     </a>
                   ) : (
                     <article class="history-card history-card-owner">
-                      <small>{entry.meta}</small>
-                      <h3>{entry.name}</h3>
-                      <p class="history-card-hook">{entry.hook}</p>
-                      <p>{entry.cardSummary}</p>
-                      <span class="history-card-status">{entry.cardStatus}</span>
+                      <small>{entry.meta}</small><h3>{entry.name}</h3><p class="history-card-hook">{entry.hook}</p><p>{entry.cardSummary}</p><span class="history-card-status">{entry.cardStatus}</span>
                     </article>
                   )
                 ))}
@@ -241,38 +202,24 @@ const schema = {
         <details class="history-chapter" id="1950s">
           <summary class="shell history-chapter-summary">
             <span class="history-chapter-no">{era1950s.chapterNo}</span>
-            <span class="history-chapter-heading">
-              <small>{era1950s.label}</small>
-              <strong>{era1950s.title}</strong>
-            </span>
+            <span class="history-chapter-heading"><small>{era1950s.label}</small><strong>{era1950s.title}</strong></span>
             <span class="history-chapter-teaser">{era1950s.teaser}</span>
             <span class="history-chapter-toggle" aria-hidden="true">＋</span>
           </summary>
           <div class="history-chapter-body">
-            <div class="shell history-decade-intro">
-              <p class="history-decade-thesis">{era1950s.thesis}</p>
-              <p class="history-golden-lead">{era1950s.lead}</p>
-              <p class="history-editorial-rule">{era1950s.editorialLead}<strong>{era1950s.editorialStrong}</strong>{era1950s.editorialTail}</p>
-            </div>
+            <div class="shell history-decade-intro"><p>{era1950s.intro}</p></div>
 
             <div class="shell history-shelf" data-shelf>
               <div class="history-shelf-head">
-                <div><span>MILESTONES</span><p>歴史上の節目 / 年代順</p></div>
-                <div class="history-shelf-actions">
-                  <div class="history-shelf-controls" aria-label="マイルストーンを横に移動">
-                    <button type="button" data-prev aria-label="前へ">←</button>
-                    <button type="button" data-next aria-label="次へ">→</button>
-                  </div>
-                </div>
+                <div><span>MILESTONES</span><p>歴史上の節目</p></div>
+                {milestoneCards('1950s').length > 1 && (
+                  <div class="history-shelf-actions"><div class="history-shelf-controls" aria-label="マイルストーンを横に移動"><button type="button" data-prev aria-label="前へ">←</button><button type="button" data-next aria-label="次へ">→</button></div></div>
+                )}
               </div>
               <div class="history-card-track" data-track>
                 {milestoneCards('1950s').map((entry) => (
                   <article class="history-card history-card-milestone">
-                    <small>{entry.meta}</small>
-                    <h3>{entry.name}</h3>
-                    <p class="history-card-hook">{entry.hook}</p>
-                    <p>{entry.cardSummary}</p>
-                    <span class="history-card-status">{entry.cardStatus}</span>
+                    <small>{entry.meta}</small><h3>{entry.name}</h3><p class="history-card-hook">{entry.hook}</p><p>{entry.cardSummary}</p><span class="history-card-status">{entry.cardStatus}</span>
                   </article>
                 ))}
               </div>
@@ -281,57 +228,36 @@ const schema = {
             <div class="shell history-shelf history-shelf-owner" data-shelf>
               <div class="history-shelf-head">
                 <div><span>OWNER'S NOTES</span><p>実機から見る、その時代</p></div>
-                <div class="history-shelf-actions">
-                  <div class="history-shelf-controls" aria-label="オーナーズノートを横に移動">
-                    <button type="button" data-prev aria-label="前へ">←</button>
-                    <button type="button" data-next aria-label="次へ">→</button>
-                  </div>
-                </div>
+                {ownerCards('1950s').length > 1 && (
+                  <div class="history-shelf-actions"><div class="history-shelf-controls" aria-label="オーナーズノートを横に移動"><button type="button" data-prev aria-label="前へ">←</button><button type="button" data-next aria-label="次へ">→</button></div></div>
+                )}
               </div>
               <div class="history-card-track" data-track>
                 {ownerCards('1950s').map((entry) => (
                   entry.hrefKind === 'site' ? (
                     <a class="history-card history-card-owner history-card-link" href={`${base}${entry.href}`}>
-                      <small>{entry.meta}</small>
-                      <h3>{entry.name}</h3>
-                      <p class="history-card-hook">{entry.hook}</p>
-                      <p>{entry.cardSummary}</p>
-                      <span class="history-card-status">{entry.cardStatus}</span>
+                      <small>{entry.meta}</small><h3>{entry.name}</h3><p class="history-card-hook">{entry.hook}</p><p>{entry.cardSummary}</p><span class="history-card-status">{entry.cardStatus}</span>
                     </a>
                   ) : (
                     <article class="history-card history-card-owner">
-                      <small>{entry.meta}</small>
-                      <h3>{entry.name}</h3>
-                      <p class="history-card-hook">{entry.hook}</p>
-                      <p>{entry.cardSummary}</p>
-                      <span class="history-card-status">{entry.cardStatus}</span>
+                      <small>{entry.meta}</small><h3>{entry.name}</h3><p class="history-card-hook">{entry.hook}</p><p>{entry.cardSummary}</p><span class="history-card-status">{entry.cardStatus}</span>
                     </article>
                   )
                 ))}
               </div>
             </div>
 
-            <div class="shell history-shelf history-shelf-interest" id="research" data-shelf>
-              <div class="history-shelf-head">
-                <div><span>気になっているもの</span><p>調査・探索を続けたい時計</p></div>
-              </div>
+            <div class="shell history-shelf history-shelf-interest" data-shelf>
+              <div class="history-shelf-head"><div><span>RESEARCH</span><p>調査中</p></div></div>
               <div class="history-card-track" data-track>
                 {researchCards('1950s').map((entry) => (
                   entry.hrefKind === 'site' ? (
                     <a class="history-card history-card-interest history-card-link" href={`${base}${entry.href}`}>
-                      <small>{entry.meta}</small>
-                      <h3>{entry.name}</h3>
-                      <p class="history-card-hook">{entry.hook}</p>
-                      <p>{entry.cardSummary}</p>
-                      <span class="history-card-status">{entry.cardStatus}</span>
+                      <small>{entry.meta}</small><h3>{entry.name}</h3><p class="history-card-hook">{entry.hook}</p><p>{entry.cardSummary}</p><span class="history-card-status">{entry.cardStatus}</span>
                     </a>
                   ) : (
                     <article class="history-card history-card-interest">
-                      <small>{entry.meta}</small>
-                      <h3>{entry.name}</h3>
-                      <p class="history-card-hook">{entry.hook}</p>
-                      <p>{entry.cardSummary}</p>
-                      <span class="history-card-status">{entry.cardStatus}</span>
+                      <small>{entry.meta}</small><h3>{entry.name}</h3><p class="history-card-hook">{entry.hook}</p><p>{entry.cardSummary}</p><span class="history-card-status">{entry.cardStatus}</span>
                     </article>
                   )
                 ))}
@@ -343,36 +269,24 @@ const schema = {
         <details class="history-chapter" id="1960s">
           <summary class="shell history-chapter-summary">
             <span class="history-chapter-no">{era1960s.chapterNo}</span>
-            <span class="history-chapter-heading">
-              <small>{era1960s.label}</small>
-              <strong>{era1960s.title}</strong>
-            </span>
+            <span class="history-chapter-heading"><small>{era1960s.label}</small><strong>{era1960s.title}</strong></span>
             <span class="history-chapter-teaser">{era1960s.teaser}</span>
             <span class="history-chapter-toggle" aria-hidden="true">＋</span>
           </summary>
           <div class="history-chapter-body history-chapter-paper">
-            <div class="shell history-decade-intro">
-              <p>{era1960s.intro}</p>
-            </div>
+            <div class="shell history-decade-intro"><p>{era1960s.intro}</p></div>
 
             <div class="shell history-shelf" data-shelf>
               <div class="history-shelf-head">
-                <div><span>BRANCHES</span><p>用途と複合機能へ</p></div>
-                <div class="history-shelf-actions">
-                  <div class="history-shelf-controls" aria-label="用途のカードを横に移動">
-                    <button type="button" data-prev aria-label="前へ">←</button>
-                    <button type="button" data-next aria-label="次へ">→</button>
-                  </div>
-                </div>
+                <div><span>MILESTONES</span><p>歴史上の節目</p></div>
+                {milestoneCards('1960s').length > 1 && (
+                  <div class="history-shelf-actions"><div class="history-shelf-controls" aria-label="マイルストーンを横に移動"><button type="button" data-prev aria-label="前へ">←</button><button type="button" data-next aria-label="次へ">→</button></div></div>
+                )}
               </div>
               <div class="history-card-track" data-track>
-                {era1960s.branches.map((branch) => (
+                {milestoneCards('1960s').map((entry) => (
                   <article class="history-card history-card-milestone">
-                    <small>{branch.meta}</small>
-                    <h3>{branch.name}</h3>
-                    <p class="history-card-hook">{branch.hook}</p>
-                    <p>{branch.summary}</p>
-                    <span class="history-card-status">{branch.status}</span>
+                    <small>{entry.meta}</small><h3>{entry.name}</h3><p class="history-card-hook">{entry.hook}</p><p>{entry.cardSummary}</p><span class="history-card-status">{entry.cardStatus}</span>
                   </article>
                 ))}
               </div>
@@ -383,10 +297,7 @@ const schema = {
         <details class="history-chapter" id="electronic">
           <summary class="shell history-chapter-summary">
             <span class="history-chapter-no">{electronic.chapterNo}</span>
-            <span class="history-chapter-heading">
-              <small>{electronic.label}</small>
-              <strong>{electronic.title}</strong>
-            </span>
+            <span class="history-chapter-heading"><small>{electronic.label}</small><strong>{electronic.title}</strong></span>
             <span class="history-chapter-teaser">{electronic.teaser}</span>
             <span class="history-chapter-toggle" aria-hidden="true">＋</span>
           </summary>
@@ -394,6 +305,22 @@ const schema = {
             <div class="shell history-story-inner history-story-inner-compact">
               <div class="history-story-copy history-story-copy-flat">
                 {electronic.body.map((paragraph) => <p>{paragraph}</p>)}
+              </div>
+            </div>
+
+            <div class="shell history-shelf" data-shelf>
+              <div class="history-shelf-head">
+                <div><span>MILESTONES</span><p>歴史上の節目</p></div>
+                {milestoneCards('electronic').length > 1 && (
+                  <div class="history-shelf-actions"><div class="history-shelf-controls" aria-label="マイルストーンを横に移動"><button type="button" data-prev aria-label="前へ">←</button><button type="button" data-next aria-label="次へ">→</button></div></div>
+                )}
+              </div>
+              <div class="history-card-track" data-track>
+                {milestoneCards('electronic').map((entry) => (
+                  <article class="history-card history-card-milestone">
+                    <small>{entry.meta}</small><h3>{entry.name}</h3><p class="history-card-hook">{entry.hook}</p><p>{entry.cardSummary}</p><span class="history-card-status">{entry.cardStatus}</span>
+                  </article>
+                ))}
               </div>
             </div>
           </div>
@@ -412,9 +339,7 @@ const schema = {
       <section class="shell history-sources">
         <details>
           <summary>{sources.summary}</summary>
-          <ul>
-            {sources.items.map((item) => <li>{item}</li>)}
-          </ul>
+          <ul>{sources.items.map((item) => <li>{item}</li>)}</ul>
         </details>
       </section>
     </main>
