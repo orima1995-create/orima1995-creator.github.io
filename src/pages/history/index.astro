@@ -2,12 +2,14 @@
 import SeoHead from '../../components/SeoHead.astro';
 import SectionMast from '../../components/SectionMast.astro';
 import { historyCatalogByGroup } from '../../data/history-catalog';
+import { historyContent } from '../../data/history-content';
 import '../../styles/site.css';
 import '../../styles/history-magazine.css';
 const base = import.meta.env.BASE_URL;
 const milestoneCards = (era: '1910s' | '1940s' | '1950s') => historyCatalogByGroup.milestones.filter((entry) => entry.era === era && entry.featured);
 const ownerCards = (era: '1940s' | '1950s') => historyCatalogByGroup.owners.filter((entry) => entry.era === era && entry.featured);
 const researchCards = (era: '1950s') => historyCatalogByGroup.research.filter((entry) => entry.era === era && entry.featured);
+const before = historyContent.before;
 const title = 'アラーム腕時計の歴史｜Eterna・Cricket・Memovox・Duofon・Time-O-Vox｜VINTAGE ALARM';
 const description = '鐘で共有された時間から、懐中時計、アラーム腕時計へ。Eterna、Vulcain Cricket、Memovox、AS 1475、Pierce Duofon、Cyma Time-O-Vox、Parking Watch、電子化まで、「時間を知らせる」腕時計の歴史を辿る。';
 const schema = {
@@ -90,33 +92,31 @@ const schema = {
       <div class="history-chapters">
         <details class="history-chapter" id="before">
           <summary class="shell history-chapter-summary">
-            <span class="history-chapter-no">00</span>
+            <span class="history-chapter-no">{before.chapterNo}</span>
             <span class="history-chapter-heading">
-              <small>BEFORE THE WRIST</small>
-              <strong>時間は、まだ手元になかった。</strong>
+              <small>{before.label}</small>
+              <strong>{before.title}</strong>
             </span>
-            <span class="history-chapter-teaser">鐘から、ポケットへ。共有される時間が個人の持ち物になるまで。</span>
+            <span class="history-chapter-teaser">{before.teaser}</span>
             <span class="history-chapter-toggle" aria-hidden="true">＋</span>
           </summary>
           <div class="history-chapter-body">
             <div class="shell history-story-inner history-story-inner-compact">
-              <p class="history-overline">TIME AS INFRASTRUCTURE</p>
+              <p class="history-overline">{before.overline}</p>
               <div class="history-story-copy history-story-copy-flat">
-                <p>いまなら、正確な時刻はほとんどどこにいても確認できる。だが、時計を個人で持つことが一般的になる以前、時刻は誰もが好きな瞬間に手元で確認できる情報ではなかった。</p>
-                <p>太陽を見る。生活の周期から判断する。そして、鐘を聞く。中世の修道院では、鐘が祈り・食事・労働の時刻を区切った。やがて教会や公共の塔に置かれた時計と鐘は、聞こえる範囲の人々へ時刻を伝え、仕事や市場など街の活動をそろえる役割も担っていく。</p>
-                <p><strong>時間は、個人が所有する情報である前に、社会を動かすために共有されるインフラだった。</strong></p>
+                {before.intro.map((paragraph) => <p>{paragraph}</p>)}
+                <p><strong>{before.infrastructureEmphasis}</strong></p>
               </div>
 
-              <p class="history-turn">鐘は、一人ではなく<br /><strong>共同体を呼んだ。</strong></p>
+              <p class="history-turn">{before.turnLead}<br /><strong>{before.turnStrong}</strong></p>
 
               <div class="history-story-copy history-story-copy-follow history-story-copy-flat">
-                <h3 class="history-subhead">時間が、街からポケットへ。</h3>
-                <p>時計が小さくなると、時間は塔や建物から離れ、携帯時計、そして懐中時計へ移っていく。長く高価だった携帯時計も、生産技術の発達とともに、より広い層が所有できるものになった。</p>
-                <p><strong>みんなに知らされていた時間が、一人ひとりの持ち物になっていく。</strong></p>
+                <h3 class="history-subhead">{before.portableTitle}</h3>
+                {before.portable.map((paragraph) => <p>{paragraph}</p>)}
+                <p><strong>{before.portableEmphasis}</strong></p>
 
-                <h3 class="history-subhead">見るだけではなく、時間になったら知らせてほしい。</h3>
-                <p>アラームという仕組み自体は腕時計より古い。14世紀末にはアラーム時計の記録があり、16世紀には据置時計へ、さらに携帯時計や懐中時計へと機構が移っていった。</p>
-                <p>腕時計が広がり始めるころには、懐中時計を革製のホルダーなどで腕へ装着する過渡的な使い方もあった。次の段階は、アラームを最初から腕時計として作ることだった。</p>
+                <h3 class="history-subhead">{before.alarmTitle}</h3>
+                {before.alarm.map((paragraph) => <p>{paragraph}</p>)}
               </div>
             </div>
           </div>
