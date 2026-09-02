@@ -7,10 +7,10 @@ import WatchSpec from '../components/WatchSpec.astro';
 import AlarmVideo from '../components/AlarmVideo.astro';
 import DeepDive from '../components/DeepDive.astro';
 import Sources from '../components/Sources.astro';
+import OwnerNoteEndNav from '../components/OwnerNoteEndNav.astro';
 import '../styles/site.css';
 
 const { watch } = Astro.props;
-const base = import.meta.env.BASE_URL;
 const siteRoot = 'https://orima1995-create.github.io/orima1995-creator.github.io/';
 const pageTitle = watch.slug === 'pierce-duofon'
   ? 'Pierce Duofon｜Cal.135・2段階アラーム・実機音｜VINTAGE ALARM'
@@ -23,6 +23,11 @@ const description = watch.slug === 'cyma-time-o-vox'
 const pagePath = `${watch.slug}/`;
 const pageUrl = new URL(pagePath, siteRoot).href;
 const imageUrl = new URL(watch.ownersNote.image.replace(/^\//, ''), siteRoot).href;
+const nextOwnerNote = watch.slug === 'pierce-duofon'
+  ? { href: 'cyma-time-o-vox/owners-note/', name: 'CYMA TIME-O-VOX' }
+  : watch.slug === 'cyma-time-o-vox'
+    ? { href: 'pierce-duofon/#owners-note', name: 'PIERCE DUOFON' }
+    : null;
 const schema = {
   '@context': 'https://schema.org',
   '@graph': [
@@ -82,9 +87,13 @@ const schema = {
       {watch.video && <AlarmVideo video={watch.video} title={`${watch.brand} ${watch.model}`} />}
       <DeepDive items={watch.deepDive} />
       <Sources sources={watch.sources} />
-      <nav class="shell watch-back" aria-label="歴史ページへ戻る">
-        <a href={`${base}history/#1950s`}>← 1950年代のアラーム腕時計へ戻る</a>
-      </nav>
+      {nextOwnerNote && (
+        <OwnerNoteEndNav
+          nextHref={nextOwnerNote.href}
+          nextName={nextOwnerNote.name}
+          historyHref="history/#1950s"
+        />
+      )}
     </main>
   </body>
 </html>
