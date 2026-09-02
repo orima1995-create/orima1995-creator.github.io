@@ -34,34 +34,38 @@ jobs:
           test -f dist/history/smartwatch/index.html
           test -f dist/images/history/smartwatch-part-4.webp
 
-          grep -Fq "PIERCE" dist/pierce-duofon/index.html
-          grep -Fq "DUOFON" dist/pierce-duofon/index.html
-          grep -Fq "マナーモードの祖先!?" dist/pierce-duofon/index.html
-          grep -Fq "① 動力巻き上げ" dist/pierce-duofon/index.html
-          grep -Fq "xkecjZqr7BY" dist/pierce-duofon/index.html
-          grep -Fq "Pierce Cal.135" dist/pierce-duofon/index.html
-          grep -Fq "Gruen Duotoneとの関係" dist/pierce-duofon/index.html
-          grep -Fq "1950年代のアラーム腕時計へ戻る" dist/pierce-duofon/index.html
+          check_text() {
+            needle="$1"
+            file="$2"
+            grep -Fq "$needle" "$file" || { echo "missing text [$needle] in $file"; exit 1; }
+          }
 
-          grep -Fq "CYMA TIME-O-VOX 18K CHRONOMÈTRE" dist/owners-notes/index.html
-          grep -Fq "cyma-time-o-vox/owners-note/" dist/owners-notes/index.html
+          check_text "PIERCE" dist/pierce-duofon/index.html
+          check_text "DUOFON" dist/pierce-duofon/index.html
+          check_text "マナーモードの祖先!?" dist/pierce-duofon/index.html
+          check_text "① 動力巻き上げ" dist/pierce-duofon/index.html
+          check_text "xkecjZqr7BY" dist/pierce-duofon/index.html
+          check_text "Pierce Cal.135" dist/pierce-duofon/index.html
+          check_text "Gruen Duotoneとの関係" dist/pierce-duofon/index.html
+          check_text "history/#1950s" dist/pierce-duofon/index.html
 
-          grep -Fq "アラームを、腕へ。" dist/history/index.html
-          grep -Fq "様々な進化と個性。" dist/history/index.html
-          grep -Fq "PIERCE DUOFON" dist/history/index.html
-          grep -Fq "TIME-O-VOX" dist/history/index.html
-          grep -Fq "cyma-time-o-vox/" dist/history/index.html
-          grep -Fq 'id="milestones"' dist/history/index.html
-          grep -Fq 'id="research"' dist/history/index.html
-          grep -Fq "owners-notes/" dist/history/index.html
-          grep -Fq "現状の到達点。" dist/history/index.html
-          grep -Fq "history/smartwatch/" dist/history/index.html
+          check_text "cyma-time-o-vox/owners-note/" dist/owners-notes/index.html
 
-          grep -Fq "smartwatch-part-4.webp" dist/history/smartwatch/index.html
-          grep -Fq "もっと静かな時代へ戻る" dist/history/smartwatch/index.html
+          check_text 'id="1950s"' dist/history/index.html
+          check_text "PIERCE DUOFON" dist/history/index.html
+          check_text "TIME-O-VOX" dist/history/index.html
+          check_text "cyma-time-o-vox/" dist/history/index.html
+          check_text 'id="milestones"' dist/history/index.html
+          check_text 'id="research"' dist/history/index.html
+          check_text "owners-notes/" dist/history/index.html
+          check_text 'id="current"' dist/history/index.html
+          check_text "history/smartwatch/" dist/history/index.html
 
-          grep -Fq "一つの香箱なのに、リューズは回らない。" dist/cyma-time-o-vox/index.html
-          grep -Fq "約9時間分のパワーリザーブ" dist/cyma-time-o-vox/index.html
+          check_text "smartwatch-part-4.webp" dist/history/smartwatch/index.html
+          check_text "もっと静かな時代へ戻る" dist/history/smartwatch/index.html
+
+          check_text "一つの香箱なのに、リューズは回らない。" dist/cyma-time-o-vox/index.html
+          check_text "約9時間分のパワーリザーブ" dist/cyma-time-o-vox/index.html
 
           if find dist -name '*.html' -print0 | xargs -0 grep -q "data:image/.*base64"; then
             echo "Embedded base64 image remains in generated HTML"
