@@ -123,9 +123,6 @@ content:
             label: 導入本文
             type: text
             list: true
-          - { name: emphasisLead, label: 強調前, type: string }
-          - { name: emphasis, label: 強調文, type: text }
-          - { name: tail, label: 締め, type: text }
 
       - name: before
         label: 00 / BEFORE THE WRIST
@@ -139,20 +136,6 @@ content:
           - { name: overline, label: Overline, type: string }
           - name: intro
             label: 導入本文
-            type: text
-            list: true
-          - { name: infrastructureEmphasis, label: 強調文, type: text }
-          - { name: turnLead, label: 転換文 前半, type: string }
-          - { name: turnStrong, label: 転換文 強調, type: string }
-          - { name: portableTitle, label: 小見出し / ポケットへ, type: string }
-          - name: portable
-            label: ポケットへ 本文
-            type: text
-            list: true
-          - { name: portableEmphasis, label: ポケットへ 強調, type: text }
-          - { name: alarmTitle, label: 小見出し / アラームへ, type: string }
-          - name: alarm
-            label: アラームへ 本文
             type: text
             list: true
 
@@ -178,14 +161,7 @@ content:
           - { name: title, label: 章タイトル, type: string }
           - { name: teaser, label: 目次・要約, type: text }
           - { name: overline, label: Overline, type: string }
-          - { name: problemTitleLead, label: 問題提起 前半, type: string }
-          - { name: problemTitleStrong, label: 問題提起 強調, type: string }
-          - name: problemLines
-            label: 問題点
-            type: string
-            list: true
-          - { name: problemStrong, label: 問題点 強調, type: string }
-          - { name: problemCopy, label: 本文, type: text }
+          - { name: intro, label: 本文, type: text }
 
       - name: era1950s
         label: 03 / 1950s
@@ -196,14 +172,10 @@ content:
           - { name: label, label: 章ラベル, type: string, readonly: true }
           - { name: title, label: 章タイトル, type: string }
           - { name: teaser, label: 目次・要約, type: text }
-          - { name: thesis, label: Thesis, type: string }
-          - { name: lead, label: 導入本文, type: text }
-          - { name: editorialLead, label: 編集方針 前半, type: text }
-          - { name: editorialStrong, label: 編集方針 強調, type: text }
-          - { name: editorialTail, label: 編集方針 後半, type: string }
+          - { name: intro, label: 導入本文, type: text }
 
       - name: era1960s
-        label: 04 / 1960s–70s
+        label: 04 / 1960s
         type: object
         required: true
         fields:
@@ -212,24 +184,9 @@ content:
           - { name: title, label: 章タイトル, type: string }
           - { name: teaser, label: 目次・要約, type: text }
           - { name: intro, label: 導入本文, type: text }
-          - name: branches
-            label: BRANCHES
-            type: object
-            list:
-              min: 1
-              max: 8
-              collapsible:
-                collapsed: true
-                summary: "{meta} / {name}"
-            fields:
-              - { name: meta, label: Meta, type: string }
-              - { name: name, label: Name, type: string }
-              - { name: hook, label: Hook, type: text }
-              - { name: summary, label: Summary, type: text }
-              - { name: status, label: Status, type: string }
 
       - name: electronic
-        label: 05 / QUARTZ・DIGITAL
+        label: 05 / 1970s
         type: object
         required: true
         fields:
