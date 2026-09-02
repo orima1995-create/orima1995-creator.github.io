@@ -75,6 +75,30 @@ export const historyCatalog: HistoryCatalogEntry[] = [
     featured: true
   },
   {
+    id: 'vulcain-golden-voice',
+    group: 'milestone',
+    era: '1950s',
+    sort: 55,
+    meta: '1958 / VULCAIN',
+    name: 'GOLDEN VOICE / CAL.406',
+    hook: '世界初の女性用アラーム腕時計。',
+    cardSummary: '19.7mmの2香箱ムーブメントと金製メンブレン。',
+    cardStatus: 'MILESTONE',
+    featured: true
+  },
+  {
+    id: 'jlc-parking',
+    group: 'milestone',
+    era: '1950s',
+    sort: 58,
+    meta: '1958 / JAEGER-LECOULTRE',
+    name: 'MEMOVOX PARKING',
+    hook: '駐車時間を知らせる最初のアラーム腕時計。',
+    cardSummary: '内側のディスクに駐車時間用の目盛りを加えたMemovox。',
+    cardStatus: 'MILESTONE',
+    featured: true
+  },
+  {
     id: 'pierce-duofon',
     group: 'owner',
     era: '1950s',
@@ -115,18 +139,6 @@ export const historyCatalog: HistoryCatalogEntry[] = [
     featured: true
   },
   {
-    id: 'jlc-parking',
-    group: 'research',
-    era: '1950s',
-    sort: 90,
-    meta: '1958 / JAEGER-LECOULTRE',
-    name: 'MEMOVOX PARKING',
-    hook: '駐車時間をアラームで管理する。',
-    cardSummary: '内側のディスクをカウントダウンとして使う、駐車時間用のMemovox。',
-    cardStatus: 'RESEARCHING',
-    featured: true
-  },
-  {
     id: 'vulcain-cricket-nautical',
     group: 'milestone',
     era: '1960s',
@@ -134,7 +146,19 @@ export const historyCatalog: HistoryCatalogEntry[] = [
     meta: '1961 / VULCAIN',
     name: 'CRICKET NAUTICAL',
     hook: '水中で聞こえるアラームを、ダイバーズへ。',
-    cardSummary: '減圧表を備え、Hannes Kellerの222m潜水でも使用された。',
+    cardSummary: '減圧表を備え、Hannes Kellerの潜水でも使用された。',
+    cardStatus: 'MILESTONE',
+    featured: true
+  },
+  {
+    id: 'seiko-bell-matic',
+    group: 'milestone',
+    era: '1960s',
+    sort: 105,
+    meta: '約1968 / SEIKO',
+    name: 'BELL-MATIC / CAL.4005・4006',
+    hook: '日本独自開発の自動巻きアラーム。',
+    cardSummary: '時計側は自動巻き、アラーム用ゼンマイは手巻き。',
     cardStatus: 'MILESTONE',
     featured: true
   },
@@ -147,6 +171,18 @@ export const historyCatalog: HistoryCatalogEntry[] = [
     name: 'MEMOMATIC / CAL.980',
     hook: 'アラームの動力まで自動巻き。',
     cardSummary: '1香箱で時刻とアラームを駆動し、分単位でアラーム時刻を設定できる。',
+    cardStatus: 'MILESTONE',
+    featured: true
+  },
+  {
+    id: 'as5007-5008',
+    group: 'milestone',
+    era: 'electronic',
+    sort: 115,
+    meta: '1971–73 / A. SCHILD',
+    name: 'AS 5007 / 5008',
+    hook: '2香箱の両方をローターで自動巻き。',
+    cardSummary: '時計用とアラーム用、双方のゼンマイを自動巻きする量産キャリバー。',
     cardStatus: 'MILESTONE',
     featured: true
   },
