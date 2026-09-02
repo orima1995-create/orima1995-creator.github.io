@@ -15,6 +15,7 @@ const era1940s = historyContent.era1940s;
 const era1950s = historyContent.era1950s;
 const era1960s = historyContent.era1960s;
 const electronic = historyContent.electronic;
+const current = historyContent.current;
 const title = 'アラーム腕時計の歴史｜Eterna・Cricket・Memovox・Duofon・Time-O-Vox｜VINTAGE ALARM';
 const description = '鐘で共有された時間から、懐中時計、アラーム腕時計へ。Eterna、Vulcain Cricket、Memovox、AS 1475、Pierce Duofon、Cyma Time-O-Vox、Parking Watch、電子化まで、「時間を知らせる」腕時計の歴史を辿る。';
 const schema = {
@@ -400,10 +401,10 @@ const schema = {
 
       <section class="history-current" id="current">
         <div class="shell history-current-inner">
-          <p class="history-story-no">06 / CURRENT</p>
-          <h2>現状の到達点。</h2>
-          <p class="history-current-name">SMARTWATCH</p>
-          <a class="history-next" href={`${base}history/smartwatch/`}>見る →</a>
+          <p class="history-story-no">{current.storyNo}</p>
+          <h2>{current.title}</h2>
+          <p class="history-current-name">{current.name}</p>
+          <a class="history-next" href={`${base}${current.href}`}>{current.linkLabel}</a>
         </div>
       </section>
 
