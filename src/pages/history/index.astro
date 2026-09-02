@@ -12,6 +12,7 @@ const researchCards = (era: '1950s') => historyCatalogByGroup.research.filter((e
 const before = historyContent.before;
 const era1910s = historyContent.era1910s;
 const era1940s = historyContent.era1940s;
+const era1950s = historyContent.era1950s;
 const title = 'アラーム腕時計の歴史｜Eterna・Cricket・Memovox・Duofon・Time-O-Vox｜VINTAGE ALARM';
 const description = '鐘で共有された時間から、懐中時計、アラーム腕時計へ。Eterna、Vulcain Cricket、Memovox、AS 1475、Pierce Duofon、Cyma Time-O-Vox、Parking Watch、電子化まで、「時間を知らせる」腕時計の歴史を辿る。';
 const schema = {
@@ -230,19 +231,19 @@ const schema = {
 
         <details class="history-chapter" id="1950s">
           <summary class="shell history-chapter-summary">
-            <span class="history-chapter-no">03</span>
+            <span class="history-chapter-no">{era1950s.chapterNo}</span>
             <span class="history-chapter-heading">
-              <small>1950s</small>
-              <strong>様々な進化と個性。</strong>
+              <small>{era1950s.label}</small>
+              <strong>{era1950s.title}</strong>
             </span>
-            <span class="history-chapter-teaser">正解が、一つじゃなくなる。音、動力、操作、知らせ方に違う答えが並び始める。</span>
+            <span class="history-chapter-teaser">{era1950s.teaser}</span>
             <span class="history-chapter-toggle" aria-hidden="true">＋</span>
           </summary>
           <div class="history-chapter-body">
             <div class="shell history-decade-intro">
-              <p class="history-decade-thesis">正解が、一つじゃなくなる。</p>
-              <p class="history-golden-lead">音の出し方。動力の分け方。操作方法。そして、どう知らせるか。1950年代には、同じ「腕から知らせる」という目的に、異なる設計が並んだ。</p>
-              <p class="history-editorial-rule">ここから先は、存在したアラーム腕時計をすべて並べる年表にはしない。<strong>歴史上のマイルストーン、OWNER'S NOTE、そして個人的に気になっている時計</strong>を分けて置く。</p>
+              <p class="history-decade-thesis">{era1950s.thesis}</p>
+              <p class="history-golden-lead">{era1950s.lead}</p>
+              <p class="history-editorial-rule">{era1950s.editorialLead}<strong>{era1950s.editorialStrong}</strong>{era1950s.editorialTail}</p>
             </div>
 
             <div class="shell history-shelf" data-shelf>
