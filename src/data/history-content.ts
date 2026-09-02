@@ -30,5 +30,17 @@ export const historyContent = {
     teaser: 'Eterna Patent 42,203。懐中時計の延長ではなく、腕時計サイズのアラームへ。',
     overline: 'PATENT 42,203 / 1908 → SERIES PRODUCTION / 1914',
     intro: 'Eternaは1908年、13リーニュのアラーム腕時計機構について特許42,203を取得した。1914年からシリーズ生産が始まり、専門文献では最初のシリーズ生産アラーム腕時計として位置づけられている。'
+  },
+  era1940s: {
+    chapterNo: '02',
+    label: '1940s',
+    title: '腕につけたまま、聞こえる音を。',
+    teaser: 'ケースを守るほど音は逃げない。Cricketが音響の問題を大きく前へ進める。',
+    overline: 'THE CONTRADICTION',
+    problemTitleLead: '腕に載せたら、',
+    problemTitleStrong: '音と密閉が喧嘩した。',
+    problemLines: ['小さくする。', '動力を確保する。', '水と埃を防ぐ。'],
+    problemStrong: 'でも、音は外へ出したい。',
+    problemCopy: '腕時計は外へ持ち出される。ケースを閉じて機構を守りたい。一方で、閉じるほどアラーム音は外へ届きにくくなる。小型化だけでは終わらなかった。'
   }
 } as const;
