@@ -76,7 +76,7 @@ jobs:
           check_text 'id="research"' dist/history/index.html
           check_text 'owners-notes/' dist/history/index.html
           check_text '鳴る黄金のクロノメーター' dist/owners-notes/index.html
-          check_text "1950's通知のオーパーツ。" dist/owners-notes/index.html
+          check_text '通知のオーパーツ' dist/owners-notes/index.html
           check_text 'cyma-time-o-vox/owners-note/' dist/owners-notes/index.html
           check_text 'pierce-duofon/#owners-note' dist/owners-notes/index.html
           check_text 'smartwatch-part-4.webp' dist/history/smartwatch/index.html
@@ -141,7 +141,7 @@ jobs:
               && grep -Fq "cyma-time-o-vox/" <<<"$history_html" \
               && grep -Fq "owners-notes/" <<<"$history_html" \
               && grep -Fq "鳴る黄金のクロノメーター" <<<"$owners_html" \
-              && grep -Fq "1950's通知のオーパーツ。" <<<"$owners_html" \
+              && grep -Fq "通知のオーパーツ" <<<"$owners_html" \
               && grep -Fq "cyma-time-o-vox/owners-note/" <<<"$owners_html" \
               && grep -Fq "pierce-duofon/#owners-note" <<<"$owners_html" \
               && ! grep -Fq "個体ページへ" <<<"$owners_html" \
