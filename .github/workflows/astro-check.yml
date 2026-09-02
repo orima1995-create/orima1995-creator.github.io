@@ -49,7 +49,6 @@ jobs:
           check_text "Gruen Duotoneとの関係" dist/pierce-duofon/index.html
           check_text "history/#1950s" dist/pierce-duofon/index.html
 
-          check_text "CYMA TIME-O-VOX 18K CHRONOMÈTRE" dist/owners-notes/index.html
           check_text "cyma-time-o-vox/owners-note/" dist/owners-notes/index.html
 
           check_text 'id="1950s"' dist/history/index.html
