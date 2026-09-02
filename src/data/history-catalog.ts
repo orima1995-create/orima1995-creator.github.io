@@ -145,8 +145,8 @@ export const historyCatalog: HistoryCatalogEntry[] = [
     sort: 80,
     meta: '1958 / CITIZEN',
     name: 'CITIZEN ALARM',
-    hook: '囁かれる伝説',
-    cardSummary: '2香箱。内蔵ハンマーが裏蓋を叩く。',
+    hook: '国産初のアラーム',
+    cardSummary: 'まことしやかに囁かれる伝説',
     cardStatus: "OWNER'S NOTE",
     featured: true
   },
