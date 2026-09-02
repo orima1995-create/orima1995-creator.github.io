@@ -105,8 +105,8 @@ export const historyCatalog: HistoryCatalogEntry[] = [
     sort: 59,
     meta: 'WITTNAUER / 10WA',
     name: 'WITTNAUER ALARM',
-    hook: 'CAL.10WA',
-    cardSummary: 'Longines系手巻きムーブメントに独自のアラームモジュールを追加。',
+    hook: '',
+    cardSummary: '',
     cardStatus: "OWNER'S NOTE",
     featured: true
   },
