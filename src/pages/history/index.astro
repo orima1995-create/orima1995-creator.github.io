@@ -6,6 +6,7 @@ import '../../styles/site.css';
 import '../../styles/history-magazine.css';
 const base = import.meta.env.BASE_URL;
 const milestoneCards = (era: '1910s' | '1940s' | '1950s') => historyCatalogByGroup.milestones.filter((entry) => entry.era === era && entry.featured);
+const ownerCards = (era: '1940s' | '1950s') => historyCatalogByGroup.owners.filter((entry) => entry.era === era && entry.featured);
 const title = 'アラーム腕時計の歴史｜Eterna・Cricket・Memovox・Duofon・Time-O-Vox｜VINTAGE ALARM';
 const description = '鐘で共有された時間から、懐中時計、アラーム腕時計へ。Eterna、Vulcain Cricket、Memovox、AS 1475、Pierce Duofon、Cyma Time-O-Vox、Parking Watch、電子化まで、「時間を知らせる」腕時計の歴史を辿る。';
 const schema = {
@@ -202,13 +203,25 @@ const schema = {
                 <div><span>OWNER'S NOTES</span><p>実機から見る、その時代</p></div>
               </div>
               <div class="history-card-track" data-track>
-                <article class="history-card history-card-owner">
-                  <small>1948 / BASIS</small>
-                  <h3>BASIS ALARM / BFG 90</h3>
-                  <p class="history-card-hook">高級機だけが、アラームではない。</p>
-                  <p>2香箱と巻上げ表示窓を持つBFG 90。実用品としてのアラーム腕時計を見る一例。</p>
-                  <span class="history-card-status">OWNER'S NOTE / NEXT</span>
-                </article>
+                {ownerCards('1940s').map((entry) => (
+                  entry.hrefKind === 'site' ? (
+                    <a class="history-card history-card-owner history-card-link" href={`${base}${entry.href}`}>
+                      <small>{entry.meta}</small>
+                      <h3>{entry.name}</h3>
+                      <p class="history-card-hook">{entry.hook}</p>
+                      <p>{entry.cardSummary}</p>
+                      <span class="history-card-status">{entry.cardStatus}</span>
+                    </a>
+                  ) : (
+                    <article class="history-card history-card-owner">
+                      <small>{entry.meta}</small>
+                      <h3>{entry.name}</h3>
+                      <p class="history-card-hook">{entry.hook}</p>
+                      <p>{entry.cardSummary}</p>
+                      <span class="history-card-status">{entry.cardStatus}</span>
+                    </article>
+                  )
+                ))}
               </div>
             </div>
           </div>
@@ -265,27 +278,25 @@ const schema = {
                 </div>
               </div>
               <div class="history-card-track" data-track>
-                <a class="history-card history-card-owner history-card-link" href={`${base}pierce-duofon/`}>
-                  <small>PIERCE</small>
-                  <h3>PIERCE DUOFON</h3>
-                  <p class="history-card-hook">鳴らすか。控えめに知らせるか。</p>
-                  <p>2香箱とWECKER / SIGNALの切替を持つ実機。</p>
-                  <span class="history-card-status">OWNER'S NOTE →</span>
-                </a>
-                <a class="history-card history-card-owner history-card-link" href={`${base}cyma-time-o-vox/`}>
-                  <small>CYMA</small>
-                  <h3>TIME-O-VOX</h3>
-                  <p class="history-card-hook">一つの香箱で、時刻とアラームを。</p>
-                  <p>Cal.R.464を搭載する18K Chronomètre表記の実機を記録中。</p>
-                  <span class="history-card-status">OWNER'S NOTE →</span>
-                </a>
-                <article class="history-card history-card-owner">
-                  <small>CITIZEN</small>
-                  <h3>CITIZEN ALARM</h3>
-                  <p class="history-card-hook">アラーム腕時計が、日本へ。</p>
-                  <p>1950年代末に現れる国産機械式アラームの実機。</p>
-                  <span class="history-card-status">OWNER'S NOTE / NEXT</span>
-                </article>
+                {ownerCards('1950s').map((entry) => (
+                  entry.hrefKind === 'site' ? (
+                    <a class="history-card history-card-owner history-card-link" href={`${base}${entry.href}`}>
+                      <small>{entry.meta}</small>
+                      <h3>{entry.name}</h3>
+                      <p class="history-card-hook">{entry.hook}</p>
+                      <p>{entry.cardSummary}</p>
+                      <span class="history-card-status">{entry.cardStatus}</span>
+                    </a>
+                  ) : (
+                    <article class="history-card history-card-owner">
+                      <small>{entry.meta}</small>
+                      <h3>{entry.name}</h3>
+                      <p class="history-card-hook">{entry.hook}</p>
+                      <p>{entry.cardSummary}</p>
+                      <span class="history-card-status">{entry.cardStatus}</span>
+                    </article>
+                  )
+                ))}
               </div>
             </div>
 
