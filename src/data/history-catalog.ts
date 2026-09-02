@@ -106,7 +106,7 @@ export const historyCatalog: HistoryCatalogEntry[] = [
     meta: 'WITTNAUER / 10WA',
     name: 'WITTNAUER ALARM',
     hook: 'ベゼルで巻くアラーム',
-    cardSummary: '',
+    cardSummary: '回転ベゼルでアラーム時刻を設定し、同時にアラーム香箱を巻き上げる。',
     cardStatus: "OWNER'S NOTE",
     featured: true
   },
