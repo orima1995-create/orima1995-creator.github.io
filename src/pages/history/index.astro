@@ -9,6 +9,7 @@ const base = import.meta.env.BASE_URL;
 const milestoneCards = (era: '1910s' | '1940s' | '1950s') => historyCatalogByGroup.milestones.filter((entry) => entry.era === era && entry.featured);
 const ownerCards = (era: '1940s' | '1950s') => historyCatalogByGroup.owners.filter((entry) => entry.era === era && entry.featured);
 const researchCards = (era: '1950s') => historyCatalogByGroup.research.filter((entry) => entry.era === era && entry.featured);
+const hero = historyContent.hero;
 const before = historyContent.before;
 const era1910s = historyContent.era1910s;
 const era1940s = historyContent.era1940s;
@@ -74,14 +75,13 @@ const schema = {
 
     <main>
       <section class="shell history-hero history-hero-magazine">
-        <div class="eyebrow">HISTORY OF ALARM WRISTWATCHES</div>
-        <h1>アラームを、腕へ。</h1>
-        <p class="history-kicker">時間を見る。<br class="history-title-break" />時間になったら、知らされる。</p>
+        <div class="eyebrow">{hero.eyebrow}</div>
+        <h1>{hero.title}</h1>
+        <p class="history-kicker">{hero.kicker[0]}<br class="history-title-break" />{hero.kicker[1]}</p>
         <div class="history-lead">
-          <p>いまでは当たり前のこの二つは、最初から一緒だったわけではない。</p>
-          <p>人はまず、時間を共有した。次に、自分で時間を持つようになった。</p>
-          <p>そして、<strong>自分の時間を、自分のために知らせる。</strong></p>
-          <p>その仕組みまで腕へ載せようとした。</p>
+          {hero.lead.map((paragraph) => <p>{paragraph}</p>)}
+          <p>{hero.emphasisLead}<strong>{hero.emphasis}</strong></p>
+          <p>{hero.tail}</p>
         </div>
       </section>
 
