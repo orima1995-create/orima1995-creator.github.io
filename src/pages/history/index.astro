@@ -10,6 +10,7 @@ const milestoneCards = (era: '1910s' | '1940s' | '1950s') => historyCatalogByGro
 const ownerCards = (era: '1940s' | '1950s') => historyCatalogByGroup.owners.filter((entry) => entry.era === era && entry.featured);
 const researchCards = (era: '1950s') => historyCatalogByGroup.research.filter((entry) => entry.era === era && entry.featured);
 const before = historyContent.before;
+const era1910s = historyContent.era1910s;
 const title = 'アラーム腕時計の歴史｜Eterna・Cricket・Memovox・Duofon・Time-O-Vox｜VINTAGE ALARM';
 const description = '鐘で共有された時間から、懐中時計、アラーム腕時計へ。Eterna、Vulcain Cricket、Memovox、AS 1475、Pierce Duofon、Cyma Time-O-Vox、Parking Watch、電子化まで、「時間を知らせる」腕時計の歴史を辿る。';
 const schema = {
@@ -124,18 +125,18 @@ const schema = {
 
         <details class="history-chapter" id="1910s">
           <summary class="shell history-chapter-summary">
-            <span class="history-chapter-no">01</span>
+            <span class="history-chapter-no">{era1910s.chapterNo}</span>
             <span class="history-chapter-heading">
-              <small>1910s</small>
-              <strong>アラームを、腕時計のサイズへ。</strong>
+              <small>{era1910s.label}</small>
+              <strong>{era1910s.title}</strong>
             </span>
-            <span class="history-chapter-teaser">Eterna Patent 42,203。懐中時計の延長ではなく、腕時計サイズのアラームへ。</span>
+            <span class="history-chapter-teaser">{era1910s.teaser}</span>
             <span class="history-chapter-toggle" aria-hidden="true">＋</span>
           </summary>
           <div class="history-chapter-body history-chapter-paper">
             <div class="shell history-decade-intro">
-              <p class="history-overline">PATENT 42,203 / 1908 → SERIES PRODUCTION / 1914</p>
-              <p>Eternaは1908年、13リーニュのアラーム腕時計機構について特許42,203を取得した。1914年からシリーズ生産が始まり、専門文献では最初のシリーズ生産アラーム腕時計として位置づけられている。</p>
+              <p class="history-overline">{era1910s.overline}</p>
+              <p>{era1910s.intro}</p>
             </div>
 
             <div class="shell history-shelf" id="milestones" data-shelf>
