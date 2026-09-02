@@ -175,6 +175,26 @@ content:
           - { name: teaser, label: 目次・要約, type: text }
           - { name: overline, label: Overline, type: string }
           - { name: intro, label: 本文, type: text }
+          - name: cards
+            label: HISTORYカード
+            type: object
+            list:
+              max: 30
+              collapsible:
+                collapsed: true
+                summary: "{group} / {name}"
+            fields:
+              - { name: id, label: ID, type: string, readonly: true }
+              - { name: group, label: 分類, type: string, readonly: true }
+              - { name: sort, label: 並び順, type: number, readonly: true }
+              - { name: meta, label: 上部表記, type: string }
+              - { name: name, label: カード名, type: string }
+              - { name: hook, label: フック, type: text }
+              - { name: cardSummary, label: 要約, type: text }
+              - { name: cardStatus, label: ステータス表示, type: string }
+              - { name: featured, label: 掲載, type: boolean, readonly: true }
+              - { name: href, label: リンク先, type: string, readonly: true }
+              - { name: hrefKind, label: リンク種別, type: string, readonly: true }
 
       - name: era1940s
         label: 02 / 1940s
@@ -187,6 +207,26 @@ content:
           - { name: teaser, label: 目次・要約, type: text }
           - { name: overline, label: Overline, type: string }
           - { name: intro, label: 本文, type: text }
+          - name: cards
+            label: HISTORYカード
+            type: object
+            list:
+              max: 30
+              collapsible:
+                collapsed: true
+                summary: "{group} / {name}"
+            fields:
+              - { name: id, label: ID, type: string, readonly: true }
+              - { name: group, label: 分類, type: string, readonly: true }
+              - { name: sort, label: 並び順, type: number, readonly: true }
+              - { name: meta, label: 上部表記, type: string }
+              - { name: name, label: カード名, type: string }
+              - { name: hook, label: フック, type: text }
+              - { name: cardSummary, label: 要約, type: text }
+              - { name: cardStatus, label: ステータス表示, type: string }
+              - { name: featured, label: 掲載, type: boolean, readonly: true }
+              - { name: href, label: リンク先, type: string, readonly: true }
+              - { name: hrefKind, label: リンク種別, type: string, readonly: true }
 
       - name: era1950s
         label: 03 / 1950s
@@ -198,6 +238,26 @@ content:
           - { name: title, label: 章タイトル, type: string }
           - { name: teaser, label: 目次・要約, type: text }
           - { name: intro, label: 導入本文, type: text }
+          - name: cards
+            label: HISTORYカード
+            type: object
+            list:
+              max: 30
+              collapsible:
+                collapsed: true
+                summary: "{group} / {name}"
+            fields:
+              - { name: id, label: ID, type: string, readonly: true }
+              - { name: group, label: 分類, type: string, readonly: true }
+              - { name: sort, label: 並び順, type: number, readonly: true }
+              - { name: meta, label: 上部表記, type: string }
+              - { name: name, label: カード名, type: string }
+              - { name: hook, label: フック, type: text }
+              - { name: cardSummary, label: 要約, type: text }
+              - { name: cardStatus, label: ステータス表示, type: string }
+              - { name: featured, label: 掲載, type: boolean, readonly: true }
+              - { name: href, label: リンク先, type: string, readonly: true }
+              - { name: hrefKind, label: リンク種別, type: string, readonly: true }
 
       - name: era1960s
         label: 04 / 1960s
@@ -209,6 +269,26 @@ content:
           - { name: title, label: 章タイトル, type: string }
           - { name: teaser, label: 目次・要約, type: text }
           - { name: intro, label: 導入本文, type: text }
+          - name: cards
+            label: HISTORYカード
+            type: object
+            list:
+              max: 30
+              collapsible:
+                collapsed: true
+                summary: "{group} / {name}"
+            fields:
+              - { name: id, label: ID, type: string, readonly: true }
+              - { name: group, label: 分類, type: string, readonly: true }
+              - { name: sort, label: 並び順, type: number, readonly: true }
+              - { name: meta, label: 上部表記, type: string }
+              - { name: name, label: カード名, type: string }
+              - { name: hook, label: フック, type: text }
+              - { name: cardSummary, label: 要約, type: text }
+              - { name: cardStatus, label: ステータス表示, type: string }
+              - { name: featured, label: 掲載, type: boolean, readonly: true }
+              - { name: href, label: リンク先, type: string, readonly: true }
+              - { name: hrefKind, label: リンク種別, type: string, readonly: true }
 
       - name: electronic
         label: 05 / 1970s
@@ -224,6 +304,26 @@ content:
             label: 本文
             type: text
             list: true
+          - name: cards
+            label: HISTORYカード
+            type: object
+            list:
+              max: 30
+              collapsible:
+                collapsed: true
+                summary: "{group} / {name}"
+            fields:
+              - { name: id, label: ID, type: string, readonly: true }
+              - { name: group, label: 分類, type: string, readonly: true }
+              - { name: sort, label: 並び順, type: number, readonly: true }
+              - { name: meta, label: 上部表記, type: string }
+              - { name: name, label: カード名, type: string }
+              - { name: hook, label: フック, type: text }
+              - { name: cardSummary, label: 要約, type: text }
+              - { name: cardStatus, label: ステータス表示, type: string }
+              - { name: featured, label: 掲載, type: boolean, readonly: true }
+              - { name: href, label: リンク先, type: string, readonly: true }
+              - { name: hrefKind, label: リンク種別, type: string, readonly: true }
 
       - name: current
         label: 06 / CURRENT
