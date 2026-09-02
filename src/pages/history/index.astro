@@ -247,22 +247,26 @@ const schema = {
               </div>
             </div>
 
-            <div class="shell history-shelf history-shelf-interest" id="research" data-shelf>
-              <div class="history-shelf-head"><div><span>RESEARCH</span></div></div>
-              <div class="history-card-track" data-track>
-                {researchCards('1950s').map((entry) => (
-                  entry.hrefKind === 'site' ? (
-                    <a class="history-card history-card-interest history-card-link" href={`${base}${entry.href}`}>
-                      <small>{entry.meta}</small><h3>{entry.name}</h3><p class="history-card-hook">{entry.hook}</p><p>{entry.cardSummary}</p><span class="history-card-status">{entry.cardStatus}</span>
-                    </a>
-                  ) : (
-                    <article class="history-card history-card-interest">
-                      <small>{entry.meta}</small><h3>{entry.name}</h3><p class="history-card-hook">{entry.hook}</p><p>{entry.cardSummary}</p><span class="history-card-status">{entry.cardStatus}</span>
-                    </article>
-                  )
-                ))}
+            {researchCards('1950s').length > 0 ? (
+              <div class="shell history-shelf history-shelf-interest" id="research" data-shelf>
+                <div class="history-shelf-head"><div><span>RESEARCH</span></div></div>
+                <div class="history-card-track" data-track>
+                  {researchCards('1950s').map((entry) => (
+                    entry.hrefKind === 'site' ? (
+                      <a class="history-card history-card-interest history-card-link" href={`${base}${entry.href}`}>
+                        <small>{entry.meta}</small><h3>{entry.name}</h3><p class="history-card-hook">{entry.hook}</p><p>{entry.cardSummary}</p><span class="history-card-status">{entry.cardStatus}</span>
+                      </a>
+                    ) : (
+                      <article class="history-card history-card-interest">
+                        <small>{entry.meta}</small><h3>{entry.name}</h3><p class="history-card-hook">{entry.hook}</p><p>{entry.cardSummary}</p><span class="history-card-status">{entry.cardStatus}</span>
+                      </article>
+                    )
+                  ))}
+                </div>
               </div>
-            </div>
+            ) : (
+              <span id="research" hidden></span>
+            )}
           </div>
         </details>
 
