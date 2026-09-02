@@ -68,8 +68,8 @@ jobs:
           check_text 'owners-notes/' dist/index.html
           check_text 'history/#milestones' dist/index.html
           check_text 'history/#research' dist/index.html
-          check_text '自分のために知らせる' dist/history/index.html
-          check_text 'PARKING WATCH' dist/history/index.html
+          check_text 'MEMOVOX AUTOMATIC / CAL.815' dist/history/index.html
+          check_text 'MEMOVOX PARKING' dist/history/index.html
           check_text 'PIERCE DUOFON' dist/history/index.html
           check_text 'cyma-time-o-vox/' dist/history/index.html
           check_text 'id="milestones"' dist/history/index.html
@@ -128,8 +128,8 @@ jobs:
             if grep -Fq "owners-notes/" <<<"$home_html" \
               && grep -Fq "history/#milestones" <<<"$home_html" \
               && grep -Fq "history/#research" <<<"$home_html" \
-              && grep -Fq "自分のために知らせる" <<<"$history_html" \
-              && grep -Fq "PARKING WATCH" <<<"$history_html" \
+              && grep -Fq "MEMOVOX AUTOMATIC / CAL.815" <<<"$history_html" \
+              && grep -Fq "MEMOVOX PARKING" <<<"$history_html" \
               && grep -Fq "id=\"milestones\"" <<<"$history_html" \
               && grep -Fq "id=\"research\"" <<<"$history_html" \
               && grep -Fq "cyma-time-o-vox/" <<<"$history_html" \
