@@ -23,11 +23,24 @@
 - 主題は「アラームを、腕へ。」。
 - 年表を並べるだけではなく、腕時計へ載せる際に発生した小型化・動力・設定・音響・ケース・装着時の可聴性などの問題を軸にする。
 - 1950年代を中心章として扱い、Vulcain Cricket / Jaeger-LeCoultre Memovox / Pierce Duofon / Cyma Time-O-Vox / Citizen Alarmなど、異なる構造上の回答を並べる。
+- HISTORYの年代は、モデル・機構の歴史上の初出や節目を基準にする。所有個体の製造年代から決めない。
+- HISTORYの年代データをOWNER'S NOTES一覧やWATCHの`spec.era`から自動生成しない。
 - HISTORYからWATCHへリンクし、WATCHから該当時代のHISTORYへ戻れるようにする。
 - 最終章の見出しは「現状の到達点」。入口では皮肉やオチを説明しない。
 - SMARTWATCHページは通常の歴史章として入場させ、ページ内部でのみ通知過多のビジュアルを見せる。
 - SMARTWATCHを機械式アラーム腕時計の直接的な系譜として断定しない。
 - SMARTWATCH画像の前に「通知地獄」「皮肉」などのネタバレ見出しを追加しない。
+
+## OWNER'S NOTES一覧
+
+- `OWNER'S NOTES`は、完成したOWNER'S NOTEを所有個体の年代順に並べる一覧ページ。
+- 一覧のデータソースは`src/data/owners-directory.json`とする。
+- `ownedEra` / `ownedSortYear`は所有個体の年代を表す。HISTORYの初出年代とは別データとして管理する。
+- 例：Pierce DuofonはHISTORYでは1950年代の初出として扱えても、所有個体一覧では掲載個体に合わせて1960sへ置ける。
+- 一覧でWATCHページ用の`catch`や`spec.era`を自動流用しない。一覧専用の`catch`と所有個体年代を使う。
+- カードはヒーロー画像、ブランド、モデル名、短い一覧専用キャッチに絞る。
+- カード全体をOWNER'S NOTEへのリンクとし、「OWNER'S NOTEを見る」と「個体ページへ」の重複導線を置かない。
+- OWNER'S NOTE原文・WATCH本文を一覧都合で変更しない。
 
 ## WATCHページ固定順序
 
@@ -52,7 +65,8 @@
 ## コード変更範囲
 
 - 通常の記事追加・文章修正：`src/content/watches/` と `public/images/` を中心に変更する。
-- HISTORYの追加・修正：`src/pages/history/` と、必要なHISTORY用画像を変更する。
+- OWNER'S NOTES一覧の追加・修正：`src/pages/owners-notes/` と `src/data/owners-directory.json` を中心に変更する。
+- HISTORYの追加・修正：`src/pages/history/`、`src/data/history-content.json`、`src/data/history-catalog.ts` と必要なHISTORY用画像を変更する。
 - デザイン変更の明示指示がある場合のみ：`src/components/`、`src/layouts/`、`src/styles/` を変更可。
 - 一つの記事修正を理由に共通テンプレートを勝手に変更しない。
 
@@ -65,19 +79,20 @@
 
 ## 検索・公開の最低基準
 
-- TOP / HISTORY / WATCH / SMARTWATCHは、それぞれ固有の `title` と `description` を持つ。
+- TOP / HISTORY / OWNER'S NOTES / WATCH / SMARTWATCHは、それぞれ固有の `title` と `description` を持つ。
 - 公開ページには canonical URL を付ける。
 - OGP / Twitter Cardの基本メタデータを付ける。利用できる実画像があるページは `og:image` を設定する。
 - `robots.txt` でクロールを許可し、`sitemap.xml` を明示する。
 - 検索対象ページを追加したら `sitemap.xml` にURLを追加する。
-- TOPは `WebSite`、HISTORYは `Article`、WATCH / SMARTWATCHは `CreativeWork` を基本に構造化データを付ける。階層ページには `BreadcrumbList` を付ける。
+- TOPは `WebSite`、HISTORYは `Article`、OWNER'S NOTESは`CollectionPage`、WATCH / SMARTWATCHは `CreativeWork` を基本に構造化データを付ける。階層ページには `BreadcrumbList` を付ける。
 - 検索用タイトルやdescriptionに未確認事項・過剰主張を追加しない。
 - SEO目的で本文を水増ししない。本文の編集品質と検索メタデータを分離する。
 
 ## 公開前確認
 
 - Astro build成功。
-- TOP / HISTORY / WATCH / SMARTWATCHの必要ページが生成される。
+- TOP / HISTORY / OWNER'S NOTES / WATCH / SMARTWATCHの必要ページが生成される。
+- OWNER'S NOTES一覧では所有個体年代とHISTORY初出年代が混在していない。
 - WATCHではタイトル、OWNER'S NOTE、SPEC、動画、DEEP DIVE、出典が存在する。
 - HISTORYからWATCH、WATCHからHISTORYの往復リンクが存在する。
 - `robots.txt` と `sitemap.xml` が生成物に存在する。
