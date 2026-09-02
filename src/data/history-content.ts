@@ -71,7 +71,23 @@ export const historyContent = {
     label: '1960s–70s',
     title: '用途と複合機能へ。',
     teaser: '自動巻、日付、潜水、第二時間帯。アラームは他の機能と結びついていく。',
-    intro: '1950年代までに多様な基本構成が現れ、その後はアラームを自動巻、日付、スポーツ用途、旅行用途などと組み合わせる展開が広がった。'
+    intro: '1950年代までに多様な基本構成が現れ、その後はアラームを自動巻、日付、スポーツ用途、旅行用途などと組み合わせる展開が広がった。',
+    branches: [
+      {
+        meta: 'AUTOMATIC / DATE',
+        name: 'DAILY USE',
+        hook: '巻く手間を減らし、日常機能を足す。',
+        summary: '自動巻や日付との組み合わせで、アラームは日常時計の一機能へ近づいていく。',
+        status: 'BRANCH'
+      },
+      {
+        meta: 'DIVER / TRAVEL',
+        name: 'BEYOND THE DESK',
+        hook: '潜る。旅する。別の時間を扱う。',
+        summary: '高防水、潜水、第二時間帯など、アラームは使われる場所そのものを広げた。',
+        status: 'BRANCH'
+      }
+    ]
   },
   electronic: {
     chapterNo: '05',

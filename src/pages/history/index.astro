@@ -366,20 +366,15 @@ const schema = {
                 </div>
               </div>
               <div class="history-card-track" data-track>
-                <article class="history-card history-card-milestone">
-                  <small>AUTOMATIC / DATE</small>
-                  <h3>DAILY USE</h3>
-                  <p class="history-card-hook">巻く手間を減らし、日常機能を足す。</p>
-                  <p>自動巻や日付との組み合わせで、アラームは日常時計の一機能へ近づいていく。</p>
-                  <span class="history-card-status">BRANCH</span>
-                </article>
-                <article class="history-card history-card-milestone">
-                  <small>DIVER / TRAVEL</small>
-                  <h3>BEYOND THE DESK</h3>
-                  <p class="history-card-hook">潜る。旅する。別の時間を扱う。</p>
-                  <p>高防水、潜水、第二時間帯など、アラームは使われる場所そのものを広げた。</p>
-                  <span class="history-card-status">BRANCH</span>
-                </article>
+                {era1960s.branches.map((branch) => (
+                  <article class="history-card history-card-milestone">
+                    <small>{branch.meta}</small>
+                    <h3>{branch.name}</h3>
+                    <p class="history-card-hook">{branch.hook}</p>
+                    <p>{branch.summary}</p>
+                    <span class="history-card-status">{branch.status}</span>
+                  </article>
+                ))}
               </div>
             </div>
           </div>
