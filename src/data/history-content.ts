@@ -70,5 +70,12 @@ export const historyContent = {
       '機械式では、香箱、ハンマー、音響体、停止機構を小さなケースへ組み込む必要があった。電子化すると、アラームは回路と電子音で実現できる。',
       'アラームは消えなかった。むしろ、時計に付いていて当然の機能へ近づいていった。'
     ]
+  },
+  current: {
+    storyNo: '06 / CURRENT',
+    title: '現状の到達点。',
+    name: 'SMARTWATCH',
+    linkLabel: '見る →',
+    href: 'history/smartwatch/'
   }
 } as const;
