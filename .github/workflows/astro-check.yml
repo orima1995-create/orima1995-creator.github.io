@@ -46,15 +46,14 @@ jobs:
           grep -Fq "CYMA TIME-O-VOX 18K CHRONOMÈTRE" dist/owners-notes/index.html
           grep -Fq "cyma-time-o-vox/owners-note/" dist/owners-notes/index.html
 
-          grep -Fq "アラームを、腕へ。" dist/history/index.html
-          grep -Fq "様々な進化と個性。" dist/history/index.html
+          grep -Fq 'id="1950s"' dist/history/index.html
           grep -Fq "PIERCE DUOFON" dist/history/index.html
           grep -Fq "TIME-O-VOX" dist/history/index.html
           grep -Fq "cyma-time-o-vox/" dist/history/index.html
           grep -Fq 'id="milestones"' dist/history/index.html
           grep -Fq 'id="research"' dist/history/index.html
           grep -Fq "owners-notes/" dist/history/index.html
-          grep -Fq "現状の到達点。" dist/history/index.html
+          grep -Fq 'id="current"' dist/history/index.html
           grep -Fq "history/smartwatch/" dist/history/index.html
 
           grep -Fq "smartwatch-part-4.webp" dist/history/smartwatch/index.html
