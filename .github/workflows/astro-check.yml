@@ -64,7 +64,8 @@ jobs:
           grep -Fq "約9時間分のパワーリザーブ" dist/cyma-time-o-vox/index.html
 
           if grep -R -q "data:image/.*base64" dist; then
-            echo "Embedded base64 image remains in generated HTML"
+            echo "Embedded base64 image found in generated output:"
+            grep -R -l "data:image/.*base64" dist
             exit 1
           fi
           if grep -R -q "word-break:[[:space:]]*break-all" dist; then
