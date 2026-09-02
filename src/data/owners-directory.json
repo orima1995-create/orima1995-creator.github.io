@@ -1,0 +1,24 @@
+{
+  "entries": [
+    {
+      "ownerNumber": "02",
+      "ownedEra": "1950s",
+      "ownedSortYear": 1956,
+      "brand": "CYMA",
+      "name": "TIME-O-VOX",
+      "catch": "鳴る黄金のクロノメーター",
+      "image": "/images/cyma-time-o-vox/owners-note-1.webp",
+      "href": "/cyma-time-o-vox/owners-note/"
+    },
+    {
+      "ownerNumber": "01",
+      "ownedEra": "1960s",
+      "ownedSortYear": 1960,
+      "brand": "PIERCE",
+      "name": "DUOFON",
+      "catch": "1950's通知のオーパーツ。",
+      "image": "/images/pierce-duofon/owners-note.jpg",
+      "href": "/pierce-duofon/#owners-note"
+    }
+  ]
+}
