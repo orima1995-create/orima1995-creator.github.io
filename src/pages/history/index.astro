@@ -133,7 +133,7 @@ const schema = {
               <p>{era1910s.intro}</p>
             </div>
 
-            <div class="shell history-shelf" data-shelf>
+            <div class="shell history-shelf" id="milestones" data-shelf>
               <div class="history-shelf-head">
                 <div><span>MILESTONES</span><p>歴史上の節目</p></div>
                 {milestoneCards('1910s').length > 1 && (
@@ -247,7 +247,7 @@ const schema = {
               </div>
             </div>
 
-            <div class="shell history-shelf history-shelf-interest" data-shelf>
+            <div class="shell history-shelf history-shelf-interest" id="research" data-shelf>
               <div class="history-shelf-head"><div><span>RESEARCH</span><p>調査中</p></div></div>
               <div class="history-card-track" data-track>
                 {researchCards('1950s').map((entry) => (
