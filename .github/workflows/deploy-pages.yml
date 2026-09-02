@@ -65,10 +65,16 @@ jobs:
             file="$2"
             grep -Fq "$needle" "$file" || { echo "missing text [$needle] in $file"; exit 1; }
           }
+          check_text 'owners-notes/' dist/index.html
+          check_text 'history/#milestones' dist/index.html
+          check_text 'history/#research' dist/index.html
           check_text '自分のために知らせる' dist/history/index.html
           check_text 'PARKING WATCH' dist/history/index.html
           check_text 'PIERCE DUOFON' dist/history/index.html
-          check_text 'owners-notes/' dist/index.html
+          check_text 'cyma-time-o-vox/' dist/history/index.html
+          check_text 'id="milestones"' dist/history/index.html
+          check_text 'id="research"' dist/history/index.html
+          check_text 'owners-notes/' dist/history/index.html
           check_text 'CYMA TIME-O-VOX 18K CHRONOMÈTRE' dist/owners-notes/index.html
           check_text 'cyma-time-o-vox/owners-note/' dist/owners-notes/index.html
           check_text 'smartwatch-part-4.webp' dist/history/smartwatch/index.html
@@ -79,6 +85,16 @@ jobs:
           check_text 'owners-note-4.webp' dist/cyma-time-o-vox/index.html
           check_text 'owners-notes' dist/sitemap.xml
           check_text 'cyma-time-o-vox' dist/sitemap.xml
+          for dead in '#index-milestones' '#index-owners' '#index-interests'; do
+            if grep -R -Fq "$dead" dist; then
+              echo "removed navigation target remains in generated output: $dead"
+              exit 1
+            fi
+          done
+          if grep -R -Fq 'runtime-menu' dist; then
+            echo "legacy runtime navigation remains in generated output"
+            exit 1
+          fi
       - name: Configure Pages
         uses: actions/configure-pages@v5
       - name: Upload site
@@ -110,8 +126,14 @@ jobs:
               [ "${cyma_size:-0}" -gt 4000 ] || parts_ok=0
             done
             if grep -Fq "owners-notes/" <<<"$home_html" \
+              && grep -Fq "history/#milestones" <<<"$home_html" \
+              && grep -Fq "history/#research" <<<"$home_html" \
               && grep -Fq "自分のために知らせる" <<<"$history_html" \
               && grep -Fq "PARKING WATCH" <<<"$history_html" \
+              && grep -Fq "id=\"milestones\"" <<<"$history_html" \
+              && grep -Fq "id=\"research\"" <<<"$history_html" \
+              && grep -Fq "cyma-time-o-vox/" <<<"$history_html" \
+              && grep -Fq "owners-notes/" <<<"$history_html" \
               && grep -Fq "CYMA TIME-O-VOX 18K CHRONOMÈTRE" <<<"$owners_html" \
               && grep -Fq "cyma-time-o-vox/owners-note/" <<<"$owners_html" \
               && grep -Fq "smartwatch-part-4.webp" <<<"$smart_html" \
@@ -119,8 +141,11 @@ jobs:
               && grep -Fq "一つの香箱なのに、リューズは回らない。" <<<"$cyma_html" \
               && grep -Fq "約9時間分のパワーリザーブ" <<<"$cyma_html" \
               && grep -Fq "owners-note-4.webp" <<<"$cyma_html" \
+              && ! grep -Fq "#index-milestones" <<<"$home_html$history_html" \
+              && ! grep -Fq "#index-owners" <<<"$home_html$history_html" \
+              && ! grep -Fq "#index-interests" <<<"$home_html$history_html" \
               && [ "$parts_ok" -eq 1 ]; then
-              echo "Verified live site, owners notes directory, smartwatch artwork, and Cyma owner note: $root"
+              echo "Verified live navigation, owners notes, smartwatch artwork, and Cyma page: $root"
               exit 0
             fi
             sleep 5
