@@ -14,6 +14,7 @@ const era1910s = historyContent.era1910s;
 const era1940s = historyContent.era1940s;
 const era1950s = historyContent.era1950s;
 const era1960s = historyContent.era1960s;
+const electronic = historyContent.electronic;
 const title = 'アラーム腕時計の歴史｜Eterna・Cricket・Memovox・Duofon・Time-O-Vox｜VINTAGE ALARM';
 const description = '鐘で共有された時間から、懐中時計、アラーム腕時計へ。Eterna、Vulcain Cricket、Memovox、AS 1475、Pierce Duofon、Cyma Time-O-Vox、Parking Watch、電子化まで、「時間を知らせる」腕時計の歴史を辿る。';
 const schema = {
@@ -379,19 +380,18 @@ const schema = {
 
         <details class="history-chapter" id="electronic">
           <summary class="shell history-chapter-summary">
-            <span class="history-chapter-no">05</span>
+            <span class="history-chapter-no">{electronic.chapterNo}</span>
             <span class="history-chapter-heading">
-              <small>QUARTZ / DIGITAL</small>
-              <strong>アラームが、特別な複雑機構ではなくなる。</strong>
+              <small>{electronic.label}</small>
+              <strong>{electronic.title}</strong>
             </span>
-            <span class="history-chapter-teaser">香箱もハンマーも要らない。電子化で、アラームの前提そのものが変わる。</span>
+            <span class="history-chapter-teaser">{electronic.teaser}</span>
             <span class="history-chapter-toggle" aria-hidden="true">＋</span>
           </summary>
           <div class="history-chapter-body">
             <div class="shell history-story-inner history-story-inner-compact">
               <div class="history-story-copy history-story-copy-flat">
-                <p>機械式では、香箱、ハンマー、音響体、停止機構を小さなケースへ組み込む必要があった。電子化すると、アラームは回路と電子音で実現できる。</p>
-                <p>アラームは消えなかった。むしろ、時計に付いていて当然の機能へ近づいていった。</p>
+                {electronic.body.map((paragraph) => <p>{paragraph}</p>)}
               </div>
             </div>
           </div>
