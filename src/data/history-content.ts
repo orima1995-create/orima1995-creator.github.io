@@ -53,5 +53,12 @@ export const historyContent = {
     editorialLead: 'ここから先は、存在したアラーム腕時計をすべて並べる年表にはしない。',
     editorialStrong: '歴史上のマイルストーン、OWNER\'S NOTE、そして個人的に気になっている時計',
     editorialTail: 'を分けて置く。'
+  },
+  era1960s: {
+    chapterNo: '04',
+    label: '1960s–70s',
+    title: '用途と複合機能へ。',
+    teaser: '自動巻、日付、潜水、第二時間帯。アラームは他の機能と結びついていく。',
+    intro: '1950年代までに多様な基本構成が現れ、その後はアラームを自動巻、日付、スポーツ用途、旅行用途などと組み合わせる展開が広がった。'
   }
 } as const;
