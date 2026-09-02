@@ -17,6 +17,7 @@ const era1950s = historyContent.era1950s;
 const era1960s = historyContent.era1960s;
 const electronic = historyContent.electronic;
 const current = historyContent.current;
+const sources = historyContent.sources;
 const historyIndex = [
   { href: '#before', no: before.chapterNo, label: `${before.label} — ${before.title}` },
   { href: '#1910s', no: era1910s.chapterNo, label: `${era1910s.label} — ${era1910s.title}` },
@@ -415,13 +416,9 @@ const schema = {
 
       <section class="shell history-sources">
         <details>
-          <summary>参考資料・出典</summary>
+          <summary>{sources.summary}</summary>
           <ul>
-            <li>Michael Philip Horlbeck, The Alarm Wristwatch (Schiffer Publishing, 2007), pp. 11–31, 41–83, 130–131, 203–216</li>
-            <li>Leonhard Beitl, Alarm am Arm (2009), pp. 86–90, 121–136, 353–359, 390–395, 473–480</li>
-            <li>Pierce AG, Die Wecker-Armbanduhr Duofon mit zwei Lautstärken (1955), Alarm am Arm収録 pp. 353–355</li>
-            <li>Smithsonian National Museum of American History, Simon Willard Tower Clock（公共の塔時計と都市の時間）</li>
-            <li>Cambridge, Marking Time, Making Community in Medieval Schools（鐘による時間区分と共同体）</li>
+            {sources.items.map((item) => <li>{item}</li>)}
           </ul>
         </details>
       </section>

@@ -91,5 +91,15 @@ export const historyContent = {
     name: 'SMARTWATCH',
     linkLabel: '見る →',
     href: 'history/smartwatch/'
+  },
+  sources: {
+    summary: '参考資料・出典',
+    items: [
+      'Michael Philip Horlbeck, The Alarm Wristwatch (Schiffer Publishing, 2007), pp. 11–31, 41–83, 130–131, 203–216',
+      'Leonhard Beitl, Alarm am Arm (2009), pp. 86–90, 121–136, 353–359, 390–395, 473–480',
+      'Pierce AG, Die Wecker-Armbanduhr Duofon mit zwei Lautstärken (1955), Alarm am Arm収録 pp. 353–355',
+      'Smithsonian National Museum of American History, Simon Willard Tower Clock（公共の塔時計と都市の時間）',
+      'Cambridge, Marking Time, Making Community in Medieval Schools（鐘による時間区分と共同体）'
+    ]
   }
 } as const;
