@@ -17,6 +17,15 @@ const era1950s = historyContent.era1950s;
 const era1960s = historyContent.era1960s;
 const electronic = historyContent.electronic;
 const current = historyContent.current;
+const historyIndex = [
+  { href: '#before', no: before.chapterNo, label: `${before.label} — ${before.title}` },
+  { href: '#1910s', no: era1910s.chapterNo, label: `${era1910s.label} — ${era1910s.title}` },
+  { href: '#1940s', no: era1940s.chapterNo, label: `${era1940s.label} — ${era1940s.title}` },
+  { href: '#1950s', no: era1950s.chapterNo, label: `${era1950s.label} — ${era1950s.title}${era1950s.thesis}` },
+  { href: '#1960s', no: era1960s.chapterNo, label: `${era1960s.label} — ${era1960s.title}` },
+  { href: '#electronic', no: electronic.chapterNo, label: `${electronic.label} — ${electronic.indexTitle}` },
+  { href: '#current', no: current.chapterNo, label: current.title }
+] as const;
 const title = 'アラーム腕時計の歴史｜Eterna・Cricket・Memovox・Duofon・Time-O-Vox｜VINTAGE ALARM';
 const description = '鐘で共有された時間から、懐中時計、アラーム腕時計へ。Eterna、Vulcain Cricket、Memovox、AS 1475、Pierce Duofon、Cyma Time-O-Vox、Parking Watch、電子化まで、「時間を知らせる」腕時計の歴史を辿る。';
 const schema = {
@@ -86,13 +95,9 @@ const schema = {
       </section>
 
       <nav class="shell history-index history-index-magazine" aria-label="歴史の目次">
-        <a href="#before"><span>00</span><strong>BEFORE THE WRIST — 時間は、まだ手元になかった。</strong></a>
-        <a href="#1910s"><span>01</span><strong>1910s — アラームを、腕時計のサイズへ。</strong></a>
-        <a href="#1940s"><span>02</span><strong>1940s — 腕につけたまま、聞こえる音を。</strong></a>
-        <a href="#1950s"><span>03</span><strong>1950s — 様々な進化と個性。正解が、一つじゃなくなる。</strong></a>
-        <a href="#1960s"><span>04</span><strong>1960s–70s — 用途と複合機能へ。</strong></a>
-        <a href="#electronic"><span>05</span><strong>QUARTZ / DIGITAL — アラームが標準機能になる。</strong></a>
-        <a href="#current"><span>06</span><strong>現状の到達点。</strong></a>
+        {historyIndex.map((item) => (
+          <a href={item.href}><span>{item.no}</span><strong>{item.label}</strong></a>
+        ))}
       </nav>
 
       <div class="history-chapters">

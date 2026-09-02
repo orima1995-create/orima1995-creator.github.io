@@ -77,6 +77,7 @@ export const historyContent = {
     chapterNo: '05',
     label: 'QUARTZ / DIGITAL',
     title: 'アラームが、特別な複雑機構ではなくなる。',
+    indexTitle: 'アラームが標準機能になる。',
     teaser: '香箱もハンマーも要らない。電子化で、アラームの前提そのものが変わる。',
     body: [
       '機械式では、香箱、ハンマー、音響体、停止機構を小さなケースへ組み込む必要があった。電子化すると、アラームは回路と電子音で実現できる。',
@@ -84,6 +85,7 @@ export const historyContent = {
     ]
   },
   current: {
+    chapterNo: '06',
     storyNo: '06 / CURRENT',
     title: '現状の到達点。',
     name: 'SMARTWATCH',
