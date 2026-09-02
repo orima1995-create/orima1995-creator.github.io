@@ -182,7 +182,7 @@ export const historyCatalog: HistoryCatalogEntry[] = [
     meta: '1971–73 / A. SCHILD',
     name: 'AS 5007 / 5008',
     hook: '2香箱の両方をローターで自動巻き。',
-    cardSummary: '時計用とアラーム用、双方のゼンマイを自動巻きする量産キャリバー。',
+    cardSummary: '5007 / 5008では、時計用とアラーム用の双方をローターで巻き上げる。',
     cardStatus: 'MILESTONE',
     featured: true
   },
