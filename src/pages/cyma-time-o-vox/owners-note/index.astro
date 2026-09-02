@@ -1,5 +1,6 @@
 ---
 import SectionMast from '../../../components/SectionMast.astro';
+import OwnerNoteEndNav from '../../../components/OwnerNoteEndNav.astro';
 import '../../../styles/site.css';
 const base = import.meta.env.BASE_URL;
 const parts = [1, 2, 3, 4].map((n) => `${base}images/cyma-time-o-vox/owners-note-${n}.webp`);
@@ -15,23 +16,30 @@ const parts = [1, 2, 3, 4].map((n) => `${base}images/cyma-time-o-vox/owners-note
   </head>
   <body>
     <SectionMast rightLabel="OWNER'S NOTE" />
-    <main class="shell owner-note-zoom-page">
-      <a class="owner-note-zoom-back" href={`${base}cyma-time-o-vox/`}>← CYMA TIME-O-VOX</a>
-      <div class="owner-note-zoom-stack">
-        {parts.map((src, index) => <img src={src} alt={index === 0 ? "CYMA TIME-O-VOX 18K CHRONOMÈTRE OWNER'S NOTE" : ''} />)}
+    <main>
+      <div class="shell owner-note-zoom-page">
+        <a class="owner-note-zoom-back" href={`${base}cyma-time-o-vox/`}>← CYMA TIME-O-VOX</a>
+        <div class="owner-note-zoom-stack">
+          {parts.map((src, index) => <img src={src} alt={index === 0 ? "CYMA TIME-O-VOX 18K CHRONOMÈTRE OWNER'S NOTE" : ''} />)}
+        </div>
       </div>
+      <OwnerNoteEndNav
+        nextHref="pierce-duofon/#owners-note"
+        nextName="PIERCE DUOFON"
+        historyHref="history/#1950s"
+      />
     </main>
   </body>
 </html>
 
 <style>
-  .owner-note-zoom-page{padding:34px 0 72px}
+  .owner-note-zoom-page{padding:34px 0 54px}
   .owner-note-zoom-back{display:inline-block;margin-bottom:24px;padding-bottom:4px;border-bottom:1px solid currentColor;text-decoration:none;font-size:14px}
   .owner-note-zoom-stack{width:min(100%,800px);margin-inline:auto}
   .owner-note-zoom-stack img{display:block;width:100%;height:auto;margin:0}
   .owner-note-zoom-stack img+img{margin-top:-1px}
   @media(max-width:480px){
-    .owner-note-zoom-page{padding-top:24px}
+    .owner-note-zoom-page{padding-top:24px;padding-bottom:42px}
     .owner-note-zoom-back{margin-bottom:18px}
   }
 </style>
