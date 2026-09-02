@@ -13,6 +13,7 @@ const before = historyContent.before;
 const era1910s = historyContent.era1910s;
 const era1940s = historyContent.era1940s;
 const era1950s = historyContent.era1950s;
+const era1960s = historyContent.era1960s;
 const title = 'アラーム腕時計の歴史｜Eterna・Cricket・Memovox・Duofon・Time-O-Vox｜VINTAGE ALARM';
 const description = '鐘で共有された時間から、懐中時計、アラーム腕時計へ。Eterna、Vulcain Cricket、Memovox、AS 1475、Pierce Duofon、Cyma Time-O-Vox、Parking Watch、電子化まで、「時間を知らせる」腕時計の歴史を辿る。';
 const schema = {
@@ -333,17 +334,17 @@ const schema = {
 
         <details class="history-chapter" id="1960s">
           <summary class="shell history-chapter-summary">
-            <span class="history-chapter-no">04</span>
+            <span class="history-chapter-no">{era1960s.chapterNo}</span>
             <span class="history-chapter-heading">
-              <small>1960s–70s</small>
-              <strong>用途と複合機能へ。</strong>
+              <small>{era1960s.label}</small>
+              <strong>{era1960s.title}</strong>
             </span>
-            <span class="history-chapter-teaser">自動巻、日付、潜水、第二時間帯。アラームは他の機能と結びついていく。</span>
+            <span class="history-chapter-teaser">{era1960s.teaser}</span>
             <span class="history-chapter-toggle" aria-hidden="true">＋</span>
           </summary>
           <div class="history-chapter-body history-chapter-paper">
             <div class="shell history-decade-intro">
-              <p>1950年代までに多様な基本構成が現れ、その後はアラームを自動巻、日付、スポーツ用途、旅行用途などと組み合わせる展開が広がった。</p>
+              <p>{era1960s.intro}</p>
             </div>
 
             <div class="shell history-shelf" data-shelf>
