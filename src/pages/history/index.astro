@@ -7,6 +7,7 @@ import '../../styles/history-magazine.css';
 const base = import.meta.env.BASE_URL;
 const milestoneCards = (era: '1910s' | '1940s' | '1950s') => historyCatalogByGroup.milestones.filter((entry) => entry.era === era && entry.featured);
 const ownerCards = (era: '1940s' | '1950s') => historyCatalogByGroup.owners.filter((entry) => entry.era === era && entry.featured);
+const researchCards = (era: '1950s') => historyCatalogByGroup.research.filter((entry) => entry.era === era && entry.featured);
 const title = 'アラーム腕時計の歴史｜Eterna・Cricket・Memovox・Duofon・Time-O-Vox｜VINTAGE ALARM';
 const description = '鐘で共有された時間から、懐中時計、アラーム腕時計へ。Eterna、Vulcain Cricket、Memovox、AS 1475、Pierce Duofon、Cyma Time-O-Vox、Parking Watch、電子化まで、「時間を知らせる」腕時計の歴史を辿る。';
 const schema = {
@@ -305,13 +306,25 @@ const schema = {
                 <div><span>気になっているもの</span><p>調査・探索を続けたい時計</p></div>
               </div>
               <div class="history-card-track" data-track>
-                <article class="history-card history-card-interest">
-                  <small>1957 / JLC PARKING PATENT</small>
-                  <h3>PARKING WATCH</h3>
-                  <p class="history-card-hook">駐車時間まで、腕が知らせる。</p>
-                  <p>アラームを「起こす」以外の生活用途へ使う、気になる系譜。</p>
-                  <span class="history-card-status">RESEARCHING</span>
-                </article>
+                {researchCards('1950s').map((entry) => (
+                  entry.hrefKind === 'site' ? (
+                    <a class="history-card history-card-interest history-card-link" href={`${base}${entry.href}`}>
+                      <small>{entry.meta}</small>
+                      <h3>{entry.name}</h3>
+                      <p class="history-card-hook">{entry.hook}</p>
+                      <p>{entry.cardSummary}</p>
+                      <span class="history-card-status">{entry.cardStatus}</span>
+                    </a>
+                  ) : (
+                    <article class="history-card history-card-interest">
+                      <small>{entry.meta}</small>
+                      <h3>{entry.name}</h3>
+                      <p class="history-card-hook">{entry.hook}</p>
+                      <p>{entry.cardSummary}</p>
+                      <span class="history-card-status">{entry.cardStatus}</span>
+                    </article>
+                  )
+                ))}
               </div>
             </div>
           </div>
