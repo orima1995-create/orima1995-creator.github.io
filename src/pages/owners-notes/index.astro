@@ -1,15 +1,18 @@
 ---
-import { getCollection } from 'astro:content';
 import SeoHead from '../../components/SeoHead.astro';
 import SectionMast from '../../components/SectionMast.astro';
+import ownersDirectory from '../../data/owners-directory.json';
 import '../../styles/site.css';
 
 const base = import.meta.env.BASE_URL;
-const watches = (await getCollection('watches'))
-  .sort((a, b) => Number(a.data.ownerNumber) - Number(b.data.ownerNumber));
+const entries = [...ownersDirectory.entries].sort((a, b) =>
+  a.ownedSortYear - b.ownedSortYear || Number(a.ownerNumber) - Number(b.ownerNumber)
+);
+const eras = [...new Set(entries.map((entry) => entry.ownedEra))];
+const noteHref = (href: string) => `${base}${href.replace(/^\//, '')}`;
 
 const title = "OWNER'S NOTES｜所有アラーム腕時計の実機記録｜VINTAGE ALARM";
-const description = "VINTAGE ALARMのOWNER'S NOTE一覧。所有する機械式アラーム腕時計を、実機写真・操作・SPEC・機構資料とともに記録する。";
+const description = "VINTAGE ALARMのOWNER'S NOTE一覧。所有する機械式アラーム腕時計を、所有個体の年代ごとに記録する。";
 const schema = {
   '@context': 'https://schema.org',
   '@type': 'CollectionPage',
@@ -18,14 +21,6 @@ const schema = {
   inLanguage: 'ja',
   url: 'https://orima1995-create.github.io/orima1995-creator.github.io/owners-notes/'
 };
-
-const watchName = (watch) => watch.data.slug === 'cyma-time-o-vox'
-  ? 'CYMA TIME-O-VOX 18K CHRONOMÈTRE'
-  : `${watch.data.brand} ${watch.data.model}`;
-
-const noteHref = (watch) => watch.data.ownersNote.zoomHref
-  ? `${base}${watch.data.ownersNote.zoomHref.replace(/^\//, '')}`
-  : `${base}${watch.data.slug}/#owners-note`;
 ---
 <!doctype html>
 <html lang="ja">
@@ -41,46 +36,57 @@ const noteHref = (watch) => watch.data.ownersNote.zoomHref
       <section class="shell owners-directory-hero">
         <div class="eyebrow">OWNER'S NOTES</div>
         <h1>所有個体から、読む。</h1>
-        <p>カタログではなく、実際に手元へ来た時計の記録。OWNER'S NOTEから個体ページ、SPEC、機構資料へ辿る。</p>
       </section>
 
       <section class="shell owners-directory" aria-label="OWNER'S NOTE一覧">
-        {watches.map((watch) => (
-          <article class="owners-directory-card">
-            <div class="owners-directory-meta">
-              <span>OWNER'S NOTE / {watch.data.ownerNumber}</span>
-              <small>{watch.data.brand}</small>
+        {eras.map((era) => (
+          <section class="owners-era" aria-labelledby={`owners-${era}`}>
+            <header class="owners-era-head">
+              <h2 id={`owners-${era}`}>{era}</h2>
+            </header>
+            <div class="owners-era-grid">
+              {entries.filter((entry) => entry.ownedEra === era).map((entry) => (
+                <a class="owners-note-card" href={noteHref(entry.href)} aria-label={`${entry.brand} ${entry.name} OWNER'S NOTE`}>
+                  <img src={`${base}${entry.image.replace(/^\//, '')}`} alt="" loading="lazy" />
+                  <div class="owners-note-card-copy">
+                    <small>{entry.brand}</small>
+                    <h3>{entry.name}</h3>
+                    <p>{entry.catch}</p>
+                  </div>
+                </a>
+              ))}
             </div>
-            <h2>{watchName(watch)}</h2>
-            <p class="owners-directory-catch">{watch.data.catch[0]}</p>
-            <div class="owners-directory-actions">
-              <a href={noteHref(watch)}>OWNER'S NOTEを見る →</a>
-              <a href={`${base}${watch.data.slug}/`}>個体ページへ →</a>
-            </div>
-          </article>
+          </section>
         ))}
       </section>
     </main>
 
     <style>
-      .owners-directory-hero{padding:88px 0 58px;border-bottom:1px solid var(--ink)}
+      .owners-directory-hero{padding:78px 0 48px;border-bottom:1px solid var(--ink)}
       .owners-directory-hero h1{max-width:12em;margin:18px 0 0;font-size:clamp(2.3rem,7vw,4.7rem);font-weight:500;line-height:1.05;text-wrap:balance}
-      .owners-directory-hero>p{max-width:42em;margin:30px 0 0;color:var(--soft);font-size:15px;line-height:1.9}
-      .owners-directory{padding-block:54px 90px}
-      .owners-directory-card{padding:30px 0;border-bottom:1px solid var(--ink)}
-      .owners-directory-card:first-child{border-top:1px solid var(--ink)}
-      .owners-directory-meta{display:flex;justify-content:space-between;gap:20px;color:var(--soft);font-family:Georgia,"Times New Roman",serif;font-size:10px;letter-spacing:.14em}
-      .owners-directory-card h2{margin:19px 0 0;font-family:Georgia,"Times New Roman",serif;font-size:clamp(1.8rem,4vw,3rem);font-weight:400;line-height:1.08;text-wrap:balance}
-      .owners-directory-catch{margin:18px 0 0;font-size:clamp(1.05rem,2.5vw,1.25rem);font-weight:600;line-height:1.5}
-      .owners-directory-actions{display:flex;flex-wrap:wrap;gap:14px 26px;margin-top:30px}
-      .owners-directory-actions a{display:inline-block;padding:7px 0;border-bottom:1px solid var(--ink);color:var(--ink);font-size:13px;text-decoration:none}
-      .owners-directory-actions a:hover{color:var(--red);border-bottom-color:var(--red)}
-      @media(max-width:480px){
-        .owners-directory-hero{padding:54px 0 42px}
-        .owners-directory{padding-block:38px 64px}
-        .owners-directory-card{padding:25px 0}
-        .owners-directory-actions{display:grid;gap:12px;margin-top:24px}
-        .owners-directory-actions a{width:max-content;max-width:100%}
+      .owners-directory{padding-block:18px 90px}
+      .owners-era{padding:38px 0 12px}
+      .owners-era+.owners-era{border-top:1px solid var(--ink);margin-top:28px}
+      .owners-era-head{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:18px}
+      .owners-era-head h2{margin:0;font-family:Georgia,"Times New Roman",serif;font-size:clamp(2rem,5vw,3.4rem);font-weight:400;line-height:1}
+      .owners-era-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+      .owners-note-card{position:relative;display:block;aspect-ratio:1/1;overflow:hidden;border:1px solid rgba(31,28,24,.28);background:#d9d2c5;color:#fff;text-decoration:none}
+      .owners-note-card::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(15,13,10,.04) 36%,rgba(15,13,10,.78) 100%);transition:background .2s ease}
+      .owners-note-card img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center top;transition:transform .3s ease}
+      .owners-note-card-copy{position:absolute;z-index:1;left:16px;right:16px;bottom:16px}
+      .owners-note-card-copy small{display:block;margin-bottom:5px;font-family:Georgia,"Times New Roman",serif;font-size:9px;letter-spacing:.16em}
+      .owners-note-card-copy h3{margin:0;font-family:Georgia,"Times New Roman",serif;font-size:clamp(1.25rem,3vw,2rem);font-weight:400;line-height:1.04;letter-spacing:.01em}
+      .owners-note-card-copy p{margin:8px 0 0;font-size:clamp(.76rem,1.8vw,.98rem);font-weight:600;line-height:1.35}
+      .owners-note-card:hover img{transform:scale(1.025)}
+      .owners-note-card:hover::after{background:linear-gradient(180deg,rgba(15,13,10,.02) 30%,rgba(15,13,10,.84) 100%)}
+      @media(max-width:760px){
+        .owners-directory-hero{padding:54px 0 38px}
+        .owners-directory{padding-block:10px 64px}
+        .owners-era{padding-top:32px}
+        .owners-era-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:11px}
+        .owners-note-card-copy{left:11px;right:11px;bottom:11px}
+        .owners-note-card-copy h3{font-size:clamp(1rem,5vw,1.4rem)}
+        .owners-note-card-copy p{font-size:clamp(.68rem,3.1vw,.84rem)}
       }
     </style>
   </body>
