@@ -1,9 +1,11 @@
 ---
 import SeoHead from '../../components/SeoHead.astro';
 import SectionMast from '../../components/SectionMast.astro';
+import { historyCatalogByGroup } from '../../data/history-catalog';
 import '../../styles/site.css';
 import '../../styles/history-magazine.css';
 const base = import.meta.env.BASE_URL;
+const milestoneCards = (era: '1910s' | '1940s' | '1950s') => historyCatalogByGroup.milestones.filter((entry) => entry.era === era && entry.featured);
 const title = 'アラーム腕時計の歴史｜Eterna・Cricket・Memovox・Duofon・Time-O-Vox｜VINTAGE ALARM';
 const description = '鐘で共有された時間から、懐中時計、アラーム腕時計へ。Eterna、Vulcain Cricket、Memovox、AS 1475、Pierce Duofon、Cyma Time-O-Vox、Parking Watch、電子化まで、「時間を知らせる」腕時計の歴史を辿る。';
 const schema = {
@@ -139,13 +141,15 @@ const schema = {
                 <div><span>MILESTONES</span><p>歴史上の節目</p></div>
               </div>
               <div class="history-card-track" data-track>
-                <article class="history-card history-card-milestone">
-                  <small>1914 / ETERNA</small>
-                  <h3>ETERNA ALARM</h3>
-                  <p class="history-card-hook">アラームを、腕時計のサイズへ。</p>
-                  <p>一つの香箱から時刻とアラームを動かす、最初期の量産アラーム腕時計。</p>
-                  <span class="history-card-status">MILESTONE</span>
-                </article>
+                {milestoneCards('1910s').map((entry) => (
+                  <article class="history-card history-card-milestone">
+                    <small>{entry.meta}</small>
+                    <h3>{entry.name}</h3>
+                    <p class="history-card-hook">{entry.hook}</p>
+                    <p>{entry.cardSummary}</p>
+                    <span class="history-card-status">{entry.cardStatus}</span>
+                  </article>
+                ))}
               </div>
             </div>
           </div>
@@ -181,13 +185,15 @@ const schema = {
                 <div><span>MILESTONES</span><p>歴史上の節目</p></div>
               </div>
               <div class="history-card-track" data-track>
-                <article class="history-card history-card-milestone">
-                  <small>1947 / VULCAIN</small>
-                  <h3>CRICKET</h3>
-                  <p class="history-card-hook">腕につけたまま、聞こえる音を。</p>
-                  <p>二重底の音響構造で、装着時のアラーム音を実用的なレベルへ押し上げた。</p>
-                  <span class="history-card-status">MILESTONE</span>
-                </article>
+                {milestoneCards('1940s').map((entry) => (
+                  <article class="history-card history-card-milestone">
+                    <small>{entry.meta}</small>
+                    <h3>{entry.name}</h3>
+                    <p class="history-card-hook">{entry.hook}</p>
+                    <p>{entry.cardSummary}</p>
+                    <span class="history-card-status">{entry.cardStatus}</span>
+                  </article>
+                ))}
               </div>
             </div>
 
@@ -236,20 +242,15 @@ const schema = {
                 </div>
               </div>
               <div class="history-card-track" data-track>
-                <article class="history-card history-card-milestone">
-                  <small>1951 / JAEGER-LECOULTRE</small>
-                  <h3>MEMOVOX</h3>
-                  <p class="history-card-hook">アラーム専用の動力を持つ。</p>
-                  <p>時刻用とアラーム用に独立した2つの香箱を持つ、代表的な二香箱構成。</p>
-                  <span class="history-card-status">MILESTONE</span>
-                </article>
-                <article class="history-card history-card-milestone">
-                  <small>1954 / A. SCHILD</small>
-                  <h3>AS 1475</h3>
-                  <p class="history-card-hook">アラームを、もっと多くの腕へ。</p>
-                  <p>多数のブランドへ広がり、アラーム腕時計の裾野を大きく広げた量産ムーブメント。</p>
-                  <span class="history-card-status">MILESTONE</span>
-                </article>
+                {milestoneCards('1950s').map((entry) => (
+                  <article class="history-card history-card-milestone">
+                    <small>{entry.meta}</small>
+                    <h3>{entry.name}</h3>
+                    <p class="history-card-hook">{entry.hook}</p>
+                    <p>{entry.cardSummary}</p>
+                    <span class="history-card-status">{entry.cardStatus}</span>
+                  </article>
+                ))}
               </div>
             </div>
 
