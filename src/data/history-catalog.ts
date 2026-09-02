@@ -144,7 +144,7 @@ export const historyCatalog: HistoryCatalogEntry[] = [
     name: 'PARKING WATCH',
     hook: '駐車時間まで、腕が知らせる。',
     cardSummary: 'アラームを「起こす」以外の生活用途へ使う、気になる系譜。',
-    cardStatus: 'RESEARCHING →',
+    cardStatus: 'RESEARCHING',
     href: '#1950s',
     hrefKind: 'hash',
     featured: true
