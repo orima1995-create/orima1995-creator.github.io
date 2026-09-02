@@ -79,11 +79,11 @@ export const historyCatalog: HistoryCatalogEntry[] = [
     group: 'owner',
     era: '1950s',
     sort: 60,
-    meta: '1950s / PIERCE',
-    name: 'DUOFON',
+    meta: 'PIERCE',
+    name: 'PIERCE DUOFON',
     hook: '鳴らすか。控えめに知らせるか。',
     cardSummary: 'WECKER / SIGNALを選べるCal.135を、実機と資料から追う。',
-    cardStatus: "OWNER'S NOTE / READ",
+    cardStatus: "OWNER'S NOTE →",
     featured: true,
     href: 'pierce-duofon/',
     hrefKind: 'site'
@@ -93,12 +93,14 @@ export const historyCatalog: HistoryCatalogEntry[] = [
     group: 'owner',
     era: '1950s',
     sort: 70,
-    meta: '1950s / CYMA',
+    meta: 'CYMA',
     name: 'TIME-O-VOX',
     hook: '一つの香箱で、時刻とアラームを。',
     cardSummary: 'Cal.R.464を搭載する18K Chronomètre表記の実機。',
-    cardStatus: "OWNER'S NOTE / NEXT",
-    featured: true
+    cardStatus: "OWNER'S NOTE →",
+    featured: true,
+    href: 'cyma-time-o-vox/',
+    hrefKind: 'site'
   },
   {
     id: 'citizen-alarm',
