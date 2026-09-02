@@ -11,6 +11,7 @@ const ownerCards = (era: '1940s' | '1950s') => historyCatalogByGroup.owners.filt
 const researchCards = (era: '1950s') => historyCatalogByGroup.research.filter((entry) => entry.era === era && entry.featured);
 const before = historyContent.before;
 const era1910s = historyContent.era1910s;
+const era1940s = historyContent.era1940s;
 const title = 'アラーム腕時計の歴史｜Eterna・Cricket・Memovox・Duofon・Time-O-Vox｜VINTAGE ALARM';
 const description = '鐘で共有された時間から、懐中時計、アラーム腕時計へ。Eterna、Vulcain Cricket、Memovox、AS 1475、Pierce Duofon、Cyma Time-O-Vox、Parking Watch、電子化まで、「時間を知らせる」腕時計の歴史を辿る。';
 const schema = {
@@ -160,26 +161,24 @@ const schema = {
 
         <details class="history-chapter" id="1940s">
           <summary class="shell history-chapter-summary">
-            <span class="history-chapter-no">02</span>
+            <span class="history-chapter-no">{era1940s.chapterNo}</span>
             <span class="history-chapter-heading">
-              <small>1940s</small>
-              <strong>腕につけたまま、聞こえる音を。</strong>
+              <small>{era1940s.label}</small>
+              <strong>{era1940s.title}</strong>
             </span>
-            <span class="history-chapter-teaser">ケースを守るほど音は逃げない。Cricketが音響の問題を大きく前へ進める。</span>
+            <span class="history-chapter-teaser">{era1940s.teaser}</span>
             <span class="history-chapter-toggle" aria-hidden="true">＋</span>
           </summary>
           <div class="history-chapter-body">
             <div class="history-problem-stage history-problem-stage-nested">
               <div class="shell history-problem-stage-inner">
-                <p class="history-overline">THE CONTRADICTION</p>
-                <h2 class="history-problem-title">腕に載せたら、<br />音と密閉が喧嘩した。</h2>
+                <p class="history-overline">{era1940s.overline}</p>
+                <h2 class="history-problem-title">{era1940s.problemTitleLead}<br />{era1940s.problemTitleStrong}</h2>
                 <div class="history-problem-lines" aria-label="腕時計化で生じた問題">
-                  <span>小さくする。</span>
-                  <span>動力を確保する。</span>
-                  <span>水と埃を防ぐ。</span>
-                  <strong>でも、音は外へ出したい。</strong>
+                  {era1940s.problemLines.map((line) => <span>{line}</span>)}
+                  <strong>{era1940s.problemStrong}</strong>
                 </div>
-                <p class="history-problem-copy">腕時計は外へ持ち出される。ケースを閉じて機構を守りたい。一方で、閉じるほどアラーム音は外へ届きにくくなる。小型化だけでは終わらなかった。</p>
+                <p class="history-problem-copy">{era1940s.problemCopy}</p>
               </div>
             </div>
 
