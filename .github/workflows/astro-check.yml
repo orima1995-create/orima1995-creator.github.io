@@ -24,32 +24,44 @@ jobs:
         run: npm run build
       - name: Verify site output
         run: |
+          set -e
           test -f dist/index.html
+          test -f dist/owners-notes/index.html
           test -f dist/pierce-duofon/index.html
+          test -f dist/cyma-time-o-vox/index.html
+          test -f dist/cyma-time-o-vox/owners-note/index.html
           test -f dist/history/index.html
           test -f dist/history/smartwatch/index.html
-          test -f dist/images/history/smartwatch.webp
+          test -f dist/images/history/smartwatch-part-4.webp
 
-          grep -q "PIERCE" dist/pierce-duofon/index.html
-          grep -q "DUOFON" dist/pierce-duofon/index.html
-          grep -q "マナーモードの祖先!?" dist/pierce-duofon/index.html
-          grep -q "① 動力巻き上げ" dist/pierce-duofon/index.html
-          grep -q "xkecjZqr7BY" dist/pierce-duofon/index.html
-          grep -q "Pierce Cal.135" dist/pierce-duofon/index.html
-          grep -q "Gruen Duotoneとの関係" dist/pierce-duofon/index.html
-          grep -q "1950年代のアラーム腕時計へ戻る" dist/pierce-duofon/index.html
+          grep -Fq "PIERCE" dist/pierce-duofon/index.html
+          grep -Fq "DUOFON" dist/pierce-duofon/index.html
+          grep -Fq "マナーモードの祖先!?" dist/pierce-duofon/index.html
+          grep -Fq "① 動力巻き上げ" dist/pierce-duofon/index.html
+          grep -Fq "xkecjZqr7BY" dist/pierce-duofon/index.html
+          grep -Fq "Pierce Cal.135" dist/pierce-duofon/index.html
+          grep -Fq "Gruen Duotoneとの関係" dist/pierce-duofon/index.html
+          grep -Fq "1950年代のアラーム腕時計へ戻る" dist/pierce-duofon/index.html
 
-          grep -q "アラームを、腕へ。" dist/history/index.html
-          grep -q "1950s / 答えが増える" dist/history/index.html
-          grep -q "PIERCE" dist/history/index.html
-          grep -q "DUOFON" dist/history/index.html
-          grep -q "現状の到達点" dist/history/index.html
-          grep -q "history/smartwatch/" dist/history/index.html
+          grep -Fq "CYMA TIME-O-VOX 18K CHRONOMÈTRE" dist/owners-notes/index.html
+          grep -Fq "cyma-time-o-vox/owners-note/" dist/owners-notes/index.html
 
-          grep -q "現状の到達点。" dist/history/smartwatch/index.html
-          grep -q "SMARTWATCH" dist/history/smartwatch/index.html
-          grep -q "smartwatch.webp" dist/history/smartwatch/index.html
-          grep -q "アラーム腕時計の歴史に戻る" dist/history/smartwatch/index.html
+          grep -Fq "アラームを、腕へ。" dist/history/index.html
+          grep -Fq "様々な進化と個性。" dist/history/index.html
+          grep -Fq "PIERCE DUOFON" dist/history/index.html
+          grep -Fq "TIME-O-VOX" dist/history/index.html
+          grep -Fq "cyma-time-o-vox/" dist/history/index.html
+          grep -Fq 'id="milestones"' dist/history/index.html
+          grep -Fq 'id="research"' dist/history/index.html
+          grep -Fq "owners-notes/" dist/history/index.html
+          grep -Fq "現状の到達点。" dist/history/index.html
+          grep -Fq "history/smartwatch/" dist/history/index.html
+
+          grep -Fq "smartwatch-part-4.webp" dist/history/smartwatch/index.html
+          grep -Fq "もっと静かな時代へ戻る" dist/history/smartwatch/index.html
+
+          grep -Fq "一つの香箱なのに、リューズは回らない。" dist/cyma-time-o-vox/index.html
+          grep -Fq "約9時間分のパワーリザーブ" dist/cyma-time-o-vox/index.html
 
           if grep -R -q "data:image/.*base64" dist; then
             echo "Embedded base64 image remains in generated HTML"
@@ -57,5 +69,15 @@ jobs:
           fi
           if grep -R -q "word-break:[[:space:]]*break-all" dist; then
             echo "Unsafe mobile break-all rule found"
+            exit 1
+          fi
+          for dead in '#index-milestones' '#index-owners' '#index-interests'; do
+            if grep -R -Fq "$dead" dist; then
+              echo "Removed navigation target remains in generated output: $dead"
+              exit 1
+            fi
+          done
+          if grep -R -Fq "runtime-menu" dist; then
+            echo "Legacy runtime navigation remains in generated output"
             exit 1
           fi
