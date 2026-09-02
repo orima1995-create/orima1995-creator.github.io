@@ -47,7 +47,7 @@ jobs:
           check_text "xkecjZqr7BY" dist/pierce-duofon/index.html
           check_text "Pierce Cal.135" dist/pierce-duofon/index.html
           check_text "Gruen Duotoneとの関係" dist/pierce-duofon/index.html
-          check_text "1950年代のアラーム腕時計へ戻る" dist/pierce-duofon/index.html
+          check_text "history/#1950s" dist/pierce-duofon/index.html
 
           check_text "CYMA TIME-O-VOX 18K CHRONOMÈTRE" dist/owners-notes/index.html
           check_text "cyma-time-o-vox/owners-note/" dist/owners-notes/index.html
