@@ -105,7 +105,7 @@ export const historyCatalog: HistoryCatalogEntry[] = [
     sort: 59,
     meta: 'WITTNAUER / 10WA',
     name: 'WITTNAUER ALARM',
-    hook: '',
+    hook: 'ベゼルで巻くアラーム',
     cardSummary: '',
     cardStatus: "OWNER'S NOTE",
     featured: true
