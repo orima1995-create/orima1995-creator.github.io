@@ -116,9 +116,9 @@ export const historyCatalog: HistoryCatalogEntry[] = [
     name: 'TIME-O-VOX',
     hook: '一つの香箱で、時刻とアラームを。',
     cardSummary: 'Cal.R.464を搭載する18K Chronomètre表記の実機を記録中。',
-    cardStatus: "OWNER'S NOTE / NEXT",
-    href: '#1950s',
-    hrefKind: 'hash',
+    cardStatus: "OWNER'S NOTE →",
+    href: 'cyma-time-o-vox/',
+    hrefKind: 'site',
     featured: true
   },
   {
