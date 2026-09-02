@@ -1,4 +1,16 @@
 export const historyContent = {
+  hero: {
+    eyebrow: 'HISTORY OF ALARM WRISTWATCHES',
+    title: 'アラームを、腕へ。',
+    kicker: ['時間を見る。', '時間になったら、知らされる。'],
+    lead: [
+      'いまでは当たり前のこの二つは、最初から一緒だったわけではない。',
+      '人はまず、時間を共有した。次に、自分で時間を持つようになった。'
+    ],
+    emphasisLead: 'そして、',
+    emphasis: '自分の時間を、自分のために知らせる。',
+    tail: 'その仕組みまで腕へ載せようとした。'
+  },
   before: {
     chapterNo: '00',
     label: 'BEFORE THE WRIST',
