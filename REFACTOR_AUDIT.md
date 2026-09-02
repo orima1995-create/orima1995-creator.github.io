@@ -161,6 +161,29 @@
 - GitHub CI status: リポジトリ側のstatus checkは未設定（0件）
 - 結論: 本採用を妨げる問題なし
 
+### Step 1F — MILESTONESカードをカタログから生成
+
+- 変更: `src/pages/history/index.astro`
+- 対象: 1910s / 1940s / 1950s の MILESTONES カードのみ
+- ETERNA ALARM / CRICKET / MEMOVOX / AS 1475 を `src/data/history-catalog.ts` の `historyCatalogByGroup.milestones` から年代別に静的生成するよう変更
+- OWNER'S NOTES / RESEARCH / 1960s–70s の BRANCH カードは未変更
+- HTMLクラス、カード配置、既存アンカー、本文、SEO、CSS、クライアントJavaScriptは変更しない
+
+#### Step 1F 監査結果
+
+- mainとの差分: `src/pages/history/index.astro` のMILESTONES生成部分と本監査ログのみ
+- コード差分を全件確認し、MILESTONES以外の本文・カード・リンクに意図しない変更なし
+- データ照合: 4カードすべてで `meta` / `name` / `hook` / `cardSummary` / `cardStatus` が従来の直書き文言と一致
+- 順序: 1910s ETERNA → 1940s CRICKET → 1950s MEMOVOX / AS 1475 を維持
+- URL / anchor: 変更なし
+- SEO: 変更なし
+- CSS変更: なし
+- JavaScript変更: なし
+- ライブラリ追加: なし
+- PR #9 の Astro foundation check: build / Verify site output ともに成功
+- main / 本番: この監査記録時点では未変更
+- 次: OWNER'S NOTESカードのカタログ生成へ進む前に、本Stepだけを本採用して公開後監査する
+
 ## 方針
 
 速度改善のためにフレームワークやライブラリを増やさない。
