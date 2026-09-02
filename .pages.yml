@@ -100,6 +100,31 @@ content:
         type: string
         list: true
 
+  - name: ownersDirectory
+    label: OWNER'S NOTES 一覧
+    type: file
+    path: src/data/owners-directory.json
+    format: json
+    fields:
+      - name: entries
+        label: 所有個体カード
+        type: object
+        list:
+          min: 1
+          max: 100
+          collapsible:
+            collapsed: true
+            summary: "{ownedEra} / {brand} {name}"
+        fields:
+          - { name: ownerNumber, label: OWNER'S NOTE No., type: string }
+          - { name: ownedEra, label: 所有個体の年代区分, type: string }
+          - { name: ownedSortYear, label: 所有個体の並び順年, type: number }
+          - { name: brand, label: Brand, type: string }
+          - { name: name, label: Model, type: string }
+          - { name: catch, label: 一覧専用キャッチ, type: string }
+          - { name: image, label: カード画像, type: image }
+          - { name: href, label: OWNER'S NOTEリンク, type: string }
+
   - name: history
     label: HISTORY 編集
     type: file
