@@ -1,0 +1,26 @@
+---
+const { nextHref, nextName, historyHref = 'history/#1950s' } = Astro.props;
+const base = import.meta.env.BASE_URL;
+const resolveLocal = (path: string) => `${base}${path.replace(/^\//, '')}`;
+---
+<nav class="owner-note-end-nav shell" aria-label="OWNER'S NOTE 次のページ">
+  <a class="owner-note-next" href={resolveLocal(nextHref)}>
+    <small>次の変な時計</small>
+    <strong>{nextName} →</strong>
+  </a>
+  <a class="owner-note-history" href={resolveLocal(historyHref)}>HISTORYへ戻る →</a>
+</nav>
+
+<style>
+  .owner-note-end-nav{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:28px;align-items:end;padding-block:52px 82px;border-top:1px solid var(--ink)}
+  .owner-note-end-nav a{text-decoration:none}
+  .owner-note-next{display:grid;gap:8px;min-width:0}
+  .owner-note-next small{color:var(--soft);font-size:11px;letter-spacing:.12em}
+  .owner-note-next strong{font-family:Georgia,"Times New Roman",serif;font-size:clamp(1.45rem,4vw,2.4rem);font-weight:400;line-height:1.12;overflow-wrap:normal;word-break:normal}
+  .owner-note-history{padding-bottom:5px;border-bottom:1px solid currentColor;font-size:14px;white-space:nowrap}
+  @media(max-width:480px){
+    .owner-note-end-nav{grid-template-columns:1fr;gap:28px;padding-block:38px 58px}
+    .owner-note-next strong{font-size:1.45rem}
+    .owner-note-history{justify-self:start}
+  }
+</style>
