@@ -1,5 +1,6 @@
 ---
 import SeoHead from '../../components/SeoHead.astro';
+import SectionMast from '../../components/SectionMast.astro';
 import '../../styles/site.css';
 import '../../styles/history-magazine.css';
 const base = import.meta.env.BASE_URL;
@@ -57,10 +58,7 @@ const schema = {
     </style>
   </head>
   <body>
-    <header class="shell mast">
-      <a class="mast-link" href={base}>VINTAGE ALARM</a>
-      <span>HISTORY</span>
-    </header>
+    <SectionMast rightLabel="HISTORY" />
 
     <main>
       <section class="shell history-hero history-hero-magazine">
@@ -136,7 +134,7 @@ const schema = {
               <p>Eternaは1908年、13リーニュのアラーム腕時計機構について特許42,203を取得した。1914年からシリーズ生産が始まり、専門文献では最初のシリーズ生産アラーム腕時計として位置づけられている。</p>
             </div>
 
-            <div class="shell history-shelf" data-shelf>
+            <div class="shell history-shelf" id="milestones" data-shelf>
               <div class="history-shelf-head">
                 <div><span>MILESTONES</span><p>歴史上の節目</p></div>
               </div>
@@ -273,13 +271,13 @@ const schema = {
                   <p>2香箱とWECKER / SIGNALの切替を持つ実機。</p>
                   <span class="history-card-status">OWNER'S NOTE →</span>
                 </a>
-                <article class="history-card history-card-owner">
+                <a class="history-card history-card-owner history-card-link" href={`${base}cyma-time-o-vox/`}>
                   <small>CYMA</small>
                   <h3>TIME-O-VOX</h3>
                   <p class="history-card-hook">一つの香箱で、時刻とアラームを。</p>
                   <p>Cal.R.464を搭載する18K Chronomètre表記の実機を記録中。</p>
-                  <span class="history-card-status">OWNER'S NOTE / NEXT</span>
-                </article>
+                  <span class="history-card-status">OWNER'S NOTE →</span>
+                </a>
                 <article class="history-card history-card-owner">
                   <small>CITIZEN</small>
                   <h3>CITIZEN ALARM</h3>
@@ -290,7 +288,7 @@ const schema = {
               </div>
             </div>
 
-            <div class="shell history-shelf history-shelf-interest" data-shelf>
+            <div class="shell history-shelf history-shelf-interest" id="research" data-shelf>
               <div class="history-shelf-head">
                 <div><span>気になっているもの</span><p>調査・探索を続けたい時計</p></div>
               </div>
