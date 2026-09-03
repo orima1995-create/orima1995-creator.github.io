@@ -1,0 +1,73 @@
+name: Staging Mobile Check
+
+on:
+  push:
+    branches: ["staging/mobile-v1"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout staging
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install
+        run: npm ci
+
+      - name: Build
+        run: npm run build
+
+      - name: Verify required pages
+        run: |
+          set -e
+          for f in \
+            dist/index.html \
+            dist/history/index.html \
+            dist/owners-notes/index.html \
+            dist/pierce-duofon/index.html \
+            dist/cyma-time-o-vox/index.html; do
+            test -f "$f" || { echo "missing file: $f"; exit 1; }
+          done
+
+      - name: Verify mobile v1 is bundled
+        run: |
+          set -e
+          grep -R -Fq 'prefers-reduced-motion' dist/_astro || { echo 'mobile-v1 CSS missing from build'; exit 1; }
+          grep -R -Fq 'grid-template-columns:1fr' dist/_astro || { echo 'single-column mobile rule missing'; exit 1; }
+
+      - name: Guard editorial content
+        run: |
+          set -e
+          grep -Fq '鳴る黄金のクロノメーター' dist/cyma-time-o-vox/index.html
+          grep -Fq '通知のオーパーツ' dist/pierce-duofon/index.html
+          grep -Fq '1香箱' dist/cyma-time-o-vox/index.html
+          grep -Fq '2香箱' dist/pierce-duofon/index.html
+
+      - name: Guard small-screen CSS
+        run: |
+          set -e
+          if grep -R -Fq 'word-break:break-all' dist/_astro; then
+            echo 'break-all detected'
+            exit 1
+          fi
+          if grep -R -Eiq 'width:[[:space:]]*[1-9][0-9]{3,}px' dist/_astro; then
+            echo 'suspicious fixed width >= 1000px detected'
+            exit 1
+          fi
+
+      - name: Upload staging build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: staging-mobile-v1-dist
+          path: dist
+          retention-days: 7
