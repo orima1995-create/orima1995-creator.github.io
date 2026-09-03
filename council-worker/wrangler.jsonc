@@ -1,0 +1,11 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "council-api",
+  "main": "src/index.ts",
+  "compatibility_date": "2026-09-04",
+  "vars": {
+    "ALLOWED_ORIGIN": "https://orima1995-create.github.io",
+    "COUNCIL_MODEL_FAST": "gpt-5.6-luna",
+    "COUNCIL_MODEL_JUDGE": "gpt-5.6-terra"
+  }
+}
