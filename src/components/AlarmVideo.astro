@@ -1,6 +1,30 @@
 ---
 const { video, title } = Astro.props;
-const embed = `https://www.youtube.com/embed/${video.youtubeId}`;
+
+const getYouTubeId = (value: string) => {
+  const input = value?.trim();
+  if (!input) return '';
+  if (!input.includes('/') && !input.includes('.')) return input;
+
+  try {
+    const url = new URL(input);
+    const host = url.hostname.replace(/^www\./, '');
+    if (host === 'youtu.be') return url.pathname.split('/').filter(Boolean)[0] ?? '';
+    if (host === 'youtube.com' || host === 'm.youtube.com') {
+      const queryId = url.searchParams.get('v');
+      if (queryId) return queryId;
+      const parts = url.pathname.split('/').filter(Boolean);
+      if (['shorts', 'embed', 'live'].includes(parts[0])) return parts[1] ?? '';
+    }
+  } catch {
+    return input;
+  }
+
+  return input;
+};
+
+const youtubeId = getYouTubeId(video.youtubeId);
+const embed = `https://www.youtube.com/embed/${youtubeId}`;
 ---
 <section class="section shell" aria-labelledby="listen">
   <h2 id="listen">実機鳴動</h2>
