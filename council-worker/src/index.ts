@@ -6,272 +6,39 @@ interface Env {
   COUNCIL_VECTOR_STORE_ID?: string;
   DB?: any;
 }
+type Resident={id:string;name:string;role:string;bias:string};
+type SourceInput={id:string;name:string;kind:string;selected?:boolean};
+type CouncilRequest={title:string;body:string;mode:'general'|'watch'|'business'|'roast';engine:'quick'|'project'|'deep-web-10';residents:Resident[];sources:SourceInput[]};
+type Citation={title:string;url:string};
+type Post={resident:string;text:string;confidence:number;evidence:string;citations?:Citation[];format?:'text'|'aa';replyTo?:number;conclusion?:boolean;continue?:boolean};
 
-type Resident = {
-  id: string;
-  name: string;
-  role: string;
-  bias: string;
-};
-
-type SourceInput = {
-  id: string;
-  name: string;
-  kind: string;
-  selected?: boolean;
-};
-
-type CouncilRequest = {
-  title: string;
-  body: string;
-  mode: 'general' | 'watch' | 'business' | 'roast';
-  engine: 'quick' | 'project' | 'deep-web-10';
-  residents: Resident[];
-  sources: SourceInput[];
-};
-
-type Citation = { title: string; url: string };
-
-type Post = {
-  resident: string;
-  text: string;
-  confidence: number;
-  evidence: string;
-  source?: string | null;
-  citations?: Citation[];
-  format?: 'text' | 'aa';
-};
-
-const jsonHeaders = (origin: string) => ({
-  'content-type': 'application/json; charset=utf-8',
-  'access-control-allow-origin': origin,
-  'access-control-allow-methods': 'GET,POST,OPTIONS',
-  'access-control-allow-headers': 'content-type',
-  'cache-control': 'no-store'
-});
-
-function cleanOrigin(env: Env) {
-  return env.ALLOWED_ORIGIN || '*';
+const headers=(origin:string)=>({'content-type':'application/json; charset=utf-8','access-control-allow-origin':origin,'access-control-allow-methods':'GET,POST,OPTIONS','access-control-allow-headers':'content-type','cache-control':'no-store'});
+const origin=(env:Env)=>env.ALLOWED_ORIGIN||'*';
+function responseText(p:any){if(typeof p?.output_text==='string')return p.output_text.trim();const out:string[]=[];for(const item of p?.output||[])if(item?.type==='message')for(const c of item?.content||[])if(c?.type==='output_text'&&typeof c.text==='string')out.push(c.text);return out.join('\n').trim()}
+function citations(p:any){const seen=new Set<string>(),out:Citation[]=[];for(const item of p?.output||[]){if(item?.type==='web_search_call')for(const s of item?.action?.sources||[]){if(s?.url&&!seen.has(s.url)){seen.add(s.url);out.push({title:s.title||s.url,url:s.url})}}if(item?.type==='message')for(const c of item?.content||[])for(const a of c?.annotations||[]){const url=a?.url||a?.url_citation?.url,title=a?.title||a?.url_citation?.title||url;if(url&&!seen.has(url)){seen.add(url);out.push({title,url})}}}return out.slice(0,14)}
+function parseMeta(raw:string){
+  const conf=raw.match(/CONFIDENCE\s*[:：]\s*(\d{1,3})/i);const target=raw.match(/TARGET\s*[:：]\s*(\d+)/i);const cont=raw.match(/CONTINUE\s*[:：]\s*(YES|NO)/i);
+  const text=raw.replace(/^\s*(?:CONFIDENCE|TARGET|STANCE|CONTINUE)\s*[:：].*$/gim,'').replace(/^\s*\n/gm,'').trim();
+  return {text,confidence:Math.max(0,Math.min(100,Number(conf?.[1]||65))),target:target?Number(target[1]):undefined,continue:cont?.[1]?.toUpperCase()==='YES'};
 }
+function toolset(req:CouncilRequest,env:Env){const tools:any[]=[];const web=req.engine==='deep-web-10'||req.sources.some(s=>s.id==='web'||s.kind.toLowerCase().includes('web'));const files=req.engine==='project'||req.sources.some(s=>/pdf|project/i.test(s.kind));if(web)tools.push({type:'web_search',search_context_size:req.engine==='deep-web-10'?'high':'medium'});if(files&&env.COUNCIL_VECTOR_STORE_ID)tools.push({type:'file_search',vector_store_ids:[env.COUNCIL_VECTOR_STORE_ID],max_num_results:15});return tools}
+function sourceText(req:CouncilRequest){return req.sources.length?req.sources.map(s=>`- ${s.name} (${s.kind})`).join('\n'):'指定資料なし'}
+function watchRule(req:CouncilRequest){return req.mode==='watch'?'時計研究では日本語だけに寄せず、必要に応じ英語・ドイツ語・フランス語、旧表記、キャリバー、特許、刻印語まで展開する。販売文・専門家意見・一次資料を分離する。':''}
+async function call(env:Env,input:string,tools:any[],model:string,effort:'low'|'medium'|'high'='medium'){const r=await fetch('https://api.openai.com/v1/responses',{method:'POST',headers:{authorization:`Bearer ${env.OPENAI_API_KEY}`,'content-type':'application/json'},body:JSON.stringify({model,input,tools,reasoning:{effort},max_output_tokens:3200})});if(!r.ok)throw new Error(`OpenAI ${r.status}: ${await r.text()}`);return r.json()}
+async function mapLimit<T,R>(items:T[],limit:number,fn:(v:T,i:number)=>Promise<R>){const out=new Array<R>(items.length);let cursor=0;await Promise.all(Array.from({length:Math.min(limit,items.length)},async()=>{while(true){const i=cursor++;if(i>=items.length)return;out[i]=await fn(items[i],i)}}));return out}
+function residentMap(req:CouncilRequest){return new Map(req.residents.map(r=>[r.id,r]))}
 
-function responseText(payload: any): string {
-  if (typeof payload?.output_text === 'string' && payload.output_text.trim()) return payload.output_text.trim();
-  const parts: string[] = [];
-  for (const item of payload?.output || []) {
-    if (item?.type !== 'message') continue;
-    for (const content of item?.content || []) {
-      if (content?.type === 'output_text' && typeof content?.text === 'string') parts.push(content.text);
-    }
-  }
-  return parts.join('\n').trim();
-}
+function firstPrompt(req:CouncilRequest,r:Resident){const len=req.engine==='deep-web-10'?'500〜1000':'350〜750';return `あなたは匿名掲示板の住民「${r.name}」。役割は「${r.role}」、自覚すべき偏りは「${r.bias}」。\n\nスレタイ: ${req.title}\n>>1:\n${req.body}\n\nSOURCE PACK:\n${sourceText(req)}\n\n他住民のレスはまだ見ない。自分の判断軸だけで独立に考える。${req.engine==='deep-web-10'?'必ずWeb検索を使い、検索語を複数変え、反証資料も探す。':'必要なら利用可能な資料/検索を使う。'} File Search未接続の資料を読んだふりしない。確認済み・資料記載・Web確認・推論・未確認を混ぜない。反証条件を最低1つ入れる。${watchRule(req)}\n\n掲示板レスとして${len}字程度、2〜5段落。短い感想で終わらせず、自分なりの暫定結論まで出す。最後に CONFIDENCE: 0-100。`}
+function digest(posts:Post[],req:CouncilRequest){const rm=residentMap(req);return posts.map((p,i)=>`${i+2} 名前:${rm.get(p.resident)?.name||p.resident}\n${p.text}`).join('\n\n')}
+function replyPrompt(req:CouncilRequest,r:Resident,own:Post,first:Post[]){return `あなたは「${r.name}」。初回見解:\n${own.text}\n\n現在のレス:\n${digest(first,req)}\n\n全部読んだ上で、自分が最も返す価値があるレスを1つ自分で選ぶ。単なる賛同ではなく、相手の強い点を認めた上で、弱点・反証・評価軸の衝突を具体化する。自説も維持/修正/撤回のどれでもよい。${req.engine==='deep-web-10'?'必要ならWebを再検索し、初回と別の検索語・別ソースも使う。':''}${watchRule(req)}\n\n300〜750字、2〜4段落。先頭のアンカー文字列は本文に書かない。最後に以下4行を必ず付ける。\nTARGET: 返信したいレス番号\nSTANCE: MAINTAIN または REVISE または WITHDRAW\nCONTINUE: YES または NO\nCONFIDENCE: 0-100`}
+function continuePrompt(req:CouncilRequest,r:Resident,posts:Post[]){const rm=residentMap(req);const text=posts.map((p,i)=>`${i+2} 名前:${rm.get(p.resident)?.name||p.resident}\n${p.text}`).join('\n\n');return `あなたは「${r.name}」。議論が進んだ。\n\n${text}\n\nまだ決着していない一点だけを選び、過去レスのどれかへ返信する。前と同じ主張を繰り返さない。新しい証拠、定義の修正、譲歩、反例のどれかを必ず追加する。${req.engine==='deep-web-10'?'必要ならWebを再検索する。':''}\n\n250〜650字。最後に TARGET: レス番号 と CONFIDENCE: 0-100。`}
 
-function extractCitations(payload: any): Citation[] {
-  const seen = new Set<string>();
-  const out: Citation[] = [];
-  for (const item of payload?.output || []) {
-    if (item?.type === 'web_search_call') {
-      for (const source of item?.action?.sources || []) {
-        if (!source?.url || seen.has(source.url)) continue;
-        seen.add(source.url);
-        out.push({ title: source.title || source.url, url: source.url });
-      }
-    }
-    if (item?.type === 'message') {
-      for (const content of item?.content || []) {
-        for (const ann of content?.annotations || []) {
-          const url = ann?.url || ann?.url_citation?.url;
-          const title = ann?.title || ann?.url_citation?.title || url;
-          if (!url || seen.has(url)) continue;
-          seen.add(url);
-          out.push({ title, url });
-        }
-      }
-    }
-  }
-  return out.slice(0, 12);
-}
+async function firstWave(req:CouncilRequest,env:Env){const model=env.COUNCIL_MODEL_FAST||'gpt-5.6-luna',tools=toolset(req,env);return mapLimit(req.residents,req.engine==='deep-web-10'?4:6,async(r)=>{const p=await call(env,firstPrompt(req,r),tools,model,req.engine==='deep-web-10'?'high':'medium');const m=parseMeta(responseText(p));return {resident:r.id,text:m.text,confidence:m.confidence,evidence:tools.length?'ツール利用。根拠欄参照':'モデル推論のみ',citations:citations(p),format:r.id==='aa'?'aa':'text'} as Post})}
+async function replyWave(req:CouncilRequest,env:Env,first:Post[]){const model=env.COUNCIL_MODEL_FAST||'gpt-5.6-luna',tools=toolset(req,env),rm=residentMap(req);const count=req.engine==='deep-web-10'?first.length:Math.min(first.length,6);return mapLimit(first.slice(0,count),req.engine==='deep-web-10'?4:6,async(own)=>{const r=rm.get(own.resident)!;const p=await call(env,replyPrompt(req,r,own,first),tools,model,req.engine==='deep-web-10'?'high':'medium');const m=parseMeta(responseText(p));const max=first.length+1;const target=Math.max(2,Math.min(max,m.target||2));return {resident:r.id,text:m.text,confidence:m.confidence,evidence:req.engine==='deep-web-10'?'Web再検索を許可した返信':'全レスを読んで返信先を自己選択',citations:citations(p),replyTo:target,continue:m.continue,format:'text'} as Post})}
+async function thirdWave(req:CouncilRequest,env:Env,first:Post[],second:Post[]){const model=env.COUNCIL_MODEL_FAST||'gpt-5.6-luna',tools=toolset(req,env),rm=residentMap(req);const all=[...first,...second];let candidates=second.filter(p=>p.continue).slice(0,req.engine==='deep-web-10'?6:4);if(!candidates.length)candidates=[...second].sort((a,b)=>a.confidence-b.confidence).slice(0,Math.min(3,second.length));return mapLimit(candidates,req.engine==='deep-web-10'?3:4,async(prev)=>{const r=rm.get(prev.resident)!;const p=await call(env,continuePrompt(req,r,all),tools,model,req.engine==='deep-web-10'?'high':'medium');const m=parseMeta(responseText(p));const max=all.length+1;return {resident:r.id,text:m.text,confidence:m.confidence,evidence:'追加論点による再返信',citations:citations(p),replyTo:Math.max(2,Math.min(max,m.target||2)),format:'text'} as Post})}
+async function chairPost(req:CouncilRequest,env:Env,posts:Post[]){const model=env.COUNCIL_MODEL_JUDGE||'gpt-5.6-terra',rm=residentMap(req);const thread=posts.map((p,i)=>`${i+2} 名前:${rm.get(p.resident)?.name||p.resident}${p.replyTo?` >>${p.replyTo}`:''}\n${p.text}`).join('\n\n');const prompt=`匿名掲示板の最後に書き込む議長役。議題「${req.title}」。\n\n全レス:\n${thread}\n\n多数決で丸めず、強い根拠と反証を比較して裁定する。500〜1000字程度。本文の中に「結論」「その理由」「残る反対意見」「まだ未確認」を自然に含める。別カード用の箇条書き要約ではなく、普通の一つのレスとして書く。断定できないものは条件付き結論にする。CONFIDENCE: 0-100。`;const p=await call(env,prompt,[],model,'high');const m=parseMeta(responseText(p));return {resident:'chair',text:m.text,confidence:m.confidence,evidence:'全レスを比較した裁定',citations:[],conclusion:true,format:'text'} as Post}
 
-function parseConfidence(text: string): { text: string; confidence: number } {
-  const match = text.match(/(?:CONFIDENCE|確信度)\s*[:：]\s*(\d{1,3})/i);
-  const confidence = Math.max(0, Math.min(100, Number(match?.[1] || 65)));
-  const cleaned = text.replace(/\n?(?:CONFIDENCE|確信度)\s*[:：]\s*\d{1,3}\s*%?/ig, '').trim();
-  return { text: cleaned, confidence };
-}
+async function persist(env:Env,thread:any){if(!env.DB)return null;const id=crypto.randomUUID().replace(/-/g,'').slice(0,12);await env.DB.prepare('INSERT INTO threads (id, payload, created_at) VALUES (?, ?, ?)').bind(id,JSON.stringify(thread),new Date().toISOString()).run();return id}
+async function run(req:CouncilRequest,env:Env){if(!req.title?.trim())throw new Error('title is required');if(!Array.isArray(req.residents)||req.residents.length<2)throw new Error('at least 2 residents are required');if(req.engine==='deep-web-10'&&req.residents.length<10)throw new Error('deep-web-10 requires 10 residents');const first=await firstWave(req,env);const second=await replyWave(req,env,first);const third=await thirdWave(req,env,first,second);const all=[...first,...second,...third];const chair=await chairPost(req,env,all);const thread={title:req.title,body:req.body||'',created:new Date().toISOString(),engine:req.engine,mode:req.mode,posts:[...all,chair]};const shareId=await persist(env,thread);return {...thread,shareId}}
 
-function toolsFor(req: CouncilRequest, env: Env) {
-  const tools: any[] = [];
-  const wantsWeb = req.engine === 'deep-web-10' || req.sources.some(s => s.id === 'web' || s.kind.toLowerCase().includes('web'));
-  const wantsFiles = req.engine === 'project' || req.sources.some(s => s.kind.toLowerCase().includes('pdf') || s.kind.toLowerCase().includes('project'));
-
-  if (wantsWeb) tools.push({ type: 'web_search', search_context_size: req.engine === 'deep-web-10' ? 'high' : 'medium' });
-  if (wantsFiles && env.COUNCIL_VECTOR_STORE_ID) {
-    tools.push({ type: 'file_search', vector_store_ids: [env.COUNCIL_VECTOR_STORE_ID], max_num_results: 12 });
-  }
-  return tools;
-}
-
-function watchSearchInstruction(mode: CouncilRequest['mode']) {
-  if (mode !== 'watch') return '';
-  return `\n時計研究では日本語だけに寄せない。必要に応じて英語・ドイツ語・フランス語へ展開し、ブランド名、モデル名、キャリバー名、旧表記、スペル揺れ、刻印語を分解して探す。販売文と一次資料を混ぜない。`;
-}
-
-function sourcePackText(req: CouncilRequest) {
-  if (!req.sources.length) return '指定資料なし';
-  return req.sources.map(s => `- ${s.name} (${s.kind})`).join('\n');
-}
-
-function independentPrompt(req: CouncilRequest, resident: Resident) {
-  return `あなたは匿名掲示板の住民「${resident.name}」。\n役割: ${resident.role}\n弱点/偏り: ${resident.bias}\n\n議題: ${req.title}\n>>1本文:\n${req.body}\n\n指定SOURCE PACK:\n${sourcePackText(req)}\n\n重要ルール:\n- 他の住民の回答はまだ見えていない。独立して考える。\n- 自分の役割に固有の評価軸を使う。別人格の言い換えをしない。\n- 確認できた事実、資料記載、Web確認、推論、未確認を混ぜない。\n- 反証または「この結論が崩れる条件」を最低1つ考える。\n- ${req.engine === 'deep-web-10' ? '必ずWeb検索を使い、自分の担当軸に合う検索語を複数試す。最初の検索結果だけで終わらない。' : '必要な場合のみ利用可能なツールを使う。'}\n- SOURCE PACKがFile Searchに未接続なら、読んだふりをしない。\n- 掲示板レスとして読める自然な日本語で、長すぎず、しかし論点は削らない。\n${watchSearchInstruction(req.mode)}\n\n最後に別行で「CONFIDENCE: 0-100」を出す。`;
-}
-
-function critiquePrompt(req: CouncilRequest, resident: Resident, own: Post, targetName: string, target: Post) {
-  return `あなたは匿名掲示板の住民「${resident.name}」。\n役割: ${resident.role}\n弱点/偏り: ${resident.bias}\n\n議題: ${req.title}\n\n自分の初回レス:\n${own.text}\n\n反論対象「${targetName}」のレス:\n${target.text}\n\nやること:\n1. 相手の最も強い点を1つ認める。\n2. 相手の見落とし、弱い根拠、評価軸の混同のどれかを具体的に指摘する。\n3. 必要なら再検索して、自分の初回見解を維持・修正・撤回のどれかに更新する。\n4. 冒頭は「>>n」相当のレスアンカー感がある文章にする。ただし番号自体はシステム側で付けるので数字は書かなくてよい。\n5. ${req.engine === 'deep-web-10' ? 'Web検索を再度使ってよい。初回検索と同じ結果に依存しない。' : '利用可能な資料・Webを必要に応じて確認する。'}\n${watchSearchInstruction(req.mode)}\n\n最後に別行で「CONFIDENCE: 0-100」を出す。`;
-}
-
-async function callOpenAI(env: Env, input: string, tools: any[], model: string) {
-  const res = await fetch('https://api.openai.com/v1/responses', {
-    method: 'POST',
-    headers: {
-      'authorization': `Bearer ${env.OPENAI_API_KEY}`,
-      'content-type': 'application/json'
-    },
-    body: JSON.stringify({
-      model,
-      input,
-      tools,
-      reasoning: { effort: 'medium' },
-      max_output_tokens: 2200
-    })
-  });
-  if (!res.ok) throw new Error(`OpenAI ${res.status}: ${await res.text()}`);
-  return res.json();
-}
-
-async function mapLimit<T, R>(items: T[], limit: number, fn: (item: T, index: number) => Promise<R>): Promise<R[]> {
-  const results = new Array<R>(items.length);
-  let cursor = 0;
-  const workers = Array.from({ length: Math.min(limit, items.length) }, async () => {
-    while (true) {
-      const index = cursor++;
-      if (index >= items.length) return;
-      results[index] = await fn(items[index], index);
-    }
-  });
-  await Promise.all(workers);
-  return results;
-}
-
-async function independentRound(req: CouncilRequest, env: Env): Promise<Post[]> {
-  const model = env.COUNCIL_MODEL_FAST || 'gpt-5.6-luna';
-  const tools = toolsFor(req, env);
-  const concurrency = req.engine === 'deep-web-10' ? 4 : 5;
-  return mapLimit(req.residents, concurrency, async (resident, index) => {
-    const payload = await callOpenAI(env, independentPrompt(req, resident), tools, model);
-    const parsed = parseConfidence(responseText(payload));
-    return {
-      resident: resident.id,
-      text: parsed.text,
-      confidence: parsed.confidence,
-      evidence: tools.length ? 'ツール利用可。根拠欄を確認' : 'モデル推論のみ',
-      source: req.sources[index % Math.max(req.sources.length, 1)]?.name || null,
-      citations: extractCitations(payload),
-      format: 'text'
-    };
-  });
-}
-
-async function critiqueRound(req: CouncilRequest, env: Env, first: Post[]): Promise<Post[]> {
-  const model = env.COUNCIL_MODEL_FAST || 'gpt-5.6-luna';
-  const tools = toolsFor(req, env);
-  const residentById = new Map(req.residents.map(r => [r.id, r]));
-  const count = req.engine === 'deep-web-10' ? first.length : Math.min(5, first.length);
-  const selected = first.slice(0, count);
-  return mapLimit(selected, req.engine === 'deep-web-10' ? 4 : 5, async (own, index) => {
-    const resident = residentById.get(own.resident)!;
-    const target = first[(index + 1) % first.length];
-    const targetName = residentById.get(target.resident)?.name || target.resident;
-    const payload = await callOpenAI(env, critiquePrompt(req, resident, own, targetName, target), tools, model);
-    const parsed = parseConfidence(responseText(payload));
-    return {
-      resident: resident.id,
-      text: parsed.text,
-      confidence: parsed.confidence,
-      evidence: req.engine === 'deep-web-10' ? '相互反論・再検索フェーズ' : '相互反論フェーズ',
-      source: null,
-      citations: extractCitations(payload),
-      format: 'text'
-    };
-  });
-}
-
-async function judge(req: CouncilRequest, env: Env, first: Post[], second: Post[]) {
-  const model = env.COUNCIL_MODEL_JUDGE || env.COUNCIL_MODEL_FAST || 'gpt-5.6-terra';
-  const digest = [...first, ...second].map((p, i) => `${i + 1}. ${p.resident}: ${p.text}`).join('\n\n');
-  const prompt = `あなたは議長。多数決で結論を潰さない。\n議題: ${req.title}\n\n住民レス:\n${digest}\n\n出力は次の3点だけ。\n- 現在もっとも強い争点\n- 合意している点\n- まだ不足している情報\n\n断定できないことは断定しない。各項目は短く。`;
-  const payload = await callOpenAI(env, prompt, [], model);
-  return responseText(payload);
-}
-
-async function persistThread(env: Env, thread: any) {
-  if (!env.DB) return null;
-  const id = crypto.randomUUID().replace(/-/g, '').slice(0, 12);
-  await env.DB.prepare('INSERT INTO threads (id, payload, created_at) VALUES (?, ?, ?)')
-    .bind(id, JSON.stringify(thread), new Date().toISOString())
-    .run();
-  return id;
-}
-
-async function runCouncil(req: CouncilRequest, env: Env) {
-  if (!req.title?.trim()) throw new Error('title is required');
-  if (!Array.isArray(req.residents) || req.residents.length < 2) throw new Error('at least 2 residents are required');
-  if (req.engine === 'deep-web-10' && req.residents.length < 10) throw new Error('deep-web-10 requires 10 residents');
-
-  const first = await independentRound(req, env);
-  const second = await critiqueRound(req, env, first);
-  const summary = await judge(req, env, first, second);
-  const thread = {
-    title: req.title,
-    body: req.body || '',
-    created: new Date().toISOString(),
-    engine: req.engine,
-    mode: req.mode,
-    posts: [first, second],
-    summary
-  };
-  const shareId = await persistThread(env, thread);
-  return { ...thread, shareId };
-}
-
-export default {
-  async fetch(request: Request, env: Env): Promise<Response> {
-    const origin = cleanOrigin(env);
-    const url = new URL(request.url);
-
-    if (request.method === 'OPTIONS') return new Response(null, { status: 204, headers: jsonHeaders(origin) });
-
-    if (request.method === 'GET' && url.pathname === '/health') {
-      return new Response(JSON.stringify({ ok: true, openai: Boolean(env.OPENAI_API_KEY), vectorStore: Boolean(env.COUNCIL_VECTOR_STORE_ID), db: Boolean(env.DB) }), { headers: jsonHeaders(origin) });
-    }
-
-    if (request.method === 'GET' && url.pathname.startsWith('/api/thread/')) {
-      if (!env.DB) return new Response(JSON.stringify({ error: 'DB not configured' }), { status: 501, headers: jsonHeaders(origin) });
-      const id = url.pathname.split('/').pop();
-      const row = await env.DB.prepare('SELECT payload FROM threads WHERE id = ?').bind(id).first();
-      if (!row) return new Response(JSON.stringify({ error: 'not found' }), { status: 404, headers: jsonHeaders(origin) });
-      return new Response(row.payload, { headers: jsonHeaders(origin) });
-    }
-
-    if (request.method === 'POST' && url.pathname === '/api/council') {
-      try {
-        const req = await request.json() as CouncilRequest;
-        const thread = await runCouncil(req, env);
-        return new Response(JSON.stringify({ thread }), { headers: jsonHeaders(origin) });
-      } catch (error: any) {
-        return new Response(JSON.stringify({ error: error?.message || String(error) }), { status: 500, headers: jsonHeaders(origin) });
-      }
-    }
-
-    return new Response(JSON.stringify({ error: 'not found' }), { status: 404, headers: jsonHeaders(origin) });
-  }
-};
+export default{async fetch(request:Request,env:Env):Promise<Response>{const o=origin(env),url=new URL(request.url);if(request.method==='OPTIONS')return new Response(null,{status:204,headers:headers(o)});if(request.method==='GET'&&url.pathname==='/health')return new Response(JSON.stringify({ok:true,openai:Boolean(env.OPENAI_API_KEY),vectorStore:Boolean(env.COUNCIL_VECTOR_STORE_ID),db:Boolean(env.DB)}),{headers:headers(o)});if(request.method==='GET'&&url.pathname.startsWith('/api/thread/')){if(!env.DB)return new Response(JSON.stringify({error:'DB not configured'}),{status:501,headers:headers(o)});const id=url.pathname.split('/').pop();const row=await env.DB.prepare('SELECT payload FROM threads WHERE id = ?').bind(id).first();if(!row)return new Response(JSON.stringify({error:'not found'}),{status:404,headers:headers(o)});return new Response(row.payload,{headers:headers(o)})}if(request.method==='POST'&&url.pathname==='/api/council'){try{const req=await request.json() as CouncilRequest;const result=await run(req,env);return new Response(JSON.stringify(result),{headers:headers(o)})}catch(e:any){return new Response(JSON.stringify({error:e?.message||String(e)}),{status:500,headers:headers(o)})}}return new Response(JSON.stringify({error:'not found'}),{status:404,headers:headers(o)})}}
