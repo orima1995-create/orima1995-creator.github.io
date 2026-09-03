@@ -4,7 +4,8 @@
   "type": "module",
   "scripts": {
     "dev": "wrangler dev",
-    "deploy": "wrangler deploy"
+    "deploy": "wrangler deploy",
+    "setup:vector": "node scripts/setup-vector-store.mjs"
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^4.20260901.0",
