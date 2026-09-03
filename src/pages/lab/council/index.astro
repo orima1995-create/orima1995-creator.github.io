@@ -352,7 +352,7 @@ async function extendThread(){
   try{
     const res=await fetch(url,{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify(continuationPayload())});
     if(!res.ok)throw new Error(await res.text());
-    state.thread=normalizeThread(await res.json());state.pendingPrevious=null;renderThread();
+    state.thread=normalizeThread(await res.json());renderThread();
   }catch(err){toast('延長に失敗');if(btn){btn.disabled=false;btn.textContent='このスレ続ける'}}
 }
 function localNextDraft(){
@@ -397,7 +397,7 @@ async function generate(){
     localStorage.setItem('councilApi',api);
     const payload={title,body,mode:state.mode,engine:state.engine,residents:state.selected.map(id=>resident(id)),sources:state.sources.filter(s=>s.selected).map(({id,name,kind})=>({id,name,kind})),previousThread:state.pendingPrevious};
     const res=await fetch(api,{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify(payload)});if(!res.ok)throw new Error(await res.text());
-    state.thread=normalizeThread(await res.json());renderThread();
+    state.thread=normalizeThread(await res.json());state.pendingPrevious=null;renderThread();
   }catch(err){$('#thread').innerHTML=`<div class="thread-empty">ENGINE API error<br>${esc(err?.message||err)}</div>`}
 }
 function encodeState(){const p={v:3,mode:state.mode,engine:state.engine,selected:state.selected,sources:state.sources,title:$('#threadTitle').value,body:$('#threadBody').value,thread:state.thread};return btoa(unescape(encodeURIComponent(JSON.stringify(p)))).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'')}
