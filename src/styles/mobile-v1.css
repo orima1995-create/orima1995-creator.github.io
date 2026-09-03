@@ -82,7 +82,7 @@
 @media(max-width:340px){
   /* Avoid leaving only 「む。」 on a second line at 320px. */
   .owners-directory-hero h1{
-    font-size:30px!important;
+    font-size:29px!important;
     line-height:1.15!important;
   }
 }
