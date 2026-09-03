@@ -1,0 +1,85 @@
+/* Staging mobile pass v1.
+   Keep the existing editorial look; change only mobile density, touch targets,
+   focus visibility and small-screen OWNER'S NOTES presentation. */
+
+:where(a, summary):focus-visible{
+  outline:2px solid var(--ink);
+  outline-offset:4px;
+}
+
+@media(max-width:480px){
+  .home-hero{
+    padding:62px 0 50px;
+  }
+
+  .home-hero h1{
+    font-size:clamp(56px,17vw,74px);
+    line-height:.84;
+  }
+
+  .home-hero p{
+    margin-top:28px;
+    font-size:20px;
+  }
+
+  .home-nav{
+    padding-bottom:60px;
+  }
+
+  .home-nav>a,
+  .home-nav-disabled{
+    min-height:88px;
+    padding:18px 0;
+  }
+
+  .home-nav small{
+    font-size:14px;
+    line-height:1.5;
+  }
+
+  .owners-era-grid{
+    grid-template-columns:1fr!important;
+    max-width:100%!important;
+    gap:16px!important;
+  }
+
+  .owners-note-card-copy{
+    left:16px!important;
+    right:16px!important;
+    bottom:16px!important;
+  }
+
+  .owners-note-card-copy small{
+    font-size:8px!important;
+  }
+
+  .owners-note-card-copy h3{
+    font-size:clamp(1.2rem,6vw,1.55rem)!important;
+    line-height:1.08!important;
+  }
+
+  .owners-note-card-copy p{
+    margin-top:7px!important;
+    font-size:clamp(.82rem,3.8vw,.95rem)!important;
+    line-height:1.4!important;
+  }
+
+  .deep-media figcaption{
+    font-size:13px!important;
+    line-height:1.65!important;
+  }
+}
+
+@media(prefers-reduced-motion:reduce){
+  html{
+    scroll-behavior:auto;
+  }
+
+  *,
+  *::before,
+  *::after{
+    animation-duration:.01ms!important;
+    animation-iteration-count:1!important;
+    transition-duration:.01ms!important;
+  }
+}
