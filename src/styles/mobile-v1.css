@@ -37,6 +37,12 @@
     line-height:1.5;
   }
 
+  /* The original 15vw rule becomes too large around 390px and makes
+     TIME-O-VOX wrap to an unnecessary third line. */
+  .hero h1{
+    font-size:clamp(48px,13vw,56px);
+  }
+
   .owners-era-grid{
     grid-template-columns:1fr!important;
     max-width:100%!important;
@@ -67,6 +73,14 @@
   .deep-media figcaption{
     font-size:13px!important;
     line-height:1.65!important;
+  }
+}
+
+@media(max-width:340px){
+  /* Avoid leaving only 「む。」 on a second line at 320px. */
+  .owners-directory-hero h1{
+    font-size:30px!important;
+    line-height:1.15!important;
   }
 }
 
