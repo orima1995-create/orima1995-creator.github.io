@@ -9,7 +9,7 @@ const watches = defineCollection({
     ownerNumber: z.string(),
     brand: z.string(),
     model: z.string(),
-    catch: z.array(z.string()).length(2),
+    catch: z.array(z.string()).min(1).max(2),
     ownersNote: z.object({
       image: z.string(),
       imageParts: z.array(z.string()).optional(),
@@ -43,7 +43,8 @@ const watches = defineCollection({
       images: z.array(z.object({
         src: z.string(),
         caption: z.string().optional(),
-        alt: z.string().optional()
+        alt: z.string().optional(),
+        afterParagraph: z.number().int().min(1).optional()
       })).optional()
     })),
     sources: z.array(z.string())

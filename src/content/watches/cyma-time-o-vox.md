@@ -5,7 +5,6 @@ brand: CYMA
 model: TIME-O-VOX
 catch:
   - 鳴る黄金のクロノメーター
-  - そして、アラームにクロノメーター
 ownersNote:
   image: /images/cyma-time-o-vox/Cyma timeovox .png
   lead:
@@ -86,11 +85,13 @@ deepDive:
       - src: /images/cyma-time-o-vox/ムーブメント.jpg
         caption: Cal.R.464のムーブメント全景
         alt: CYMA Time-O-Vox Cal.R.464 ムーブメント全景
+        afterParagraph: 1
       - src: /images/cyma-time-o-vox/wipe.jpg
         caption: |-
           Wippe（揺動切替機構）と上下プッシャーの作用点。
           プッシャー操作に応じてリューズからの接続先を切り替える。
         alt: CYMA Cal.R.464 Wippeと上下プッシャーの作用点
+        afterParagraph: 2
   - number: "03"
     title: Time-O-Voxのケースとラグ
     paragraphs:
