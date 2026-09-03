@@ -1,8 +1,8 @@
-name: Staging Mobile Check
+name: Staging Mobile v2 Check
 
 on:
   push:
-    branches: ["staging/mobile-v1"]
+    branches: ["staging/mobile-v2"]
   workflow_dispatch:
 
 permissions:
@@ -57,11 +57,14 @@ jobs:
             test -f "$f" || { echo "missing file: $f"; exit 1; }
           done
 
-      - name: Verify mobile v1 is bundled
+      - name: Verify mobile v2 structure
         run: |
           set -e
-          grep -R -Fq 'prefers-reduced-motion' dist/_astro || { echo 'mobile-v1 CSS missing from build'; exit 1; }
-          grep -R -Fq 'grid-template-columns:1fr' dist/_astro || { echo 'single-column mobile rule missing'; exit 1; }
+          grep -Fq 'home-feature-section' dist/index.html || { echo 'editorial home feature missing'; exit 1; }
+          grep -Fq 'home-index-primary' dist/index.html || { echo 'home hierarchy missing'; exit 1; }
+          grep -Fq 'owners-mobile-rail' dist/owners-notes/index.html || { echo 'mobile owners rail missing'; exit 1; }
+          grep -R -Fq 'scroll-snap-type:x mandatory' dist/_astro dist/owners-notes/index.html || { echo 'owners swipe snapping missing'; exit 1; }
+          grep -R -Fq 'prefers-reduced-motion' dist/_astro || { echo 'mobile shared CSS missing from build'; exit 1; }
 
       - name: Guard editorial output
         run: |
@@ -86,6 +89,6 @@ jobs:
       - name: Upload staging build artifact
         uses: actions/upload-artifact@v4
         with:
-          name: staging-mobile-v1-dist
+          name: staging-mobile-v2-dist
           path: dist
           retention-days: 7
