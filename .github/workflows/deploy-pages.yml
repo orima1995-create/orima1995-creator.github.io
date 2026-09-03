@@ -47,19 +47,19 @@ jobs:
             dist/images/history/smartwatch-part-2.webp \
             dist/images/history/smartwatch-part-3.webp \
             dist/images/history/smartwatch-part-4.webp \
-            dist/images/cyma-time-o-vox/owners-note-1.webp \
-            dist/images/cyma-time-o-vox/owners-note-2.webp \
-            dist/images/cyma-time-o-vox/owners-note-3.webp \
-            dist/images/cyma-time-o-vox/owners-note-4.webp \
+            "dist/images/cyma-time-o-vox/Cyma timeovox .png" \
             dist/robots.txt \
             dist/sitemap.xml; do
             test -f "$f" || { echo "missing file: $f"; exit 1; }
           done
-          for f in dist/images/history/smartwatch-part-*.webp dist/images/cyma-time-o-vox/owners-note-*.webp; do
+          for f in dist/images/history/smartwatch-part-*.webp; do
             bytes=$(wc -c < "$f")
             echo "$f: ${bytes} bytes"
             test "$bytes" -gt 4000 || { echo "image too small: $f"; exit 1; }
           done
+          cyma_bytes=$(wc -c < "dist/images/cyma-time-o-vox/Cyma timeovox .png")
+          echo "Cyma OWNER'S NOTE PNG: ${cyma_bytes} bytes"
+          test "$cyma_bytes" -gt 100000 || { echo "Cyma OWNER'S NOTE PNG is unexpectedly small"; exit 1; }
           check_text() {
             needle="$1"
             file="$2"
@@ -84,7 +84,8 @@ jobs:
           check_text '一つの香箱なのに、リューズは回らない。' dist/cyma-time-o-vox/index.html
           check_text '6〜10秒' dist/cyma-time-o-vox/index.html
           check_text '約9時間分のパワーリザーブ' dist/cyma-time-o-vox/index.html
-          check_text 'owners-note-4.webp' dist/cyma-time-o-vox/index.html
+          check_text 'Cyma timeovox .png' dist/cyma-time-o-vox/index.html
+          check_text 'Cyma timeovox .png' dist/cyma-time-o-vox/owners-note/index.html
           check_text 'owners-notes' dist/sitemap.xml
           check_text 'cyma-time-o-vox' dist/sitemap.xml
           if grep -Fq '個体ページへ' dist/owners-notes/index.html; then
@@ -118,19 +119,21 @@ jobs:
           owners="${root}owners-notes/"
           smart="${root}history/smartwatch/"
           cyma="${root}cyma-time-o-vox/"
+          cyma_note="${root}cyma-time-o-vox/owners-note/"
           for attempt in {1..12}; do
             home_html=$(curl -fsSL "$home" || true)
             history_html=$(curl -fsSL "$history" || true)
             owners_html=$(curl -fsSL "$owners" || true)
             smart_html=$(curl -fsSL "$smart" || true)
             cyma_html=$(curl -fsSL "$cyma" || true)
+            cyma_note_html=$(curl -fsSL "$cyma_note" || true)
             parts_ok=1
             for n in 1 2 3 4; do
               size=$(curl -fsSL "${root}images/history/smartwatch-part-${n}.webp" 2>/dev/null | wc -c || true)
               [ "${size:-0}" -gt 4000 ] || parts_ok=0
-              cyma_size=$(curl -fsSL "${root}images/cyma-time-o-vox/owners-note-${n}.webp" 2>/dev/null | wc -c || true)
-              [ "${cyma_size:-0}" -gt 4000 ] || parts_ok=0
             done
+            cyma_size=$(curl -fsSL "${root}images/cyma-time-o-vox/Cyma%20timeovox%20.png" 2>/dev/null | wc -c || true)
+            [ "${cyma_size:-0}" -gt 100000 ] || parts_ok=0
             if grep -Fq "owners-notes/" <<<"$home_html" \
               && grep -Fq "history/#milestones" <<<"$home_html" \
               && grep -Fq "history/#research" <<<"$home_html" \
@@ -149,7 +152,8 @@ jobs:
               && grep -Fq "もっと静かな時代へ戻る" <<<"$smart_html" \
               && grep -Fq "一つの香箱なのに、リューズは回らない。" <<<"$cyma_html" \
               && grep -Fq "約9時間分のパワーリザーブ" <<<"$cyma_html" \
-              && grep -Fq "owners-note-4.webp" <<<"$cyma_html" \
+              && grep -Fq "Cyma timeovox .png" <<<"$cyma_html" \
+              && grep -Fq "Cyma timeovox .png" <<<"$cyma_note_html" \
               && ! grep -Fq "#index-milestones" <<<"$home_html$history_html" \
               && ! grep -Fq "#index-owners" <<<"$home_html$history_html" \
               && ! grep -Fq "#index-interests" <<<"$home_html$history_html" \
