@@ -48,6 +48,8 @@ jobs:
             dist/images/history/smartwatch-part-3.webp \
             dist/images/history/smartwatch-part-4.webp \
             "dist/images/cyma-time-o-vox/Cyma timeovox .png" \
+            "dist/images/cyma-time-o-vox/ムーブメント.jpg" \
+            dist/images/cyma-time-o-vox/wipe.jpg \
             dist/robots.txt \
             dist/sitemap.xml; do
             test -f "$f" || { echo "missing file: $f"; exit 1; }
@@ -60,6 +62,10 @@ jobs:
           cyma_bytes=$(wc -c < "dist/images/cyma-time-o-vox/Cyma timeovox .png")
           echo "Cyma OWNER'S NOTE PNG: ${cyma_bytes} bytes"
           test "$cyma_bytes" -gt 100000 || { echo "Cyma OWNER'S NOTE PNG is unexpectedly small"; exit 1; }
+          movement_bytes=$(wc -c < "dist/images/cyma-time-o-vox/ムーブメント.jpg")
+          wipe_bytes=$(wc -c < dist/images/cyma-time-o-vox/wipe.jpg)
+          test "$movement_bytes" -gt 100000 || { echo "Cyma movement image is unexpectedly small"; exit 1; }
+          test "$wipe_bytes" -gt 100000 || { echo "Cyma Wippe image is unexpectedly small"; exit 1; }
           check_text() {
             needle="$1"
             file="$2"
@@ -77,14 +83,15 @@ jobs:
           check_text 'owners-notes/' dist/history/index.html
           check_text '鳴る黄金のクロノメーター' dist/owners-notes/index.html
           check_text '通知のオーパーツ' dist/owners-notes/index.html
-          check_text 'cyma-time-o-vox/owners-note/' dist/owners-notes/index.html
+          check_text 'cyma-time-o-vox/#owners-note' dist/owners-notes/index.html
+          check_text 'Cyma timeovox .png' dist/owners-notes/index.html
           check_text 'pierce-duofon/#owners-note' dist/owners-notes/index.html
           check_text 'smartwatch-part-4.webp' dist/history/smartwatch/index.html
           check_text 'もっと静かな時代へ戻る' dist/history/smartwatch/index.html
           check_text 'youtube.com/embed/xkecjZqr7BY' dist/pierce-duofon/index.html
-          check_text '一つの香箱なのに、リューズは回らない。' dist/cyma-time-o-vox/index.html
-          check_text '6〜10秒' dist/cyma-time-o-vox/index.html
-          check_text '約9時間分のパワーリザーブ' dist/cyma-time-o-vox/index.html
+          check_text 'Cal.R.464' dist/cyma-time-o-vox/index.html
+          check_text 'ムーブメント.jpg' dist/cyma-time-o-vox/index.html
+          check_text 'wipe.jpg' dist/cyma-time-o-vox/index.html
           check_text 'Cyma timeovox .png' dist/cyma-time-o-vox/index.html
           check_text 'Cyma timeovox .png' dist/cyma-time-o-vox/owners-note/index.html
           check_text 'youtube.com/embed/OONH0JZqCK0' dist/cyma-time-o-vox/index.html
@@ -138,7 +145,11 @@ jobs:
               [ "${size:-0}" -gt 4000 ] || parts_ok=0
             done
             cyma_size=$(curl -fsSL "${root}images/cyma-time-o-vox/Cyma%20timeovox%20.png" 2>/dev/null | wc -c || true)
+            movement_size=$(curl -fsSL "${root}images/cyma-time-o-vox/%E3%83%A0%E3%83%BC%E3%83%96%E3%83%A1%E3%83%B3%E3%83%88.jpg" 2>/dev/null | wc -c || true)
+            wipe_size=$(curl -fsSL "${root}images/cyma-time-o-vox/wipe.jpg" 2>/dev/null | wc -c || true)
             [ "${cyma_size:-0}" -gt 100000 ] || parts_ok=0
+            [ "${movement_size:-0}" -gt 100000 ] || parts_ok=0
+            [ "${wipe_size:-0}" -gt 100000 ] || parts_ok=0
             if grep -Fq "owners-notes/" <<<"$home_html" \
               && grep -Fq "history/#milestones" <<<"$home_html" \
               && grep -Fq "history/#research" <<<"$home_html" \
@@ -150,14 +161,16 @@ jobs:
               && grep -Fq "owners-notes/" <<<"$history_html" \
               && grep -Fq "鳴る黄金のクロノメーター" <<<"$owners_html" \
               && grep -Fq "通知のオーパーツ" <<<"$owners_html" \
-              && grep -Fq "cyma-time-o-vox/owners-note/" <<<"$owners_html" \
+              && grep -Fq "cyma-time-o-vox/#owners-note" <<<"$owners_html" \
+              && grep -Fq "Cyma timeovox .png" <<<"$owners_html" \
               && grep -Fq "pierce-duofon/#owners-note" <<<"$owners_html" \
               && ! grep -Fq "個体ページへ" <<<"$owners_html" \
               && grep -Fq "smartwatch-part-4.webp" <<<"$smart_html" \
               && grep -Fq "もっと静かな時代へ戻る" <<<"$smart_html" \
               && grep -Fq "youtube.com/embed/xkecjZqr7BY" <<<"$duofon_html" \
-              && grep -Fq "一つの香箱なのに、リューズは回らない。" <<<"$cyma_html" \
-              && grep -Fq "約9時間分のパワーリザーブ" <<<"$cyma_html" \
+              && grep -Fq "Cal.R.464" <<<"$cyma_html" \
+              && grep -Fq "ムーブメント.jpg" <<<"$cyma_html" \
+              && grep -Fq "wipe.jpg" <<<"$cyma_html" \
               && grep -Fq "Cyma timeovox .png" <<<"$cyma_html" \
               && grep -Fq "Cyma timeovox .png" <<<"$cyma_note_html" \
               && grep -Fq "youtube.com/embed/OONH0JZqCK0" <<<"$cyma_html" \
@@ -166,7 +179,7 @@ jobs:
               && ! grep -Fq "#index-owners" <<<"$home_html$history_html" \
               && ! grep -Fq "#index-interests" <<<"$home_html$history_html" \
               && [ "$parts_ok" -eq 1 ]; then
-              echo "Verified live navigation, watch videos, owners notes, smartwatch artwork, and Cyma page: $root"
+              echo "Verified live navigation, watch videos, owners notes, Cyma media, and smartwatch artwork: $root"
               exit 0
             fi
             sleep 5
