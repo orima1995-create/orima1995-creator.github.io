@@ -1,5 +1,4 @@
 ---
-const base = import.meta.env.BASE_URL;
 const title = 'COUNCIL LAB｜多視点AI議論プロトタイプ';
 const description = '異なる判断軸を持つ住民を召喚し、資料やWebを参照させて議論させる検証版。';
 ---
@@ -13,44 +12,45 @@ const description = '異なる判断軸を持つ住民を召喚し、資料やWe
   <meta name="description" content={description} />
   <style>
     :root{
-      --bg:#efefe9;--paper:#f8f8f3;--ink:#171717;--muted:#66665d;--line:#c8c8bd;
-      --green:#187328;--blue:#0000cc;--red:#8b2019;--warn:#fff2c7;--meta:#e8e8df;
+      --bg:#efefe8;--paper:#fafaf4;--ink:#111;--muted:#666;--line:#c8c8bb;
+      --green:#008000;--blue:#0000cc;--red:#8b1f17;--meta:#e7e7df;--warn:#fff1c7;
     }
     *{box-sizing:border-box}
-    html{-webkit-text-size-adjust:100%;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif}
+    html{-webkit-text-size-adjust:100%;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif;scroll-behavior:smooth}
     body{margin:0;line-height:1.65}
     button,input,textarea{font:inherit}
     button{cursor:pointer}
-    .wrap{width:min(1120px,calc(100% - 24px));margin:auto}
-    header{padding:20px 0 12px;border-bottom:3px double #555;background:#e6e6df}
-    .mast{display:flex;justify-content:space-between;gap:18px;align-items:end}
-    .mast h1{margin:0;font-family:Georgia,"Times New Roman",serif;font-size:clamp(1.8rem,6vw,3.3rem);font-weight:500;line-height:1}
-    .mast p{margin:7px 0 0;color:var(--muted);font-size:12px}
-    .labtag{border:1px solid #777;padding:4px 7px;font-size:10px;letter-spacing:.12em;white-space:nowrap}
-    main{padding:18px 0 70px}
-    .notice{margin:0 0 16px;padding:10px 12px;border:1px solid #c9ad55;background:var(--warn);font-size:12px;line-height:1.7}
-    .layout{display:grid;grid-template-columns:minmax(0,360px) minmax(0,1fr);gap:16px;align-items:start}
-    .panel{border:1px solid #aaa99d;background:var(--paper)}
-    .panel-head{padding:8px 10px;border-bottom:1px solid #aaa99d;background:#deded5;font-size:12px;font-weight:700}
+    a{color:var(--blue)}
+    .wrap{width:min(1140px,calc(100% - 24px));margin:auto}
+    header{padding:18px 0 11px;border-bottom:3px double #666;background:#e6e6df}
+    .mast{display:flex;justify-content:space-between;gap:16px;align-items:end}
+    .mast h1{margin:0;font:500 clamp(1.8rem,6vw,3.2rem)/1 Georgia,"Times New Roman",serif}
+    .mast p{margin:6px 0 0;color:var(--muted);font-size:11px}
+    .labtag{border:1px solid #777;padding:4px 7px;font-size:9px;letter-spacing:.12em;white-space:nowrap}
+    main{padding:16px 0 70px}
+    .notice{margin:0 0 14px;padding:9px 11px;border:1px solid #c7aa4f;background:var(--warn);font-size:11px;line-height:1.7}
+    .layout{display:grid;grid-template-columns:minmax(0,350px) minmax(0,1fr);gap:15px;align-items:start}
+    .panel,.thread-panel{border:1px solid #aaa99d;background:var(--paper)}
+    .panel-head{padding:8px 10px;border-bottom:1px solid #aaa99d;background:#deded5;font-size:11px;font-weight:700}
     .panel-body{padding:11px}
-    .field{display:block;margin-bottom:12px}
-    .field>span{display:block;margin-bottom:4px;color:var(--muted);font-size:11px;font-weight:700}
+    .field{display:block;margin-bottom:11px}
+    .field>span{display:block;margin-bottom:4px;color:var(--muted);font-size:10px;font-weight:700}
     input[type="text"],input[type="url"],textarea{width:100%;border:1px solid #99998c;border-radius:0;background:#fff;padding:9px 10px;color:var(--ink)}
     textarea{min-height:105px;resize:vertical}
     .button-row,.chips{display:flex;flex-wrap:wrap;gap:6px}
-    .choice,.chip{border:1px solid #99998c;background:#fff;padding:6px 8px;font-size:11px}
+    .choice,.chip{border:1px solid #99998c;background:#fff;padding:6px 8px;font-size:10px}
     .choice[aria-pressed="true"],.chip[aria-pressed="true"]{border-color:#275d31;background:#275d31;color:#fff}
     .engine-grid{display:grid;gap:7px}
-    .engine{display:grid;grid-template-columns:auto 1fr;gap:8px;text-align:left;border:1px solid #aaa99d;background:#fff;padding:9px}
+    .engine{display:grid;grid-template-columns:auto 1fr;gap:8px;text-align:left;border:1px solid #aaa99d;background:#fff;padding:8px}
     .engine[aria-pressed="true"]{outline:2px solid #333;outline-offset:-2px;background:#f0f0e7}
-    .engine strong{font-size:11px;white-space:nowrap}
-    .engine span{color:var(--muted);font-size:10px;line-height:1.55}
-    .engine-status{margin-top:9px;padding:8px 9px;border-left:3px solid #8b2019;background:#f3e8e4;font-size:10px;line-height:1.65}
+    .engine strong{font-size:10px;white-space:nowrap}
+    .engine span{color:var(--muted);font-size:9px;line-height:1.55}
+    .engine-status{margin-top:8px;padding:8px 9px;border-left:3px solid #8b2019;background:#f3e8e4;font-size:9px;line-height:1.65}
     .engine-status.live{border-color:#187328;background:#e6f0e7}
-    .source-row{display:grid;grid-template-columns:18px 1fr auto;gap:7px;align-items:start;padding:8px 0;border-bottom:1px dotted #c4c4b8;font-size:11px}
+    .source-row{display:grid;grid-template-columns:18px 1fr auto;gap:7px;align-items:start;padding:8px 0;border-bottom:1px dotted #c4c4b8;font-size:10px}
     .source-row:last-child{border-bottom:0}
     .source-row small{color:var(--muted)}
-    .source-state{font-size:9px;color:#8b2019;white-space:nowrap}
+    .source-state{font-size:8px;color:#8b2019;white-space:nowrap}
     .source-state.live{color:#187328}
     .add-source{display:grid;grid-template-columns:1fr auto;gap:6px;margin-top:9px}
     .add-source button,.primary,.secondary{border:1px solid #222;background:#222;color:#fff;padding:9px 10px}
@@ -58,7 +58,7 @@ const description = '異なる判断軸を持つ住民を召喚し、資料やWe
     .resident-card{padding:7px 0;border-bottom:1px dotted #c4c4b8}
     .resident-card:last-child{border-bottom:0}
     .resident-top{display:flex;justify-content:space-between;gap:8px}
-    .resident-name{font-size:11px;font-weight:700}
+    .resident-name{font-size:10px;font-weight:700}
     .resident-role,.resident-bias{color:var(--muted);font-size:9px;line-height:1.5}
     .actions{display:grid;grid-template-columns:1fr auto;gap:7px;margin-top:12px}
     .footnote{margin:10px 0 0;color:var(--muted);font-size:9px;line-height:1.6}
@@ -66,343 +66,242 @@ const description = '異なる判断軸を持つ住民を召喚し、資料やWe
     details.dev summary{cursor:pointer;color:var(--muted);font-size:9px}
     details.dev input{margin-top:7px;font-size:10px}
 
-    .thread-panel{min-height:620px;border:1px solid #aaa99d;background:#f4f4ee}
-    .thread-panel>.panel-head{background:#d8d8d0}
-    .thread-empty{padding:70px 20px;text-align:center;color:#777;font-size:12px}
-    .thread-head{padding:14px 13px 12px;border-bottom:1px solid #bdbdb2;background:#ecece3}
+    .thread-panel{min-height:620px;background:#f5f5ef}
+    .thread-head{padding:13px 12px 11px;border-bottom:1px solid #bdbdb2;background:#ecece3}
     .thread-title{margin:0;color:var(--red);font-size:18px;line-height:1.45;font-weight:700}
-    .thread-meta{display:flex;flex-wrap:wrap;gap:6px 12px;margin-top:7px;color:#707069;font-size:9px}
-    .thread-tools{display:flex;flex-wrap:wrap;gap:6px;padding:9px 12px;border-bottom:1px solid #c5c5ba;background:#f0f0e9}
-    .thread-tools button{border:1px solid #88887d;background:#fff;padding:5px 8px;font-size:10px}
-    .demo-flag{margin-left:auto;color:#8b2019;font-size:9px;align-self:center}
-    .round{margin:24px 12px 14px;padding-top:7px;border-top:3px double #9f9f93;color:#6b6b64;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:10px;font-weight:700}
-    .post{margin:0 12px 28px;padding:0 0 23px;border-bottom:1px solid #d0d0c5}
-    .post:last-child{margin-bottom:10px}
-    .post-meta{padding:6px 8px;background:var(--meta);font-size:12px;line-height:1.7;overflow-wrap:anywhere}
-    .post-meta .no{margin-right:5px;color:var(--blue);font-weight:700;text-decoration:underline;text-underline-offset:2px}
-    .post-meta .name{color:var(--green);font-weight:700}
-    .post-meta .date,.post-meta .id,.post-meta .confidence{color:#555}
-    .post-meta .id{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:10px}
-    .post-body{margin:12px 9px 0 2.2em;font-size:15px;line-height:1.9;overflow-wrap:anywhere;word-break:normal}
-    .post-body p{margin:0 0 13px}
-    .post-body p:last-child{margin-bottom:0}
-    .post-body .quote{color:var(--blue)}
-    .aa-body{margin:13px 0 0 1em;padding:4px 0 8px;overflow-x:auto;overflow-y:hidden;-webkit-overflow-scrolling:touch}
-    .aa-body pre{margin:0;font-family:"MS PGothic","ＭＳ Ｐゴシック",IPAMonaPGothic,Mona,Osaka,ui-monospace,monospace;font-size:16px;line-height:16px;letter-spacing:0;white-space:pre;color:#111}
-    .post-sources{margin:13px 9px 0 2.2em;color:#74746d;font-size:9px}
-    .post-sources summary{cursor:pointer;display:inline-block;border-bottom:1px dotted #888;padding-bottom:1px}
-    .post-sources div{margin-top:6px;line-height:1.65}
-    .post-sources .unverified{color:#8b2019}
-    .summary{margin:28px 12px 14px;padding:12px 13px;border:1px solid #99998e;background:#fff}
-    .summary h3{margin:0 0 7px;font-size:11px}
-    .summary p{margin:5px 0;font-size:11px;line-height:1.75}
-    .loading{padding:50px 20px;text-align:center;font-size:12px;color:#666}
+    .thread-meta{display:flex;flex-wrap:wrap;gap:5px 11px;margin-top:6px;color:#707069;font-size:9px}
+    .thread-tools{display:flex;align-items:center;flex-wrap:wrap;gap:7px;padding:8px 10px 10px;border-bottom:1px solid #c5c5ba;background:#f0f0e9;font-size:10px}
+    .thread-tools a,.thread-tools button{border:0;background:none;padding:0;color:var(--blue);text-decoration:underline;font-size:10px}
+    .thread-tools .demo{margin-left:auto;color:#8b2019;text-decoration:none}
+    .thread-empty,.loading{padding:60px 20px;text-align:center;color:#777;font-size:12px}
     .loading strong{display:block;margin-bottom:7px;color:#222}
-    .toast{position:fixed;left:50%;bottom:18px;transform:translateX(-50%);padding:8px 11px;background:#111;color:#fff;font-size:10px;opacity:0;pointer-events:none;transition:.18s;z-index:10}
+
+    .post{margin:0 10px;padding:15px 2px 23px;border-bottom:1px solid #d0d0c5;scroll-margin-top:14px}
+    .post:target,.post.jump-target{background:#fff7cf;box-shadow:0 0 0 5px #fff7cf}
+    .post-meta{font-size:12px;line-height:1.7;overflow-wrap:anywhere}
+    .post-meta .no{margin-right:4px;color:var(--blue);font-weight:700;text-decoration:underline;text-underline-offset:2px}
+    .post-meta .name{color:var(--green);font-weight:700}
+    .post-meta .date,.post-meta .id{color:#555}
+    .post-meta .id{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:10px}
+    .post-body{margin:10px 7px 0 2em;font-size:15px;line-height:1.88;overflow-wrap:anywhere;word-break:normal}
+    .post-body p{margin:0 0 14px}
+    .post-body p:last-child{margin-bottom:0}
+    .anchor{color:var(--blue);text-decoration:underline;cursor:pointer}
+    .aa-body{margin:12px 0 0 .7em;overflow-x:auto;overflow-y:hidden;-webkit-overflow-scrolling:touch}
+    .aa-body pre{margin:0;font-family:"MS PGothic","ＭＳ Ｐゴシック",IPAMonaPGothic,Mona,Osaka,ui-monospace,monospace;font-size:16px;line-height:16px;letter-spacing:0;white-space:pre;color:#111}
+    .post-evidence{margin:11px 7px 0 2em;color:#74746d;font-size:9px}
+    .post-evidence summary{cursor:pointer;display:inline-block;color:#666;border-bottom:1px dotted #888}
+    .post-evidence div{margin-top:6px;line-height:1.65}
+    .post-evidence a{overflow-wrap:anywhere}
+    .conclusion .name{color:#a00000}
+    .back-jump{position:fixed;right:12px;bottom:20px;z-index:20;display:none;border:1px solid #555;background:#fff;padding:7px 9px;font-size:10px;box-shadow:0 2px 10px #0002}
+    .back-jump.show{display:block}
+    .toast{position:fixed;left:50%;bottom:18px;transform:translateX(-50%);padding:8px 11px;background:#111;color:#fff;font-size:10px;opacity:0;pointer-events:none;transition:.18s;z-index:30}
     .toast.show{opacity:1}
 
     @media(max-width:760px){
-      .wrap{width:min(100% - 18px,720px)}
+      .wrap{width:min(100% - 14px,720px)}
       .layout{grid-template-columns:1fr}
-      .thread-panel{min-height:380px}
-      .thread-head{padding:13px 9px 11px}
       .thread-title{font-size:17px}
-      .thread-tools{padding:8px 9px 11px}
-      .round{margin:27px 8px 15px}
-      .post{margin:0 8px 32px;padding-bottom:25px}
-      .post-meta{padding:7px 7px;font-size:12px;line-height:1.75}
-      .post-body{margin:13px 7px 0 1.5em;font-size:16px;line-height:1.95}
+      .post{margin:0 6px;padding:16px 1px 25px}
+      .post-meta{font-size:12px;line-height:1.78}
+      .post-body{margin:11px 4px 0 1.1em;font-size:16px;line-height:1.92}
       .post-body p{margin-bottom:15px}
-      .post-sources{margin:14px 7px 0 1.5em;font-size:9px}
-      .aa-body{margin-left:.25em}
-      .aa-body pre{font-size:16px;line-height:16px}
-      .summary{margin:30px 8px 12px}
+      .post-evidence{margin:12px 4px 0 1.1em}
+      .aa-body{margin-left:0}
     }
   </style>
 </head>
 <body>
 <header>
   <div class="wrap mast">
-    <div>
-      <h1>COUNCIL LAB</h1>
-      <p>違う判断軸を、同じスレに放り込む。</p>
-    </div>
+    <div><h1>COUNCIL LAB</h1><p>違う判断軸を、同じスレに放り込む。</p></div>
     <span class="labtag">PROTOTYPE</span>
   </div>
 </header>
-
 <main class="wrap">
-  <p class="notice"><strong>現在：</strong> UIと共有は実働。AIエンジン未接続時は「ローカルデモ」と明示し、Project PDFやWebを読んだふりはしません。ENGINE API接続後は同じ画面から実エージェントへ切り替わります。</p>
+  <p class="notice"><strong>検証版：</strong> スレ表示・URL共有・レスアンカーは実働。AI API未接続時だけローカルデモを使い、Project PDFやWebを読んだふりはしません。</p>
   <div class="layout">
     <div>
-      <section class="panel">
-        <div class="panel-head">1｜スレを立てる</div>
-        <div class="panel-body">
-          <label class="field"><span>スレタイ</span><input id="threadTitle" type="text" value="AS 1475は本当にアラーム腕時計史のマイルストーンなのか？" /></label>
-          <label class="field"><span>本文</span><textarea id="threadBody">量産数だけで歴史的重要性を決めていいのか。普及、機構、他社への影響、反証まで分けて議論して。</textarea></label>
-          <div class="field"><span>議題モード</span><div class="button-row" id="modes"></div></div>
-        </div>
-      </section>
-
-      <section class="panel" style="margin-top:11px">
-        <div class="panel-head">2｜生成エンジン</div>
-        <div class="panel-body">
-          <div class="engine-grid" id="engines"></div>
-          <div class="engine-status" id="engineStatus"></div>
-          <details class="dev">
-            <summary>開発用：ENGINE API URL</summary>
-            <input id="apiEndpoint" type="url" placeholder="https://.../api/council" />
-          </details>
-        </div>
-      </section>
-
-      <section class="panel" style="margin-top:11px">
-        <div class="panel-head">3｜SOURCE PACK</div>
-        <div class="panel-body">
-          <div id="sources"></div>
-          <div class="add-source"><input id="customSource" type="url" placeholder="https://... 追加URL" /><button id="addSource" type="button">追加</button></div>
-          <p class="footnote">非公開PDF本体・APIキーは共有URLに含めない。公開時は資料名・引用・URLだけを出す設計。</p>
-        </div>
-      </section>
-
-      <section class="panel" style="margin-top:11px">
-        <div class="panel-head">4｜住民プール</div>
-        <div class="panel-body">
-          <div class="chips" id="residentChips"></div>
-          <div id="residentDetail" style="margin-top:9px"></div>
-          <div class="actions">
-            <button class="primary" id="generate" type="button">議論を開始</button>
-            <button class="secondary" id="shuffle" type="button">ランダム枠更新</button>
-          </div>
-        </div>
-      </section>
+      <section class="panel"><div class="panel-head">1｜スレを立てる</div><div class="panel-body">
+        <label class="field"><span>スレタイ</span><input id="threadTitle" type="text" value="AS 1475は本当にアラーム腕時計史のマイルストーンなのか？" /></label>
+        <label class="field"><span>本文</span><textarea id="threadBody">量産数だけで歴史的重要性を決めていいのか。普及、機構、他社への影響、反証まで分けて議論して。</textarea></label>
+        <div class="field"><span>議題モード</span><div class="button-row" id="modes"></div></div>
+      </div></section>
+      <section class="panel" style="margin-top:11px"><div class="panel-head">2｜生成エンジン</div><div class="panel-body">
+        <div class="engine-grid" id="engines"></div><div class="engine-status" id="engineStatus"></div>
+        <details class="dev"><summary>開発用：ENGINE API URL</summary><input id="apiEndpoint" type="url" placeholder="https://.../api/council" /></details>
+      </div></section>
+      <section class="panel" style="margin-top:11px"><div class="panel-head">3｜SOURCE PACK</div><div class="panel-body">
+        <div id="sources"></div><div class="add-source"><input id="customSource" type="url" placeholder="https://... 追加URL" /><button id="addSource" type="button">追加</button></div>
+        <p class="footnote">非公開PDF本体・APIキーは共有URLへ埋め込まない。</p>
+      </div></section>
+      <section class="panel" style="margin-top:11px"><div class="panel-head">4｜住民プール</div><div class="panel-body">
+        <div class="chips" id="residentChips"></div><div id="residentDetail" style="margin-top:9px"></div>
+        <div class="actions"><button class="primary" id="generate" type="button">スレを立てる</button><button class="secondary" id="shuffle" type="button">住民入替</button></div>
+      </div></section>
     </div>
-
-    <section class="thread-panel" aria-live="polite">
-      <div class="panel-head">THREAD</div>
-      <div id="thread"><div class="thread-empty">左で議題・エンジン・資料・住民を決めてスレを立てる。</div></div>
-    </section>
+    <section class="thread-panel" aria-live="polite"><div class="panel-head">THREAD</div><div id="thread"><div class="thread-empty">左で議題・エンジン・資料・住民を決めてスレを立てる。</div></div></section>
   </div>
 </main>
+<button class="back-jump" id="backJump" type="button">← 元のレスへ</button>
 <div class="toast" id="toast"></div>
 
-<script is:inline define:vars={{base}}>
-const MODES=[
-  {id:'general',label:'一般'},
-  {id:'watch',label:'時計研究'},
-  {id:'business',label:'仕事・企画'},
-  {id:'roast',label:'ロースト'}
-];
+<script is:inline>
+const MODES=[{id:'general',label:'一般'},{id:'watch',label:'時計研究'},{id:'business',label:'仕事・企画'},{id:'roast',label:'ロースト'}];
 const ENGINES=[
-  {id:'quick',label:'QUICK',desc:'6〜8人。資料を共有して独立回答→反論。Webは必要時だけ。'},
-  {id:'project',label:'PROJECT SOURCES',desc:'指定PDF・資料を優先。資料上の事実と推論を分離。'},
-  {id:'deep-web-10',label:'DEEP WEB ×10',desc:'10人が別々にWeb探索→独立報告→相互反論→再評価。時間・コスト高。'}
+  {id:'quick',label:'QUICK',desc:'6〜8人。独立意見→必要な相手へ返信→結論。'},
+  {id:'project',label:'PROJECT SOURCES',desc:'指定資料を優先して議論。File Search接続時に実参照。'},
+  {id:'deep-web-10',label:'DEEP WEB ×10',desc:'10人が別々にWeb検索。再検索・反論あり。かなり時間がかかる。'}
 ];
 const RESIDENTS=[
-  {id:'source',name:'史料警察',role:'一次資料・文献・推論を分離',bias:'未確認を嫌う',modes:['watch','general']},
-  {id:'mechanic',name:'機構オタク',role:'構造・操作・故障から見る',bias:'機構美を過大評価',modes:['watch']},
-  {id:'market',name:'市場屋',role:'価格・流動性・再取得難度',bias:'価値を値札へ寄せる',modes:['watch','business']},
-  {id:'cfo',name:'冷徹なCFO',role:'費用対効果・機会費用',bias:'浪漫を切り捨てる',modes:['business','general']},
-  {id:'ux',name:'初見ユーザー',role:'伝わるか・面倒でないか',bias:'背景知識が薄い',modes:['business','general']},
-  {id:'devil',name:'前提破壊班',role:'問いそのものを疑う',bias:'反証へ寄りすぎる',modes:['watch','business','general','roast']},
-  {id:'editor',name:'編集者',role:'面白さと断定リスクを分離',bias:'物語性へ寄る',modes:['watch','business','general']},
-  {id:'roaster',name:'焼却炉の名無しさん',role:'自己正当化と無駄を焼く',bias:'火力過多',modes:['roast','business','general']},
-  {id:'minimal',name:'ミニマリスト',role:'そもそも必要かを見る',bias:'研究を切りすぎる',modes:['watch','business','general']},
-  {id:'wild',name:'野良の変人',role:'異分野から接続を出す',bias:'再現性が低い',modes:['watch','business','general','roast']},
-  {id:'aa',name:'AA職人',role:'論点をAAで一度脱臼させる',bias:'役に立たない時もある',modes:['watch','business','general','roast'],format:'aa'}
+  {id:'source',name:'史料警察',role:'一次資料・文献・推論を分離',bias:'断定に厳しすぎる'},
+  {id:'mechanic',name:'機構オタク',role:'構造・操作・故障から見る',bias:'機構を過大評価しがち'},
+  {id:'market',name:'市場屋',role:'価格・流動性・再取得難度',bias:'価値を値札へ寄せがち'},
+  {id:'historian',name:'時計史厨',role:'前後関係・同時代比較',bias:'歴史的位置づけを重く見すぎる'},
+  {id:'collector',name:'沼の住人',role:'所有・再取得・実機経験',bias:'欲しい気持ちに引っ張られる'},
+  {id:'editor',name:'編集者',role:'伝わる面白さと断定リスク',bias:'物語性へ寄せがち'},
+  {id:'devil',name:'前提破壊班',role:'問い・前提・反証条件を疑う',bias:'否定から入りがち'},
+  {id:'cfo',name:'冷徹なCFO',role:'費用対効果・機会費用',bias:'浪漫を切り捨てがち'},
+  {id:'novice',name:'初見の名無しさん',role:'初見で理解できるか',bias:'専門背景が薄い'},
+  {id:'researcher',name:'検索沼研究員',role:'検索語を広げ反証も拾う',bias:'調査量を増やしすぎる'},
+  {id:'minimal',name:'ミニマリスト',role:'そもそも必要か',bias:'削りすぎる'},
+  {id:'wild',name:'野良の変人',role:'異分野から接続する',bias:'再現性が低い'},
+  {id:'aa',name:'AA職人',role:'空気をAAで切る',bias:'議論を進めない'}
 ];
-const DEMO_ANGLES={
-  source:[
-    '量産数は事実として強い。ただし「歴史的重要性」は別命題。専門書がどう位置づけているかと、当時資料で何が確認できるかを分けたい。',
-    'まず「最初」「普及させた」「後続へ影響した」を分離した方がいい。同じマイルストーンでも功績の種類が違う。',
-    '資料に書いてあることと、こちらが歴史的意味を付与している部分を同じ文章に混ぜると危ない。'
-  ],
-  mechanic:[
-    '生産数だけでは足りない。香箱構成、巻上げ、アラーム設定、発音構造まで見て、後続機に何が残ったかを比較したい。',
-    '機構として凡庸でも量産性が高ければ歴史には残る。逆に革新的でも孤立した機構は別の意味で重要。二軸で見るべき。',
-    '「よく使われた」と「設計上の転換点」は一致しない。ここを混ぜると機構史が薄くなる。'
-  ],
-  market:[
-    '希少性・市場価格・歴史的重要性は別物。売値が高い個体を歴史の中心へ置くと、ただの市場史になる。',
-    '再取得難度は所有判断には効くが、歴史年表の採否にはそのまま使えない。評価軸を分けるべき。',
-    '大量に残ったから安い、という市場結果と、大量に普及したから重要、という歴史評価は両立する。'
-  ],
-  cfo:[
-    'この調査で結論が変わるのかを先に決めたい。変わらないなら調査時間を切る。',
-    '10人で調べる価値がある論点と、1人の検索で十分な論点を分けないとコストが膨らむ。',
-    '深掘り自体を成果にしない。意思決定か公開品質を動かす情報だけ残す。'
-  ],
-  ux:[
-    '初見には「何が以前と違ったのか」が一文で分からないと、数字を並べても頭に残らない。',
-    'マイルストーンという語より、読者が見て分かる変化を先に置いた方が伝わる。',
-    '専門語の正しさより、比較対象が見える説明の方が入口として強い。'
-  ],
-  devil:[
-    '量産数が重要性の根拠なら、量産されなかった革新的機構をどう扱う？ その反例に耐える定義が必要。',
-    'そもそも年表に一つの「重要」を置く必要があるのか。普及史・機構史・用途史を分けた方が自然かもしれない。',
-    '「多く使われたから重要」は循環していないか。なぜ多く使われ、それが何を変えたのかまで必要。'
-  ],
-  editor:[
-    '安全に言える事実と、読ませるためのコピーを分ければ両立できる。コピーが事実の代わりを始めた瞬間に危ない。',
-    '数字は補強材料として強いが、見出しにするなら「何を変えたか」の方が読者には残る。',
-    '反証を本文に全部入れる必要はない。ただし裏では持っておき、断定の強さを調整する。'
-  ],
-  roaster:[
-    '調べたページ数を成果だと思い始めたら終わり。結論を変えない枝葉は切れ。',
-    '「資料をたくさん見た」だけで偉くなるな。比較軸が死んでたらただのPDF筋トレ。',
-    '深掘りは武器だが、出口がないと穴掘り大会。何を決めるための調査か毎回書け。'
-  ],
-  minimal:[
-    'サイトに必要なのは読者が理解する最小情報。研究ノートの全部を本文へ持ち込む必要はない。',
-    'この論点を主幹に置く必要があるか。年表の一カードなら説明を一段削れる可能性がある。',
-    '情報を増やす前に、消しても意味が変わらない文を探したい。'
-  ],
-  wild:[
-    '技術史なら「最初に作った規格」と「普及させた規格」は別の英雄として扱う。時計史でも同じ整理が使える。',
-    '交通史で言えば発明車と大衆車を同じ評価軸で競わせるのが変。役割別のマイルストーンにすればいい。',
-    '生物進化みたいに系統樹で見る手もある。最初・大量普及・枝分かれを一本の順位にしない。'
-  ]
-};
-let state={
-  mode:'watch',engine:'quick',
-  selectedResidents:['source','mechanic','market','devil','editor','wild','aa'],
-  sources:[
-    {id:'alarm-am-arm',name:'Alarm am Arm',kind:'Project PDF',selected:true,connected:false},
-    {id:'alarm-wristwatch',name:'The Alarm Wristwatch',kind:'Project PDF',selected:true,connected:false},
-    {id:'web',name:'Web research',kind:'Open web',selected:false,connected:false}
-  ],thread:null
-};
+let state={mode:'watch',engine:'quick',selected:['source','mechanic','historian','market','editor','devil','wild'],sources:[
+  {id:'alarm-am-arm',name:'Alarm am Arm',kind:'Project PDF',selected:true,connected:false},
+  {id:'alarm-wristwatch',name:'The Alarm Wristwatch',kind:'Project PDF',selected:true,connected:false},
+  {id:'web',name:'Web research',kind:'Web',selected:false,connected:true}
+],thread:null};
+let originScroll=null;
 const $=s=>document.querySelector(s);
 const esc=(s='')=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const pick=a=>a[Math.floor(Math.random()*a.length)];
-function renderModes(){
-  $('#modes').innerHTML=MODES.map(m=>`<button type="button" class="choice" data-mode="${m.id}" aria-pressed="${state.mode===m.id}">${m.label}</button>`).join('');
-  document.querySelectorAll('[data-mode]').forEach(b=>b.onclick=()=>{state.mode=b.dataset.mode;autoPick();renderResidents();renderModes();});
-}
-function renderEngines(){
-  $('#engines').innerHTML=ENGINES.map(e=>`<button type="button" class="engine" data-engine="${e.id}" aria-pressed="${state.engine===e.id}"><strong>${e.label}</strong><span>${e.desc}</span></button>`).join('');
-  document.querySelectorAll('[data-engine]').forEach(b=>b.onclick=()=>{state.engine=b.dataset.engine;if(state.engine==='deep-web-10')state.selectedResidents=RESIDENTS.filter(r=>r.id!=='aa').map(r=>r.id);renderEngines();renderResidents();renderEngineStatus();});
-}
-function renderEngineStatus(){
-  const endpoint=$('#apiEndpoint')?.value.trim()||localStorage.getItem('councilApiEndpoint')||'';
-  const el=$('#engineStatus');
-  if(endpoint){el.className='engine-status live';el.textContent='ENGINE接続あり：実AIへ送信します。Deep Web ×10では各住民が独立Web探索する前提です。';}
-  else{el.className='engine-status';el.textContent=state.engine==='deep-web-10'?'ENGINE未接続：Deep Web ×10のUI・住民構成だけ確認できます。実際の10人独立検索はまだ走りません。':'ENGINE未接続：現在はローカルデモ。自律思考・資料検索は行っていません。';}
+const resident=id=>RESIDENTS.find(r=>r.id===id)||{id,name:id,role:'',bias:''};
+const hash=s=>{let h=2166136261;for(const c of String(s)){h^=c.charCodeAt(0);h=Math.imul(h,16777619)}return (h>>>0).toString(36).slice(0,8)};
+const shuffle=a=>[...a].sort(()=>Math.random()-.5);
+
+function renderControls(){
+  $('#modes').innerHTML=MODES.map(m=>`<button class="choice" data-mode="${m.id}" aria-pressed="${state.mode===m.id}">${m.label}</button>`).join('');
+  document.querySelectorAll('[data-mode]').forEach(b=>b.onclick=()=>{state.mode=b.dataset.mode;autoPick();renderControls();});
+  $('#engines').innerHTML=ENGINES.map(e=>`<button class="engine" data-engine="${e.id}" aria-pressed="${state.engine===e.id}"><strong>${e.label}</strong><span>${e.desc}</span></button>`).join('');
+  document.querySelectorAll('[data-engine]').forEach(b=>b.onclick=()=>{state.engine=b.dataset.engine;if(state.engine==='deep-web-10'){const w=state.sources.find(s=>s.id==='web');if(w)w.selected=true;}autoPick();renderControls();});
+  const api=$('#apiEndpoint').value.trim();
+  $('#engineStatus').className='engine-status'+(api?' live':'');
+  $('#engineStatus').textContent=api?'ENGINE API接続先を使用。':'現在はAI API未接続。画面確認用ローカルデモ。';
+  $('#sources').innerHTML=state.sources.map((s,i)=>`<label class="source-row"><input type="checkbox" data-source="${i}" ${s.selected?'checked':''}><span><strong>${esc(s.name)}</strong><br><small>${esc(s.kind)}</small></span><span class="source-state ${s.connected?'live':''}">${s.connected?'利用可':'接続待ち'}</span></label>`).join('');
+  document.querySelectorAll('[data-source]').forEach(c=>c.onchange=()=>state.sources[+c.dataset.source].selected=c.checked);
+  $('#residentChips').innerHTML=RESIDENTS.map(r=>`<button class="chip" data-res="${r.id}" aria-pressed="${state.selected.includes(r.id)}">${r.name}</button>`).join('');
+  document.querySelectorAll('[data-res]').forEach(b=>b.onclick=()=>{const id=b.dataset.res;state.selected=state.selected.includes(id)?state.selected.filter(x=>x!==id):[...state.selected,id];renderControls();});
+  $('#residentDetail').innerHTML=state.selected.map(id=>resident(id)).map(r=>`<div class="resident-card"><div class="resident-top"><span class="resident-name">${r.name}</span><span class="resident-role">${r.role}</span></div><div class="resident-bias">弱点：${r.bias}</div></div>`).join('');
 }
 function autoPick(){
-  if(state.engine==='deep-web-10'){state.selectedResidents=RESIDENTS.filter(r=>r.id!=='aa').map(r=>r.id);return;}
-  const core=state.mode==='watch'?['source','mechanic','market','devil','editor']:state.mode==='business'?['cfo','ux','devil','editor']:state.mode==='roast'?['roaster','devil','wild','ux']:['ux','devil','editor','wild'];
-  const pool=RESIDENTS.filter(r=>r.modes.includes(state.mode)&&!core.includes(r.id)&&r.id!=='aa').sort(()=>Math.random()-.5).slice(0,2).map(r=>r.id);
-  state.selectedResidents=[...new Set([...core,...pool,'aa'])];
+  const core=state.mode==='watch'?['source','mechanic','historian','market','editor','devil']:state.mode==='business'?['cfo','editor','devil','novice','minimal']:state.mode==='roast'?['devil','editor','novice','wild','minimal']:['editor','devil','novice','wild','minimal'];
+  const extra=shuffle(RESIDENTS.map(r=>r.id).filter(id=>!core.includes(id)&&id!=='aa')).slice(0,state.engine==='deep-web-10'?Math.max(0,10-core.length):2);
+  state.selected=[...new Set([...core,...extra])].slice(0,state.engine==='deep-web-10'?10:8);
 }
-function renderSources(){
-  $('#sources').innerHTML=state.sources.map((s,i)=>`<label class="source-row"><input type="checkbox" data-source="${i}" ${s.selected?'checked':''}><span><strong>${esc(s.name)}</strong><br><small>${esc(s.kind)}</small></span><span class="source-state ${s.connected?'live':''}">${s.connected?'接続済':'未接続'}</span></label>`).join('');
-  document.querySelectorAll('[data-source]').forEach(c=>c.onchange=()=>state.sources[+c.dataset.source].selected=c.checked);
+
+function topicSeed(title,body){
+  const raw=`${title} ${body}`.replace(/[\n\r]/g,' ');
+  return raw.length>56?raw.slice(0,56)+'…':raw;
 }
-function renderResidents(){
-  $('#residentChips').innerHTML=RESIDENTS.map(r=>`<button type="button" class="chip" data-res="${r.id}" aria-pressed="${state.selectedResidents.includes(r.id)}">${r.name}</button>`).join('');
-  document.querySelectorAll('[data-res]').forEach(b=>b.onclick=()=>{const id=b.dataset.res;state.selectedResidents=state.selectedResidents.includes(id)?state.selectedResidents.filter(x=>x!==id):[...state.selectedResidents,id];renderResidents();});
-  $('#residentDetail').innerHTML=state.selectedResidents.map(id=>RESIDENTS.find(r=>r.id===id)).filter(Boolean).map(r=>`<div class="resident-card"><div class="resident-top"><span class="resident-name">${r.name}</span><span class="resident-role">${r.role}</span></div><div class="resident-bias">弱点：${r.bias}</div></div>`).join('');
+function demoOpinion(r,title,body,n){
+  const seed=topicSeed(title,body);
+  const common=`>>1\n「${seed}」について。`;
+  const map={
+    source:`まず確認できる事実と評価を分けたい。資料に何が書いてあるか、後世の文献がどう位置づけたか、こちらがそこから何を推論しているかは別物。\n\nこの議題なら、単に数字や有名さを置くより「何を確認できればマイルストーンと呼べるのか」を先に定義した方がいい。反対に、その根拠が一つ崩れただけで評価が全部落ちるなら、主張自体が強すぎる。`,
+    mechanic:`機構の側から見ると、重要なのは販売数だけじゃない。設計上どの問題を解いたのか、操作系や香箱構成が後続へ何を残したのかまで見ないと、普及しただけの機械と技術的な転換点を混同する。\n\n逆に革新的でも後続へ全く影響がないなら「面白い孤立例」で終わる可能性もある。俺なら構造・量産性・後続への波及を分けて採点する。`,
+    historian:`歴史上の「最初」と「広めた」は別の功績だと思う。先行例があるのに普及機を世界初のように扱うのは危ない一方、最初の一個だけを唯一の転換点にするのも雑。\n\n年代順に前後の比較個体を置き、どこで市場や設計の標準が変わったかを見るべき。結論は一個のラベルより、何の意味で重要なのかを限定した方が強い。`,
+    market:`市場価格は歴史的重要性の証明にはならない。ただ、流通量や長期間残った需要は「受け入れられたか」を見る補助線にはなる。\n\n希少だから高い、有名だから重要、量産だから偉い、は全部別の話。市場資料を使うなら、価格ではなく出現頻度と再取得難度、それが時代をまたいでどう変化したかまで分けたい。`,
+    collector:`所有者目線だと、資料上の重要性と実機で感じる異質さがズレることがある。操作して初めて分かる設計思想や、修理時に見える弱点はカタログだけでは拾えない。\n\nただし「自分が好きだから重要」は一番危ない。実機経験は一次観察として出して、歴史評価とは別枠に置くのが妥当。`,
+    editor:`記事としては「世界初」「最多」「唯一」みたいな一語に寄せるほど読みやすいけど、その瞬間に誤断定リスクが上がる。\n\n面白さを殺す必要はない。見出しは強く、本文で条件を限定する。何が確定で何が論争点かが一読で分かる構造にした方が、結果的に読者にも強い。`,
+    devil:`そもそも「マイルストーン」を一軸で決める前提がおかしい可能性がある。初出、普及、技術革新、用途拡張は別軸で、同じ時計が全部を取る必要はない。\n\n反証条件を置くなら、先行例が見つかったら初出評価は落ちる、後続への影響が確認できなければ技術転換点とは呼びにくい、など。何が出たら自説を撤回するかまで決めた方が議論になる。`,
+    cfo:`調査を深くするほど精度は上がるが、その情報で判断が変わるかは別。結論を変えない枝葉に時間を使うなら、先に「どの事実が判明したら採用・不採用が変わるか」を決めるべき。\n\n研究そのものが目的なら別だが、サイト掲載判断なら必要十分な証拠で止める基準も要る。`,
+    novice:`初見だと「何がそれ以前と違ったのか」が分からないと重要性が伝わらない。生産数やキャリバー番号だけ並んでも、詳しくない人には数字の大きさしか残らない。\n\n一文で差分を説明して、その後に証拠を置く方が読みやすい。`,
+    researcher:`検索は名称一致だけだと漏れる。ブランド、キャリバー、旧表記、広告語、特許、他言語、同時代記事へ分解して探す必要がある。\n\nしかも賛成材料だけ集めると簡単に物語が完成する。意図的に反例・先行例・同年代の競合を別検索した方がいい。`,
+    minimal:`この論点を読者が本当に必要としているかから逆算したい。全部説明するより、歴史の地図を作るなら「なぜここに置いたか」が伝わる最低限の根拠で十分な場合もある。\n\n深掘りは個別ページへ逃がせる。主幹ページで全部背負う必要はない。`,
+    wild:`別分野で言えば「最初に発明した規格」と「普及させた規格」と「業界標準にした規格」は別の賞を取る。時計史でも同じで、一つの王冠を奪い合うより役割別に置いた方が自然。`,
+    aa:`　∧＿∧\n（　´∀｀）　＜ とりあえず「最初」と「普及」を\n（　　　　）　　 同じ箱に入れるのやめようぜ\n｜ ｜　|\n（_＿）＿）`
+  };
+  return {resident:r.id,text:`${common}\n\n${map[r.id]||map.wild}`,confidence:58+(n*7)%30,evidence:'ローカルデモ。実資料未参照',format:r.id==='aa'?'aa':'text'};
 }
-function residentName(id){return RESIDENTS.find(r=>r.id===id)?.name||id}
-function makeId(seed){let h=2166136261;for(const ch of seed){h^=ch.charCodeAt(0);h=Math.imul(h,16777619)}return Math.abs(h>>>0).toString(36).slice(0,8).toUpperCase()}
-function aaText(){return '　　 ∧＿∧\n　　（　´∀｀）　量産だけで\n　　（　　　　）　歴史を決めるな\n　　 ｜ ｜　|\n　　（_＿）＿）';}
-function demoPost(r,index,selectedSources){
-  const src=selectedSources.length?selectedSources[index%selectedSources.length]:null;
-  if(r.id==='aa')return {resident:r.id,text:aaText(),format:'aa',confidence:42,source:src?.name||null,evidence:'ローカルデモ／検索未実行'};
-  const angle=pick(DEMO_ANGLES[r.id]||DEMO_ANGLES.wild);
-  return {resident:r.id,text:angle,format:'text',confidence:55+Math.floor(Math.random()*31),source:src?.name||null,evidence:src?'資料指定のみ／未検索':'資料なし'};
+function buildDemoThread(title,body){
+  const people=state.selected.map(id=>resident(id));
+  const first=people.map((r,i)=>demoOpinion(r,title,body,i));
+  const replyPool=shuffle(first.map((p,i)=>({p,i}))).slice(0,Math.min(6,first.length));
+  const replies=replyPool.map(({p,i},k)=>{
+    const r=resident(people[(i+k+2)%people.length].id);
+    const targetNo=2+i;
+    const variants=[
+      `その分け方ならだいぶ納得。ただ、評価軸を増やすだけだと何でもマイルストーンになりかねない。最低条件を一つ置いた方がいい。\n\n俺なら「後続へ何かを残した」「当時の用途を実際に広げた」のどちらかを要求する。そこまで確認できなければ、重要個体ではあっても歴史の節目とは別扱いにする。`,
+      `ここは逆に見たい。先行例があること自体は普及の功績を消さない。問題は、その後に何が変わったかを証明できるか。\n\n生産数だけでは弱いが、複数社への採用や設計の標準化まで追えれば「広めた側」のマイルストーンとしてはかなり強くなる。`,
+      `この話、資料の有無と主張の強さが噛み合ってない時が一番危ない。資料が薄いならコピーを弱くする、資料が積めたら強くする、でいい。\n\n最初から結論を固定して証拠を探すより、反証が出た時にどの表現まで後退するか決めておく方が安全。`
+    ];
+    return {resident:r.id,replyTo:targetNo,text:variants[k%variants.length],confidence:64+(k*5)%24,evidence:'ローカルデモ。返信先のみ擬似選択',format:'text'};
+  });
+  const conclusion={resident:'chair',text:`結論としては、「マイルストーンか否か」を一発で決めるより、何の意味で節目なのかを限定して置くのが一番強い。\n\n現時点の議論で共通しているのは、量産数・価格・世界初を単独根拠にしないこと。少なくとも「先行例」「技術的差分」「後続への影響」「実際の普及」の四つを分けて確認する。\n\nしたがって、資料が揃うまでは“普及上の重要候補”のように条件付きで置き、先行例や後続影響を確認できた段階で表現を上げる。反対意見としては、そこまで厳密にするとHISTORY本体が重くなるので、詳細根拠は個別ページへ逃がす、が残る。`,confidence:78,evidence:'ローカルデモの暫定結論',format:'text',conclusion:true};
+  return {title,body,created:new Date().toISOString(),engine:state.engine,mode:state.mode,posts:[...first,...replies,conclusion],demo:true};
 }
-function makeDemoThread(){
-  const title=$('#threadTitle').value.trim()||'無題のスレ';
-  const body=$('#threadBody').value.trim();
-  const residents=state.selectedResidents.map(id=>RESIDENTS.find(r=>r.id===id)).filter(Boolean);
-  const selectedSources=state.sources.filter(s=>s.selected);
-  const round0=residents.map((r,i)=>demoPost(r,i,selectedSources));
-  const textPosts=round0.filter(p=>p.format!=='aa');
-  const critiquePool=[
-    'その結論は残していい。ただし、反証されたら撤回する条件を一つ書いた方が強い。',
-    'そこは同意。ただ「確認済み」と「推論」を同じ段落に置くと読者には区別できない。',
-    '評価軸を一つ増やした方がいい。今の二択だと、別タイプの功績を落としている。',
-    '逆の個体・反例を一つ置いても結論が残るか確認したい。'
-  ];
-  const round1=textPosts.slice(0,Math.min(5,textPosts.length)).map((p,i)=>({resident:p.resident,text:`>>${2+((i+1)%Math.max(textPosts.length,1))}\n\n${pick(critiquePool)}`,format:'text',confidence:60+Math.floor(Math.random()*26),source:selectedSources[(i+1)%Math.max(selectedSources.length,1)]?.name||null,evidence:'相互反論デモ／検索未実行'}));
-  state.thread={title,body,created:new Date().toISOString(),engine:state.engine,isDemo:true,posts:[round0,round1]};
-  renderThread();
+
+function normalizeThread(t){
+  if(!t)return t;
+  let posts=Array.isArray(t.posts)?t.posts:[];
+  if(posts.some(Array.isArray))posts=posts.flat();
+  if(t.summary&&!posts.some(p=>p.conclusion||p.resident==='chair'))posts.push({resident:'chair',text:t.summary,confidence:70,evidence:'旧形式summary',conclusion:true});
+  return {...t,posts};
 }
-async function runCouncil(){
-  const endpoint=$('#apiEndpoint').value.trim()||localStorage.getItem('councilApiEndpoint')||'';
-  if(!endpoint){makeDemoThread();return;}
-  localStorage.setItem('councilApiEndpoint',endpoint);
-  $('#thread').innerHTML='<div class="loading"><strong>住民を放流中…</strong>資料・Web探索を含む場合は時間がかかります。</div>';
-  const payload={title:$('#threadTitle').value.trim(),body:$('#threadBody').value.trim(),mode:state.mode,engine:state.engine,residents:state.selectedResidents.map(id=>RESIDENTS.find(r=>r.id===id)).filter(Boolean),sources:state.sources.filter(s=>s.selected)};
-  try{
-    const res=await fetch(endpoint,{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify(payload)});
-    if(!res.ok)throw new Error(`HTTP ${res.status}`);
-    const data=await res.json();
-    state.thread={...data.thread,isDemo:false,engine:state.engine};
-    renderThread();
-  }catch(err){
-    $('#thread').innerHTML=`<div class="loading"><strong>ENGINE接続失敗</strong>${esc(err.message||String(err))}<br>ローカルデモへは自動フォールバックしません。</div>`;
-  }
+function anchorify(text){
+  const escaped=esc(text);
+  return escaped.replace(/&gt;&gt;(\d+)(?:-(\d+))?/g,(m,a,b)=>`<a class="anchor" href="#res-${a}" data-res="${a}">${b?`&gt;&gt;${a}-${b}`:`&gt;&gt;${a}`}</a>`);
 }
-function formatPostText(text){
-  return String(text||'').split(/\n{2,}/).map(block=>{
-    const lines=esc(block).split('\n').map(line=>/^&gt;&gt;\d+/.test(line)?`<span class="quote">${line}</span>`:line).join('<br>');
-    return `<p>${lines}</p>`;
-  }).join('');
-}
-function postDate(created,index){const d=new Date(created);d.setSeconds(d.getSeconds()+index*7);return d.toLocaleString('ja-JP',{year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',second:'2-digit'}).replaceAll('/','/');}
-function renderPost(p,no,created){
-  const name=esc(residentName(p.resident));
-  const id=makeId(`${p.resident}-${no}-${created}`);
-  const body=p.format==='aa'?`<div class="aa-body"><pre>${esc(p.text)}</pre></div>`:`<div class="post-body">${formatPostText(p.text)}</div>`;
-  const source=p.source?`<div>指定：${esc(p.source)}</div>`:'';
-  const citations=Array.isArray(p.citations)&&p.citations.length?p.citations.map(c=>`<div>${c.url?`<a href="${esc(c.url)}" target="_blank" rel="noopener">${esc(c.title||c.url)}</a>`:esc(c.title||'')}</div>`).join(''):'';
-  return `<article class="post" id="post-${no}"><div class="post-meta"><a class="no" href="#post-${no}">${no}</a> 名前：<span class="name">${name}</span> <span class="date">${postDate(created,no)}</span> ID:<span class="id">${id}</span> <span class="confidence">確信度 ${Number(p.confidence||0)}%</span></div>${body}<details class="post-sources"><summary>根拠・資料</summary><div>${source}${citations}<span class="${String(p.evidence||'').includes('未')||String(p.evidence||'').includes('デモ')?'unverified':''}">${esc(p.evidence||'資料情報なし')}</span></div></details></article>`;
+function paragraphs(text){return anchorify(text).split(/\n\s*\n/).map(p=>`<p>${p.replace(/\n/g,'<br>')}</p>`).join('')}
+function postId(p,no){return hash(`${p.resident}-${no}-${state.thread?.title||''}`)}
+function renderPost(p,no){
+  const r=p.resident==='chair'?{name:'名無しさん＠議長'}:resident(p.resident);
+  const date=new Date(state.thread.created||Date.now());date.setSeconds(date.getSeconds()+no*17);
+  const ds=date.toLocaleString('ja-JP',{year:'numeric',month:'2-digit',day:'2-digit',weekday:'short',hour:'2-digit',minute:'2-digit',second:'2-digit'});
+  const body=p.format==='aa'?`<div class="aa-body"><pre>${esc((p.replyTo?`>>${p.replyTo}\n`:'')+p.text)}</pre></div>`:`<div class="post-body">${paragraphs((p.replyTo?`>>${p.replyTo}\n\n`:'')+p.text)}</div>`;
+  const citations=(p.citations||[]).map(c=>`<div><a href="${esc(c.url)}" target="_blank" rel="noopener">${esc(c.title||c.url)}</a></div>`).join('');
+  const ev=`<details class="post-evidence"><summary>根拠・確信度</summary><div>${esc(p.evidence||'根拠情報なし')} / ${Number.isFinite(p.confidence)?`確信度 ${p.confidence}%`:'確信度未設定'}${citations}</div></details>`;
+  return `<article class="post ${p.conclusion?'conclusion':''}" id="res-${no}" data-no="${no}"><div class="post-meta"><a class="no" href="#res-${no}">${no}</a> 名前：<span class="name">${esc(r.name)}</span> <span class="date">${esc(ds)}</span> ID:<span class="id">${postId(p,no)}</span></div>${body}${ev}</article>`;
 }
 function renderThread(){
-  if(!state.thread){$('#thread').innerHTML='<div class="thread-empty">左で議題・エンジン・資料・住民を決めてスレを立てる。</div>';return;}
-  const t=state.thread;let no=1;
-  const op=`<article class="post" id="post-1"><div class="post-meta"><a class="no" href="#post-1">1</a> 名前：<span class="name">スレ主</span> <span class="date">${postDate(t.created,1)}</span> ID:<span class="id">${makeId(`op-${t.created}`)}</span></div><div class="post-body">${formatPostText(t.body)}</div></article>`;
-  const rounds=(t.posts||[]).map((round,ri)=>`<div class="round">${ri===0?'独立回答：他人のレスを見ずに回答':'相互反論：他人のレスを読んで再評価'}</div>${round.map(p=>renderPost(p,++no,t.created)).join('')}`).join('');
-  $('#thread').innerHTML=`<div class="thread-head"><h2 class="thread-title">${esc(t.title)}</h2><div class="thread-meta"><span>${state.selectedResidents.length} residents</span><span>${state.sources.filter(s=>s.selected).length} sources</span><span>${esc(ENGINES.find(e=>e.id===state.engine)?.label||state.engine)}</span></div></div><div class="thread-tools"><button id="shareBtn" type="button">共有</button><button id="copyBtn" type="button">本文コピー</button>${t.isDemo?'<span class="demo-flag">LOCAL DEMO / AI未接続</span>':''}</div>${op}${rounds}<div class="summary"><h3>現在の争点</h3><p>・初出、普及、機構、影響を同じ「重要性」で潰してよいか。</p><p>${t.isDemo?'・このスレはUI確認用。資料検索・Web探索は実行していない。':'・実エンジン出力。各レスの根拠欄から参照を確認する。'}</p></div>`;
-  $('#shareBtn').onclick=shareThread;
-  $('#copyBtn').onclick=()=>navigator.clipboard?.writeText(threadText()).then(()=>toast('スレ本文をコピーしました'));
+  if(!state.thread){$('#thread').innerHTML='<div class="thread-empty">左で議題・エンジン・資料・住民を決めてスレを立てる。</div>';return}
+  state.thread=normalizeThread(state.thread);
+  const t=state.thread;
+  const op={resident:'op',text:t.body||'',confidence:null,evidence:'スレ主入力',format:'text'};
+  const posts=[op,...t.posts];
+  $('#thread').innerHTML=`<div class="thread-head"><h2 class="thread-title">${esc(t.title)}</h2><div class="thread-meta"><span>${posts.length}レス</span><span>${esc(ENGINES.find(e=>e.id===t.engine)?.label||t.engine||'')}</span><span>${esc(MODES.find(m=>m.id===t.mode)?.label||t.mode||'')}</span></div></div><div class="thread-tools"><a href="#res-1">全部</a><a href="#res-${Math.max(1,posts.length-49)}">最新50</a><a href="#res-1">1-100</a><button id="reloadThread">リロード</button><button id="shareBtn">URL共有</button>${t.demo?'<span class="demo">LOCAL DEMO</span>':''}</div>${posts.map((p,i)=>renderPost(p,i+1)).join('')}`;
+  $('#reloadThread').onclick=()=>renderThread();$('#shareBtn').onclick=share;
+  document.querySelectorAll('.anchor').forEach(a=>a.addEventListener('click',onAnchor));
 }
-function threadText(){
-  if(!state.thread)return '';let n=1;
-  const lines=[state.thread.title,`1 名前：スレ主\n${state.thread.body}`];
-  (state.thread.posts||[]).forEach(round=>round.forEach(p=>lines.push(`${++n} 名前：${residentName(p.resident)}\n${p.text}`)));
-  return lines.join('\n\n');
+function onAnchor(e){
+  const no=e.currentTarget.dataset.res;const target=document.querySelector(`#res-${no}`);if(!target)return;
+  e.preventDefault();originScroll=window.scrollY;document.querySelectorAll('.jump-target').forEach(x=>x.classList.remove('jump-target'));target.classList.add('jump-target');history.pushState(null,'',`#res-${no}`);target.scrollIntoView({behavior:'smooth',block:'center'});$('#backJump').classList.add('show');
 }
-function encodeState(){
-  const payload={v:2,mode:state.mode,engine:state.engine,residents:state.selectedResidents,sources:state.sources.map(({id,name,kind,selected})=>({id,name,kind,selected})),title:$('#threadTitle').value,body:$('#threadBody').value,thread:state.thread};
-  const bytes=new TextEncoder().encode(JSON.stringify(payload));let bin='';for(const b of bytes)bin+=String.fromCharCode(b);return btoa(bin).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');
+$('#backJump').onclick=()=>{if(originScroll!==null)window.scrollTo({top:originScroll,behavior:'smooth'});$('#backJump').classList.remove('show');originScroll=null};
+
+async function generate(){
+  const title=$('#threadTitle').value.trim()||'無題のスレ';const body=$('#threadBody').value.trim();const api=$('#apiEndpoint').value.trim();
+  if(state.engine==='deep-web-10'&&state.selected.length<10){autoPick();renderControls()}
+  $('#thread').innerHTML=`<div class="loading"><strong>${state.engine==='deep-web-10'?'10人が別々に検索中…':'住民が考え中…'}</strong>${state.engine==='deep-web-10'?'このモードはかなり時間がかかります。':'レスを組み立てています。'}</div>`;
+  if(!api){state.thread=buildDemoThread(title,body);renderThread();return}
+  try{
+    localStorage.setItem('councilApi',api);
+    const payload={title,body,mode:state.mode,engine:state.engine,residents:state.selected.map(id=>resident(id)),sources:state.sources.filter(s=>s.selected).map(({id,name,kind})=>({id,name,kind}))};
+    const res=await fetch(api,{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify(payload)});if(!res.ok)throw new Error(await res.text());
+    state.thread=normalizeThread(await res.json());renderThread();
+  }catch(err){$('#thread').innerHTML=`<div class="thread-empty">ENGINE API error<br>${esc(err?.message||err)}</div>`}
 }
-function decodeState(hash){
-  try{let b=hash.replace(/^#s=/,'').replace(/-/g,'+').replace(/_/g,'/');while(b.length%4)b+='=';const bin=atob(b);const bytes=Uint8Array.from(bin,c=>c.charCodeAt(0));return JSON.parse(new TextDecoder().decode(bytes));}catch{return null}
-}
-async function shareThread(){
-  const url=`${location.origin}${location.pathname}#s=${encodeState()}`;
-  history.replaceState(null,'',`#s=${encodeState()}`);
-  if(navigator.share){try{await navigator.share({title:state.thread?.title||'COUNCIL LAB',url});return}catch{}}
-  await navigator.clipboard?.writeText(url);toast('共有URLをコピーしました');
-}
-function loadShared(){
-  if(!location.hash.startsWith('#s='))return;const p=decodeState(location.hash);if(!p)return;
-  state.mode=p.mode||state.mode;state.engine=p.engine||state.engine;state.selectedResidents=p.residents||state.selectedResidents;
-  if(Array.isArray(p.sources))state.sources=p.sources.map(s=>({...s,connected:false}));
-  state.thread=p.thread||null;$('#threadTitle').value=p.title||'';$('#threadBody').value=p.body||'';
-}
-function toast(msg){const el=$('#toast');el.textContent=msg;el.classList.add('show');setTimeout(()=>el.classList.remove('show'),1600)}
-function renderAll(){renderModes();renderEngines();renderEngineStatus();renderSources();renderResidents();renderThread()}
-$('#addSource').onclick=()=>{const v=$('#customSource').value.trim();if(!v)return;state.sources.push({id:`url-${Date.now()}`,name:v,kind:'Web URL',selected:true,connected:false});$('#customSource').value='';renderSources()};
-$('#generate').onclick=runCouncil;
-$('#shuffle').onclick=()=>{autoPick();renderResidents()};
-$('#apiEndpoint').value=localStorage.getItem('councilApiEndpoint')||'';
-$('#apiEndpoint').addEventListener('change',()=>{const v=$('#apiEndpoint').value.trim();if(v)localStorage.setItem('councilApiEndpoint',v);else localStorage.removeItem('councilApiEndpoint');renderEngineStatus();});
-loadShared();renderAll();
+function encodeState(){const p={v:3,mode:state.mode,engine:state.engine,selected:state.selected,sources:state.sources,title:$('#threadTitle').value,body:$('#threadBody').value,thread:state.thread};return btoa(unescape(encodeURIComponent(JSON.stringify(p)))).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'')}
+function decodeState(v){try{let b=v.replace(/^#s=/,'').replace(/-/g,'+').replace(/_/g,'/');while(b.length%4)b+='=';return JSON.parse(decodeURIComponent(escape(atob(b))))}catch{return null}}
+function share(){const u=`${location.origin}${location.pathname}#s=${encodeState()}`;navigator.clipboard?.writeText(u);history.replaceState(null,'',`#s=${encodeState()}`);toast('共有URLをコピーしました')}
+function loadShared(){if(!location.hash.startsWith('#s='))return;const p=decodeState(location.hash);if(!p)return;state.mode=p.mode||state.mode;state.engine=p.engine||state.engine;state.selected=p.selected||state.selected;state.sources=p.sources||state.sources;state.thread=normalizeThread(p.thread);$('#threadTitle').value=p.title||'';$('#threadBody').value=p.body||''}
+function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),1600)}
+$('#generate').onclick=generate;$('#shuffle').onclick=()=>{autoPick();renderControls()};
+$('#addSource').onclick=()=>{const v=$('#customSource').value.trim();if(!v)return;state.sources.push({id:`url-${Date.now()}`,name:v,kind:'Web URL',selected:true,connected:true});$('#customSource').value='';renderControls()};
+$('#apiEndpoint').value=localStorage.getItem('councilApi')||'';$('#apiEndpoint').addEventListener('input',renderControls);
+loadShared();renderControls();renderThread();
 </script>
 </body>
 </html>
