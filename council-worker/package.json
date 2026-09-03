@@ -8,7 +8,6 @@
     "setup:vector": "node scripts/setup-vector-store.mjs"
   },
   "devDependencies": {
-    "@cloudflare/workers-types": "^4.20260901.0",
     "wrangler": "^4.0.0"
   }
 }
