@@ -38,8 +38,8 @@ spec:
   frequency: 18,000振動／時
   barrels: 1香箱
   winding: 手巻き
-  acoustic: 音ばね式
-  notes: 18K YG、Chronomètre表記、2プッシャー、透かしラグ
+  acoustic: ゴング式
+  notes: 18KYG、Chronomètre表記、2プッシャー、透かしラグ
 video:
   youtubeId: https://youtube.com/shorts/OONH0JZqCK0?si=nAgbRc1aJ_TUBi6r
   xUrl: https://x.com/Rimacroissant/status/2085277918473883977?s=20
@@ -47,16 +47,16 @@ deepDive:
   - number: "01"
     title: CYMAとは
     paragraphs:
-      - CYMAの系譜は、1862年にラ・ショー＝ド＝フォンで創業したSchwob Frèresに遡る。
-      - 1871年にはHenri Sandozがル・ロックルでHenri Sandoz &
+      - >-
+        CYMAの系譜は、1862年にラ・ショー＝ド＝フォンで創業したSchwob Frèresに遡る。
+
+        1871年にはHenri Sandozがル・ロックルでHenri Sandoz &
         Cieを設立。1891年、Sandozはタヴァンヌへ移り、Tavannes Watch Co.を立ち上げた。
-      - Tavannesの工場は、当初からリピーターなどの複雑時計を機械生産し、当時としては先進的な自動工作機械を導入していた。Sandoz自身も巻上げ、調速、リピーターなど時計機構に関する特許を多数取得している。
       - 20世紀に入ると、CYMA名で超薄型ムーブメントや高精度時計を展開。1910年にはスイス有数の大規模時計工場へ成長し、1920年代には部品の互換性を進めたメーカーとしても記録されている。
-      - 精度と生産技術の両方を追ってきたメーカーだったことは、後のTime-O-Voxにもつながっている。
+      - 精度と生産技術の両方を追ってきたメーカーだったことは、後のTime-O-Voxにもつながっているのではないだろうか。
       - |-
-        Cal.R.464も、既存の一般的なアラームムーブメントをそのまま使ったものではない。
-        一つの香箱、二つのプッシャー、独特の輪列切替。
-        CYMAは、アラーム腕時計にもかなり独自の構造を持ち込んだ。
+        その証拠に一つの香箱、二つのプッシャー、独特の輪列切替...
+        CYMAは、アラーム腕時計にもかなり独自の構造を持ち込んだのだ。
   - number: "02"
     title: Cal.R.464
     subtitle: 2つのプッシャーと、1つの香箱
