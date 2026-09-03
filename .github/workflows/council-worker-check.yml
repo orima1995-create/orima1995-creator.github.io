@@ -1,0 +1,32 @@
+name: Council Worker Check
+
+on:
+  push:
+    paths:
+      - "council-worker/**"
+      - ".github/workflows/council-worker-check.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: council-worker
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Setup Node
+        uses: actions/setup-node@v6
+        with:
+          node-version: 22
+
+      - name: Install
+        run: npm install
+
+      - name: Compile Worker
+        run: npx wrangler deploy --dry-run --outdir /tmp/council-worker-dist
