@@ -120,7 +120,7 @@ const description = '異なる判断軸を持つ住民を召喚し、資料やWe
   </div>
 </header>
 <main class="wrap">
-  <p class="notice"><strong>検証版：</strong> スレ表示・URL共有・レスアンカーは実働。AI API未接続時だけローカルデモを使い、Project PDFやWebを読んだふりはしません。</p>
+  <p class="notice"><strong>個人用MVP：</strong> TypeC Project Mirrorを常時参照する前提。スレ表示・URL共有・レスアンカーは実働。AI API未接続時だけローカルデモを使い、資料やWebを読んだふりはしません。</p>
   <div class="layout">
     <div>
       <section class="panel"><div class="panel-head">1｜スレを立てる</div><div class="panel-body">
@@ -132,9 +132,9 @@ const description = '異なる判断軸を持つ住民を召喚し、資料やWe
         <div class="engine-grid" id="engines"></div><div class="engine-status" id="engineStatus"></div>
         <details class="dev"><summary>開発用：ENGINE API URL</summary><input id="apiEndpoint" type="url" placeholder="https://.../api/council" /></details>
       </div></section>
-      <section class="panel" style="margin-top:11px"><div class="panel-head">3｜SOURCE PACK</div><div class="panel-body">
-        <div id="sources"></div><div class="add-source"><input id="customSource" type="url" placeholder="https://... 追加URL" /><button id="addSource" type="button">追加</button></div>
-        <p class="footnote">非公開PDF本体・APIキーは共有URLへ埋め込まない。</p>
+      <section class="panel" style="margin-top:11px"><div class="panel-head">3｜TYPEC PROJECT MIRROR</div><div class="panel-body">
+        <div id="sources"></div><div class="add-source"><input id="customSource" type="url" placeholder="追加で見せたいWeb URL" /><button id="addSource" type="button">追加</button></div>
+        <p class="footnote">固定資料・プロジェクトルールは毎回ON。追加URLだけ任意。非公開PDF本体・APIキーは共有URLへ埋め込まない。</p>
       </div></section>
       <section class="panel" style="margin-top:11px"><div class="panel-head">4｜住民プール</div><div class="panel-body">
         <div class="chips" id="residentChips"></div><div id="residentDetail" style="margin-top:9px"></div>
@@ -150,9 +150,9 @@ const description = '異なる判断軸を持つ住民を召喚し、資料やWe
 <script is:inline>
 const MODES=[{id:'general',label:'一般'},{id:'watch',label:'時計研究'},{id:'business',label:'仕事・企画'},{id:'roast',label:'ロースト'}];
 const ENGINES=[
-  {id:'quick',label:'QUICK',desc:'6〜8人。独立意見→必要な相手へ返信→結論。'},
-  {id:'project',label:'PROJECT SOURCES',desc:'指定資料を優先して議論。File Search接続時に実参照。'},
-  {id:'deep-web-10',label:'DEEP WEB ×10',desc:'10人が別々にWeb検索。再検索・反論あり。かなり時間がかかる。'}
+  {id:'quick',label:'QUICK',desc:'6〜8人。短めだが、複数回の返信まで回す。'},
+  {id:'project',label:'PROJECT',desc:'TypeC Project Mirror常時参照。標準は長めの議論。'},
+  {id:'deep-web-10',label:'DEEP WEB ×10',desc:'10人が別々にWeb検索し、再検索と再反論を何度も行う。かなり時間がかかる。'}
 ];
 const RESIDENTS=[
   {id:'source',name:'史料警察',role:'一次資料・文献・推論を分離',bias:'断定に厳しすぎる'},
@@ -169,10 +169,11 @@ const RESIDENTS=[
   {id:'wild',name:'野良の変人',role:'異分野から接続する',bias:'再現性が低い'},
   {id:'aa',name:'AA職人',role:'空気をAAで切る',bias:'議論を進めない'}
 ];
-let state={mode:'watch',engine:'quick',selected:['source','mechanic','historian','market','editor','devil','wild'],sources:[
-  {id:'alarm-am-arm',name:'Alarm am Arm',kind:'Project PDF',selected:true,connected:false},
-  {id:'alarm-wristwatch',name:'The Alarm Wristwatch',kind:'Project PDF',selected:true,connected:false},
-  {id:'web',name:'Web research',kind:'Web',selected:false,connected:true}
+let state={mode:'watch',engine:'project',selected:['source','mechanic','historian','market','editor','devil','researcher','wild'],sources:[
+  {id:'typec-project',name:'TypeC project rules / context',kind:'Project Mirror',selected:true,connected:false,fixed:true},
+  {id:'alarm-am-arm',name:'Alarm am Arm',kind:'Project PDF',selected:true,connected:false,fixed:true},
+  {id:'alarm-wristwatch',name:'The Alarm Wristwatch',kind:'Project PDF',selected:true,connected:false,fixed:true},
+  {id:'web',name:'Web research',kind:'Web',selected:false,connected:true,fixed:false}
 ],thread:null};
 let originScroll=null;
 const $=s=>document.querySelector(s);
@@ -189,7 +190,7 @@ function renderControls(){
   const api=$('#apiEndpoint').value.trim();
   $('#engineStatus').className='engine-status'+(api?' live':'');
   $('#engineStatus').textContent=api?'ENGINE API接続先を使用。':'現在はAI API未接続。画面確認用ローカルデモ。';
-  $('#sources').innerHTML=state.sources.map((s,i)=>`<label class="source-row"><input type="checkbox" data-source="${i}" ${s.selected?'checked':''}><span><strong>${esc(s.name)}</strong><br><small>${esc(s.kind)}</small></span><span class="source-state ${s.connected?'live':''}">${s.connected?'利用可':'接続待ち'}</span></label>`).join('');
+  $('#sources').innerHTML=state.sources.map((s,i)=>s.fixed?`<div class="source-row"><span>●</span><span><strong>${esc(s.name)}</strong><br><small>${esc(s.kind)} / 常時ON</small></span><span class="source-state ${s.connected?'live':''}">${s.connected?'接続済':'Mirror待ち'}</span></div>`:`<label class="source-row"><input type="checkbox" data-source="${i}" ${s.selected?'checked':''}><span><strong>${esc(s.name)}</strong><br><small>${esc(s.kind)} / 任意</small></span><span class="source-state ${s.connected?'live':''}">${s.connected?'利用可':'接続待ち'}</span></label>`).join('');
   document.querySelectorAll('[data-source]').forEach(c=>c.onchange=()=>state.sources[+c.dataset.source].selected=c.checked);
   $('#residentChips').innerHTML=RESIDENTS.map(r=>`<button class="chip" data-res="${r.id}" aria-pressed="${state.selected.includes(r.id)}">${r.name}</button>`).join('');
   document.querySelectorAll('[data-res]').forEach(b=>b.onclick=()=>{const id=b.dataset.res;state.selected=state.selected.includes(id)?state.selected.filter(x=>x!==id):[...state.selected,id];renderControls();});
@@ -228,19 +229,33 @@ function demoOpinion(r,title,body,n){
 function buildDemoThread(title,body){
   const people=state.selected.map(id=>resident(id));
   const first=people.map((r,i)=>demoOpinion(r,title,body,i));
-  const replyPool=shuffle(first.map((p,i)=>({p,i}))).slice(0,Math.min(6,first.length));
-  const replies=replyPool.map(({p,i},k)=>{
-    const r=resident(people[(i+k+2)%people.length].id);
-    const targetNo=2+i;
-    const variants=[
-      `その分け方ならだいぶ納得。ただ、評価軸を増やすだけだと何でもマイルストーンになりかねない。最低条件を一つ置いた方がいい。\n\n俺なら「後続へ何かを残した」「当時の用途を実際に広げた」のどちらかを要求する。そこまで確認できなければ、重要個体ではあっても歴史の節目とは別扱いにする。`,
-      `ここは逆に見たい。先行例があること自体は普及の功績を消さない。問題は、その後に何が変わったかを証明できるか。\n\n生産数だけでは弱いが、複数社への採用や設計の標準化まで追えれば「広めた側」のマイルストーンとしてはかなり強くなる。`,
-      `この話、資料の有無と主張の強さが噛み合ってない時が一番危ない。資料が薄いならコピーを弱くする、資料が積めたら強くする、でいい。\n\n最初から結論を固定して証拠を探すより、反証が出た時にどの表現まで後退するか決めておく方が安全。`
-    ];
-    return {resident:r.id,replyTo:targetNo,text:variants[k%variants.length],confidence:64+(k*5)%24,evidence:'ローカルデモ。返信先のみ擬似選択',format:'text'};
+  const variants=[
+    `その分け方は分かる。ただ評価軸を増やすだけだと、何でも重要個体にできてしまう。最低条件を置くべき。\n\n俺なら「後続へ何かを残した」「当時の用途を実際に広げた」のどちらかを要求する。そこまで確認できなければ、面白い個体ではあっても歴史の節目とは別扱い。`,
+    `先行例があること自体は普及の功績を消さない。問題は、その後に何が変わったかを証明できるか。\n\n生産数だけでは弱いが、複数社への採用や設計の標準化まで追えれば「広めた側」のマイルストーンとしてかなり強い。`,
+    `資料の厚さと主張の強さが噛み合ってない時が一番危ない。資料が薄いならコピーを弱くする、積めたら強くするでいい。\n\n反証が出た時にどの表現まで後退するかを先に決めておく方が、後付けの物語になりにくい。`,
+    `>>1の問い自体を少し変えたい。「マイルストーンか」ではなく「何の意味でマイルストーンか」。初出、普及、技術、用途拡張を一つの王冠で争わせる必要がない。\n\nこの分解なら、賛成と反対が同時に成立しても矛盾しない。`,
+    `ここまで読むと、強いのは単独の数字じゃなくて複数の線が交わる時だと思う。技術差分があり、流通が増え、後続にも痕跡が残る。この3つが揃えばかなり強い。\n\n逆にどれか一つしかないなら、表現は限定した方がいい。`,
+    `その結論、まだ反証側が弱い。賛成材料だけで地図を作ると簡単に“重要だった物語”になる。先行例、同年代の競合、売れなかった類例まで同じ熱量で探してから決めたい。`
+  ];
+  const posts=[...first];
+  const waveSizes=state.engine==='deep-web-10'?[10,8,6,5,4]:state.engine==='project'?[7,6,5,4]:[6,5,4];
+  waveSizes.forEach((count,w)=>{
+    for(let k=0;k<Math.min(count,people.length);k++){
+      const r=people[(k+w+2)%people.length];
+      const target=2+((k*2+w)%Math.max(1,posts.length));
+      posts.push({
+        resident:r.id,
+        replyTo:Math.min(target,posts.length+1),
+        text:variants[(k+w)%variants.length],
+        confidence:60+((k*9+w*7)%31),
+        evidence:'ローカルデモ。実資料未参照',
+        format:r.id==='aa'?'aa':'text'
+      });
+    }
   });
-  const conclusion={resident:'chair',text:`結論としては、「マイルストーンか否か」を一発で決めるより、何の意味で節目なのかを限定して置くのが一番強い。\n\n現時点の議論で共通しているのは、量産数・価格・世界初を単独根拠にしないこと。少なくとも「先行例」「技術的差分」「後続への影響」「実際の普及」の四つを分けて確認する。\n\nしたがって、資料が揃うまでは“普及上の重要候補”のように条件付きで置き、先行例や後続影響を確認できた段階で表現を上げる。反対意見としては、そこまで厳密にするとHISTORY本体が重くなるので、詳細根拠は個別ページへ逃がす、が残る。`,confidence:78,evidence:'ローカルデモの暫定結論',format:'text',conclusion:true};
-  return {title,body,created:new Date().toISOString(),engine:state.engine,mode:state.mode,posts:[...first,...replies,conclusion],demo:true};
+  const conclusion={resident:'chair',text:`結論としては、「マイルストーンか否か」を一発で決めるより、何の意味で節目なのかを限定して置くのが一番強い。\n\nここまでのレスで繰り返し残ったのは、量産数・価格・世界初を単独根拠にしないこと。少なくとも先行例、技術的差分、後続への影響、実際の普及を分けて確認する必要がある。\n\n現段階では“普及上の重要候補”のような条件付き表現が妥当。先行例と後続影響まで固まれば表現を上げる。一方でHISTORY本体へ根拠を全部詰め込む必要はなく、詳細は個別ページへ逃がす余地が残る。`,confidence:79,evidence:'ローカルデモの暫定裁定',format:'text',conclusion:true};
+  posts.push(conclusion);
+  return {title,body,created:new Date().toISOString(),engine:state.engine,mode:state.mode,posts,demo:true,projectMirror:true};
 }
 
 function normalizeThread(t){
@@ -296,7 +311,7 @@ async function generate(){
 function encodeState(){const p={v:3,mode:state.mode,engine:state.engine,selected:state.selected,sources:state.sources,title:$('#threadTitle').value,body:$('#threadBody').value,thread:state.thread};return btoa(unescape(encodeURIComponent(JSON.stringify(p)))).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'')}
 function decodeState(v){try{let b=v.replace(/^#s=/,'').replace(/-/g,'+').replace(/_/g,'/');while(b.length%4)b+='=';return JSON.parse(decodeURIComponent(escape(atob(b))))}catch{return null}}
 function share(){const u=`${location.origin}${location.pathname}#s=${encodeState()}`;navigator.clipboard?.writeText(u);history.replaceState(null,'',`#s=${encodeState()}`);toast('共有URLをコピーしました')}
-function loadShared(){if(!location.hash.startsWith('#s='))return;const p=decodeState(location.hash);if(!p)return;state.mode=p.mode||state.mode;state.engine=p.engine||state.engine;state.selected=p.selected||state.selected;state.sources=p.sources||state.sources;state.thread=normalizeThread(p.thread);$('#threadTitle').value=p.title||'';$('#threadBody').value=p.body||''}
+function loadShared(){if(!location.hash.startsWith('#s='))return;const p=decodeState(location.hash);if(!p)return;state.mode=p.mode||state.mode;state.engine=p.engine||state.engine;state.selected=p.selected||state.selected;const extras=(p.sources||[]).filter(x=>!['typec-project','alarm-am-arm','alarm-wristwatch'].includes(x.id));state.sources=[{id:'typec-project',name:'TypeC project rules / context',kind:'Project Mirror',selected:true,connected:false,fixed:true},{id:'alarm-am-arm',name:'Alarm am Arm',kind:'Project PDF',selected:true,connected:false,fixed:true},{id:'alarm-wristwatch',name:'The Alarm Wristwatch',kind:'Project PDF',selected:true,connected:false,fixed:true},...extras];state.thread=normalizeThread(p.thread);$('#threadTitle').value=p.title||'';$('#threadBody').value=p.body||''}
 function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),1600)}
 $('#generate').onclick=generate;$('#shuffle').onclick=()=>{autoPick();renderControls()};
 $('#addSource').onclick=()=>{const v=$('#customSource').value.trim();if(!v)return;state.sources.push({id:`url-${Date.now()}`,name:v,kind:'Web URL',selected:true,connected:true});$('#customSource').value='';renderControls()};
