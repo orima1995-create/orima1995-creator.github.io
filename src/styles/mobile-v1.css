@@ -1,6 +1,9 @@
 /* Staging mobile pass v1.
    Keep the existing editorial look; change only mobile density, touch targets,
-   focus visibility and small-screen OWNER'S NOTES presentation. */
+   focus visibility and small-screen OWNER'S NOTES presentation.
+
+   site.css is bundled after this file on some pages. The html prefix gives
+   staging overrides enough specificity without turning every rule into !important. */
 
 :where(a, summary):focus-visible{
   outline:2px solid var(--ink);
@@ -8,38 +11,38 @@
 }
 
 @media(max-width:480px){
-  .home-hero{
+  html .home-hero{
     padding:62px 0 50px;
   }
 
-  .home-hero h1{
+  html .home-hero h1{
     font-size:clamp(56px,17vw,74px);
     line-height:.84;
   }
 
-  .home-hero p{
+  html .home-hero p{
     margin-top:28px;
     font-size:20px;
   }
 
-  .home-nav{
+  html .home-nav{
     padding-bottom:60px;
   }
 
-  .home-nav>a,
-  .home-nav-disabled{
+  html .home-nav>a,
+  html .home-nav-disabled{
     min-height:88px;
     padding:18px 0;
   }
 
-  .home-nav small{
+  html .home-nav small{
     font-size:14px;
     line-height:1.5;
   }
 
-  /* The original 15vw rule becomes too large around 390px and makes
+  /* The original 15vw rule becomes too large around 375-390px and makes
      TIME-O-VOX wrap to an unnecessary third line. */
-  .hero h1{
+  html .hero h1{
     font-size:clamp(48px,13vw,56px);
   }
 
@@ -70,9 +73,9 @@
     line-height:1.4!important;
   }
 
-  .deep-media figcaption{
-    font-size:13px!important;
-    line-height:1.65!important;
+  html .deep-media figcaption{
+    font-size:13px;
+    line-height:1.65;
   }
 }
 
