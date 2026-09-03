@@ -1,0 +1,270 @@
+---
+const base = import.meta.env.BASE_URL;
+const title = 'COUNCIL LAB｜多視点AI議論プロトタイプ';
+const description = '異なる判断軸を持つ住民を召喚し、資料パックを指定して議論を組み立て、URL共有できる検証版。';
+---
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="robots" content="noindex,nofollow" />
+  <title>{title}</title>
+  <meta name="description" content={description} />
+  <style>
+    :root{
+      --bg:#f0f0e8;--panel:#fafaf5;--ink:#171717;--muted:#62625b;--line:#b8b8aa;
+      --accent:#1f5e3b;--accent2:#8a2d21;--source:#e8eee8;--warn:#fff4d6;
+    }
+    *{box-sizing:border-box}
+    html{background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif}
+    body{margin:0;line-height:1.65}
+    button,input,textarea,select{font:inherit}
+    button{cursor:pointer}
+    .wrap{width:min(1080px,calc(100% - 28px));margin:auto}
+    header{padding:22px 0 13px;border-bottom:3px double var(--ink)}
+    .mast{display:flex;justify-content:space-between;gap:18px;align-items:end}
+    .mast h1{margin:0;font-family:Georgia,"Times New Roman",serif;font-size:clamp(1.8rem,6vw,3.4rem);line-height:.95;font-weight:500;letter-spacing:-.03em}
+    .mast p{margin:7px 0 0;color:var(--muted);font-size:12px}
+    .labtag{font-size:10px;letter-spacing:.14em;border:1px solid;padding:4px 7px;white-space:nowrap}
+    main{padding:20px 0 70px}
+    .notice{margin:0 0 20px;padding:10px 12px;border:1px solid #d0b96f;background:var(--warn);font-size:12px}
+    .grid{display:grid;grid-template-columns:minmax(0,370px) minmax(0,1fr);gap:20px;align-items:start}
+    .panel{border:1px solid var(--line);background:var(--panel)}
+    .panel-head{padding:9px 11px;border-bottom:1px solid var(--line);background:#e5e5db;font-weight:700;font-size:12px;letter-spacing:.04em}
+    .panel-body{padding:12px}
+    label.field{display:block;margin-bottom:12px}
+    .field>span{display:block;margin-bottom:4px;font-size:11px;font-weight:700;color:var(--muted)}
+    input[type="text"],input[type="url"],textarea,select{width:100%;border:1px solid #99998c;background:#fff;padding:9px 10px;color:var(--ink);border-radius:0}
+    textarea{min-height:108px;resize:vertical}
+    .modes,.chips{display:flex;flex-wrap:wrap;gap:6px}
+    .mode,.chip{border:1px solid #98988a;background:#fff;padding:6px 8px;font-size:12px}
+    .mode[aria-pressed="true"],.chip[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:white}
+    .source-row{display:grid;grid-template-columns:20px 1fr auto;gap:7px;align-items:start;padding:8px 0;border-bottom:1px dotted var(--line);font-size:12px}
+    .source-row:last-child{border-bottom:0}
+    .source-row small{color:var(--muted)}
+    .source-state{font-size:9px;border:1px solid var(--line);padding:2px 5px;white-space:nowrap}
+    .source-state.demo{color:var(--accent2)}
+    .add-source{display:grid;grid-template-columns:1fr auto;gap:6px;margin-top:10px}
+    .add-source button,.primary,.secondary{border:1px solid var(--ink);background:var(--ink);color:white;padding:9px 11px}
+    .secondary{background:transparent;color:var(--ink)}
+    .actions{display:grid;grid-template-columns:1fr auto;gap:8px;margin-top:15px}
+    .primary{font-weight:700}
+    .resident-card{padding:8px 0;border-bottom:1px dotted var(--line)}
+    .resident-card:last-child{border-bottom:0}
+    .resident-top{display:flex;gap:8px;align-items:center;justify-content:space-between}
+    .resident-name{font-size:12px;font-weight:700}
+    .resident-role{font-size:10px;color:var(--muted)}
+    .resident-source{margin-top:5px;font-size:10px;color:var(--muted)}
+    .thread{min-height:640px}
+    .thread-empty{padding:60px 20px;text-align:center;color:var(--muted);font-size:13px}
+    .thread-head{padding:13px 14px;border-bottom:1px solid var(--line);background:#f5f5ee}
+    .thread-head h2{margin:0;font-size:17px;line-height:1.4}
+    .thread-meta{display:flex;flex-wrap:wrap;gap:10px;margin-top:7px;color:var(--muted);font-size:10px}
+    .post{padding:14px;border-bottom:1px solid var(--line);background:var(--panel)}
+    .post:nth-child(even){background:#f5f5ee}
+    .post-meta{font-family:monospace;font-size:11px;color:var(--accent);overflow-wrap:anywhere}
+    .post-meta .no{color:var(--ink);font-weight:700;margin-right:7px}
+    .post-body{margin:7px 0 0;font-size:14px;white-space:pre-wrap}
+    .evidence{display:flex;flex-wrap:wrap;gap:4px;margin-top:9px}
+    .badge{border:1px solid #aab3aa;background:var(--source);padding:2px 5px;font-size:9px}
+    .badge.unverified{background:#f6e6e1;border-color:#caa79d;color:#76271d}
+    .round{padding:7px 14px;border-bottom:1px solid var(--line);background:#deded2;font-size:10px;font-weight:700;letter-spacing:.08em}
+    .thread-tools{display:flex;flex-wrap:wrap;gap:7px;padding:10px 14px;border-bottom:1px solid var(--line);background:#efefe7}
+    .thread-tools button{border:1px solid #87877a;background:#fff;padding:5px 8px;font-size:11px}
+    .summary{margin:15px 14px;border:1px solid var(--ink);background:#fff;padding:12px}
+    .summary h3{margin:0 0 7px;font-size:12px}
+    .summary p{margin:4px 0;font-size:12px}
+    .share-toast{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);padding:8px 12px;background:#111;color:#fff;font-size:11px;opacity:0;pointer-events:none;transition:.2s}
+    .share-toast.show{opacity:1}
+    .footnote{margin-top:14px;color:var(--muted);font-size:10px}
+    @media(max-width:760px){
+      .grid{grid-template-columns:1fr}
+      .thread{min-height:380px}
+      .mast{align-items:start}
+      .actions{grid-template-columns:1fr 1fr}
+    }
+  </style>
+</head>
+<body>
+<header>
+  <div class="wrap mast">
+    <div>
+      <h1>COUNCIL LAB</h1>
+      <p>違う判断軸を、同じスレに放り込む。</p>
+    </div>
+    <span class="labtag">PRIVATE PROTOTYPE</span>
+  </div>
+</header>
+
+<main class="wrap">
+  <p class="notice"><strong>検証版：</strong> URL共有・住民構成・Source Pack状態は実働。現在のレス本文はUI検証用のローカル生成で、PDF本文を実際に検索した結果ではありません。</p>
+  <div class="grid">
+    <div>
+      <section class="panel">
+        <div class="panel-head">1｜スレを立てる</div>
+        <div class="panel-body">
+          <label class="field"><span>スレタイ</span><input id="threadTitle" type="text" value="AS 1475は本当にアラーム腕時計史のマイルストーンなのか？" /></label>
+          <label class="field"><span>本文</span><textarea id="threadBody">量産数だけで歴史的重要性を決めていいのか。普及、機構、他社への影響、反証まで分けて議論して。</textarea></label>
+          <div class="field"><span>モード</span><div class="modes" id="modes"></div></div>
+        </div>
+      </section>
+
+      <section class="panel" style="margin-top:12px">
+        <div class="panel-head">2｜SOURCE PACK</div>
+        <div class="panel-body">
+          <div id="sources"></div>
+          <div class="add-source"><input id="customSource" type="url" placeholder="https://... 追加URL" /><button id="addSource" type="button">追加</button></div>
+          <p class="footnote">共有URLには資料名・URL・選択状態だけを保持。非公開PDF本体や認証情報は埋め込まない。</p>
+        </div>
+      </section>
+
+      <section class="panel" style="margin-top:12px">
+        <div class="panel-head">3｜住民プール</div>
+        <div class="panel-body">
+          <div class="chips" id="residentChips"></div>
+          <div id="residentDetail" style="margin-top:10px"></div>
+          <div class="actions">
+            <button class="primary" id="generate" type="button">議論を開始</button>
+            <button class="secondary" id="shuffle" type="button">ランダム枠更新</button>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <section class="panel thread" aria-live="polite">
+      <div class="panel-head">THREAD</div>
+      <div id="thread"><div class="thread-empty">左で議題・資料・住民を決めて、議論を開始。</div></div>
+    </section>
+  </div>
+</main>
+<div class="share-toast" id="toast">共有URLをコピーしました</div>
+
+<script is:inline define:vars={{base}}>
+const MODES = [
+  {id:'general',label:'一般'},
+  {id:'watch',label:'時計研究'},
+  {id:'business',label:'仕事・企画'},
+  {id:'roast',label:'ロースト'}
+];
+const RESIDENTS = [
+  {id:'source',name:'史料警察',role:'一次資料と文献を分離する',bias:'確認できない主張を嫌う',modes:['watch','general']},
+  {id:'mechanic',name:'機構オタク',role:'構造・操作・故障から見る',bias:'機構の面白さを過大評価しがち',modes:['watch']},
+  {id:'market',name:'市場屋',role:'価格・流動性・再取得難度を見る',bias:'文化的価値を値札へ寄せがち',modes:['watch','business']},
+  {id:'cfo',name:'冷徹なCFO',role:'費用対効果と機会費用を見る',bias:'浪漫を切り捨てがち',modes:['business','general']},
+  {id:'ux',name:'初見ユーザー',role:'伝わるか・面倒でないかを見る',bias:'深い背景を知らない',modes:['business','general']},
+  {id:'devil',name:'前提破壊班',role:'問いそのものを疑う',bias:'反証を優先しすぎる',modes:['watch','business','general','roast']},
+  {id:'editor',name:'編集者',role:'面白さと断定リスクを分ける',bias:'物語性へ寄せがち',modes:['watch','business','general']},
+  {id:'roaster',name:'焼却炉の名無しさん',role:'余計な自己正当化を焼く',bias:'火力が高すぎる',modes:['roast','business','general']},
+  {id:'minimal',name:'ミニマリスト',role:'そもそも必要かを見る',bias:'収集や研究を過剰と見なしがち',modes:['watch','business','general']},
+  {id:'wild',name:'野良の変人',role:'遠い分野から変な接続を出す',bias:'再現性が低い',modes:['watch','business','general','roast']}
+];
+let state = {
+  mode:'watch',
+  selectedResidents:['source','mechanic','market','devil','editor','wild'],
+  sources:[
+    {id:'alarm-am-arm',name:'Alarm am Arm',kind:'PDF / Project source',selected:true,connected:false},
+    {id:'alarm-wristwatch',name:'The Alarm Wristwatch',kind:'PDF / Project source',selected:true,connected:false},
+    {id:'web',name:'Web research',kind:'Web',selected:false,connected:true}
+  ],
+  thread:null
+};
+const $ = (s)=>document.querySelector(s);
+const esc = (s='')=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+function renderModes(){
+  $('#modes').innerHTML = MODES.map(m=>`<button type="button" class="mode" data-mode="${m.id}" aria-pressed="${state.mode===m.id}">${m.label}</button>`).join('');
+  document.querySelectorAll('[data-mode]').forEach(b=>b.onclick=()=>{state.mode=b.dataset.mode;autoPick();renderAll();});
+}
+function autoPick(){
+  const candidates=RESIDENTS.filter(r=>r.modes.includes(state.mode));
+  const core=state.mode==='watch'?['source','mechanic','market','devil','editor']:state.mode==='business'?['cfo','ux','devil','editor']:state.mode==='roast'?['roaster','devil','wild','ux']:['ux','devil','editor','wild'];
+  const random=candidates.filter(r=>!core.includes(r.id)).sort(()=>Math.random()-.5).slice(0,2).map(r=>r.id);
+  state.selectedResidents=[...new Set([...core,...random])];
+}
+function renderSources(){
+  $('#sources').innerHTML=state.sources.map((s,i)=>`<label class="source-row"><input type="checkbox" data-source="${i}" ${s.selected?'checked':''}><span><strong>${esc(s.name)}</strong><br><small>${esc(s.kind)}</small></span><span class="source-state ${s.connected?'':'demo'}">${s.connected?'接続可':'接続待ち'}</span></label>`).join('');
+  document.querySelectorAll('[data-source]').forEach(c=>c.onchange=()=>{state.sources[+c.dataset.source].selected=c.checked;});
+}
+function renderResidents(){
+  $('#residentChips').innerHTML=RESIDENTS.map(r=>`<button type="button" class="chip" data-res="${r.id}" aria-pressed="${state.selectedResidents.includes(r.id)}">${r.name}</button>`).join('');
+  document.querySelectorAll('[data-res]').forEach(b=>b.onclick=()=>{
+    const id=b.dataset.res; state.selectedResidents=state.selectedResidents.includes(id)?state.selectedResidents.filter(x=>x!==id):[...state.selectedResidents,id]; renderResidents();
+  });
+  $('#residentDetail').innerHTML=state.selectedResidents.map(id=>RESIDENTS.find(r=>r.id===id)).filter(Boolean).map(r=>`<div class="resident-card"><div class="resident-top"><span class="resident-name">${r.name}</span><span class="resident-role">${r.role}</span></div><div class="resident-source">弱点：${r.bias}</div></div>`).join('');
+}
+function demoReply(r,idx,title,body,selectedSources){
+  const src=selectedSources.length?selectedSources[idx%selectedSources.length]:null;
+  const prefix=idx===0?'まず前提を分ける。':idx===1?'>>1 そこだけでは足りない。':idx===2?'価格や知名度と歴史的重要性は別軸だ。':idx===3?'そもそも「マイルストーン」の定義を固定してから比べるべき。':'前のレスが見落としているのは、評価軸を一つに潰している点。';
+  let angle='';
+  if(r.id==='source') angle='資料上の明記、後世の専門書による位置づけ、こちらの推論を別々に表示したい。';
+  else if(r.id==='mechanic') angle='普及数だけでなく、香箱構成・操作系・音響構造が後続設計へ何を残したかを見る。';
+  else if(r.id==='market') angle='希少性と歴史的重要性は一致しない。市場で高いから歴史上重要、は危険。';
+  else if(r.id==='cfo') angle='議論の精度が上がっても意思決定が変わらない情報なら、調査コストを切る。';
+  else if(r.id==='ux') angle='初見には専門語より「何が以前と違ったのか」が一文で分からないと伝わらない。';
+  else if(r.id==='devil') angle='量産数が大きいことを重要性の根拠にするなら、量産されなかった革新的機構をどう扱うか反例が必要。';
+  else if(r.id==='editor') angle='安全に言える事実と、面白いが危険なコピーを分ければ記事としては強くなる。';
+  else if(r.id==='roaster') angle='調べた量を成果と勘違いすると沼る。結論を変えない枝葉なら切れ。';
+  else if(r.id==='minimal') angle='この論点をサイトの主幹に置く必要があるか。読者に必要な最小情報から逆算したい。';
+  else angle='他分野なら「普及させた規格」と「最初に発明した規格」は別の功績として並べる。時計史でも同じ整理が使える。';
+  return {resident:r.id,text:`${prefix}\n${angle}`,source:src?.name||null,evidence:src?(src.connected?'資料指定':'資料指定・未接続'):'資料なし',confidence:55+((idx*7)%31)};
+}
+function makeThread(){
+  const title=$('#threadTitle').value.trim()||'無題のスレ';
+  const body=$('#threadBody').value.trim();
+  const selected=state.selectedResidents.map(id=>RESIDENTS.find(r=>r.id===id)).filter(Boolean);
+  const selectedSources=state.sources.filter(s=>s.selected);
+  const round0=selected.map((r,i)=>demoReply(r,i,title,body,selectedSources));
+  const round1=selected.slice(0,Math.min(4,selected.length)).map((r,i)=>({
+    resident:r.id,
+    text:`>>${(i%round0.length)+1}\n${i%2===0?'その主張を残すなら、反証条件を一つ明示した方がいい。':'そこは同意。ただし資料で確認できた範囲と推論を同じ文に入れない方がいい。'}`,
+    source:selectedSources[(i+1)%Math.max(selectedSources.length,1)]?.name||null,
+    evidence:selectedSources.length?'資料指定・未検証':'資料なし',
+    confidence:61+i*5
+  }));
+  state.thread={title,body,created:new Date().toISOString(),posts:[round0,round1]};
+  renderThread();
+}
+function residentName(id){return RESIDENTS.find(r=>r.id===id)?.name||id}
+function renderThread(){
+  if(!state.thread){$('#thread').innerHTML='<div class="thread-empty">左で議題・資料・住民を決めて、議論を開始。</div>';return;}
+  const t=state.thread;
+  let no=0;
+  const rounds=t.posts.map((round,ri)=>`<div class="round">ROUND ${ri} — ${ri===0?'独立回答':'相互反論'}</div>${round.map(p=>{no++;return `<article class="post"><div class="post-meta"><span class="no">${no}</span>名前：${esc(residentName(p.resident))}　確信度 ${p.confidence}%</div><div class="post-body">${esc(p.text)}</div><div class="evidence">${p.source?`<span class="badge">${esc(p.source)}</span>`:''}<span class="badge ${p.evidence.includes('未')?'unverified':''}">${esc(p.evidence)}</span></div></article>`}).join('')}`).join('');
+  $('#thread').innerHTML=`<div class="thread-head"><h2>${esc(t.title)}</h2><div class="thread-meta"><span>${state.selectedResidents.length} residents</span><span>${state.sources.filter(s=>s.selected).length} sources</span><span>${esc(MODES.find(m=>m.id===state.mode)?.label||state.mode)}</span></div></div><div class="thread-tools"><button id="shareBtn" type="button">URLを共有</button><button id="copyText" type="button">スレ本文をコピー</button></div>${rounds}<div class="summary"><h3>現在の争点</h3><p>・歴史的重要性を「初出」「普及」「機構」「影響」のどれで測るか。</p><p>・Source Packが未接続のため、現段階では資料に基づく確定裁定はしない。</p></div>`;
+  $('#shareBtn').onclick=share;
+  $('#copyText').onclick=()=>navigator.clipboard?.writeText(threadText()).then(()=>toast('スレ本文をコピーしました'));
+}
+function threadText(){
+  if(!state.thread)return '';
+  let n=0;return [state.thread.title,state.thread.body,'',...state.thread.posts.flatMap((round,ri)=>[`--- ROUND ${ri} ---`,...round.map(p=>`${++n} 名前：${residentName(p.resident)}\n${p.text}`)])].join('\n');
+}
+function encodeState(){
+  const payload={v:1,mode:state.mode,residents:state.selectedResidents,sources:state.sources.map(({id,name,kind,selected})=>({id,name,kind,selected})),title:$('#threadTitle').value,body:$('#threadBody').value,thread:state.thread};
+  const raw=encodeURIComponent(JSON.stringify(payload));
+  return btoa(unescape(raw)).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');
+}
+function decodeState(hash){
+  try{const b=hash.replace(/^#s=/,'').replace(/-/g,'+').replace(/_/g,'/');const raw=decodeURIComponent(escape(atob(b)));return JSON.parse(decodeURIComponent(raw));}catch{return null}
+}
+function share(){
+  const url=`${location.origin}${location.pathname}#s=${encodeState()}`;
+  navigator.clipboard?.writeText(url).then(()=>toast('共有URLをコピーしました'));
+  history.replaceState(null,'',`#s=${encodeState()}`);
+}
+function toast(msg){const t=$('#toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),1600)}
+function loadShared(){
+  if(!location.hash.startsWith('#s='))return;
+  const p=decodeState(location.hash);if(!p)return;
+  state.mode=p.mode||state.mode;state.selectedResidents=p.residents||state.selectedResidents;
+  if(Array.isArray(p.sources))state.sources=p.sources.map(s=>({...s,connected:s.id==='web'}));
+  state.thread=p.thread||null;$('#threadTitle').value=p.title||'';$('#threadBody').value=p.body||'';
+}
+function renderAll(){renderModes();renderSources();renderResidents();renderThread()}
+$('#addSource').onclick=()=>{const v=$('#customSource').value.trim();if(!v)return;state.sources.push({id:`url-${Date.now()}`,name:v,kind:'Web URL',selected:true,connected:true});$('#customSource').value='';renderSources()};
+$('#generate').onclick=makeThread;
+$('#shuffle').onclick=()=>{autoPick();renderResidents()};
+loadShared();renderAll();
+</script>
+</body>
+</html>
