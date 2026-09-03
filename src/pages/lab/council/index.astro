@@ -73,6 +73,17 @@ const description = '異なる判断軸を持つ住民を召喚し、資料やWe
     .thread-tools{display:flex;align-items:center;flex-wrap:wrap;gap:7px;padding:8px 10px 10px;border-bottom:1px solid #c5c5ba;background:#f0f0e9;font-size:10px}
     .thread-tools a,.thread-tools button{border:0;background:none;padding:0;color:var(--blue);text-decoration:underline;font-size:10px}
     .thread-tools .demo{margin-left:auto;color:#8b2019;text-decoration:none}
+    .thread-tail{display:flex;flex-wrap:wrap;gap:8px;padding:14px 12px 16px;border-top:1px solid #bdbdb2;background:#ecece3}
+    .thread-tail button{border:0;background:none;padding:0;color:var(--blue);text-decoration:underline;font-size:11px}
+    .thread-tail button[disabled]{color:#888;text-decoration:none}
+    .next-draft{margin:0 10px 16px;padding:12px;border:1px solid #aaa99d;background:#fff}
+    .next-draft h3{margin:0 0 8px;font-size:13px;color:var(--red)}
+    .next-draft label{display:block;margin:8px 0}
+    .next-draft label span{display:block;margin-bottom:3px;color:#666;font-size:9px}
+    .next-draft textarea{min-height:180px;font-size:13px;line-height:1.7}
+    .next-draft .draft-actions{display:flex;flex-wrap:wrap;gap:7px;margin-top:8px}
+    .next-draft .draft-actions button{border:1px solid #555;background:#fff;padding:7px 9px;font-size:10px}
+    .next-draft .draft-actions .go{background:#222;color:#fff;border-color:#222}
     .thread-empty,.loading{padding:60px 20px;text-align:center;color:#777;font-size:12px}
     .loading strong{display:block;margin-bottom:7px;color:#222}
 
@@ -174,7 +185,7 @@ let state={mode:'watch',engine:'project',selected:['source','mechanic','historia
   {id:'alarm-am-arm',name:'Alarm am Arm',kind:'Project PDF',selected:true,connected:false,fixed:true},
   {id:'alarm-wristwatch',name:'The Alarm Wristwatch',kind:'Project PDF',selected:true,connected:false,fixed:true},
   {id:'web',name:'Web research',kind:'Web',selected:false,connected:true,fixed:false}
-],thread:null};
+],thread:null,pendingPrevious:null};
 let originScroll=null;
 const $=s=>document.querySelector(s);
 const esc=(s='')=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -286,8 +297,10 @@ function renderThread(){
   const t=state.thread;
   const op={resident:'op',text:t.body||'',confidence:null,evidence:'スレ主入力',format:'text'};
   const posts=[op,...t.posts];
-  $('#thread').innerHTML=`<div class="thread-head"><h2 class="thread-title">${esc(t.title)}</h2><div class="thread-meta"><span>${posts.length}レス</span><span>${esc(ENGINES.find(e=>e.id===t.engine)?.label||t.engine||'')}</span><span>${esc(MODES.find(m=>m.id===t.mode)?.label||t.mode||'')}</span></div></div><div class="thread-tools"><a href="#res-1">全部</a><a href="#res-${Math.max(1,posts.length-49)}">最新50</a><a href="#res-1">1-100</a><button id="reloadThread">リロード</button><button id="shareBtn">URL共有</button>${t.demo?'<span class="demo">LOCAL DEMO</span>':''}</div>${posts.map((p,i)=>renderPost(p,i+1)).join('')}`;
+  const prev=t.previousThread?.title?`<span>前スレ：${esc(t.previousThread.title)}</span>`:'';
+  $('#thread').innerHTML=`<div class="thread-head"><h2 class="thread-title">${esc(t.title)}</h2><div class="thread-meta"><span>${posts.length}レス</span><span>${esc(ENGINES.find(e=>e.id===t.engine)?.label||t.engine||'')}</span><span>${esc(MODES.find(m=>m.id===t.mode)?.label||t.mode||'')}</span>${prev}</div></div><div class="thread-tools"><a href="#res-1">全部</a><a href="#res-${Math.max(1,posts.length-49)}">最新50</a><a href="#res-1">1-100</a><button id="reloadThread">リロード</button><button id="shareBtn">URL共有</button>${t.demo?'<span class="demo">LOCAL DEMO</span>':''}</div>${posts.map((p,i)=>renderPost(p,i+1)).join('')}<div class="thread-tail"><button id="extendThreadBtn" type="button">このスレ続ける</button><button id="nextThreadBtn" type="button">次スレ立てる</button></div><div id="nextDraft"></div>`;
   $('#reloadThread').onclick=()=>renderThread();$('#shareBtn').onclick=share;
+  $('#extendThreadBtn').onclick=extendThread;$('#nextThreadBtn').onclick=prepareNextThread;
   document.querySelectorAll('.anchor').forEach(a=>a.addEventListener('click',onAnchor));
 }
 function onAnchor(e){
@@ -296,14 +309,93 @@ function onAnchor(e){
 }
 $('#backJump').onclick=()=>{if(originScroll!==null)window.scrollTo({top:originScroll,behavior:'smooth'});$('#backJump').classList.remove('show');originScroll=null};
 
+function endpointFor(path){
+  const api=$('#apiEndpoint').value.trim();
+  if(!api)return '';
+  const base=api.replace(/\/api\/council\/?$/,'').replace(/\/$/,'');
+  return base+path;
+}
+function continuationPayload(){
+  return {
+    thread:state.thread,
+    mode:state.mode,
+    engine:state.engine,
+    residents:state.selected.map(id=>resident(id)),
+    sources:state.sources.filter(s=>s.selected).map(({id,name,kind})=>({id,name,kind}))
+  };
+}
+function demoExtend(){
+  if(!state.thread)return;
+  const people=state.selected.map(id=>resident(id)).filter(r=>r.id!=='aa');
+  const base=state.thread.posts.length+1;
+  const extraTexts=[
+    '>>結論まで読んだが、まだ一つ抜けている。結論を支える事実と、単にもっともらしい説明になっている部分を分け直したい。\n\n前のレスで強かった論点を一度疑い直すと、まだ確認していない比較対象が残っている。そこを潰さない限り、結論は暫定のまま。',
+    '前の裁定は方向としては妥当。ただ、反証条件をもっと具体化できる。何が見つかったら結論を下げるのかを、検索可能な形に落とした方が次の調査が速い。\n\n比較個体、同年代資料、後続採用例の3系統に分ければ、同じ話を周回しにくい。',
+    'ここで一回逆張りする。議論が精密になった結果、問いそのものが細かくなりすぎている可能性がある。読者にとって必要な歴史評価と、研究者向けの完全証明は別。\n\nどこまで確認できればサイト上の一文として十分か、停止条件も必要。',
+    '今までのレスを読むと、残っているのは賛否ではなく証拠の優先順位だと思う。一次資料、準一次資料、後世文献、市場資料を同じ重さで置かないこと。\n\n次に掘るなら、結論を変える可能性が高い資料から当たるべき。'
+  ];
+  const add=[];
+  for(let i=0;i<Math.min(8,people.length*2);i++){
+    const r=people[i%people.length];
+    const target=Math.max(2,base-1-(i%Math.min(8,base-1)));
+    add.push({resident:r.id,replyTo:target,text:extraTexts[i%extraTexts.length].replace('>>結論まで','結論まで'),confidence:62+(i*5)%27,evidence:'ローカルデモ。実資料未参照',format:'text'});
+  }
+  const lastNo=state.thread.posts.length+add.length+1;
+  add.push({resident:'chair',text:`延長後の暫定結論。前の裁定そのものは大きく崩れていないが、結論を上げるための確認事項がはっきりした。\n\n次に見るべきなのは、結論を変え得る反証資料と比較対象。ここが出なければ現状維持、出れば表現を下げる。その停止条件まで含めて判断するのが妥当。\n\nまだ未確認なのは、比較対象の網羅性と後続への影響を直接示す資料。ここを次スレで切り出す価値がある。`,confidence:80,evidence:'延長後のローカルデモ裁定',format:'text',conclusion:true});
+  state.thread={...state.thread,posts:[...state.thread.posts,...add],updatedAt:new Date().toISOString(),extended:true};
+}
+async function extendThread(){
+  if(!state.thread)return;
+  const btn=$('#extendThreadBtn');if(btn){btn.disabled=true;btn.textContent='書き込み中…'}
+  const url=endpointFor('/api/extend');
+  if(!url){demoExtend();renderThread();return}
+  try{
+    const res=await fetch(url,{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify(continuationPayload())});
+    if(!res.ok)throw new Error(await res.text());
+    state.thread=normalizeThread(await res.json());state.pendingPrevious=null;renderThread();
+  }catch(err){toast('延長に失敗');if(btn){btn.disabled=false;btn.textContent='このスレ続ける'}}
+}
+function localNextDraft(){
+  const chair=[...(state.thread?.posts||[])].reverse().find(p=>p.conclusion||p.resident==='chair');
+  const conclusion=chair?.text||'前スレでは暫定結論まで到達した。';
+  const title=(state.thread?.title||'前スレ').replace(/[？?]$/,'')+'：未確認点を潰すスレ';
+  const body=`前スレ：${state.thread?.title||''}\n\n前スレの暫定結論：\n${conclusion}\n\nまだ残っているのは、結論を変え得る反証と比較対象の確認。\nこのスレでは「何が見つかったら前スレの結論を修正するのか」を具体化して、未確認点を優先して掘る。`;
+  return {title,body,previousThread:{title:state.thread?.title||'',shareId:state.thread?.shareId||null,conclusion}};
+}
+function showNextDraft(draft){
+  const box=$('#nextDraft');if(!box)return;
+  box.innerHTML=`<div class="next-draft"><h3>次スレ案</h3><label><span>スレタイ</span><input id="nextTitle" type="text" value="${esc(draft.title)}"></label><label><span>&gt;&gt;1</span><textarea id="nextBody">${esc(draft.body)}</textarea></label><div class="draft-actions"><button class="go" id="startNextThread" type="button">この内容で次スレを立てる</button><button id="cancelNextThread" type="button">やめる</button></div></div>`;
+  $('#cancelNextThread').onclick=()=>box.innerHTML='';
+  $('#startNextThread').onclick=async()=>{
+    const title=$('#nextTitle').value.trim();const body=$('#nextBody').value.trim();
+    if(!title||!body){toast('スレタイと>>1が必要');return}
+    state.pendingPrevious=draft.previousThread||{title:state.thread?.title||''};
+    $('#threadTitle').value=title;$('#threadBody').value=body;
+    await generate();
+    window.scrollTo({top:0,behavior:'smooth'});
+  };
+}
+async function prepareNextThread(){
+  if(!state.thread)return;
+  const btn=$('#nextThreadBtn');if(btn){btn.disabled=true;btn.textContent='次スレ案作成中…'}
+  const url=endpointFor('/api/next-thread');
+  if(!url){showNextDraft(localNextDraft());if(btn){btn.disabled=false;btn.textContent='次スレ立てる'}return}
+  try{
+    const res=await fetch(url,{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify(continuationPayload())});
+    if(!res.ok)throw new Error(await res.text());
+    const draft=await res.json();showNextDraft(draft);
+    if(btn){btn.disabled=false;btn.textContent='次スレ立てる'}
+  }catch(err){toast('次スレ案の作成に失敗');if(btn){btn.disabled=false;btn.textContent='次スレ立てる'}}
+}
+
 async function generate(){
   const title=$('#threadTitle').value.trim()||'無題のスレ';const body=$('#threadBody').value.trim();const api=$('#apiEndpoint').value.trim();
   if(state.engine==='deep-web-10'&&state.selected.length<10){autoPick();renderControls()}
   $('#thread').innerHTML=`<div class="loading"><strong>${state.engine==='deep-web-10'?'10人が別々に検索中…':'住民が考え中…'}</strong>${state.engine==='deep-web-10'?'このモードはかなり時間がかかります。':'レスを組み立てています。'}</div>`;
-  if(!api){state.thread=buildDemoThread(title,body);renderThread();return}
+  if(!api){state.thread=buildDemoThread(title,body);state.thread.previousThread=state.pendingPrevious||state.thread.previousThread||null;state.pendingPrevious=null;renderThread();return}
   try{
     localStorage.setItem('councilApi',api);
-    const payload={title,body,mode:state.mode,engine:state.engine,residents:state.selected.map(id=>resident(id)),sources:state.sources.filter(s=>s.selected).map(({id,name,kind})=>({id,name,kind}))};
+    const payload={title,body,mode:state.mode,engine:state.engine,residents:state.selected.map(id=>resident(id)),sources:state.sources.filter(s=>s.selected).map(({id,name,kind})=>({id,name,kind})),previousThread:state.pendingPrevious};
     const res=await fetch(api,{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify(payload)});if(!res.ok)throw new Error(await res.text());
     state.thread=normalizeThread(await res.json());renderThread();
   }catch(err){$('#thread').innerHTML=`<div class="thread-empty">ENGINE API error<br>${esc(err?.message||err)}</div>`}
