@@ -33,6 +33,10 @@ jobs:
           test -f dist/history/index.html
           test -f dist/history/smartwatch/index.html
           test -f dist/images/history/smartwatch-part-4.webp
+          test -f "dist/images/cyma-time-o-vox/Cyma timeovox .png"
+
+          cyma_bytes=$(wc -c < "dist/images/cyma-time-o-vox/Cyma timeovox .png")
+          test "$cyma_bytes" -gt 100000 || { echo "Cyma OWNER'S NOTE PNG is unexpectedly small"; exit 1; }
 
           check_text() {
             needle="$1"
@@ -66,6 +70,8 @@ jobs:
 
           check_text "一つの香箱なのに、リューズは回らない。" dist/cyma-time-o-vox/index.html
           check_text "約9時間分のパワーリザーブ" dist/cyma-time-o-vox/index.html
+          check_text "Cyma timeovox .png" dist/cyma-time-o-vox/index.html
+          check_text "Cyma timeovox .png" dist/cyma-time-o-vox/owners-note/index.html
 
           if find dist -name '*.html' -print0 | xargs -0 grep -q "data:image/.*base64"; then
             echo "Embedded base64 image remains in generated HTML"
