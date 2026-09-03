@@ -8,7 +8,9 @@ interface Env {
 }
 type Resident={id:string;name:string;role:string;bias:string};
 type SourceInput={id:string;name:string;kind:string;selected?:boolean};
-type CouncilRequest={title:string;body:string;mode:'general'|'watch'|'business'|'roast';engine:'quick'|'project'|'deep-web-10';residents:Resident[];sources:SourceInput[]};
+type ThreadRef={title:string;shareId?:string|null;conclusion?:string};
+type CouncilRequest={title:string;body:string;mode:'general'|'watch'|'business'|'roast';engine:'quick'|'project'|'deep-web-10';residents:Resident[];sources:SourceInput[];previousThread?:ThreadRef|null};
+type ContinueRequest={thread:any;mode:CouncilRequest['mode'];engine:CouncilRequest['engine'];residents:Resident[];sources:SourceInput[];focus?:string};
 type Citation={title:string;url:string};
 type Post={resident:string;text:string;confidence:number;evidence:string;citations?:Citation[];format?:'text'|'aa';replyTo?:number;conclusion?:boolean;continue?:boolean};
 
@@ -41,7 +43,7 @@ async function call(env:Env,input:string,tools:any[],model:string,effort:'low'|'
 async function mapLimit<T,R>(items:T[],limit:number,fn:(v:T,i:number)=>Promise<R>){const out=new Array<R>(items.length);let cursor=0;await Promise.all(Array.from({length:Math.min(limit,items.length)},async()=>{while(true){const i=cursor++;if(i>=items.length)return;out[i]=await fn(items[i],i)}}));return out}
 function residentMap(req:CouncilRequest){return new Map(req.residents.map(r=>[r.id,r]))}
 
-function firstPrompt(req:CouncilRequest,r:Resident){const len=req.engine==='deep-web-10'?'500〜1000':'350〜750';return `あなたは匿名掲示板の住民「${r.name}」。役割は「${r.role}」、自覚すべき偏りは「${r.bias}」。\n\nスレタイ: ${req.title}\n>>1:\n${req.body}\n\nSOURCE PACK:\n${sourceText(req)}\n\n他住民のレスはまだ見ない。自分の判断軸だけで独立に考える。${req.engine==='deep-web-10'?'必ずWeb検索を使い、検索語を複数変え、反証資料も探す。':'必要なら利用可能な資料/検索を使う。'} File Search未接続の資料を読んだふりしない。確認済み・資料記載・Web確認・推論・未確認を混ぜない。反証条件を最低1つ入れる。${watchRule(req)}\n\n掲示板レスとして${len}字程度、2〜5段落。短い感想で終わらせず、自分なりの暫定結論まで出す。\n\n固定Projectルール:\n${PROJECT_RULES}\n\n最後に CONFIDENCE: 0-100。`}
+function firstPrompt(req:CouncilRequest,r:Resident){const len=req.engine==='deep-web-10'?'500〜1000':'350〜750';const prev=req.previousThread?`\n前スレ情報:\n- ${req.previousThread.title}\n- 前スレ暫定結論: ${req.previousThread.conclusion||'未記載'}\n`:'';return `あなたは匿名掲示板の住民「${r.name}」。役割は「${r.role}」、自覚すべき偏りは「${r.bias}」。\n\nスレタイ: ${req.title}\n>>1:\n${req.body}${prev}\n\nSOURCE PACK:\n${sourceText(req)}\n\n他住民のレスはまだ見ない。自分の判断軸だけで独立に考える。${req.engine==='deep-web-10'?'必ずWeb検索を使い、検索語を複数変え、反証資料も探す。':'必要なら利用可能な資料/検索を使う。'} File Search未接続の資料を読んだふりしない。確認済み・資料記載・Web確認・推論・未確認を混ぜない。反証条件を最低1つ入れる。${watchRule(req)}\n\n掲示板レスとして${len}字程度、2〜5段落。短い感想で終わらせず、自分なりの暫定結論まで出す。\n\n固定Projectルール:\n${PROJECT_RULES}\n\n最後に CONFIDENCE: 0-100。`}
 function digest(posts:Post[],req:CouncilRequest){const rm=residentMap(req);return posts.map((p,i)=>`${i+2} 名前:${rm.get(p.resident)?.name||p.resident}\n${p.text}`).join('\n\n')}
 function replyPrompt(req:CouncilRequest,r:Resident,own:Post,first:Post[]){return `あなたは「${r.name}」。初回見解:\n${own.text}\n\n現在のレス:\n${digest(first,req)}\n\n全部読んだ上で、自分が最も返す価値があるレスを1つ自分で選ぶ。単なる賛同ではなく、相手の強い点を認めた上で、弱点・反証・評価軸の衝突を具体化する。自説も維持/修正/撤回のどれでもよい。${req.engine==='deep-web-10'?'必要ならWebを再検索し、初回と別の検索語・別ソースも使う。':''}${watchRule(req)}\n\n350〜850字、2〜5段落。先頭のアンカー文字列は本文に書かない。同じ主張の言い換えは禁止。新しい証拠・反例・定義修正・譲歩のどれかを追加する。\n\n固定Projectルール:\n${PROJECT_RULES}\n\n最後に以下4行を必ず付ける。\nTARGET: 返信したいレス番号\nSTANCE: MAINTAIN または REVISE または WITHDRAW\nCONTINUE: YES または NO\nCONFIDENCE: 0-100`}
 function discussionPrompt(req:CouncilRequest,r:Resident,posts:Post[],wave:number){
@@ -84,6 +86,114 @@ async function discussionWave(req:CouncilRequest,env:Env,posts:Post[],activeIds:
 
 async function chairPost(req:CouncilRequest,env:Env,posts:Post[]){const model=env.COUNCIL_MODEL_JUDGE||'gpt-5.6-terra',rm=residentMap(req);const thread=posts.map((p,i)=>`${i+2} 名前:${rm.get(p.resident)?.name||p.resident}${p.replyTo?` >>${p.replyTo}`:''}\n${p.text}`).join('\n\n');const prompt=`匿名掲示板の最後に書き込む議長役。議題「${req.title}」。\n\n全レス:\n${thread}\n\n多数決で丸めず、強い根拠と反証を比較して裁定する。500〜1000字程度。本文の中に「結論」「その理由」「残る反対意見」「まだ未確認」を自然に含める。別カード用の箇条書き要約ではなく、普通の一つのレスとして書く。断定できないものは条件付き結論にする。CONFIDENCE: 0-100。`;const p=await call(env,prompt,[],model,'high');const m=parseMeta(responseText(p));return {resident:'chair',text:m.text,confidence:m.confidence,evidence:'全レスを比較した裁定',citations:[],conclusion:true,format:'text'} as Post}
 
+
+function reqFromContinue(input:ContinueRequest):CouncilRequest{
+  return {
+    title:input.thread?.title||'無題のスレ',
+    body:input.thread?.body||'',
+    mode:input.mode,
+    engine:input.engine,
+    residents:input.residents,
+    sources:input.sources||[],
+    previousThread:input.thread?.previousThread||null
+  };
+}
+
+async function extendRun(input:ContinueRequest,env:Env){
+  if(!input.thread?.title||!Array.isArray(input.thread?.posts))throw new Error('thread is required');
+  const req=reqFromContinue(input);
+  const posts:Post[]=[...input.thread.posts];
+  const rm=residentMap(req);
+  const active=req.residents
+    .filter(r=>r.id!=='aa')
+    .slice(0,req.engine==='deep-web-10'?10:req.engine==='project'?8:6)
+    .map(r=>r.id);
+
+  const focus=(input.focus||'').trim();
+  if(focus){
+    posts.push({
+      resident:'op',
+      text:`>>1\n追加でここを掘ってほしい：${focus}`,
+      confidence:100,
+      evidence:'ユーザー追記',
+      format:'text'
+    } as Post);
+  }
+
+  const extraWaves=req.engine==='deep-web-10'?3:req.engine==='project'?2:2;
+  let ids=[...active];
+  for(let wave=0;wave<extraWaves;wave++){
+    const next=await discussionWave(req,env,posts,ids,50+wave);
+    posts.push(...next);
+    ids=next.filter(p=>p.continue).map(p=>p.resident);
+    if(ids.length<3){
+      ids=next.slice().sort((a,b)=>a.confidence-b.confidence)
+        .slice(0,Math.min(req.engine==='deep-web-10'?7:5,next.length))
+        .map(p=>p.resident)
+        .filter(id=>rm.has(id));
+    }
+  }
+
+  const revised=await chairPost(req,env,posts);
+  revised.evidence='延長後の全レスを比較した更新裁定';
+  const thread={...input.thread,posts:[...posts,revised],updatedAt:new Date().toISOString(),extended:true};
+  const shareId=await persist(env,thread);
+  return {...thread,shareId};
+}
+
+function stripCodeFence(raw:string){
+  return raw.trim().replace(/^\`\`\`(?:json)?\s*/i,'').replace(/\s*\`\`\`$/,'').trim();
+}
+
+async function nextThreadDraft(input:ContinueRequest,env:Env){
+  if(!input.thread?.title||!Array.isArray(input.thread?.posts))throw new Error('thread is required');
+  const req=reqFromContinue(input);
+  const rm=residentMap(req);
+  const threadText=input.thread.posts.map((p:Post,i:number)=>`${i+2} 名前:${p.resident==='chair'?'名無しさん＠議長':(rm.get(p.resident)?.name||p.resident)}${p.replyTo?` >>${p.replyTo}`:''}\n${p.text}`).join('\n\n');
+  const model=env.COUNCIL_MODEL_JUDGE||'gpt-5.6-terra';
+  const prompt=`次スレの>>1を作る編集役。前スレ「${input.thread.title}」の全レスを読め。
+
+前スレ:
+${threadText}
+
+目的は単なるPart2ではなく、前スレで残った最重要の未解決点を一段深く掘ること。
+次スレのスレタイは具体的で、前スレより論点を狭くする。
+>>1は2ch/5chの次スレ冒頭として自然にし、以下を簡潔に含める。
+- 前スレの暫定結論
+- 最も強かった根拠
+- 最も強かった反証
+- まだ未確認のこと
+- このスレで決着させたい問い
+- 「前スレ：${input.thread.title}」という行
+
+AI的な「議論フェーズ」「深掘りフェーズ」等の見出しは使わない。
+断定できないことを断定しない。
+ユーザーが編集してから立てる草案なので、問いを明確に残す。
+
+JSONだけ返す:
+{"title":"次スレタイ","body":">>1本文"}`;
+
+  const p=await call(env,prompt,[],model,'high');
+  const raw=stripCodeFence(responseText(p));
+  let parsed:any;
+  try{parsed=JSON.parse(raw)}catch{
+    parsed={
+      title:`${input.thread.title} Part2`,
+      body:`前スレ：${input.thread.title}\n\n前スレの暫定結論を踏まえ、未解決点をさらに検証する。`
+    };
+  }
+  const chair=[...input.thread.posts].reverse().find((x:Post)=>x.conclusion||x.resident==='chair');
+  return {
+    title:String(parsed.title||`${input.thread.title} Part2`).trim(),
+    body:String(parsed.body||'').trim(),
+    previousThread:{
+      title:input.thread.title,
+      shareId:input.thread.shareId||null,
+      conclusion:chair?.text||''
+    }
+  };
+}
+
 async function persist(env:Env,thread:any){if(!env.DB)return null;const id=crypto.randomUUID().replace(/-/g,'').slice(0,12);await env.DB.prepare('INSERT INTO threads (id, payload, created_at) VALUES (?, ?, ?)').bind(id,JSON.stringify(thread),new Date().toISOString()).run();return id}
 async function run(req:CouncilRequest,env:Env){
   if(!req.title?.trim())throw new Error('title is required');
@@ -108,9 +218,9 @@ async function run(req:CouncilRequest,env:Env){
   }
 
   const chair=await chairPost(req,env,posts);
-  const thread={title:req.title,body:req.body||'',created:new Date().toISOString(),engine:req.engine,mode:req.mode,posts:[...posts,chair],projectMirror:true};
+  const thread={title:req.title,body:req.body||'',created:new Date().toISOString(),engine:req.engine,mode:req.mode,posts:[...posts,chair],projectMirror:true,previousThread:req.previousThread||null};
   const shareId=await persist(env,thread);
   return {...thread,shareId};
 }
 
-export default{async fetch(request:Request,env:Env):Promise<Response>{const o=origin(env),url=new URL(request.url);if(request.method==='OPTIONS')return new Response(null,{status:204,headers:headers(o)});if(request.method==='GET'&&url.pathname==='/health')return new Response(JSON.stringify({ok:true,openai:Boolean(env.OPENAI_API_KEY),vectorStore:Boolean(env.COUNCIL_VECTOR_STORE_ID),db:Boolean(env.DB)}),{headers:headers(o)});if(request.method==='GET'&&url.pathname.startsWith('/api/thread/')){if(!env.DB)return new Response(JSON.stringify({error:'DB not configured'}),{status:501,headers:headers(o)});const id=url.pathname.split('/').pop();const row=await env.DB.prepare('SELECT payload FROM threads WHERE id = ?').bind(id).first();if(!row)return new Response(JSON.stringify({error:'not found'}),{status:404,headers:headers(o)});return new Response(row.payload,{headers:headers(o)})}if(request.method==='POST'&&url.pathname==='/api/council'){try{const req=await request.json() as CouncilRequest;const result=await run(req,env);return new Response(JSON.stringify(result),{headers:headers(o)})}catch(e:any){return new Response(JSON.stringify({error:e?.message||String(e)}),{status:500,headers:headers(o)})}}return new Response(JSON.stringify({error:'not found'}),{status:404,headers:headers(o)})}}
+export default{async fetch(request:Request,env:Env):Promise<Response>{const o=origin(env),url=new URL(request.url);if(request.method==='OPTIONS')return new Response(null,{status:204,headers:headers(o)});if(request.method==='GET'&&url.pathname==='/health')return new Response(JSON.stringify({ok:true,openai:Boolean(env.OPENAI_API_KEY),vectorStore:Boolean(env.COUNCIL_VECTOR_STORE_ID),db:Boolean(env.DB)}),{headers:headers(o)});if(request.method==='GET'&&url.pathname.startsWith('/api/thread/')){if(!env.DB)return new Response(JSON.stringify({error:'DB not configured'}),{status:501,headers:headers(o)});const id=url.pathname.split('/').pop();const row=await env.DB.prepare('SELECT payload FROM threads WHERE id = ?').bind(id).first();if(!row)return new Response(JSON.stringify({error:'not found'}),{status:404,headers:headers(o)});return new Response(row.payload,{headers:headers(o)})}if(request.method==='POST'&&url.pathname==='/api/council'){try{const req=await request.json() as CouncilRequest;const result=await run(req,env);return new Response(JSON.stringify(result),{headers:headers(o)})}catch(e:any){return new Response(JSON.stringify({error:e?.message||String(e)}),{status:500,headers:headers(o)})}}if(request.method==='POST'&&url.pathname==='/api/extend'){try{const req=await request.json() as ContinueRequest;const result=await extendRun(req,env);return new Response(JSON.stringify(result),{headers:headers(o)})}catch(e:any){return new Response(JSON.stringify({error:e?.message||String(e)}),{status:500,headers:headers(o)})}}if(request.method==='POST'&&url.pathname==='/api/next-thread'){try{const req=await request.json() as ContinueRequest;const result=await nextThreadDraft(req,env);return new Response(JSON.stringify(result),{headers:headers(o)})}catch(e:any){return new Response(JSON.stringify({error:e?.message||String(e)}),{status:500,headers:headers(o)})}}return new Response(JSON.stringify({error:'not found'}),{status:404,headers:headers(o)})}}
