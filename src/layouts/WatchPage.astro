@@ -24,7 +24,7 @@ const pagePath = `${watch.slug}/`;
 const pageUrl = new URL(pagePath, siteRoot).href;
 const imageUrl = new URL(watch.ownersNote.image.replace(/^\//, ''), siteRoot).href;
 const nextOwnerNote = watch.slug === 'pierce-duofon'
-  ? { href: 'cyma-time-o-vox/owners-note/', name: 'CYMA TIME-O-VOX' }
+  ? { href: 'cyma-time-o-vox/#owners-note', name: 'CYMA TIME-O-VOX' }
   : watch.slug === 'cyma-time-o-vox'
     ? { href: 'pierce-duofon/#owners-note', name: 'PIERCE DUOFON' }
     : null;
