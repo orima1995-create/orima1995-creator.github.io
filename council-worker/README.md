@@ -2,26 +2,72 @@
 
 COUNCIL LAB の実AIバックエンド用 Cloudflare Worker。
 
-## 何をするか
+## MVP方針
 
-- `QUICK`: 複数住民が独立回答 → 一部が相互反論
-- `PROJECT SOURCES`: OpenAI File Search の Vector Store を優先して同様に議論
-- `DEEP WEB ×10`: 10住民が独立して Web Search → 10住民が別レスへ反論し必要なら再検索 → 議長が争点整理
+この版は汎用サービスではなく、TypeCプロジェクト専用MVPとして設計する。
 
-フロント側がローカルデモのときは、このWorkerは呼ばれない。
+- TypeC Project Mirror を毎回固定で参照する
+- `Alarm am Arm`
+- `The Alarm Wristwatch`
+- プロジェクトの事実認定ルール
+- 追加Web URLは任意
+- `DEEP WEB ×10` だけは10住民がそれぞれ独立してWebを掘る
 
-## 必須
+ChatGPT Projectそのものを外部Webアプリから直接読むのではなく、非公開のOpenAI Vector Storeへ必要資料を複製し、Responses APIのFile Searchで参照する。
 
-Cloudflare Worker secret:
+## 議論の深さ
+
+表にはROUND表示を出さない。通常の匿名掲示板レスとして時系列に並べる。
+
+- QUICK: 初手 → 返信 → 継続議論×2 → 議長
+- PROJECT: 初手 → 返信 → 継続議論×3 → 議長
+- DEEP WEB ×10: 10人独立検索 → 10人返信 → 継続議論×4 → 議長
+
+住民は各段階で、返信先・継続・修正/撤回を自分で判断する。DEEP WEB ×10 は条件次第で60レス前後まで伸びるため、時間とAPIコストが大きい。
+
+## OpenAI Vector Store 初期化
+
+著作権資料は公開GitHubへ置かない。
+
+ローカルにあるPDFを直接OpenAIへアップロードする。
+
+```bash
+cd council-worker
+OPENAI_API_KEY="..." npm run setup:vector -- \
+  "/path/to/Alarm Am Arm .pdf" \
+  "/path/to/The Alarm Wrist Watch.pdf"
+```
+
+完了すると、
+
+```text
+COUNCIL_VECTOR_STORE_ID=vs_...
+```
+
+が出る。
+
+OpenAI公式のFile Searchは、Vector Storeへファイルを登録し、Responses APIの `file_search` ツールから検索する方式。
+
+## Workerに必要なSecret
+
+GitHub repository secrets:
 
 - `OPENAI_API_KEY`
+- `COUNCIL_VECTOR_STORE_ID`
+- `CLOUDFLARE_API_TOKEN`
+- `CLOUDFLARE_ACCOUNT_ID`
 
-任意:
+その後、GitHub Actionsの `Deploy Council Worker` を手動実行する。
 
-- `COUNCIL_VECTOR_STORE_ID` — Alarm am Arm / The Alarm Wristwatch 等を格納した OpenAI Vector Store ID
-- D1 binding `DB` — スレを短い共有IDで保存したい場合
+Workflowが、
 
-APIキーはGitHubやブラウザへ置かない。Cloudflare Worker Secretへ保存する。
+1. Worker secretへOpenAI API keyを登録
+2. Vector Store IDを登録
+3. Cloudflare Workerをデプロイ
+
+まで行う。
+
+APIキーやPDF本体をブラウザ・公開repoへ置かない。
 
 ## エンドポイント
 
@@ -29,14 +75,27 @@ APIキーはGitHubやブラウザへ置かない。Cloudflare Worker Secretへ�
 - `POST /api/council`
 - `GET /api/thread/:id`（D1接続時）
 
-## SOURCE PACK
+`/health` の想定:
 
-Project PDFを実際に参照させる場合、対象ファイルをOpenAI Vector Storeへ登録し、`COUNCIL_VECTOR_STORE_ID`をWorkerに設定する。未設定時はFile Searchを使わず、資料を読んだふりもしない。
+```json
+{
+  "ok": true,
+  "openai": true,
+  "vectorStore": true,
+  "db": false
+}
+```
+
+## フロント接続
+
+Worker URLが確定したら、COUNCIL LABのENGINE API URLへ一度設定する。
+
+個人用MVPでは最終的にこのURLをフロントへ固定し、開発用入力欄自体を消す。
+
+## CI
+
+`Council Worker Check` がWorker変更時に `wrangler deploy --dry-run` を実行してコンパイルを検査する。
 
 ## D1
 
-`schema.sql` を適用し、`wrangler.jsonc` にD1 bindingを追加する。
-
-## 注意
-
-`DEEP WEB ×10` は最大で、初回10リクエスト + 相互反論10リクエスト + 議長1リクエストを行う。通常モードより時間・APIコストが大きい前提の設計。
+短い共有URLを使う場合だけ、`schema.sql` を適用し `DB` bindingを追加する。現状のハッシュ共有はD1なしでも動く。
