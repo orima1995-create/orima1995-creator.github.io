@@ -76,7 +76,7 @@ content:
         label: 実機鳴動
         type: object
         fields:
-          - { name: youtubeId, label: YouTube ID, type: string }
+          - { name: youtubeId, label: YouTube URL / ID, type: string }
           - { name: xUrl, label: Original post on X, type: string }
       - name: deepDive
         label: DEEP DIVE
@@ -95,6 +95,18 @@ content:
             label: Paragraphs
             type: text
             list: true
+          - name: images
+            label: 補足画像
+            type: object
+            list:
+              max: 8
+              collapsible:
+                collapsed: true
+                summary: "{caption}"
+            fields:
+              - { name: src, label: 画像, type: image, required: true }
+              - { name: caption, label: キャプション, type: text }
+              - { name: alt, label: altテキスト, type: string }
       - name: sources
         label: 参考資料・出典
         type: string

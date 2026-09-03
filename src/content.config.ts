@@ -39,7 +39,12 @@ const watches = defineCollection({
       number: z.string(),
       title: z.string(),
       subtitle: z.string().optional(),
-      paragraphs: z.array(z.string())
+      paragraphs: z.array(z.string()),
+      images: z.array(z.object({
+        src: z.string(),
+        caption: z.string().optional(),
+        alt: z.string().optional()
+      })).optional()
     })),
     sources: z.array(z.string())
   })

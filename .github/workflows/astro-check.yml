@@ -48,7 +48,7 @@ jobs:
           check_text "DUOFON" dist/pierce-duofon/index.html
           check_text "マナーモードの祖先!?" dist/pierce-duofon/index.html
           check_text "① 動力巻き上げ" dist/pierce-duofon/index.html
-          check_text "xkecjZqr7BY" dist/pierce-duofon/index.html
+          check_text "youtube.com/embed/xkecjZqr7BY" dist/pierce-duofon/index.html
           check_text "Pierce Cal.135" dist/pierce-duofon/index.html
           check_text "Gruen Duotoneとの関係" dist/pierce-duofon/index.html
           check_text "history/#1950s" dist/pierce-duofon/index.html
@@ -72,6 +72,8 @@ jobs:
           check_text "約9時間分のパワーリザーブ" dist/cyma-time-o-vox/index.html
           check_text "Cyma timeovox .png" dist/cyma-time-o-vox/index.html
           check_text "Cyma timeovox .png" dist/cyma-time-o-vox/owners-note/index.html
+          check_text "youtube.com/embed/OONH0JZqCK0" dist/cyma-time-o-vox/index.html
+          check_text "2085277918473883977" dist/cyma-time-o-vox/index.html
 
           if find dist -name '*.html' -print0 | xargs -0 grep -q "data:image/.*base64"; then
             echo "Embedded base64 image remains in generated HTML"
