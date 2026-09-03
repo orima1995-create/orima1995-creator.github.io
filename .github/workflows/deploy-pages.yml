@@ -81,11 +81,14 @@ jobs:
           check_text 'pierce-duofon/#owners-note' dist/owners-notes/index.html
           check_text 'smartwatch-part-4.webp' dist/history/smartwatch/index.html
           check_text 'もっと静かな時代へ戻る' dist/history/smartwatch/index.html
+          check_text 'youtube.com/embed/xkecjZqr7BY' dist/pierce-duofon/index.html
           check_text '一つの香箱なのに、リューズは回らない。' dist/cyma-time-o-vox/index.html
           check_text '6〜10秒' dist/cyma-time-o-vox/index.html
           check_text '約9時間分のパワーリザーブ' dist/cyma-time-o-vox/index.html
           check_text 'Cyma timeovox .png' dist/cyma-time-o-vox/index.html
           check_text 'Cyma timeovox .png' dist/cyma-time-o-vox/owners-note/index.html
+          check_text 'youtube.com/embed/OONH0JZqCK0' dist/cyma-time-o-vox/index.html
+          check_text '2085277918473883977' dist/cyma-time-o-vox/index.html
           check_text 'owners-notes' dist/sitemap.xml
           check_text 'cyma-time-o-vox' dist/sitemap.xml
           if grep -Fq '個体ページへ' dist/owners-notes/index.html; then
@@ -118,6 +121,7 @@ jobs:
           history="${root}history/"
           owners="${root}owners-notes/"
           smart="${root}history/smartwatch/"
+          duofon="${root}pierce-duofon/"
           cyma="${root}cyma-time-o-vox/"
           cyma_note="${root}cyma-time-o-vox/owners-note/"
           for attempt in {1..12}; do
@@ -125,6 +129,7 @@ jobs:
             history_html=$(curl -fsSL "$history" || true)
             owners_html=$(curl -fsSL "$owners" || true)
             smart_html=$(curl -fsSL "$smart" || true)
+            duofon_html=$(curl -fsSL "$duofon" || true)
             cyma_html=$(curl -fsSL "$cyma" || true)
             cyma_note_html=$(curl -fsSL "$cyma_note" || true)
             parts_ok=1
@@ -150,15 +155,18 @@ jobs:
               && ! grep -Fq "個体ページへ" <<<"$owners_html" \
               && grep -Fq "smartwatch-part-4.webp" <<<"$smart_html" \
               && grep -Fq "もっと静かな時代へ戻る" <<<"$smart_html" \
+              && grep -Fq "youtube.com/embed/xkecjZqr7BY" <<<"$duofon_html" \
               && grep -Fq "一つの香箱なのに、リューズは回らない。" <<<"$cyma_html" \
               && grep -Fq "約9時間分のパワーリザーブ" <<<"$cyma_html" \
               && grep -Fq "Cyma timeovox .png" <<<"$cyma_html" \
               && grep -Fq "Cyma timeovox .png" <<<"$cyma_note_html" \
+              && grep -Fq "youtube.com/embed/OONH0JZqCK0" <<<"$cyma_html" \
+              && grep -Fq "2085277918473883977" <<<"$cyma_html" \
               && ! grep -Fq "#index-milestones" <<<"$home_html$history_html" \
               && ! grep -Fq "#index-owners" <<<"$home_html$history_html" \
               && ! grep -Fq "#index-interests" <<<"$home_html$history_html" \
               && [ "$parts_ok" -eq 1 ]; then
-              echo "Verified live navigation, owners notes, smartwatch artwork, and Cyma page: $root"
+              echo "Verified live navigation, watch videos, owners notes, smartwatch artwork, and Cyma page: $root"
               exit 0
             fi
             sleep 5
