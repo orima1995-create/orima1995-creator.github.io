@@ -1,7 +1,7 @@
 ---
 const base = import.meta.env.BASE_URL;
 const title = 'COUNCIL LAB｜多視点AI議論プロトタイプ';
-const description = '異なる判断軸を持つ住民を召喚し、資料パックを指定して議論を組み立て、URL共有できる検証版。';
+const description = '異なる判断軸を持つ住民を召喚し、資料やWebを参照させて議論させる検証版。';
 ---
 <!doctype html>
 <html lang="ja">
@@ -13,99 +13,110 @@ const description = '異なる判断軸を持つ住民を召喚し、資料パ�
   <meta name="description" content={description} />
   <style>
     :root{
-      --bg:#efefe8;--panel:#f8f8f2;--ink:#171717;--muted:#66665d;--line:#b7b7aa;
-      --accent:#1b5e20;--link:#0000ee;--accent2:#8a2d21;--warn:#fff4d6;
+      --bg:#efefe9;--paper:#f8f8f3;--ink:#171717;--muted:#66665d;--line:#c8c8bd;
+      --green:#187328;--blue:#0000cc;--red:#8b2019;--warn:#fff2c7;--meta:#e8e8df;
     }
     *{box-sizing:border-box}
     html{-webkit-text-size-adjust:100%;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif}
     body{margin:0;line-height:1.65}
-    button,input,textarea,select{font:inherit}
+    button,input,textarea{font:inherit}
     button{cursor:pointer}
-    .wrap{width:min(1080px,calc(100% - 28px));margin:auto}
-    header{padding:22px 0 13px;border-bottom:3px double var(--ink)}
+    .wrap{width:min(1120px,calc(100% - 24px));margin:auto}
+    header{padding:20px 0 12px;border-bottom:3px double #555;background:#e6e6df}
     .mast{display:flex;justify-content:space-between;gap:18px;align-items:end}
-    .mast h1{margin:0;font-family:Georgia,"Times New Roman",serif;font-size:clamp(1.8rem,6vw,3.4rem);line-height:.95;font-weight:500;letter-spacing:-.03em}
+    .mast h1{margin:0;font-family:Georgia,"Times New Roman",serif;font-size:clamp(1.8rem,6vw,3.3rem);font-weight:500;line-height:1}
     .mast p{margin:7px 0 0;color:var(--muted);font-size:12px}
-    .labtag{font-size:10px;letter-spacing:.14em;border:1px solid;padding:4px 7px;white-space:nowrap}
-    main{padding:20px 0 70px}
-    .notice{margin:0 0 20px;padding:10px 12px;border:1px solid #d0b96f;background:var(--warn);font-size:12px}
-    .grid{display:grid;grid-template-columns:minmax(0,370px) minmax(0,1fr);gap:20px;align-items:start}
-    .panel{border:1px solid var(--line);background:var(--panel)}
-    .panel-head{padding:9px 11px;border-bottom:1px solid var(--line);background:#e5e5db;font-weight:700;font-size:12px;letter-spacing:.04em}
-    .panel-body{padding:12px}
-    label.field{display:block;margin-bottom:12px}
-    .field>span{display:block;margin-bottom:4px;font-size:11px;font-weight:700;color:var(--muted)}
-    input[type="text"],input[type="url"],textarea,select{width:100%;border:1px solid #99998c;background:#fff;padding:9px 10px;color:var(--ink);border-radius:0}
-    textarea{min-height:108px;resize:vertical}
-    .modes,.chips{display:flex;flex-wrap:wrap;gap:6px}
-    .mode,.chip{border:1px solid #98988a;background:#fff;padding:6px 8px;font-size:12px}
-    .mode[aria-pressed="true"],.chip[aria-pressed="true"]{background:#2f6d3b;border-color:#2f6d3b;color:white}
-    .source-row{display:grid;grid-template-columns:20px 1fr auto;gap:7px;align-items:start;padding:8px 0;border-bottom:1px dotted var(--line);font-size:12px}
+    .labtag{border:1px solid #777;padding:4px 7px;font-size:10px;letter-spacing:.12em;white-space:nowrap}
+    main{padding:18px 0 70px}
+    .notice{margin:0 0 16px;padding:10px 12px;border:1px solid #c9ad55;background:var(--warn);font-size:12px;line-height:1.7}
+    .layout{display:grid;grid-template-columns:minmax(0,360px) minmax(0,1fr);gap:16px;align-items:start}
+    .panel{border:1px solid #aaa99d;background:var(--paper)}
+    .panel-head{padding:8px 10px;border-bottom:1px solid #aaa99d;background:#deded5;font-size:12px;font-weight:700}
+    .panel-body{padding:11px}
+    .field{display:block;margin-bottom:12px}
+    .field>span{display:block;margin-bottom:4px;color:var(--muted);font-size:11px;font-weight:700}
+    input[type="text"],input[type="url"],textarea{width:100%;border:1px solid #99998c;border-radius:0;background:#fff;padding:9px 10px;color:var(--ink)}
+    textarea{min-height:105px;resize:vertical}
+    .button-row,.chips{display:flex;flex-wrap:wrap;gap:6px}
+    .choice,.chip{border:1px solid #99998c;background:#fff;padding:6px 8px;font-size:11px}
+    .choice[aria-pressed="true"],.chip[aria-pressed="true"]{border-color:#275d31;background:#275d31;color:#fff}
+    .engine-grid{display:grid;gap:7px}
+    .engine{display:grid;grid-template-columns:auto 1fr;gap:8px;text-align:left;border:1px solid #aaa99d;background:#fff;padding:9px}
+    .engine[aria-pressed="true"]{outline:2px solid #333;outline-offset:-2px;background:#f0f0e7}
+    .engine strong{font-size:11px;white-space:nowrap}
+    .engine span{color:var(--muted);font-size:10px;line-height:1.55}
+    .engine-status{margin-top:9px;padding:8px 9px;border-left:3px solid #8b2019;background:#f3e8e4;font-size:10px;line-height:1.65}
+    .engine-status.live{border-color:#187328;background:#e6f0e7}
+    .source-row{display:grid;grid-template-columns:18px 1fr auto;gap:7px;align-items:start;padding:8px 0;border-bottom:1px dotted #c4c4b8;font-size:11px}
     .source-row:last-child{border-bottom:0}
     .source-row small{color:var(--muted)}
-    .source-state{font-size:9px;border:1px solid var(--line);padding:2px 5px;white-space:nowrap}
-    .source-state.demo{color:var(--accent2)}
-    .add-source{display:grid;grid-template-columns:1fr auto;gap:6px;margin-top:10px}
-    .add-source button,.primary,.secondary{border:1px solid var(--ink);background:var(--ink);color:white;padding:9px 11px}
-    .secondary{background:transparent;color:var(--ink)}
-    .actions{display:grid;grid-template-columns:1fr auto;gap:8px;margin-top:15px}
-    .primary{font-weight:700}
-    .resident-card{padding:8px 0;border-bottom:1px dotted var(--line)}
+    .source-state{font-size:9px;color:#8b2019;white-space:nowrap}
+    .source-state.live{color:#187328}
+    .add-source{display:grid;grid-template-columns:1fr auto;gap:6px;margin-top:9px}
+    .add-source button,.primary,.secondary{border:1px solid #222;background:#222;color:#fff;padding:9px 10px}
+    .secondary{background:#fff;color:#222}
+    .resident-card{padding:7px 0;border-bottom:1px dotted #c4c4b8}
     .resident-card:last-child{border-bottom:0}
-    .resident-top{display:flex;gap:8px;align-items:center;justify-content:space-between}
-    .resident-name{font-size:12px;font-weight:700}
-    .resident-role{font-size:10px;color:var(--muted)}
-    .resident-source{margin-top:5px;font-size:10px;color:var(--muted)}
+    .resident-top{display:flex;justify-content:space-between;gap:8px}
+    .resident-name{font-size:11px;font-weight:700}
+    .resident-role,.resident-bias{color:var(--muted);font-size:9px;line-height:1.5}
+    .actions{display:grid;grid-template-columns:1fr auto;gap:7px;margin-top:12px}
+    .footnote{margin:10px 0 0;color:var(--muted);font-size:9px;line-height:1.6}
+    details.dev{margin-top:10px;border-top:1px dotted #aaa99d;padding-top:7px}
+    details.dev summary{cursor:pointer;color:var(--muted);font-size:9px}
+    details.dev input{margin-top:7px;font-size:10px}
 
-    .thread{min-height:640px;background:#f7f7f1}
-    .thread-empty{padding:60px 20px;text-align:center;color:var(--muted);font-size:13px}
-    .thread-head{padding:15px 14px 12px;border-bottom:1px solid var(--line);background:#ededdf}
-    .thread-head h2{margin:0;color:#7d1d16;font-size:18px;line-height:1.5;font-weight:700}
-    .thread-meta{display:flex;flex-wrap:wrap;gap:7px 12px;margin-top:7px;color:var(--muted);font-size:10px}
-    .thread-tools{display:flex;flex-wrap:wrap;gap:7px;padding:9px 12px 13px;border-bottom:1px solid var(--line);background:#f4f4ec}
-    .thread-tools button{border:1px solid #87877a;background:#fff;padding:5px 8px;font-size:11px}
-
-    .round{margin:18px 10px 8px;padding:7px 2px 4px;border-top:3px double #9f9f93;color:#67675f;font-family:monospace;font-size:10px;font-weight:700;letter-spacing:.04em}
-    .post{margin:0 8px 10px;padding:10px 6px 17px;border-bottom:1px dotted #c7c7ba;background:transparent}
-    .post:last-of-type{border-bottom:0}
-    .post-meta{display:flex;flex-wrap:wrap;align-items:baseline;gap:2px 7px;color:#444;font-size:12px;line-height:1.65;overflow-wrap:anywhere}
-    .post-meta .no{color:var(--link);font-weight:700;text-decoration:underline;text-underline-offset:2px}
-    .post-meta .name{color:var(--accent);font-weight:700}
+    .thread-panel{min-height:620px;border:1px solid #aaa99d;background:#f4f4ee}
+    .thread-panel>.panel-head{background:#d8d8d0}
+    .thread-empty{padding:70px 20px;text-align:center;color:#777;font-size:12px}
+    .thread-head{padding:14px 13px 12px;border-bottom:1px solid #bdbdb2;background:#ecece3}
+    .thread-title{margin:0;color:var(--red);font-size:18px;line-height:1.45;font-weight:700}
+    .thread-meta{display:flex;flex-wrap:wrap;gap:6px 12px;margin-top:7px;color:#707069;font-size:9px}
+    .thread-tools{display:flex;flex-wrap:wrap;gap:6px;padding:9px 12px;border-bottom:1px solid #c5c5ba;background:#f0f0e9}
+    .thread-tools button{border:1px solid #88887d;background:#fff;padding:5px 8px;font-size:10px}
+    .demo-flag{margin-left:auto;color:#8b2019;font-size:9px;align-self:center}
+    .round{margin:24px 12px 14px;padding-top:7px;border-top:3px double #9f9f93;color:#6b6b64;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:10px;font-weight:700}
+    .post{margin:0 12px 28px;padding:0 0 23px;border-bottom:1px solid #d0d0c5}
+    .post:last-child{margin-bottom:10px}
+    .post-meta{padding:6px 8px;background:var(--meta);font-size:12px;line-height:1.7;overflow-wrap:anywhere}
+    .post-meta .no{margin-right:5px;color:var(--blue);font-weight:700;text-decoration:underline;text-underline-offset:2px}
+    .post-meta .name{color:var(--green);font-weight:700}
     .post-meta .date,.post-meta .id,.post-meta .confidence{color:#555}
-    .post-meta .id{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,monospace;font-size:11px}
-    .post-body{margin:9px 0 0 2.1em;font-size:15px;line-height:1.78;overflow-wrap:anywhere;word-break:normal}
-    .post-body .quote{color:var(--link)}
-    .post-body.aa{
-      margin:10px 0 0 2.1em;padding:0;border:0;background:transparent;color:#111;
-      font-family:"MS PGothic","ＭＳ Ｐゴシック",IPAMonaPGothic,Mona,Osaka,ui-monospace,monospace;
-      font-size:16px;line-height:16px;letter-spacing:0;white-space:pre;overflow-x:auto;overflow-y:hidden;
-      -webkit-overflow-scrolling:touch;
-    }
-    .evidence{margin:10px 0 0 2.1em;color:#777;font-size:10px;line-height:1.5}
-    .evidence .unverified{color:#8a2d21}
-    .summary{margin:24px 12px 15px;padding:12px 13px;border:1px solid #98988d;background:#fff}
-    .summary h3{margin:0 0 7px;font-size:12px}
-    .summary p{margin:5px 0;font-size:12px;line-height:1.7}
-    .share-toast{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);padding:8px 12px;background:#111;color:#fff;font-size:11px;opacity:0;pointer-events:none;transition:.2s}
-    .share-toast.show{opacity:1}
-    .footnote{margin-top:14px;color:var(--muted);font-size:10px}
+    .post-meta .id{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:10px}
+    .post-body{margin:12px 9px 0 2.2em;font-size:15px;line-height:1.9;overflow-wrap:anywhere;word-break:normal}
+    .post-body p{margin:0 0 13px}
+    .post-body p:last-child{margin-bottom:0}
+    .post-body .quote{color:var(--blue)}
+    .aa-body{margin:13px 0 0 1em;padding:4px 0 8px;overflow-x:auto;overflow-y:hidden;-webkit-overflow-scrolling:touch}
+    .aa-body pre{margin:0;font-family:"MS PGothic","ＭＳ Ｐゴシック",IPAMonaPGothic,Mona,Osaka,ui-monospace,monospace;font-size:16px;line-height:16px;letter-spacing:0;white-space:pre;color:#111}
+    .post-sources{margin:13px 9px 0 2.2em;color:#74746d;font-size:9px}
+    .post-sources summary{cursor:pointer;display:inline-block;border-bottom:1px dotted #888;padding-bottom:1px}
+    .post-sources div{margin-top:6px;line-height:1.65}
+    .post-sources .unverified{color:#8b2019}
+    .summary{margin:28px 12px 14px;padding:12px 13px;border:1px solid #99998e;background:#fff}
+    .summary h3{margin:0 0 7px;font-size:11px}
+    .summary p{margin:5px 0;font-size:11px;line-height:1.75}
+    .loading{padding:50px 20px;text-align:center;font-size:12px;color:#666}
+    .loading strong{display:block;margin-bottom:7px;color:#222}
+    .toast{position:fixed;left:50%;bottom:18px;transform:translateX(-50%);padding:8px 11px;background:#111;color:#fff;font-size:10px;opacity:0;pointer-events:none;transition:.18s;z-index:10}
+    .toast.show{opacity:1}
 
     @media(max-width:760px){
-      .grid{grid-template-columns:1fr}
-      .thread{min-height:380px}
-      .mast{align-items:start}
-      .actions{grid-template-columns:1fr 1fr}
-      .thread-head{padding:14px 11px 11px}
-      .thread-head h2{font-size:17px;line-height:1.55}
-      .thread-tools{padding-inline:10px}
-      .round{margin:20px 8px 7px}
-      .post{margin:0 7px 12px;padding:9px 3px 19px}
-      .post-meta{font-size:12px;line-height:1.72;gap:1px 6px}
-      .post-meta .id{font-size:10px}
-      .post-body{margin:10px 0 0 1.25em;font-size:15px;line-height:1.82}
-      .post-body.aa{margin-left:.4em;font-size:16px;line-height:16px}
-      .evidence{margin:11px 0 0 1.25em;font-size:10px}
-      .summary{margin:24px 8px 12px}
+      .wrap{width:min(100% - 18px,720px)}
+      .layout{grid-template-columns:1fr}
+      .thread-panel{min-height:380px}
+      .thread-head{padding:13px 9px 11px}
+      .thread-title{font-size:17px}
+      .thread-tools{padding:8px 9px 11px}
+      .round{margin:27px 8px 15px}
+      .post{margin:0 8px 32px;padding-bottom:25px}
+      .post-meta{padding:7px 7px;font-size:12px;line-height:1.75}
+      .post-body{margin:13px 7px 0 1.5em;font-size:16px;line-height:1.95}
+      .post-body p{margin-bottom:15px}
+      .post-sources{margin:14px 7px 0 1.5em;font-size:9px}
+      .aa-body{margin-left:.25em}
+      .aa-body pre{font-size:16px;line-height:16px}
+      .summary{margin:30px 8px 12px}
     }
   </style>
 </head>
@@ -116,37 +127,49 @@ const description = '異なる判断軸を持つ住民を召喚し、資料パ�
       <h1>COUNCIL LAB</h1>
       <p>違う判断軸を、同じスレに放り込む。</p>
     </div>
-    <span class="labtag">PRIVATE PROTOTYPE</span>
+    <span class="labtag">PROTOTYPE</span>
   </div>
 </header>
 
 <main class="wrap">
-  <p class="notice"><strong>検証版：</strong> URL共有・住民構成・Source Pack状態は実働。現在のレス本文はUI検証用のローカル生成で、PDF本文を実際に検索した結果ではありません。</p>
-  <div class="grid">
+  <p class="notice"><strong>現在：</strong> UIと共有は実働。AIエンジン未接続時は「ローカルデモ」と明示し、Project PDFやWebを読んだふりはしません。ENGINE API接続後は同じ画面から実エージェントへ切り替わります。</p>
+  <div class="layout">
     <div>
       <section class="panel">
         <div class="panel-head">1｜スレを立てる</div>
         <div class="panel-body">
           <label class="field"><span>スレタイ</span><input id="threadTitle" type="text" value="AS 1475は本当にアラーム腕時計史のマイルストーンなのか？" /></label>
           <label class="field"><span>本文</span><textarea id="threadBody">量産数だけで歴史的重要性を決めていいのか。普及、機構、他社への影響、反証まで分けて議論して。</textarea></label>
-          <div class="field"><span>モード</span><div class="modes" id="modes"></div></div>
+          <div class="field"><span>議題モード</span><div class="button-row" id="modes"></div></div>
         </div>
       </section>
 
-      <section class="panel" style="margin-top:12px">
-        <div class="panel-head">2｜SOURCE PACK</div>
+      <section class="panel" style="margin-top:11px">
+        <div class="panel-head">2｜生成エンジン</div>
+        <div class="panel-body">
+          <div class="engine-grid" id="engines"></div>
+          <div class="engine-status" id="engineStatus"></div>
+          <details class="dev">
+            <summary>開発用：ENGINE API URL</summary>
+            <input id="apiEndpoint" type="url" placeholder="https://.../api/council" />
+          </details>
+        </div>
+      </section>
+
+      <section class="panel" style="margin-top:11px">
+        <div class="panel-head">3｜SOURCE PACK</div>
         <div class="panel-body">
           <div id="sources"></div>
           <div class="add-source"><input id="customSource" type="url" placeholder="https://... 追加URL" /><button id="addSource" type="button">追加</button></div>
-          <p class="footnote">共有URLには資料名・URL・選択状態だけを保持。非公開PDF本体や認証情報は埋め込まない。</p>
+          <p class="footnote">非公開PDF本体・APIキーは共有URLに含めない。公開時は資料名・引用・URLだけを出す設計。</p>
         </div>
       </section>
 
-      <section class="panel" style="margin-top:12px">
-        <div class="panel-head">3｜住民プール</div>
+      <section class="panel" style="margin-top:11px">
+        <div class="panel-head">4｜住民プール</div>
         <div class="panel-body">
           <div class="chips" id="residentChips"></div>
-          <div id="residentDetail" style="margin-top:10px"></div>
+          <div id="residentDetail" style="margin-top:9px"></div>
           <div class="actions">
             <button class="primary" id="generate" type="button">議論を開始</button>
             <button class="secondary" id="shuffle" type="button">ランダム枠更新</button>
@@ -155,196 +178,231 @@ const description = '異なる判断軸を持つ住民を召喚し、資料パ�
       </section>
     </div>
 
-    <section class="panel thread" aria-live="polite">
+    <section class="thread-panel" aria-live="polite">
       <div class="panel-head">THREAD</div>
-      <div id="thread"><div class="thread-empty">左で議題・資料・住民を決めて、議論を開始。</div></div>
+      <div id="thread"><div class="thread-empty">左で議題・エンジン・資料・住民を決めてスレを立てる。</div></div>
     </section>
   </div>
 </main>
-<div class="share-toast" id="toast">共有URLをコピーしました</div>
+<div class="toast" id="toast"></div>
 
 <script is:inline define:vars={{base}}>
-const MODES = [
+const MODES=[
   {id:'general',label:'一般'},
   {id:'watch',label:'時計研究'},
   {id:'business',label:'仕事・企画'},
   {id:'roast',label:'ロースト'}
 ];
-const RESIDENTS = [
-  {id:'source',name:'史料警察',role:'一次資料と文献を分離する',bias:'確認できない主張を嫌う',modes:['watch','general']},
-  {id:'mechanic',name:'機構オタク',role:'構造・操作・故障から見る',bias:'機構の面白さを過大評価しがち',modes:['watch']},
-  {id:'market',name:'市場屋',role:'価格・流動性・再取得難度を見る',bias:'文化的価値を値札へ寄せがち',modes:['watch','business']},
-  {id:'cfo',name:'冷徹なCFO',role:'費用対効果と機会費用を見る',bias:'浪漫を切り捨てがち',modes:['business','general']},
-  {id:'ux',name:'初見ユーザー',role:'伝わるか・面倒でないかを見る',bias:'深い背景を知らない',modes:['business','general']},
-  {id:'devil',name:'前提破壊班',role:'問いそのものを疑う',bias:'反証を優先しすぎる',modes:['watch','business','general','roast']},
-  {id:'editor',name:'編集者',role:'面白さと断定リスクを分ける',bias:'物語性へ寄せがち',modes:['watch','business','general']},
-  {id:'roaster',name:'焼却炉の名無しさん',role:'余計な自己正当化を焼く',bias:'火力が高すぎる',modes:['roast','business','general']},
-  {id:'minimal',name:'ミニマリスト',role:'そもそも必要かを見る',bias:'収集や研究を過剰と見なしがち',modes:['watch','business','general']},
-  {id:'wild',name:'野良の変人',role:'遠い分野から変な接続を出す',bias:'再現性が低い',modes:['watch','business','general','roast']},
-  {id:'aa',name:'AA職人',role:'空気を一枚のAAで刺す',bias:'情報量は少ない',modes:['watch','business','general','roast']}
+const ENGINES=[
+  {id:'quick',label:'QUICK',desc:'6〜8人。資料を共有して独立回答→反論。Webは必要時だけ。'},
+  {id:'project',label:'PROJECT SOURCES',desc:'指定PDF・資料を優先。資料上の事実と推論を分離。'},
+  {id:'deep-web-10',label:'DEEP WEB ×10',desc:'10人が別々にWeb探索→独立報告→相互反論→再評価。時間・コスト高。'}
 ];
-let state = {
-  mode:'watch',
+const RESIDENTS=[
+  {id:'source',name:'史料警察',role:'一次資料・文献・推論を分離',bias:'未確認を嫌う',modes:['watch','general']},
+  {id:'mechanic',name:'機構オタク',role:'構造・操作・故障から見る',bias:'機構美を過大評価',modes:['watch']},
+  {id:'market',name:'市場屋',role:'価格・流動性・再取得難度',bias:'価値を値札へ寄せる',modes:['watch','business']},
+  {id:'cfo',name:'冷徹なCFO',role:'費用対効果・機会費用',bias:'浪漫を切り捨てる',modes:['business','general']},
+  {id:'ux',name:'初見ユーザー',role:'伝わるか・面倒でないか',bias:'背景知識が薄い',modes:['business','general']},
+  {id:'devil',name:'前提破壊班',role:'問いそのものを疑う',bias:'反証へ寄りすぎる',modes:['watch','business','general','roast']},
+  {id:'editor',name:'編集者',role:'面白さと断定リスクを分離',bias:'物語性へ寄る',modes:['watch','business','general']},
+  {id:'roaster',name:'焼却炉の名無しさん',role:'自己正当化と無駄を焼く',bias:'火力過多',modes:['roast','business','general']},
+  {id:'minimal',name:'ミニマリスト',role:'そもそも必要かを見る',bias:'研究を切りすぎる',modes:['watch','business','general']},
+  {id:'wild',name:'野良の変人',role:'異分野から接続を出す',bias:'再現性が低い',modes:['watch','business','general','roast']},
+  {id:'aa',name:'AA職人',role:'論点をAAで一度脱臼させる',bias:'役に立たない時もある',modes:['watch','business','general','roast'],format:'aa'}
+];
+const DEMO_ANGLES={
+  source:[
+    '量産数は事実として強い。ただし「歴史的重要性」は別命題。専門書がどう位置づけているかと、当時資料で何が確認できるかを分けたい。',
+    'まず「最初」「普及させた」「後続へ影響した」を分離した方がいい。同じマイルストーンでも功績の種類が違う。',
+    '資料に書いてあることと、こちらが歴史的意味を付与している部分を同じ文章に混ぜると危ない。'
+  ],
+  mechanic:[
+    '生産数だけでは足りない。香箱構成、巻上げ、アラーム設定、発音構造まで見て、後続機に何が残ったかを比較したい。',
+    '機構として凡庸でも量産性が高ければ歴史には残る。逆に革新的でも孤立した機構は別の意味で重要。二軸で見るべき。',
+    '「よく使われた」と「設計上の転換点」は一致しない。ここを混ぜると機構史が薄くなる。'
+  ],
+  market:[
+    '希少性・市場価格・歴史的重要性は別物。売値が高い個体を歴史の中心へ置くと、ただの市場史になる。',
+    '再取得難度は所有判断には効くが、歴史年表の採否にはそのまま使えない。評価軸を分けるべき。',
+    '大量に残ったから安い、という市場結果と、大量に普及したから重要、という歴史評価は両立する。'
+  ],
+  cfo:[
+    'この調査で結論が変わるのかを先に決めたい。変わらないなら調査時間を切る。',
+    '10人で調べる価値がある論点と、1人の検索で十分な論点を分けないとコストが膨らむ。',
+    '深掘り自体を成果にしない。意思決定か公開品質を動かす情報だけ残す。'
+  ],
+  ux:[
+    '初見には「何が以前と違ったのか」が一文で分からないと、数字を並べても頭に残らない。',
+    'マイルストーンという語より、読者が見て分かる変化を先に置いた方が伝わる。',
+    '専門語の正しさより、比較対象が見える説明の方が入口として強い。'
+  ],
+  devil:[
+    '量産数が重要性の根拠なら、量産されなかった革新的機構をどう扱う？ その反例に耐える定義が必要。',
+    'そもそも年表に一つの「重要」を置く必要があるのか。普及史・機構史・用途史を分けた方が自然かもしれない。',
+    '「多く使われたから重要」は循環していないか。なぜ多く使われ、それが何を変えたのかまで必要。'
+  ],
+  editor:[
+    '安全に言える事実と、読ませるためのコピーを分ければ両立できる。コピーが事実の代わりを始めた瞬間に危ない。',
+    '数字は補強材料として強いが、見出しにするなら「何を変えたか」の方が読者には残る。',
+    '反証を本文に全部入れる必要はない。ただし裏では持っておき、断定の強さを調整する。'
+  ],
+  roaster:[
+    '調べたページ数を成果だと思い始めたら終わり。結論を変えない枝葉は切れ。',
+    '「資料をたくさん見た」だけで偉くなるな。比較軸が死んでたらただのPDF筋トレ。',
+    '深掘りは武器だが、出口がないと穴掘り大会。何を決めるための調査か毎回書け。'
+  ],
+  minimal:[
+    'サイトに必要なのは読者が理解する最小情報。研究ノートの全部を本文へ持ち込む必要はない。',
+    'この論点を主幹に置く必要があるか。年表の一カードなら説明を一段削れる可能性がある。',
+    '情報を増やす前に、消しても意味が変わらない文を探したい。'
+  ],
+  wild:[
+    '技術史なら「最初に作った規格」と「普及させた規格」は別の英雄として扱う。時計史でも同じ整理が使える。',
+    '交通史で言えば発明車と大衆車を同じ評価軸で競わせるのが変。役割別のマイルストーンにすればいい。',
+    '生物進化みたいに系統樹で見る手もある。最初・大量普及・枝分かれを一本の順位にしない。'
+  ]
+};
+let state={
+  mode:'watch',engine:'quick',
   selectedResidents:['source','mechanic','market','devil','editor','wild','aa'],
   sources:[
-    {id:'alarm-am-arm',name:'Alarm am Arm',kind:'PDF / Project source',selected:true,connected:false},
-    {id:'alarm-wristwatch',name:'The Alarm Wristwatch',kind:'PDF / Project source',selected:true,connected:false},
-    {id:'web',name:'Web research',kind:'Web',selected:false,connected:true}
-  ],
-  thread:null
+    {id:'alarm-am-arm',name:'Alarm am Arm',kind:'Project PDF',selected:true,connected:false},
+    {id:'alarm-wristwatch',name:'The Alarm Wristwatch',kind:'Project PDF',selected:true,connected:false},
+    {id:'web',name:'Web research',kind:'Open web',selected:false,connected:false}
+  ],thread:null
 };
-const $ = (s)=>document.querySelector(s);
-const esc = (s='')=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-
+const $=s=>document.querySelector(s);
+const esc=(s='')=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const pick=a=>a[Math.floor(Math.random()*a.length)];
 function renderModes(){
-  $('#modes').innerHTML = MODES.map(m=>`<button type="button" class="mode" data-mode="${m.id}" aria-pressed="${state.mode===m.id}">${m.label}</button>`).join('');
-  document.querySelectorAll('[data-mode]').forEach(b=>b.onclick=()=>{state.mode=b.dataset.mode;autoPick();renderAll();});
+  $('#modes').innerHTML=MODES.map(m=>`<button type="button" class="choice" data-mode="${m.id}" aria-pressed="${state.mode===m.id}">${m.label}</button>`).join('');
+  document.querySelectorAll('[data-mode]').forEach(b=>b.onclick=()=>{state.mode=b.dataset.mode;autoPick();renderResidents();renderModes();});
+}
+function renderEngines(){
+  $('#engines').innerHTML=ENGINES.map(e=>`<button type="button" class="engine" data-engine="${e.id}" aria-pressed="${state.engine===e.id}"><strong>${e.label}</strong><span>${e.desc}</span></button>`).join('');
+  document.querySelectorAll('[data-engine]').forEach(b=>b.onclick=()=>{state.engine=b.dataset.engine;if(state.engine==='deep-web-10')state.selectedResidents=RESIDENTS.filter(r=>r.id!=='aa').map(r=>r.id);renderEngines();renderResidents();renderEngineStatus();});
+}
+function renderEngineStatus(){
+  const endpoint=$('#apiEndpoint')?.value.trim()||localStorage.getItem('councilApiEndpoint')||'';
+  const el=$('#engineStatus');
+  if(endpoint){el.className='engine-status live';el.textContent='ENGINE接続あり：実AIへ送信します。Deep Web ×10では各住民が独立Web探索する前提です。';}
+  else{el.className='engine-status';el.textContent=state.engine==='deep-web-10'?'ENGINE未接続：Deep Web ×10のUI・住民構成だけ確認できます。実際の10人独立検索はまだ走りません。':'ENGINE未接続：現在はローカルデモ。自律思考・資料検索は行っていません。';}
 }
 function autoPick(){
-  const candidates=RESIDENTS.filter(r=>r.modes.includes(state.mode));
-  const core=state.mode==='watch'?['source','mechanic','market','devil','editor']:state.mode==='business'?['cfo','ux','devil','editor']:state.mode==='roast'?['roaster','devil','wild','ux','aa']:['ux','devil','editor','wild'];
-  const random=candidates.filter(r=>!core.includes(r.id)).sort(()=>Math.random()-.5).slice(0,2).map(r=>r.id);
-  state.selectedResidents=[...new Set([...core,...random])];
+  if(state.engine==='deep-web-10'){state.selectedResidents=RESIDENTS.filter(r=>r.id!=='aa').map(r=>r.id);return;}
+  const core=state.mode==='watch'?['source','mechanic','market','devil','editor']:state.mode==='business'?['cfo','ux','devil','editor']:state.mode==='roast'?['roaster','devil','wild','ux']:['ux','devil','editor','wild'];
+  const pool=RESIDENTS.filter(r=>r.modes.includes(state.mode)&&!core.includes(r.id)&&r.id!=='aa').sort(()=>Math.random()-.5).slice(0,2).map(r=>r.id);
+  state.selectedResidents=[...new Set([...core,...pool,'aa'])];
 }
 function renderSources(){
-  $('#sources').innerHTML=state.sources.map((s,i)=>`<label class="source-row"><input type="checkbox" data-source="${i}" ${s.selected?'checked':''}><span><strong>${esc(s.name)}</strong><br><small>${esc(s.kind)}</small></span><span class="source-state ${s.connected?'':'demo'}">${s.connected?'接続可':'接続待ち'}</span></label>`).join('');
-  document.querySelectorAll('[data-source]').forEach(c=>c.onchange=()=>{state.sources[+c.dataset.source].selected=c.checked;});
+  $('#sources').innerHTML=state.sources.map((s,i)=>`<label class="source-row"><input type="checkbox" data-source="${i}" ${s.selected?'checked':''}><span><strong>${esc(s.name)}</strong><br><small>${esc(s.kind)}</small></span><span class="source-state ${s.connected?'live':''}">${s.connected?'接続済':'未接続'}</span></label>`).join('');
+  document.querySelectorAll('[data-source]').forEach(c=>c.onchange=()=>state.sources[+c.dataset.source].selected=c.checked);
 }
 function renderResidents(){
   $('#residentChips').innerHTML=RESIDENTS.map(r=>`<button type="button" class="chip" data-res="${r.id}" aria-pressed="${state.selectedResidents.includes(r.id)}">${r.name}</button>`).join('');
-  document.querySelectorAll('[data-res]').forEach(b=>b.onclick=()=>{
-    const id=b.dataset.res;
-    state.selectedResidents=state.selectedResidents.includes(id)?state.selectedResidents.filter(x=>x!==id):[...state.selectedResidents,id];
-    renderResidents();
-  });
-  $('#residentDetail').innerHTML=state.selectedResidents.map(id=>RESIDENTS.find(r=>r.id===id)).filter(Boolean).map(r=>`<div class="resident-card"><div class="resident-top"><span class="resident-name">${r.name}</span><span class="resident-role">${r.role}</span></div><div class="resident-source">弱点：${r.bias}</div></div>`).join('');
-}
-function demoReply(r,idx,title,body,selectedSources){
-  const src=selectedSources.length?selectedSources[idx%selectedSources.length]:null;
-  if(r.id==='aa'){
-    return {
-      resident:r.id,
-      text:'　　　∧＿∧\n　　（　´∀｀）＜ まず資料つないでから決めようぜ\n　　（　　　　）\n　　 ｜ ｜　|\n　　（_＿）＿）',
-      source:null,
-      evidence:'AA / 資料なし',
-      confidence:42
-    };
-  }
-  const prefix=idx===0?'>>1 まず前提を分ける。':idx===1?'>>1 そこだけでは足りない。':idx===2?'>>1 価格や知名度と歴史的重要性は別軸だ。':idx===3?'>>1 そもそも「マイルストーン」の定義を固定してから比べるべき。':'>>1 前提として、評価軸を一つに潰さない方がいい。';
-  let angle='';
-  if(r.id==='source') angle='資料上の明記、後世の専門書による位置づけ、こちらの推論を別々に表示したい。';
-  else if(r.id==='mechanic') angle='普及数だけでなく、香箱構成・操作系・音響構造が後続設計へ何を残したかを見る。';
-  else if(r.id==='market') angle='希少性と歴史的重要性は一致しない。市場で高いから歴史上重要、は危険。';
-  else if(r.id==='cfo') angle='議論の精度が上がっても意思決定が変わらない情報なら、調査コストを切る。';
-  else if(r.id==='ux') angle='初見には専門語より「何が以前と違ったのか」が一文で分からないと伝わらない。';
-  else if(r.id==='devil') angle='量産数が大きいことを重要性の根拠にするなら、量産されなかった革新的機構をどう扱うか反例が必要。';
-  else if(r.id==='editor') angle='安全に言える事実と、面白いが危険なコピーを分ければ記事としては強くなる。';
-  else if(r.id==='roaster') angle='調べた量を成果と勘違いすると沼る。結論を変えない枝葉なら切れ。';
-  else if(r.id==='minimal') angle='この論点をサイトの主幹に置く必要があるか。読者に必要な最小情報から逆算したい。';
-  else angle='他分野なら「普及させた規格」と「最初に発明した規格」は別の功績として並べる。時計史でも同じ整理が使える。';
-  return {resident:r.id,text:`${prefix}\n${angle}`,source:src?.name||null,evidence:src?(src.connected?'資料指定':'資料指定・未接続'):'資料なし',confidence:55+((idx*7)%31)};
-}
-function makeThread(){
-  const title=$('#threadTitle').value.trim()||'無題のスレ';
-  const body=$('#threadBody').value.trim();
-  const selected=state.selectedResidents.map(id=>RESIDENTS.find(r=>r.id===id)).filter(Boolean);
-  const selectedSources=state.sources.filter(s=>s.selected);
-  const round0=selected.map((r,i)=>demoReply(r,i,title,body,selectedSources));
-  const round1=selected.filter(r=>r.id!=='aa').slice(0,Math.min(4,selected.length)).map((r,i)=>({
-    resident:r.id,
-    text:`>>${2+(i%Math.max(round0.length,1))}\n${i%2===0?'その主張を残すなら、反証条件を一つ明示した方がいい。':'そこは同意。ただし資料で確認できた範囲と推論を同じ文に入れない方がいい。'}`,
-    source:selectedSources[(i+1)%Math.max(selectedSources.length,1)]?.name||null,
-    evidence:selectedSources.length?'資料指定・未検証':'資料なし',
-    confidence:61+i*5
-  }));
-  state.thread={title,body,created:new Date().toISOString(),posts:[round0,round1]};
-  renderThread();
+  document.querySelectorAll('[data-res]').forEach(b=>b.onclick=()=>{const id=b.dataset.res;state.selectedResidents=state.selectedResidents.includes(id)?state.selectedResidents.filter(x=>x!==id):[...state.selectedResidents,id];renderResidents();});
+  $('#residentDetail').innerHTML=state.selectedResidents.map(id=>RESIDENTS.find(r=>r.id===id)).filter(Boolean).map(r=>`<div class="resident-card"><div class="resident-top"><span class="resident-name">${r.name}</span><span class="resident-role">${r.role}</span></div><div class="resident-bias">弱点：${r.bias}</div></div>`).join('');
 }
 function residentName(id){return RESIDENTS.find(r=>r.id===id)?.name||id}
-function postId(seed){
-  let h=2166136261;
-  for(const c of String(seed)){h^=c.charCodeAt(0);h=Math.imul(h,16777619)}
-  return Math.abs(h>>>0).toString(36).slice(0,8).toUpperCase().padEnd(8,'0');
+function makeId(seed){let h=2166136261;for(const ch of seed){h^=ch.charCodeAt(0);h=Math.imul(h,16777619)}return Math.abs(h>>>0).toString(36).slice(0,8).toUpperCase()}
+function aaText(){return '　　 ∧＿∧\n　　（　´∀｀）　量産だけで\n　　（　　　　）　歴史を決めるな\n　　 ｜ ｜　|\n　　（_＿）＿）';}
+function demoPost(r,index,selectedSources){
+  const src=selectedSources.length?selectedSources[index%selectedSources.length]:null;
+  if(r.id==='aa')return {resident:r.id,text:aaText(),format:'aa',confidence:42,source:src?.name||null,evidence:'ローカルデモ／検索未実行'};
+  const angle=pick(DEMO_ANGLES[r.id]||DEMO_ANGLES.wild);
+  return {resident:r.id,text:angle,format:'text',confidence:55+Math.floor(Math.random()*31),source:src?.name||null,evidence:src?'資料指定のみ／未検索':'資料なし'};
 }
-function postDate(iso,offset=0){
-  const d=new Date(new Date(iso).getTime()+offset*17000);
-  const w=['日','月','火','水','木','金','土'][d.getDay()];
-  const z=n=>String(n).padStart(2,'0');
-  return `${d.getFullYear()}/${z(d.getMonth()+1)}/${z(d.getDate())}(${w}) ${z(d.getHours())}:${z(d.getMinutes())}:${z(d.getSeconds())}`;
+function makeDemoThread(){
+  const title=$('#threadTitle').value.trim()||'無題のスレ';
+  const body=$('#threadBody').value.trim();
+  const residents=state.selectedResidents.map(id=>RESIDENTS.find(r=>r.id===id)).filter(Boolean);
+  const selectedSources=state.sources.filter(s=>s.selected);
+  const round0=residents.map((r,i)=>demoPost(r,i,selectedSources));
+  const textPosts=round0.filter(p=>p.format!=='aa');
+  const critiquePool=[
+    'その結論は残していい。ただし、反証されたら撤回する条件を一つ書いた方が強い。',
+    'そこは同意。ただ「確認済み」と「推論」を同じ段落に置くと読者には区別できない。',
+    '評価軸を一つ増やした方がいい。今の二択だと、別タイプの功績を落としている。',
+    '逆の個体・反例を一つ置いても結論が残るか確認したい。'
+  ];
+  const round1=textPosts.slice(0,Math.min(5,textPosts.length)).map((p,i)=>({resident:p.resident,text:`>>${2+((i+1)%Math.max(textPosts.length,1))}\n\n${pick(critiquePool)}`,format:'text',confidence:60+Math.floor(Math.random()*26),source:selectedSources[(i+1)%Math.max(selectedSources.length,1)]?.name||null,evidence:'相互反論デモ／検索未実行'}));
+  state.thread={title,body,created:new Date().toISOString(),engine:state.engine,isDemo:true,posts:[round0,round1]};
+  renderThread();
 }
-function looksLikeAA(text){
-  const s=String(text||'');
-  const lines=s.split('\n');
-  if(lines.length<3)return false;
-  const marks=(s.match(/[∧∨＿￣┌┐└┘│─／＼（）()´｀ω∀ﾟДд・｜|]/g)||[]).length;
-  const shaped=lines.filter(line=>/^[　\s]*(?:[∧／＼（(|｜＿￣]|.{0,4}[∧＿￣])/.test(line)).length;
-  return marks>=6||shaped>=3;
+async function runCouncil(){
+  const endpoint=$('#apiEndpoint').value.trim()||localStorage.getItem('councilApiEndpoint')||'';
+  if(!endpoint){makeDemoThread();return;}
+  localStorage.setItem('councilApiEndpoint',endpoint);
+  $('#thread').innerHTML='<div class="loading"><strong>住民を放流中…</strong>資料・Web探索を含む場合は時間がかかります。</div>';
+  const payload={title:$('#threadTitle').value.trim(),body:$('#threadBody').value.trim(),mode:state.mode,engine:state.engine,residents:state.selectedResidents.map(id=>RESIDENTS.find(r=>r.id===id)).filter(Boolean),sources:state.sources.filter(s=>s.selected)};
+  try{
+    const res=await fetch(endpoint,{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify(payload)});
+    if(!res.ok)throw new Error(`HTTP ${res.status}`);
+    const data=await res.json();
+    state.thread={...data.thread,isDemo:false,engine:state.engine};
+    renderThread();
+  }catch(err){
+    $('#thread').innerHTML=`<div class="loading"><strong>ENGINE接続失敗</strong>${esc(err.message||String(err))}<br>ローカルデモへは自動フォールバックしません。</div>`;
+  }
 }
-function renderPostBody(text){
-  if(looksLikeAA(text))return `<pre class="post-body aa">${esc(text)}</pre>`;
-  const html=esc(text).split('\n').map(line=>/^&gt;&gt;\d+/.test(line)?`<span class="quote">${line}</span>`:line).join('<br>');
-  return `<div class="post-body">${html}</div>`;
+function formatPostText(text){
+  return String(text||'').split(/\n{2,}/).map(block=>{
+    const lines=esc(block).split('\n').map(line=>/^&gt;&gt;\d+/.test(line)?`<span class="quote">${line}</span>`:line).join('<br>');
+    return `<p>${lines}</p>`;
+  }).join('');
 }
-function renderMeta(no,name,created,seed,confidence){
-  return `<div class="post-meta"><span class="no">${no}</span><span>名前：</span><span class="name">${esc(name)}</span><span class="date">${postDate(created,no)}</span><span class="id">ID:${postId(seed)}</span>${Number.isFinite(confidence)?`<span class="confidence">確信度 ${confidence}%</span>`:''}</div>`;
+function postDate(created,index){const d=new Date(created);d.setSeconds(d.getSeconds()+index*7);return d.toLocaleString('ja-JP',{year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',second:'2-digit'}).replaceAll('/','/');}
+function renderPost(p,no,created){
+  const name=esc(residentName(p.resident));
+  const id=makeId(`${p.resident}-${no}-${created}`);
+  const body=p.format==='aa'?`<div class="aa-body"><pre>${esc(p.text)}</pre></div>`:`<div class="post-body">${formatPostText(p.text)}</div>`;
+  const source=p.source?`<div>指定：${esc(p.source)}</div>`:'';
+  const citations=Array.isArray(p.citations)&&p.citations.length?p.citations.map(c=>`<div>${c.url?`<a href="${esc(c.url)}" target="_blank" rel="noopener">${esc(c.title||c.url)}</a>`:esc(c.title||'')}</div>`).join(''):'';
+  return `<article class="post" id="post-${no}"><div class="post-meta"><a class="no" href="#post-${no}">${no}</a> 名前：<span class="name">${name}</span> <span class="date">${postDate(created,no)}</span> ID:<span class="id">${id}</span> <span class="confidence">確信度 ${Number(p.confidence||0)}%</span></div>${body}<details class="post-sources"><summary>根拠・資料</summary><div>${source}${citations}<span class="${String(p.evidence||'').includes('未')||String(p.evidence||'').includes('デモ')?'unverified':''}">${esc(p.evidence||'資料情報なし')}</span></div></details></article>`;
 }
 function renderThread(){
-  if(!state.thread){$('#thread').innerHTML='<div class="thread-empty">左で議題・資料・住民を決めて、議論を開始。</div>';return;}
-  const t=state.thread;
-  let no=1;
-  const op=`<article class="post op">${renderMeta(1,'スレ主',t.created,`${t.title}-op`,null)}${renderPostBody(t.body||'本文なし')}</article>`;
-  const rounds=t.posts.map((round,ri)=>{
-    const label=ri===0?'住民の独立回答':'相互反論';
-    return `<div class="round">--- ROUND ${ri} / ${label} ---</div>${round.map(p=>{
-      no++;
-      const evidence=p.source?`資料：${esc(p.source)} ／ <span class="${p.evidence.includes('未')?'unverified':''}">${esc(p.evidence)}</span>`:`${esc(p.evidence)}`;
-      return `<article class="post">${renderMeta(no,residentName(p.resident),t.created,`${p.resident}-${no}`,p.confidence)}${renderPostBody(p.text)}<div class="evidence">${evidence}</div></article>`;
-    }).join('')}`;
-  }).join('');
-  $('#thread').innerHTML=`<div class="thread-head"><h2>${esc(t.title)}</h2><div class="thread-meta"><span>レス ${no}</span><span>${state.selectedResidents.length} residents</span><span>${state.sources.filter(s=>s.selected).length} sources</span><span>${esc(MODES.find(m=>m.id===state.mode)?.label||state.mode)}</span></div></div><div class="thread-tools"><button id="shareBtn" type="button">URLを共有</button><button id="copyText" type="button">スレ本文をコピー</button></div>${op}${rounds}<div class="summary"><h3>現在の争点</h3><p>・歴史的重要性を「初出」「普及」「機構」「影響」のどれで測るか。</p><p>・Source Packが未接続のため、現段階では資料に基づく確定裁定はしない。</p></div>`;
-  $('#shareBtn').onclick=share;
-  $('#copyText').onclick=()=>navigator.clipboard?.writeText(threadText()).then(()=>toast('スレ本文をコピーしました'));
+  if(!state.thread){$('#thread').innerHTML='<div class="thread-empty">左で議題・エンジン・資料・住民を決めてスレを立てる。</div>';return;}
+  const t=state.thread;let no=1;
+  const op=`<article class="post" id="post-1"><div class="post-meta"><a class="no" href="#post-1">1</a> 名前：<span class="name">スレ主</span> <span class="date">${postDate(t.created,1)}</span> ID:<span class="id">${makeId(`op-${t.created}`)}</span></div><div class="post-body">${formatPostText(t.body)}</div></article>`;
+  const rounds=(t.posts||[]).map((round,ri)=>`<div class="round">${ri===0?'独立回答：他人のレスを見ずに回答':'相互反論：他人のレスを読んで再評価'}</div>${round.map(p=>renderPost(p,++no,t.created)).join('')}`).join('');
+  $('#thread').innerHTML=`<div class="thread-head"><h2 class="thread-title">${esc(t.title)}</h2><div class="thread-meta"><span>${state.selectedResidents.length} residents</span><span>${state.sources.filter(s=>s.selected).length} sources</span><span>${esc(ENGINES.find(e=>e.id===state.engine)?.label||state.engine)}</span></div></div><div class="thread-tools"><button id="shareBtn" type="button">共有</button><button id="copyBtn" type="button">本文コピー</button>${t.isDemo?'<span class="demo-flag">LOCAL DEMO / AI未接続</span>':''}</div>${op}${rounds}<div class="summary"><h3>現在の争点</h3><p>・初出、普及、機構、影響を同じ「重要性」で潰してよいか。</p><p>${t.isDemo?'・このスレはUI確認用。資料検索・Web探索は実行していない。':'・実エンジン出力。各レスの根拠欄から参照を確認する。'}</p></div>`;
+  $('#shareBtn').onclick=shareThread;
+  $('#copyBtn').onclick=()=>navigator.clipboard?.writeText(threadText()).then(()=>toast('スレ本文をコピーしました'));
 }
 function threadText(){
-  if(!state.thread)return '';
-  let n=1;
-  return [state.thread.title,`1 名前：スレ主\n${state.thread.body}`,'',...state.thread.posts.flatMap((round,ri)=>[`--- ROUND ${ri} ---`,...round.map(p=>`${++n} 名前：${residentName(p.resident)}\n${p.text}`)])].join('\n');
+  if(!state.thread)return '';let n=1;
+  const lines=[state.thread.title,`1 名前：スレ主\n${state.thread.body}`];
+  (state.thread.posts||[]).forEach(round=>round.forEach(p=>lines.push(`${++n} 名前：${residentName(p.resident)}\n${p.text}`)));
+  return lines.join('\n\n');
 }
 function encodeState(){
-  const payload={v:2,mode:state.mode,residents:state.selectedResidents,sources:state.sources.map(({id,name,kind,selected})=>({id,name,kind,selected})),title:$('#threadTitle').value,body:$('#threadBody').value,thread:state.thread};
-  const raw=encodeURIComponent(JSON.stringify(payload));
-  return btoa(unescape(raw)).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');
+  const payload={v:2,mode:state.mode,engine:state.engine,residents:state.selectedResidents,sources:state.sources.map(({id,name,kind,selected})=>({id,name,kind,selected})),title:$('#threadTitle').value,body:$('#threadBody').value,thread:state.thread};
+  const bytes=new TextEncoder().encode(JSON.stringify(payload));let bin='';for(const b of bytes)bin+=String.fromCharCode(b);return btoa(bin).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');
 }
 function decodeState(hash){
-  try{
-    const b=hash.replace(/^#s=/,'').replace(/-/g,'+').replace(/_/g,'/');
-    const json=decodeURIComponent(escape(atob(b)));
-    return JSON.parse(json);
-  }catch{return null}
+  try{let b=hash.replace(/^#s=/,'').replace(/-/g,'+').replace(/_/g,'/');while(b.length%4)b+='=';const bin=atob(b);const bytes=Uint8Array.from(bin,c=>c.charCodeAt(0));return JSON.parse(new TextDecoder().decode(bytes));}catch{return null}
 }
-function share(){
-  const encoded=encodeState();
-  const url=`${location.origin}${location.pathname}#s=${encoded}`;
-  navigator.clipboard?.writeText(url).then(()=>toast('共有URLをコピーしました'));
-  history.replaceState(null,'',`#s=${encoded}`);
+async function shareThread(){
+  const url=`${location.origin}${location.pathname}#s=${encodeState()}`;
+  history.replaceState(null,'',`#s=${encodeState()}`);
+  if(navigator.share){try{await navigator.share({title:state.thread?.title||'COUNCIL LAB',url});return}catch{}}
+  await navigator.clipboard?.writeText(url);toast('共有URLをコピーしました');
 }
-function toast(msg){const t=$('#toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),1600)}
 function loadShared(){
-  if(!location.hash.startsWith('#s='))return;
-  const p=decodeState(location.hash);if(!p)return;
-  state.mode=p.mode||state.mode;
-  state.selectedResidents=p.residents||state.selectedResidents;
-  if(Array.isArray(p.sources))state.sources=p.sources.map(s=>({...s,connected:s.id==='web'||s.kind==='Web URL'}));
-  state.thread=p.thread||null;
-  $('#threadTitle').value=p.title||'';
-  $('#threadBody').value=p.body||'';
+  if(!location.hash.startsWith('#s='))return;const p=decodeState(location.hash);if(!p)return;
+  state.mode=p.mode||state.mode;state.engine=p.engine||state.engine;state.selectedResidents=p.residents||state.selectedResidents;
+  if(Array.isArray(p.sources))state.sources=p.sources.map(s=>({...s,connected:false}));
+  state.thread=p.thread||null;$('#threadTitle').value=p.title||'';$('#threadBody').value=p.body||'';
 }
-function renderAll(){renderModes();renderSources();renderResidents();renderThread()}
-$('#addSource').onclick=()=>{const v=$('#customSource').value.trim();if(!v)return;state.sources.push({id:`url-${Date.now()}`,name:v,kind:'Web URL',selected:true,connected:true});$('#customSource').value='';renderSources()};
-$('#generate').onclick=makeThread;
+function toast(msg){const el=$('#toast');el.textContent=msg;el.classList.add('show');setTimeout(()=>el.classList.remove('show'),1600)}
+function renderAll(){renderModes();renderEngines();renderEngineStatus();renderSources();renderResidents();renderThread()}
+$('#addSource').onclick=()=>{const v=$('#customSource').value.trim();if(!v)return;state.sources.push({id:`url-${Date.now()}`,name:v,kind:'Web URL',selected:true,connected:false});$('#customSource').value='';renderSources()};
+$('#generate').onclick=runCouncil;
 $('#shuffle').onclick=()=>{autoPick();renderResidents()};
-loadShared();
-renderAll();
+$('#apiEndpoint').value=localStorage.getItem('councilApiEndpoint')||'';
+$('#apiEndpoint').addEventListener('change',()=>{const v=$('#apiEndpoint').value.trim();if(v)localStorage.setItem('councilApiEndpoint',v);else localStorage.removeItem('councilApiEndpoint');renderEngineStatus();});
+loadShared();renderAll();
 </script>
 </body>
 </html>
