@@ -1,5 +1,9 @@
 ---
 const { items } = Astro.props;
+const base = import.meta.env.BASE_URL;
+const resolveImage = (path: string) => /^https?:\/\//.test(path)
+  ? path
+  : `${base}${path.replace(/^\//, '')}`;
 ---
 <section class="section shell" aria-labelledby="deep">
   <h2 id="deep">さらに詳しく</h2>
@@ -10,8 +14,30 @@ const { items } = Astro.props;
         <div class="copy prose">
           {item.subtitle && <h3>{item.subtitle}</h3>}
           {item.paragraphs.map((paragraph: string) => <p>{paragraph}</p>)}
+          {item.images?.length > 0 && (
+            <div class="deep-media">
+              {item.images.map((image: any) => (
+                <figure>
+                  <img
+                    src={resolveImage(image.src)}
+                    alt={image.alt || image.caption || `${item.title} 補足画像`}
+                    loading="lazy"
+                    decoding="async"
+                  />
+                  {image.caption && <figcaption>{image.caption}</figcaption>}
+                </figure>
+              ))}
+            </div>
+          )}
         </div>
       </details>
     ))}
   </div>
 </section>
+
+<style>
+  .deep-media{display:grid;gap:18px;margin-top:24px}
+  .deep-media figure{margin:0}
+  .deep-media img{display:block;width:100%;height:auto}
+  .deep-media figcaption{margin-top:8px;font-size:13px;line-height:1.7;opacity:.72}
+</style>
