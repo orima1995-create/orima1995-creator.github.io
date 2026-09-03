@@ -14,6 +14,24 @@ jobs:
     steps:
       - name: Checkout staging
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Guard design-only scope
+        run: |
+          set -e
+          git fetch origin main
+          changed=$(git diff --name-only origin/main...HEAD -- \
+            src/content \
+            src/data/history-content.json \
+            src/data/history-catalog.ts \
+            src/data/owners-directory.json \
+            public/images)
+          if [ -n "$changed" ]; then
+            echo 'Editorial content or source images changed in mobile staging:'
+            echo "$changed"
+            exit 1
+          fi
 
       - name: Setup Node
         uses: actions/setup-node@v4
@@ -45,7 +63,7 @@ jobs:
           grep -R -Fq 'prefers-reduced-motion' dist/_astro || { echo 'mobile-v1 CSS missing from build'; exit 1; }
           grep -R -Fq 'grid-template-columns:1fr' dist/_astro || { echo 'single-column mobile rule missing'; exit 1; }
 
-      - name: Guard editorial content
+      - name: Guard editorial output
         run: |
           set -e
           grep -Fq '鳴る黄金のクロノメーター' dist/cyma-time-o-vox/index.html
