@@ -13,11 +13,11 @@ const description = '異なる判断軸を持つ住民を召喚し、資料パ�
   <meta name="description" content={description} />
   <style>
     :root{
-      --bg:#f0f0e8;--panel:#fafaf5;--ink:#171717;--muted:#62625b;--line:#b8b8aa;
-      --accent:#1f5e3b;--accent2:#8a2d21;--source:#e8eee8;--warn:#fff4d6;
+      --bg:#efefe8;--panel:#f8f8f2;--ink:#171717;--muted:#66665d;--line:#b7b7aa;
+      --accent:#1b5e20;--link:#0000ee;--accent2:#8a2d21;--warn:#fff4d6;
     }
     *{box-sizing:border-box}
-    html{background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif}
+    html{-webkit-text-size-adjust:100%;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif}
     body{margin:0;line-height:1.65}
     button,input,textarea,select{font:inherit}
     button{cursor:pointer}
@@ -39,7 +39,7 @@ const description = '異なる判断軸を持つ住民を召喚し、資料パ�
     textarea{min-height:108px;resize:vertical}
     .modes,.chips{display:flex;flex-wrap:wrap;gap:6px}
     .mode,.chip{border:1px solid #98988a;background:#fff;padding:6px 8px;font-size:12px}
-    .mode[aria-pressed="true"],.chip[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:white}
+    .mode[aria-pressed="true"],.chip[aria-pressed="true"]{background:#2f6d3b;border-color:#2f6d3b;color:white}
     .source-row{display:grid;grid-template-columns:20px 1fr auto;gap:7px;align-items:start;padding:8px 0;border-bottom:1px dotted var(--line);font-size:12px}
     .source-row:last-child{border-bottom:0}
     .source-row small{color:var(--muted)}
@@ -56,33 +56,56 @@ const description = '異なる判断軸を持つ住民を召喚し、資料パ�
     .resident-name{font-size:12px;font-weight:700}
     .resident-role{font-size:10px;color:var(--muted)}
     .resident-source{margin-top:5px;font-size:10px;color:var(--muted)}
-    .thread{min-height:640px}
+
+    .thread{min-height:640px;background:#f7f7f1}
     .thread-empty{padding:60px 20px;text-align:center;color:var(--muted);font-size:13px}
-    .thread-head{padding:13px 14px;border-bottom:1px solid var(--line);background:#f5f5ee}
-    .thread-head h2{margin:0;font-size:17px;line-height:1.4}
-    .thread-meta{display:flex;flex-wrap:wrap;gap:10px;margin-top:7px;color:var(--muted);font-size:10px}
-    .post{padding:14px;border-bottom:1px solid var(--line);background:var(--panel)}
-    .post:nth-child(even){background:#f5f5ee}
-    .post-meta{font-family:monospace;font-size:11px;color:var(--accent);overflow-wrap:anywhere}
-    .post-meta .no{color:var(--ink);font-weight:700;margin-right:7px}
-    .post-body{margin:7px 0 0;font-size:14px;white-space:pre-wrap}
-    .evidence{display:flex;flex-wrap:wrap;gap:4px;margin-top:9px}
-    .badge{border:1px solid #aab3aa;background:var(--source);padding:2px 5px;font-size:9px}
-    .badge.unverified{background:#f6e6e1;border-color:#caa79d;color:#76271d}
-    .round{padding:7px 14px;border-bottom:1px solid var(--line);background:#deded2;font-size:10px;font-weight:700;letter-spacing:.08em}
-    .thread-tools{display:flex;flex-wrap:wrap;gap:7px;padding:10px 14px;border-bottom:1px solid var(--line);background:#efefe7}
+    .thread-head{padding:15px 14px 12px;border-bottom:1px solid var(--line);background:#ededdf}
+    .thread-head h2{margin:0;color:#7d1d16;font-size:18px;line-height:1.5;font-weight:700}
+    .thread-meta{display:flex;flex-wrap:wrap;gap:7px 12px;margin-top:7px;color:var(--muted);font-size:10px}
+    .thread-tools{display:flex;flex-wrap:wrap;gap:7px;padding:9px 12px 13px;border-bottom:1px solid var(--line);background:#f4f4ec}
     .thread-tools button{border:1px solid #87877a;background:#fff;padding:5px 8px;font-size:11px}
-    .summary{margin:15px 14px;border:1px solid var(--ink);background:#fff;padding:12px}
+
+    .round{margin:18px 10px 8px;padding:7px 2px 4px;border-top:3px double #9f9f93;color:#67675f;font-family:monospace;font-size:10px;font-weight:700;letter-spacing:.04em}
+    .post{margin:0 8px 10px;padding:10px 6px 17px;border-bottom:1px dotted #c7c7ba;background:transparent}
+    .post:last-of-type{border-bottom:0}
+    .post-meta{display:flex;flex-wrap:wrap;align-items:baseline;gap:2px 7px;color:#444;font-size:12px;line-height:1.65;overflow-wrap:anywhere}
+    .post-meta .no{color:var(--link);font-weight:700;text-decoration:underline;text-underline-offset:2px}
+    .post-meta .name{color:var(--accent);font-weight:700}
+    .post-meta .date,.post-meta .id,.post-meta .confidence{color:#555}
+    .post-meta .id{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,monospace;font-size:11px}
+    .post-body{margin:9px 0 0 2.1em;font-size:15px;line-height:1.78;overflow-wrap:anywhere;word-break:normal}
+    .post-body .quote{color:var(--link)}
+    .post-body.aa{
+      margin:10px 0 0 2.1em;padding:0;border:0;background:transparent;color:#111;
+      font-family:"MS PGothic","ＭＳ Ｐゴシック",IPAMonaPGothic,Mona,Osaka,ui-monospace,monospace;
+      font-size:16px;line-height:16px;letter-spacing:0;white-space:pre;overflow-x:auto;overflow-y:hidden;
+      -webkit-overflow-scrolling:touch;
+    }
+    .evidence{margin:10px 0 0 2.1em;color:#777;font-size:10px;line-height:1.5}
+    .evidence .unverified{color:#8a2d21}
+    .summary{margin:24px 12px 15px;padding:12px 13px;border:1px solid #98988d;background:#fff}
     .summary h3{margin:0 0 7px;font-size:12px}
-    .summary p{margin:4px 0;font-size:12px}
+    .summary p{margin:5px 0;font-size:12px;line-height:1.7}
     .share-toast{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);padding:8px 12px;background:#111;color:#fff;font-size:11px;opacity:0;pointer-events:none;transition:.2s}
     .share-toast.show{opacity:1}
     .footnote{margin-top:14px;color:var(--muted);font-size:10px}
+
     @media(max-width:760px){
       .grid{grid-template-columns:1fr}
       .thread{min-height:380px}
       .mast{align-items:start}
       .actions{grid-template-columns:1fr 1fr}
+      .thread-head{padding:14px 11px 11px}
+      .thread-head h2{font-size:17px;line-height:1.55}
+      .thread-tools{padding-inline:10px}
+      .round{margin:20px 8px 7px}
+      .post{margin:0 7px 12px;padding:9px 3px 19px}
+      .post-meta{font-size:12px;line-height:1.72;gap:1px 6px}
+      .post-meta .id{font-size:10px}
+      .post-body{margin:10px 0 0 1.25em;font-size:15px;line-height:1.82}
+      .post-body.aa{margin-left:.4em;font-size:16px;line-height:16px}
+      .evidence{margin:11px 0 0 1.25em;font-size:10px}
+      .summary{margin:24px 8px 12px}
     }
   </style>
 </head>
@@ -157,11 +180,12 @@ const RESIDENTS = [
   {id:'editor',name:'編集者',role:'面白さと断定リスクを分ける',bias:'物語性へ寄せがち',modes:['watch','business','general']},
   {id:'roaster',name:'焼却炉の名無しさん',role:'余計な自己正当化を焼く',bias:'火力が高すぎる',modes:['roast','business','general']},
   {id:'minimal',name:'ミニマリスト',role:'そもそも必要かを見る',bias:'収集や研究を過剰と見なしがち',modes:['watch','business','general']},
-  {id:'wild',name:'野良の変人',role:'遠い分野から変な接続を出す',bias:'再現性が低い',modes:['watch','business','general','roast']}
+  {id:'wild',name:'野良の変人',role:'遠い分野から変な接続を出す',bias:'再現性が低い',modes:['watch','business','general','roast']},
+  {id:'aa',name:'AA職人',role:'空気を一枚のAAで刺す',bias:'情報量は少ない',modes:['watch','business','general','roast']}
 ];
 let state = {
   mode:'watch',
-  selectedResidents:['source','mechanic','market','devil','editor','wild'],
+  selectedResidents:['source','mechanic','market','devil','editor','wild','aa'],
   sources:[
     {id:'alarm-am-arm',name:'Alarm am Arm',kind:'PDF / Project source',selected:true,connected:false},
     {id:'alarm-wristwatch',name:'The Alarm Wristwatch',kind:'PDF / Project source',selected:true,connected:false},
@@ -178,7 +202,7 @@ function renderModes(){
 }
 function autoPick(){
   const candidates=RESIDENTS.filter(r=>r.modes.includes(state.mode));
-  const core=state.mode==='watch'?['source','mechanic','market','devil','editor']:state.mode==='business'?['cfo','ux','devil','editor']:state.mode==='roast'?['roaster','devil','wild','ux']:['ux','devil','editor','wild'];
+  const core=state.mode==='watch'?['source','mechanic','market','devil','editor']:state.mode==='business'?['cfo','ux','devil','editor']:state.mode==='roast'?['roaster','devil','wild','ux','aa']:['ux','devil','editor','wild'];
   const random=candidates.filter(r=>!core.includes(r.id)).sort(()=>Math.random()-.5).slice(0,2).map(r=>r.id);
   state.selectedResidents=[...new Set([...core,...random])];
 }
@@ -189,13 +213,24 @@ function renderSources(){
 function renderResidents(){
   $('#residentChips').innerHTML=RESIDENTS.map(r=>`<button type="button" class="chip" data-res="${r.id}" aria-pressed="${state.selectedResidents.includes(r.id)}">${r.name}</button>`).join('');
   document.querySelectorAll('[data-res]').forEach(b=>b.onclick=()=>{
-    const id=b.dataset.res; state.selectedResidents=state.selectedResidents.includes(id)?state.selectedResidents.filter(x=>x!==id):[...state.selectedResidents,id]; renderResidents();
+    const id=b.dataset.res;
+    state.selectedResidents=state.selectedResidents.includes(id)?state.selectedResidents.filter(x=>x!==id):[...state.selectedResidents,id];
+    renderResidents();
   });
   $('#residentDetail').innerHTML=state.selectedResidents.map(id=>RESIDENTS.find(r=>r.id===id)).filter(Boolean).map(r=>`<div class="resident-card"><div class="resident-top"><span class="resident-name">${r.name}</span><span class="resident-role">${r.role}</span></div><div class="resident-source">弱点：${r.bias}</div></div>`).join('');
 }
 function demoReply(r,idx,title,body,selectedSources){
   const src=selectedSources.length?selectedSources[idx%selectedSources.length]:null;
-  const prefix=idx===0?'まず前提を分ける。':idx===1?'>>1 そこだけでは足りない。':idx===2?'価格や知名度と歴史的重要性は別軸だ。':idx===3?'そもそも「マイルストーン」の定義を固定してから比べるべき。':'前のレスが見落としているのは、評価軸を一つに潰している点。';
+  if(r.id==='aa'){
+    return {
+      resident:r.id,
+      text:'　　　∧＿∧\n　　（　´∀｀）＜ まず資料つないでから決めようぜ\n　　（　　　　）\n　　 ｜ ｜　|\n　　（_＿）＿）',
+      source:null,
+      evidence:'AA / 資料なし',
+      confidence:42
+    };
+  }
+  const prefix=idx===0?'>>1 まず前提を分ける。':idx===1?'>>1 そこだけでは足りない。':idx===2?'>>1 価格や知名度と歴史的重要性は別軸だ。':idx===3?'>>1 そもそも「マイルストーン」の定義を固定してから比べるべき。':'>>1 前提として、評価軸を一つに潰さない方がいい。';
   let angle='';
   if(r.id==='source') angle='資料上の明記、後世の専門書による位置づけ、こちらの推論を別々に表示したい。';
   else if(r.id==='mechanic') angle='普及数だけでなく、香箱構成・操作系・音響構造が後続設計へ何を残したかを見る。';
@@ -215,9 +250,9 @@ function makeThread(){
   const selected=state.selectedResidents.map(id=>RESIDENTS.find(r=>r.id===id)).filter(Boolean);
   const selectedSources=state.sources.filter(s=>s.selected);
   const round0=selected.map((r,i)=>demoReply(r,i,title,body,selectedSources));
-  const round1=selected.slice(0,Math.min(4,selected.length)).map((r,i)=>({
+  const round1=selected.filter(r=>r.id!=='aa').slice(0,Math.min(4,selected.length)).map((r,i)=>({
     resident:r.id,
-    text:`>>${(i%round0.length)+1}\n${i%2===0?'その主張を残すなら、反証条件を一つ明示した方がいい。':'そこは同意。ただし資料で確認できた範囲と推論を同じ文に入れない方がいい。'}`,
+    text:`>>${2+(i%Math.max(round0.length,1))}\n${i%2===0?'その主張を残すなら、反証条件を一つ明示した方がいい。':'そこは同意。ただし資料で確認できた範囲と推論を同じ文に入れない方がいい。'}`,
     source:selectedSources[(i+1)%Math.max(selectedSources.length,1)]?.name||null,
     evidence:selectedSources.length?'資料指定・未検証':'資料なし',
     confidence:61+i*5
@@ -226,45 +261,90 @@ function makeThread(){
   renderThread();
 }
 function residentName(id){return RESIDENTS.find(r=>r.id===id)?.name||id}
+function postId(seed){
+  let h=2166136261;
+  for(const c of String(seed)){h^=c.charCodeAt(0);h=Math.imul(h,16777619)}
+  return Math.abs(h>>>0).toString(36).slice(0,8).toUpperCase().padEnd(8,'0');
+}
+function postDate(iso,offset=0){
+  const d=new Date(new Date(iso).getTime()+offset*17000);
+  const w=['日','月','火','水','木','金','土'][d.getDay()];
+  const z=n=>String(n).padStart(2,'0');
+  return `${d.getFullYear()}/${z(d.getMonth()+1)}/${z(d.getDate())}(${w}) ${z(d.getHours())}:${z(d.getMinutes())}:${z(d.getSeconds())}`;
+}
+function looksLikeAA(text){
+  const s=String(text||'');
+  const lines=s.split('\n');
+  if(lines.length<3)return false;
+  const marks=(s.match(/[∧∨＿￣┌┐└┘│─／＼（）()´｀ω∀ﾟДд・｜|]/g)||[]).length;
+  const shaped=lines.filter(line=>/^[　\s]*(?:[∧／＼（(|｜＿￣]|.{0,4}[∧＿￣])/.test(line)).length;
+  return marks>=6||shaped>=3;
+}
+function renderPostBody(text){
+  if(looksLikeAA(text))return `<pre class="post-body aa">${esc(text)}</pre>`;
+  const html=esc(text).split('\n').map(line=>/^&gt;&gt;\d+/.test(line)?`<span class="quote">${line}</span>`:line).join('<br>');
+  return `<div class="post-body">${html}</div>`;
+}
+function renderMeta(no,name,created,seed,confidence){
+  return `<div class="post-meta"><span class="no">${no}</span><span>名前：</span><span class="name">${esc(name)}</span><span class="date">${postDate(created,no)}</span><span class="id">ID:${postId(seed)}</span>${Number.isFinite(confidence)?`<span class="confidence">確信度 ${confidence}%</span>`:''}</div>`;
+}
 function renderThread(){
   if(!state.thread){$('#thread').innerHTML='<div class="thread-empty">左で議題・資料・住民を決めて、議論を開始。</div>';return;}
   const t=state.thread;
-  let no=0;
-  const rounds=t.posts.map((round,ri)=>`<div class="round">ROUND ${ri} — ${ri===0?'独立回答':'相互反論'}</div>${round.map(p=>{no++;return `<article class="post"><div class="post-meta"><span class="no">${no}</span>名前：${esc(residentName(p.resident))}　確信度 ${p.confidence}%</div><div class="post-body">${esc(p.text)}</div><div class="evidence">${p.source?`<span class="badge">${esc(p.source)}</span>`:''}<span class="badge ${p.evidence.includes('未')?'unverified':''}">${esc(p.evidence)}</span></div></article>`}).join('')}`).join('');
-  $('#thread').innerHTML=`<div class="thread-head"><h2>${esc(t.title)}</h2><div class="thread-meta"><span>${state.selectedResidents.length} residents</span><span>${state.sources.filter(s=>s.selected).length} sources</span><span>${esc(MODES.find(m=>m.id===state.mode)?.label||state.mode)}</span></div></div><div class="thread-tools"><button id="shareBtn" type="button">URLを共有</button><button id="copyText" type="button">スレ本文をコピー</button></div>${rounds}<div class="summary"><h3>現在の争点</h3><p>・歴史的重要性を「初出」「普及」「機構」「影響」のどれで測るか。</p><p>・Source Packが未接続のため、現段階では資料に基づく確定裁定はしない。</p></div>`;
+  let no=1;
+  const op=`<article class="post op">${renderMeta(1,'スレ主',t.created,`${t.title}-op`,null)}${renderPostBody(t.body||'本文なし')}</article>`;
+  const rounds=t.posts.map((round,ri)=>{
+    const label=ri===0?'住民の独立回答':'相互反論';
+    return `<div class="round">--- ROUND ${ri} / ${label} ---</div>${round.map(p=>{
+      no++;
+      const evidence=p.source?`資料：${esc(p.source)} ／ <span class="${p.evidence.includes('未')?'unverified':''}">${esc(p.evidence)}</span>`:`${esc(p.evidence)}`;
+      return `<article class="post">${renderMeta(no,residentName(p.resident),t.created,`${p.resident}-${no}`,p.confidence)}${renderPostBody(p.text)}<div class="evidence">${evidence}</div></article>`;
+    }).join('')}`;
+  }).join('');
+  $('#thread').innerHTML=`<div class="thread-head"><h2>${esc(t.title)}</h2><div class="thread-meta"><span>レス ${no}</span><span>${state.selectedResidents.length} residents</span><span>${state.sources.filter(s=>s.selected).length} sources</span><span>${esc(MODES.find(m=>m.id===state.mode)?.label||state.mode)}</span></div></div><div class="thread-tools"><button id="shareBtn" type="button">URLを共有</button><button id="copyText" type="button">スレ本文をコピー</button></div>${op}${rounds}<div class="summary"><h3>現在の争点</h3><p>・歴史的重要性を「初出」「普及」「機構」「影響」のどれで測るか。</p><p>・Source Packが未接続のため、現段階では資料に基づく確定裁定はしない。</p></div>`;
   $('#shareBtn').onclick=share;
   $('#copyText').onclick=()=>navigator.clipboard?.writeText(threadText()).then(()=>toast('スレ本文をコピーしました'));
 }
 function threadText(){
   if(!state.thread)return '';
-  let n=0;return [state.thread.title,state.thread.body,'',...state.thread.posts.flatMap((round,ri)=>[`--- ROUND ${ri} ---`,...round.map(p=>`${++n} 名前：${residentName(p.resident)}\n${p.text}`)])].join('\n');
+  let n=1;
+  return [state.thread.title,`1 名前：スレ主\n${state.thread.body}`,'',...state.thread.posts.flatMap((round,ri)=>[`--- ROUND ${ri} ---`,...round.map(p=>`${++n} 名前：${residentName(p.resident)}\n${p.text}`)])].join('\n');
 }
 function encodeState(){
-  const payload={v:1,mode:state.mode,residents:state.selectedResidents,sources:state.sources.map(({id,name,kind,selected})=>({id,name,kind,selected})),title:$('#threadTitle').value,body:$('#threadBody').value,thread:state.thread};
+  const payload={v:2,mode:state.mode,residents:state.selectedResidents,sources:state.sources.map(({id,name,kind,selected})=>({id,name,kind,selected})),title:$('#threadTitle').value,body:$('#threadBody').value,thread:state.thread};
   const raw=encodeURIComponent(JSON.stringify(payload));
   return btoa(unescape(raw)).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');
 }
 function decodeState(hash){
-  try{const b=hash.replace(/^#s=/,'').replace(/-/g,'+').replace(/_/g,'/');const raw=decodeURIComponent(escape(atob(b)));return JSON.parse(decodeURIComponent(raw));}catch{return null}
+  try{
+    const b=hash.replace(/^#s=/,'').replace(/-/g,'+').replace(/_/g,'/');
+    const json=decodeURIComponent(escape(atob(b)));
+    return JSON.parse(json);
+  }catch{return null}
 }
 function share(){
-  const url=`${location.origin}${location.pathname}#s=${encodeState()}`;
+  const encoded=encodeState();
+  const url=`${location.origin}${location.pathname}#s=${encoded}`;
   navigator.clipboard?.writeText(url).then(()=>toast('共有URLをコピーしました'));
-  history.replaceState(null,'',`#s=${encodeState()}`);
+  history.replaceState(null,'',`#s=${encoded}`);
 }
 function toast(msg){const t=$('#toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),1600)}
 function loadShared(){
   if(!location.hash.startsWith('#s='))return;
   const p=decodeState(location.hash);if(!p)return;
-  state.mode=p.mode||state.mode;state.selectedResidents=p.residents||state.selectedResidents;
-  if(Array.isArray(p.sources))state.sources=p.sources.map(s=>({...s,connected:s.id==='web'}));
-  state.thread=p.thread||null;$('#threadTitle').value=p.title||'';$('#threadBody').value=p.body||'';
+  state.mode=p.mode||state.mode;
+  state.selectedResidents=p.residents||state.selectedResidents;
+  if(Array.isArray(p.sources))state.sources=p.sources.map(s=>({...s,connected:s.id==='web'||s.kind==='Web URL'}));
+  state.thread=p.thread||null;
+  $('#threadTitle').value=p.title||'';
+  $('#threadBody').value=p.body||'';
 }
 function renderAll(){renderModes();renderSources();renderResidents();renderThread()}
 $('#addSource').onclick=()=>{const v=$('#customSource').value.trim();if(!v)return;state.sources.push({id:`url-${Date.now()}`,name:v,kind:'Web URL',selected:true,connected:true});$('#customSource').value='';renderSources()};
 $('#generate').onclick=makeThread;
 $('#shuffle').onclick=()=>{autoPick();renderResidents()};
-loadShared();renderAll();
+loadShared();
+renderAll();
 </script>
 </body>
 </html>
