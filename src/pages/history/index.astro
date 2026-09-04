@@ -99,7 +99,7 @@ const schema = {
     <meta name="theme-color" content="#171410" />
     <SeoHead title={title} description={description} path="history/" type="article" schema={schema} />
   </head>
-  <body class="history-v8">
+  <body class="history-v8 history-v9">
     <SectionMast rightLabel="HISTORY" />
 
     <main>
@@ -184,7 +184,6 @@ const schema = {
                   <small class="v8-meta">{entry.meta}</small>
                   <h3>{entry.name}</h3>
                   <p class="v8-hook">{entry.hook}</p>
-                  <p class="v8-summary">{entry.cardSummary}</p>
                   <span class="v8-status">{entry.cardStatus}</span>
                 </article>
               </>
@@ -209,24 +208,24 @@ const schema = {
             <p>{era1940s.intro}</p>
           </div>
 
-          <div class="v8-1940-stage">
+          <div class="v9-single-stack">
             {milestones1940s.map((entry) => (
-              <article class="v8-cricket">
+              <article class="v9-single-milestone">
                 <small class="v8-meta">{entry.meta}</small>
                 <h3>{entry.name}</h3>
-                <p class="v8-hook">{entry.hook}</p>
-                <p class="v8-summary">{entry.cardSummary}</p>
+                <p>{entry.hook}</p>
                 <span class="v8-status">{entry.cardStatus}</span>
               </article>
             ))}
 
             {owners1940s.map((entry) => (
-              <article class="v8-owner-single">
-                <small>OWNER'S NOTE / {entry.meta}</small>
-                <h3>{entry.name}</h3>
-                <p class="v8-hook">{entry.hook}</p>
-                <p class="v8-summary">{entry.cardSummary}</p>
-                <span class="v8-status">{entry.cardStatus}</span>
+              <article class="v9-owner-row">
+                <div>
+                  <small>OWNER'S NOTE</small>
+                  <strong>{entry.name}</strong>
+                </div>
+                <span>{entry.hook}</span>
+                <b aria-hidden="true">→</b>
               </article>
             ))}
           </div>
@@ -259,7 +258,6 @@ const schema = {
                   <small class="v8-meta">{entry.meta}</small>
                   <h3>{entry.name}</h3>
                   <p class="v8-hook">{entry.hook}</p>
-                  <p class="v8-summary">{entry.cardSummary}</p>
                   <span class="v8-status">{entry.cardStatus}</span>
                 </article>
               ))}
@@ -268,29 +266,29 @@ const schema = {
 
           <section class="v8-rail-block" aria-labelledby="owners-1950s">
             <div class="v8-rail-head">
-              <span id="owners-1950s">OWNER'S NOTES / 所有個体から見る。</span>
-              <span>SWIPE →</span>
+              <span id="owners-1950s">OWNER'S NOTES</span>
+              <span>所有個体から見る。 / SWIPE →</span>
             </div>
 
-            <div class="v8-swipe-rail v8-owner-rail" aria-label="1950年代の所有個体">
+            <div class="v8-swipe-rail v9-owner-rail" aria-label="1950年代の所有個体">
               {owners1950s.map(({ entry, note }) => (
                 note ? (
-                  <a class="v8-card v8-owner-card" href={`${base}${note.href.replace(/^\//, '')}`}>
-                    <div class="v8-owner-media">
+                  <a class="v9-owner-card" href={`${base}${note.href.replace(/^\//, '')}`}>
+                    <div class="v9-owner-thumb">
                       <img src={`${base}${note.image.replace(/^\//, '')}`} alt="" loading="lazy" />
                     </div>
-                    <small class="v8-meta">{entry.meta}</small>
-                    <h3>{entry.name}</h3>
-                    <p class="v8-summary">{entry.cardSummary}</p>
-                    <span class="v8-owner-arrow" aria-hidden="true">→</span>
+                    <div class="v9-owner-caption">
+                      <strong>{entry.name}</strong>
+                      <span aria-hidden="true">→</span>
+                    </div>
                   </a>
                 ) : (
-                  <article class="v8-card v8-owner-card">
-                    <div class="v8-owner-textonly">OWNER'S NOTE</div>
-                    <small class="v8-meta">{entry.meta}</small>
-                    <h3>{entry.name}</h3>
-                    <p class="v8-summary">{entry.cardSummary}</p>
-                    <span class="v8-status">{entry.cardStatus}</span>
+                  <article class="v9-owner-card v9-owner-card-text">
+                    <div class="v9-owner-thumb v9-owner-empty">OWNER'S NOTE</div>
+                    <div class="v9-owner-caption">
+                      <strong>{entry.name}</strong>
+                      <span aria-hidden="true">→</span>
+                    </div>
                   </article>
                 )
               ))}
@@ -325,7 +323,6 @@ const schema = {
                   <small class="v8-meta">{entry.meta}</small>
                   <h3>{entry.name}</h3>
                   <p class="v8-hook">{entry.hook}</p>
-                  <p class="v8-summary">{entry.cardSummary}</p>
                   <span class="v8-status">{entry.cardStatus}</span>
                 </article>
               ))}
@@ -360,7 +357,6 @@ const schema = {
                   <small class="v8-meta">{entry.meta}</small>
                   <h3>{entry.name}</h3>
                   <p class="v8-hook">{entry.hook}</p>
-                  <p class="v8-summary">{entry.cardSummary}</p>
                   <span class="v8-status">{entry.cardStatus}</span>
                 </article>
               ))}
