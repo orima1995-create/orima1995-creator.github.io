@@ -1,8 +1,8 @@
-name: Staging HISTORY v9 Check
+name: Staging HISTORY v10 Check
 
 on:
   push:
-    branches: ["staging/history-v9"]
+    branches: ["staging/history-v10"]
   workflow_dispatch:
 
 permissions:
@@ -28,7 +28,7 @@ jobs:
             src/data/owners-directory.json \
             public/images)
           if [ -n "$changed" ]; then
-            echo 'Protected editorial data or source images changed in HISTORY v9:'
+            echo 'Protected editorial data or source images changed in HISTORY v10:'
             echo "$changed"
             exit 1
           fi
@@ -57,35 +57,51 @@ jobs:
             test -f "$f" || { echo "missing file: $f"; exit 1; }
           done
 
-      - name: Verify HISTORY v9 density system
+      - name: Verify HISTORY v10 completion criteria
         run: |
           set -e
-          grep -Fq 'v8-cover' dist/history/index.html || { echo 'dark HISTORY cover missing'; exit 1; }
-          grep -Fq 'history-v9' dist/history/index.html || { echo 'v9 marker missing'; exit 1; }
-          grep -Fq 'v9-single-milestone' dist/history/index.html || { echo 'compact single milestone missing'; exit 1; }
-          grep -Fq 'v9-owner-row' dist/history/index.html || { echo 'compact single owner row missing'; exit 1; }
-          grep -Fq 'v9-owner-rail' dist/history/index.html || { echo 'compact owner swipe rail missing'; exit 1; }
-          grep -Fq 'v9-owner-card' dist/history/index.html || { echo 'owner thumbnail cards missing'; exit 1; }
 
-          rails=$(grep -o 'v8-swipe-rail' dist/history/index.html | wc -l)
-          if [ "$rails" -lt 4 ]; then
-            echo "expected at least 4 swipe rails, found $rails"
+          grep -Fq 'history-v10' dist/history/index.html || { echo 'v10 marker missing'; exit 1; }
+          grep -Fq 'v10-cover' dist/history/index.html || { echo 'HISTORY cover missing'; exit 1; }
+          grep -Fq 'v10-milestone-rail' dist/history/index.html || { echo 'milestone rail missing'; exit 1; }
+          grep -Fq 'v10-owner-rail' dist/history/index.html || { echo 'owner note rail missing'; exit 1; }
+          grep -Fq 'v10-owner-line' dist/history/index.html || { echo 'single owner note row missing'; exit 1; }
+
+          grep -Fq 'grid-auto-columns:calc((100% - 8px)/2)' src/styles/history-v8.css || {
+            echo 'mobile rails are not exactly two-up'
+            exit 1
+          }
+
+          grep -Fq 'object-fit:contain' src/styles/history-v8.css || {
+            echo 'owner-note images are not contained'
+            exit 1
+          }
+
+          if grep -Fq 'object-fit:cover' src/styles/history-v8.css; then
+            echo 'cropping rule detected in HISTORY v10'
             exit 1
           fi
 
-          grep -Fq '1950年代のマイルストーン' dist/history/index.html
-          grep -Fq '1950年代の所有個体' dist/history/index.html
-          grep -Fq '1960年代のマイルストーン' dist/history/index.html
-          grep -Fq '1970年代のマイルストーン' dist/history/index.html
+          if grep -Fq 'margin-right:calc((100vw' src/styles/history-v8.css; then
+            echo 'partial-card teaser layout detected'
+            exit 1
+          fi
+
+          grep -Fq -- '--paper:#f2f0ea' src/styles/history-v8.css || { echo 'neutral paper palette missing'; exit 1; }
+          grep -Fq -- '--ink:#1c1a17' src/styles/history-v8.css || { echo 'neutral ink palette missing'; exit 1; }
+          grep -Fq -- '--soft:#6f6a61' src/styles/history-v8.css || { echo 'AA soft text palette missing'; exit 1; }
+          grep -Fq -- '--red:#8b3a32' src/styles/history-v8.css || { echo 'muted accent palette missing'; exit 1; }
+
           grep -Fq '所有個体から見る。' dist/history/index.html || { echo "OWNER'S NOTE definition missing"; exit 1; }
           grep -Fq '次に気になっているものと、そのデータ。' dist/history/index.html || { echo 'RESEARCH definition missing'; exit 1; }
 
-          if grep -Fq 'v8-owner-media' dist/history/index.html; then
-            echo 'verbose v8 owner card remains'
+          if grep -Fq 'history-v9' dist/history/index.html; then
+            echo 'legacy v9 markup remains'
             exit 1
           fi
-          if grep -Fq 'v8-owner-single' dist/history/index.html; then
-            echo 'oversized 1940s owner card remains'
+
+          if grep -Fq 'is-dark' dist/history/index.html; then
+            echo 'mid-page dark milestone card remains'
             exit 1
           fi
 
@@ -120,6 +136,6 @@ jobs:
       - name: Upload staging build artifact
         uses: actions/upload-artifact@v4
         with:
-          name: staging-history-v9-dist
+          name: staging-history-v10-dist
           path: dist
           retention-days: 7
