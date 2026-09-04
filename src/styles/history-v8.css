@@ -1,0 +1,618 @@
+/* HISTORY v8 — cover-first + unified swipe system */
+
+.history-v8{
+  --v8-dark:#171410;
+  --v8-paper:#f3eee4;
+  --v8-warm:#e9e0d2;
+  --v8-pale:#f7f2e9;
+  --v8-cream:#eee9df;
+}
+
+.history-v8 .section-mast{
+  position:relative;
+  z-index:20;
+  background:var(--v8-dark);
+  color:#c9c1b5;
+}
+.history-v8 .section-mast .section-menu>summary::before{
+  border-color:rgba(238,233,223,.34);
+}
+
+/* cover */
+.v8-cover{
+  min-height:calc(100svh - 64px);
+  background:
+    radial-gradient(circle at 18% 18%,rgba(170,137,99,.10),transparent 28%),
+    linear-gradient(150deg,#211d18 0%,#171410 54%,#0e0c0a 100%);
+  color:var(--v8-cream);
+}
+.v8-cover-inner{
+  min-height:calc(100svh - 64px);
+  display:flex;
+  flex-direction:column;
+  padding-top:34px;
+  padding-bottom:38px;
+}
+.v8-cover-meta{
+  display:flex;
+  justify-content:space-between;
+  gap:22px;
+  color:rgba(238,233,223,.48);
+  font-family:Georgia,"Times New Roman",serif;
+  font-size:9px;
+  letter-spacing:.17em;
+}
+.v8-cover-title{
+  margin:auto 0 0;
+  font-family:Georgia,"Times New Roman",serif;
+  font-weight:400;
+  letter-spacing:-.045em;
+}
+.v8-cover-title span{display:block}
+.v8-cover-title .history{
+  font-size:clamp(82px,15vw,142px);
+  line-height:.77;
+}
+.v8-cover-title .of-the{
+  margin:18px 0 12px .1em;
+  font-size:clamp(20px,3vw,34px);
+  line-height:1;
+  letter-spacing:.04em;
+}
+.v8-cover-title .alarm{
+  font-size:clamp(74px,13vw,124px);
+  line-height:.80;
+}
+.v8-cover-title .wristwatch{
+  margin-top:4px;
+  font-size:clamp(38px,7vw,72px);
+  line-height:.92;
+  letter-spacing:-.025em;
+}
+.v8-cover-range{
+  display:flex;
+  justify-content:space-between;
+  gap:20px;
+  margin-top:40px;
+  color:rgba(238,233,223,.56);
+  font-family:Georgia,"Times New Roman",serif;
+  font-size:9px;
+  letter-spacing:.16em;
+}
+
+/* intro + era navigation */
+.v8-intro{
+  padding:62px 0 64px;
+  border-bottom:1px solid var(--ink);
+}
+.v8-intro small{
+  display:block;
+  margin-bottom:20px;
+  color:var(--soft);
+  font-family:Georgia,"Times New Roman",serif;
+  font-size:9px;
+  letter-spacing:.16em;
+}
+.v8-intro h1{
+  margin:0;
+  font-size:clamp(28px,5vw,46px);
+  font-weight:500;
+  line-height:1.25;
+}
+.v8-intro p{
+  max-width:24em;
+  margin:26px 0 0;
+  font-size:clamp(19px,3vw,26px);
+  line-height:1.7;
+}
+
+.v8-era-nav-wrap{
+  border-bottom:1px solid var(--ink);
+}
+.v8-era-nav{
+  display:flex;
+  overflow-x:auto;
+  scrollbar-width:none;
+  -webkit-overflow-scrolling:touch;
+}
+.v8-era-nav::-webkit-scrollbar{display:none}
+.v8-era-nav a{
+  flex:0 0 auto;
+  min-width:102px;
+  display:grid;
+  gap:4px;
+  padding:14px 18px 13px 0;
+  color:inherit;
+  text-decoration:none;
+  scroll-snap-align:start;
+}
+.v8-era-nav a+a{
+  padding-left:18px;
+  border-left:1px solid var(--rule);
+}
+.v8-era-nav span{
+  color:var(--soft);
+  font-family:Georgia,"Times New Roman",serif;
+  font-size:9px;
+  letter-spacing:.14em;
+}
+.v8-era-nav strong{
+  font-family:Georgia,"Times New Roman",serif;
+  font-size:13px;
+  font-weight:400;
+}
+
+/* eras */
+.v8-era{
+  scroll-margin-top:8px;
+  overflow:hidden;
+  border-bottom:1px solid var(--ink);
+}
+.v8-era:nth-of-type(even){background:rgba(255,255,255,.09)}
+.v8-era-inner{padding:64px 0 70px}
+.v8-era-head{
+  display:grid;
+  grid-template-columns:48px minmax(0,1fr);
+  gap:18px;
+  align-items:start;
+}
+.v8-era-no{
+  padding-top:4px;
+  color:var(--soft);
+  font-family:Georgia,"Times New Roman",serif;
+  font-size:11px;
+  letter-spacing:.14em;
+}
+.v8-era-label{
+  margin:0 0 10px;
+  color:var(--red);
+  font-family:Georgia,"Times New Roman",serif;
+  font-size:9px;
+  letter-spacing:.16em;
+}
+.v8-era h2{
+  max-width:15em;
+  margin:0;
+  font-size:clamp(32px,6vw,58px);
+  font-weight:500;
+  line-height:1.09;
+  letter-spacing:-.015em;
+}
+.v8-teaser{
+  max-width:37em;
+  margin:20px 0 0;
+  color:var(--soft);
+  font-size:15px;
+  line-height:1.75;
+}
+.v8-copy{
+  max-width:46em;
+  margin:36px 0 0 66px;
+}
+.v8-copy p{
+  margin:0 0 1.2em;
+  color:var(--soft);
+  font-size:16px;
+  line-height:1.9;
+}
+.v8-overline{
+  color:var(--red)!important;
+  font-family:Georgia,"Times New Roman",serif;
+  font-size:10px!important;
+  letter-spacing:.15em;
+}
+
+/* single features */
+.v8-single-feature{
+  position:relative;
+  margin-top:44px;
+  padding:28px 0 30px;
+  border-top:1px solid var(--ink);
+  border-bottom:1px solid var(--ink);
+  overflow:hidden;
+}
+.v8-single-year{
+  position:absolute;
+  right:-.02em;
+  top:-.13em;
+  color:rgba(36,31,26,.05);
+  font-family:Georgia,"Times New Roman",serif;
+  font-size:clamp(120px,23vw,230px);
+  line-height:1;
+  pointer-events:none;
+}
+.v8-single-content{
+  position:relative;
+  z-index:1;
+  max-width:650px;
+}
+.v8-meta{
+  display:block;
+  color:var(--soft);
+  font-family:Georgia,"Times New Roman",serif;
+  font-size:9px;
+  letter-spacing:.13em;
+}
+.v8-single-content h3{
+  max-width:12em;
+  margin:14px 0 0;
+  font-family:Georgia,"Times New Roman",serif;
+  font-size:clamp(38px,7vw,70px);
+  font-weight:400;
+  line-height:.98;
+  letter-spacing:-.025em;
+}
+.v8-hook{
+  margin:22px 0 0;
+  font-size:17px;
+  font-weight:600;
+  line-height:1.55;
+}
+.v8-summary{
+  max-width:31em;
+  margin:10px 0 0;
+  color:var(--soft);
+  font-size:14px;
+  line-height:1.75;
+}
+.v8-status{
+  display:block;
+  margin-top:22px;
+  color:var(--red);
+  font-family:Georgia,"Times New Roman",serif;
+  font-size:9px;
+  letter-spacing:.14em;
+}
+
+/* 1940s single milestone + single owner note */
+.v8-1940s{background:var(--v8-warm)}
+.v8-1940-stage{
+  display:grid;
+  grid-template-columns:minmax(0,1.2fr) minmax(250px,.8fr);
+  gap:20px;
+  margin-top:44px;
+}
+.v8-cricket{
+  min-height:390px;
+  display:flex;
+  flex-direction:column;
+  padding:28px;
+  background:var(--v8-dark);
+  color:var(--v8-cream);
+}
+.v8-cricket .v8-meta,
+.v8-cricket .v8-summary{color:rgba(238,233,223,.62)}
+.v8-cricket .v8-status{color:#c38a7c}
+.v8-cricket h3{
+  margin:16px 0 0;
+  font-family:Georgia,"Times New Roman",serif;
+  font-size:clamp(48px,8vw,80px);
+  font-weight:400;
+  line-height:.9;
+}
+.v8-cricket .v8-summary{margin-top:auto}
+.v8-owner-single{
+  min-height:390px;
+  display:flex;
+  flex-direction:column;
+  padding:26px;
+  border:1px solid var(--ink);
+  background:rgba(255,255,255,.20);
+}
+.v8-owner-single small{
+  color:var(--soft);
+  font-family:Georgia,"Times New Roman",serif;
+  font-size:9px;
+  letter-spacing:.13em;
+}
+.v8-owner-single h3{
+  margin:15px 0 0;
+  font-family:Georgia,"Times New Roman",serif;
+  font-size:clamp(29px,4vw,40px);
+  font-weight:400;
+  line-height:1.05;
+}
+.v8-owner-single .v8-status{margin-top:auto}
+
+/* unified swipe system */
+.v8-rail-block{
+  margin-top:48px;
+}
+.v8-rail-head{
+  display:flex;
+  justify-content:space-between;
+  gap:20px;
+  padding:11px 0 9px;
+  border-top:1px solid var(--ink);
+  border-bottom:1px solid var(--rule);
+  color:var(--soft);
+  font-family:Georgia,"Times New Roman",serif;
+  font-size:9px;
+  letter-spacing:.15em;
+}
+.v8-swipe-rail{
+  display:grid;
+  grid-auto-flow:column;
+  grid-auto-columns:minmax(300px,40%);
+  gap:12px;
+  margin-top:16px;
+  overflow-x:auto;
+  padding-bottom:10px;
+  scroll-snap-type:x mandatory;
+  scrollbar-width:none;
+  -webkit-overflow-scrolling:touch;
+}
+.v8-swipe-rail::-webkit-scrollbar{display:none}
+.v8-card{
+  min-height:308px;
+  display:flex;
+  flex-direction:column;
+  padding:22px;
+  border:1px solid var(--ink);
+  background:rgba(255,255,255,.18);
+  scroll-snap-align:start;
+}
+.v8-card:nth-child(even){background:var(--v8-warm)}
+.v8-card.is-dark{
+  background:var(--v8-dark);
+  color:var(--v8-cream);
+}
+.v8-card.is-dark .v8-meta,
+.v8-card.is-dark .v8-summary{color:rgba(238,233,223,.62)}
+.v8-card h3{
+  margin:14px 0 0;
+  font-family:Georgia,"Times New Roman",serif;
+  font-size:clamp(27px,4vw,40px);
+  font-weight:400;
+  line-height:1.03;
+}
+.v8-card .v8-hook{
+  margin-top:18px;
+  font-size:15px;
+}
+.v8-card .v8-summary{
+  font-size:14px;
+}
+.v8-card .v8-status{
+  margin-top:auto;
+  padding-top:20px;
+}
+
+/* owner note swipe */
+.v8-owner-rail .v8-card{
+  min-height:430px;
+}
+.v8-owner-card{
+  color:inherit;
+  text-decoration:none;
+}
+.v8-owner-media{
+  margin:-22px -22px 18px;
+  border-bottom:1px solid var(--ink);
+  background:#ddd4c7;
+  overflow:hidden;
+}
+.v8-owner-media img{
+  display:block;
+  width:100%;
+  height:240px;
+  object-fit:contain;
+  object-position:center top;
+}
+.v8-owner-textonly{
+  min-height:130px;
+  margin:-4px 0 18px;
+  display:flex;
+  align-items:flex-end;
+  border-bottom:1px solid var(--rule);
+  color:var(--soft);
+  font-family:Georgia,"Times New Roman",serif;
+  font-size:10px;
+  letter-spacing:.15em;
+  padding-bottom:14px;
+}
+.v8-owner-card h3{
+  margin-top:10px;
+}
+.v8-owner-arrow{
+  margin-top:auto;
+  padding-top:22px;
+  align-self:flex-end;
+  font-family:Georgia,"Times New Roman",serif;
+  font-size:24px;
+}
+
+/* current + research */
+.v8-current{
+  min-height:68svh;
+  display:flex;
+  align-items:flex-end;
+  background:var(--v8-dark);
+  color:var(--v8-cream);
+  border-bottom:1px solid #000;
+}
+.v8-current-inner{padding-top:72px;padding-bottom:54px}
+.v8-current small{
+  color:rgba(238,233,223,.54);
+  font-family:Georgia,"Times New Roman",serif;
+  font-size:9px;
+  letter-spacing:.17em;
+}
+.v8-current h2{
+  margin:17px 0 0;
+  font-size:clamp(29px,5vw,45px);
+  font-weight:500;
+}
+.v8-current-name{
+  margin:18px 0 0;
+  font-family:Georgia,"Times New Roman",serif;
+  font-size:clamp(62px,12vw,112px);
+  line-height:.86;
+  letter-spacing:-.035em;
+}
+.v8-current a{
+  display:inline-block;
+  margin-top:30px;
+  padding-bottom:4px;
+  border-bottom:1px solid currentColor;
+  color:inherit;
+  text-decoration:none;
+}
+.v8-next{
+  border-bottom:1px solid var(--ink);
+}
+.v8-next-inner{padding-top:40px;padding-bottom:44px}
+.v8-next small{
+  color:var(--soft);
+  font-family:Georgia,"Times New Roman",serif;
+  font-size:9px;
+  letter-spacing:.17em;
+}
+.v8-next-line{
+  display:flex;
+  justify-content:space-between;
+  gap:20px;
+  align-items:end;
+  margin-top:13px;
+}
+.v8-next strong{
+  max-width:18em;
+  font-size:clamp(22px,4vw,34px);
+  font-weight:500;
+  line-height:1.4;
+}
+.v8-next span{
+  font-family:Georgia,"Times New Roman",serif;
+  font-size:23px;
+}
+.v8-sources{padding:44px 0 66px}
+
+@media(max-width:760px){
+  .v8-1940-stage{grid-template-columns:1fr}
+  .v8-cricket,.v8-owner-single{min-height:320px}
+  .v8-swipe-rail{grid-auto-columns:minmax(280px,72%)}
+}
+
+@media(max-width:480px){
+  .history-v8 .section-mast{font-size:8px;letter-spacing:.08em}
+  .v8-cover{min-height:calc(100svh - 56px)}
+  .v8-cover-inner{
+    min-height:calc(100svh - 56px);
+    padding-top:24px;
+    padding-bottom:30px;
+  }
+  .v8-cover-meta{font-size:8px}
+  .v8-cover-title .history{
+    font-size:clamp(62px,18vw,78px);
+  }
+  .v8-cover-title .of-the{
+    margin-top:15px;
+    margin-bottom:10px;
+    font-size:18px;
+  }
+  .v8-cover-title .alarm{
+    font-size:clamp(58px,17vw,74px);
+  }
+  .v8-cover-title .wristwatch{
+    font-size:clamp(31px,9vw,40px);
+  }
+  .v8-cover-range{
+    margin-top:30px;
+    font-size:8px;
+  }
+
+  .v8-intro{padding:46px 0 50px}
+  .v8-intro small{font-size:8px}
+  .v8-intro h1{font-size:27px}
+  .v8-intro p{
+    margin-top:22px;
+    font-size:18px;
+  }
+
+  .v8-era-nav a{
+    min-width:88px;
+    padding:12px 14px 11px 0;
+  }
+  .v8-era-nav a+a{padding-left:14px}
+  .v8-era-nav strong{font-size:12px}
+
+  .v8-era-inner{padding:50px 0 56px}
+  .v8-era-head{
+    grid-template-columns:28px minmax(0,1fr);
+    gap:9px;
+  }
+  .v8-era-no{font-size:10px}
+  .v8-era-label{font-size:8px}
+  .v8-era h2{
+    font-size:clamp(29px,8.3vw,36px);
+    line-height:1.12;
+  }
+  .v8-teaser{
+    margin-top:17px;
+    font-size:14px;
+    line-height:1.7;
+  }
+  .v8-copy{
+    margin:30px 0 0 37px;
+  }
+  .v8-copy p{
+    font-size:15px;
+    line-height:1.86;
+  }
+
+  .v8-single-feature{
+    margin-top:36px;
+    padding:22px 0 26px;
+  }
+  .v8-single-year{
+    top:.04em;
+    font-size:118px;
+  }
+  .v8-single-content h3{font-size:40px}
+  .v8-hook{font-size:16px}
+  .v8-summary{font-size:14px}
+
+  .v8-1940-stage{
+    margin-top:36px;
+    gap:12px;
+  }
+  .v8-cricket,.v8-owner-single{
+    min-height:286px;
+    padding:21px;
+  }
+  .v8-cricket h3{font-size:46px}
+  .v8-owner-single h3{font-size:28px}
+
+  .v8-rail-block{margin-top:40px}
+  .v8-swipe-rail{
+    grid-auto-columns:82%;
+    gap:10px;
+    margin-right:calc((100vw - 100%) / -2);
+    padding-right:17px;
+  }
+  .v8-card{
+    min-height:286px;
+    padding:19px;
+  }
+  .v8-card h3{font-size:27px}
+  .v8-owner-rail .v8-card{min-height:390px}
+  .v8-owner-media{
+    margin:-19px -19px 16px;
+  }
+  .v8-owner-media img{height:220px}
+
+  .v8-current{min-height:60svh}
+  .v8-current-inner{padding-top:56px;padding-bottom:44px}
+  .v8-current h2{font-size:27px}
+  .v8-current-name{font-size:56px}
+  .v8-next-inner{padding-top:34px;padding-bottom:38px}
+  .v8-next strong{font-size:22px}
+}
+
+@media(max-width:340px){
+  .v8-copy{margin-left:0}
+  .v8-cover-title .history{font-size:58px}
+  .v8-cover-title .alarm{font-size:54px}
+  .v8-cover-title .wristwatch{font-size:30px}
+  .v8-era h2{font-size:28px}
+}
