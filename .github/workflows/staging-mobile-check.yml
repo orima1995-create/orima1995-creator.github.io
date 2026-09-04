@@ -1,8 +1,8 @@
-name: Staging HISTORY v6 Check
+name: Staging HISTORY v7 Check
 
 on:
   push:
-    branches: ["staging/history-v6"]
+    branches: ["staging/history-v7"]
   workflow_dispatch:
 
 permissions:
@@ -28,7 +28,7 @@ jobs:
             src/data/owners-directory.json \
             public/images)
           if [ -n "$changed" ]; then
-            echo 'Protected editorial data or source images changed in HISTORY v6:'
+            echo 'Protected editorial data or source images changed in HISTORY v7:'
             echo "$changed"
             exit 1
           fi
@@ -57,21 +57,25 @@ jobs:
             test -f "$f" || { echo "missing file: $f"; exit 1; }
           done
 
-      - name: Verify HISTORY v6 structure
+      - name: Verify HISTORY v7 editorial structure
         run: |
           set -e
-          grep -Fq 'history-v5-era-nav' dist/history/index.html || { echo 'era nav missing'; exit 1; }
-          grep -Fq 'history-v5-chapter' dist/history/index.html || { echo 'continuous chapters missing'; exit 1; }
-          grep -Fq 'history-v6-owner-feature' dist/history/index.html || { echo 'large owner note treatment missing'; exit 1; }
-          grep -Fq 'history-v6-next' dist/history/index.html || { echo 'compact RESEARCH exit missing'; exit 1; }
+          grep -Fq 'v7-hero-milestone' dist/history/index.html || { echo '1910s hero milestone missing'; exit 1; }
+          grep -Fq 'v7-1940-grid' dist/history/index.html || { echo '1940s split layout missing'; exit 1; }
+          grep -Fq 'v7-milestone-rail' dist/history/index.html || { echo '1950s milestone rail missing'; exit 1; }
+          grep -Fq 'v7-owner-posters' dist/history/index.html || { echo '1950s owner poster stage missing'; exit 1; }
+          grep -Fq 'v7-compare' dist/history/index.html || { echo '1960s comparison layout missing'; exit 1; }
+          grep -Fq 'v7-transition' dist/history/index.html || { echo '1970s transition layout missing'; exit 1; }
+          grep -Fq 'v7-current' dist/history/index.html || { echo 'CURRENT ending missing'; exit 1; }
+          grep -Fq 'v7-next' dist/history/index.html || { echo 'RESEARCH exit missing'; exit 1; }
+          grep -Fq '所有個体から見る。' dist/history/index.html || { echo "OWNER'S NOTE definition missing"; exit 1; }
           grep -Fq '次に気になっているものと、そのデータ。' dist/history/index.html || { echo 'RESEARCH definition missing'; exit 1; }
-          if grep -Fq 'history-v5-research' dist/history/index.html; then
-            echo 'RESEARCH is still rendered as a HISTORY chapter'
+          if grep -Fq 'history-v5-record' dist/history/index.html; then
+            echo 'legacy repeated record layout remains'
             exit 1
           fi
-          grep -Fq '機械式アラーム腕時計の歴史' dist/history/index.html || { echo 'HISTORY title missing'; exit 1; }
-          if grep -Fq 'class="history-chapter"' dist/history/index.html; then
-            echo 'legacy accordion chapters remain'
+          if grep -Fq 'history-v5-research' dist/history/index.html; then
+            echo 'RESEARCH rendered as HISTORY chapter'
             exit 1
           fi
 
@@ -106,6 +110,6 @@ jobs:
       - name: Upload staging build artifact
         uses: actions/upload-artifact@v4
         with:
-          name: staging-history-v6-dist
+          name: staging-history-v7-dist
           path: dist
           retention-days: 7
