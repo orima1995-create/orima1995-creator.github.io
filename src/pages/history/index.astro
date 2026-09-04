@@ -6,6 +6,7 @@ import { historyContent } from '../../data/history-content';
 import ownersDirectory from '../../data/owners-directory.json';
 import '../../styles/site.css';
 import '../../styles/history-v8.css';
+import '../../styles/history-v11.css';
 
 const base = import.meta.env.BASE_URL;
 
@@ -96,21 +97,22 @@ const schema = {
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#1b1a18" />
+    <meta name="theme-color" content="#151514" />
+    <link rel="icon" href="data:," />
     <SeoHead title={title} description={description} path="history/" type="article" schema={schema} />
   </head>
-  <body class="history-v10">
+  <body class="history-v11">
     <SectionMast rightLabel="HISTORY" />
 
     <main>
-      <section class="v10-cover" aria-labelledby="history-v10-cover-title">
+      <section class="v10-cover" aria-labelledby="history-v11-cover-title">
         <div class="shell v10-cover-inner">
           <div class="v10-cover-meta">
             <span>HISTORY / 00 — 06</span>
             <span>ALARM WRISTWATCHES</span>
           </div>
 
-          <h1 class="v10-cover-title" id="history-v10-cover-title">
+          <h1 class="v10-cover-title" id="history-v11-cover-title">
             <span>HISTORY</span>
             <small>OF THE</small>
             <span>ALARM</span>
@@ -119,7 +121,10 @@ const schema = {
 
           <div class="v10-cover-range">
             <span>16C</span>
-            <span>→</span>
+            <span>1914</span>
+            <span>1947</span>
+            <span>1956</span>
+            <span>1976</span>
             <span>CURRENT</span>
           </div>
         </div>
@@ -127,7 +132,7 @@ const schema = {
 
       <section class="shell v10-intro">
         <small>{hero.eyebrow}</small>
-        <h1>機械式アラーム腕時計の歴史</h1>
+        <h2>機械式アラーム腕時計の歴史</h2>
         <p>{hero.kicker[0]}<br />{hero.kicker[1]}</p>
       </section>
 
@@ -247,7 +252,7 @@ const schema = {
               <span id="milestones-1950s">MILESTONES / {String(milestones1950s.length).padStart(2, '0')}</span>
               <span>SWIPE →</span>
             </div>
-            <div class="v10-rail v10-milestone-rail" aria-label="1950年代のマイルストーン">
+            <div class="v10-rail v10-milestone-rail" aria-label="1950年代のマイルストーン" tabindex="0">
               {milestones1950s.map((entry) => (
                 <article class="v10-milestone-tile">
                   <small>{entry.meta}</small>
@@ -261,10 +266,10 @@ const schema = {
 
           <section class="v10-rail-block" aria-labelledby="owners-1950s">
             <div class="v10-rail-head">
-              <span id="owners-1950s">OWNER'S NOTES / {String(owners1950s.length).padStart(2, '0')}</span>
-              <span>所有個体から見る。 / SWIPE →</span>
+              <span id="owners-1950s">OWNER'S NOTES / {String(owners1950s.filter(({ note }) => note).length).padStart(2, '0')}</span>
+              <span>所有個体から見る。</span>
             </div>
-            <div class="v10-rail v10-owner-rail" aria-label="1950年代の所有個体">
+            <div class="v11-owner-grid" aria-label="1950年代の公開済み所有個体ノート">
               {owners1950s.map(({ entry, note }) => (
                 note ? (
                   <a class="v10-owner-card" href={`${base}${note.href.replace(/^\//, '')}`}>
@@ -273,23 +278,22 @@ const schema = {
                         <img src={`${base}${note.image.replace(/^\//, '')}`} alt="" loading="lazy" />
                       </div>
                       <figcaption>
+                        <small>OWNER'S NOTE</small>
                         <strong>{entry.name}</strong>
                         <span aria-hidden="true">→</span>
                       </figcaption>
                     </figure>
                   </a>
-                ) : (
-                  <article class="v10-owner-card v10-owner-card-text">
-                    <figure>
-                      <div class="v10-owner-thumb v10-owner-empty">OWNER'S NOTE</div>
-                      <figcaption>
-                        <strong>{entry.name}</strong>
-                        <span aria-hidden="true">→</span>
-                      </figcaption>
-                    </figure>
-                  </article>
-                )
+                ) : null
               ))}
+            </div>
+            <div class="v11-collection-index" aria-label="1950年代のその他の所有個体">
+              {owners1950s.map(({ entry, note }) => !note ? (
+                <div>
+                  <small>COLLECTION INDEX</small>
+                  <strong>{entry.name}</strong>
+                </div>
+              ) : null)}
             </div>
           </section>
         </div>
@@ -313,7 +317,7 @@ const schema = {
               <span id="milestones-1960s">MILESTONES / {String(milestones1960s.length).padStart(2, '0')}</span>
               <span>SWIPE →</span>
             </div>
-            <div class="v10-rail v10-milestone-rail" aria-label="1960年代のマイルストーン">
+            <div class="v10-rail v10-milestone-rail" aria-label="1960年代のマイルストーン" tabindex="0">
               {milestones1960s.map((entry) => (
                 <article class="v10-milestone-tile">
                   <small>{entry.meta}</small>
@@ -347,7 +351,7 @@ const schema = {
               <span id="milestones-1970s">MILESTONES / {String(milestones1970s.length).padStart(2, '0')}</span>
               <span>SWIPE →</span>
             </div>
-            <div class="v10-rail v10-milestone-rail" aria-label="1970年代のマイルストーン">
+            <div class="v10-rail v10-milestone-rail" aria-label="1970年代のマイルストーン" tabindex="0">
               {milestones1970s.map((entry) => (
                 <article class="v10-milestone-tile">
                   <small>{entry.meta}</small>

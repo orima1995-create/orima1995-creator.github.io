@@ -1,0 +1,819 @@
+/* HISTORY v11 — neutral archival chronology */
+
+.history-v11{
+  --paper:#f7f7f4;
+  --ink:#171715;
+  --soft:#45443f;
+  --rule:#aaa9a3;
+  --red:#81342f;
+  --v10-dark:#151514;
+  --v10-cream:#f5f5f1;
+  --v10-panel:#ededE9;
+  background:var(--paper);
+  color:var(--ink);
+  overflow-x:hidden;
+}
+
+.history-v11 .section-mast{
+  background:var(--v10-dark);
+  color:rgba(245,245,241,.78);
+  border-bottom:1px solid rgba(245,245,241,.19);
+}
+
+.history-v11 .section-mast .section-menu>summary::before{
+  border-color:rgba(245,245,241,.38);
+}
+
+/* Cover: a chronology, not a second product cover. */
+.history-v11 .v10-cover{
+  min-height:calc(100svh - 64px);
+  background:
+    linear-gradient(90deg,transparent 0,transparent calc(50% - .5px),rgba(245,245,241,.08) 50%,transparent calc(50% + .5px)),
+    var(--v10-dark);
+  color:var(--v10-cream);
+}
+
+.history-v11 .v10-cover-inner{
+  min-height:calc(100svh - 64px);
+  padding-top:28px;
+  padding-bottom:30px;
+}
+
+.history-v11 .v10-cover-meta{
+  color:rgba(245,245,241,.67);
+  font-size:12px;
+  letter-spacing:.13em;
+}
+
+.history-v11 .v10-cover-title{
+  width:min(100%,760px);
+  margin:auto 0 0;
+}
+
+.history-v11 .v10-cover-title>span{
+  font-size:clamp(72px,13vw,124px);
+  line-height:.78;
+}
+
+.history-v11 .v10-cover-title>small{
+  margin:20px 0 12px .08em;
+  font-size:clamp(17px,2.5vw,26px);
+}
+
+.history-v11 .v10-cover-title>em{
+  margin-top:7px;
+  font-size:clamp(34px,6.1vw,61px);
+  letter-spacing:-.025em;
+}
+
+.history-v11 .v10-cover-range{
+  position:relative;
+  margin-top:46px;
+  padding-top:16px;
+  color:rgba(245,245,241,.67);
+  font-size:11px;
+  letter-spacing:.1em;
+}
+
+.history-v11 .v10-cover-range::before{
+  content:"";
+  position:absolute;
+  inset:0 0 auto;
+  border-top:1px solid rgba(245,245,241,.38);
+}
+
+.history-v11 .v10-cover-range span{
+  position:relative;
+}
+
+.history-v11 .v10-cover-range span::before{
+  content:"";
+  position:absolute;
+  left:50%;
+  top:-19px;
+  width:5px;
+  height:5px;
+  border-radius:50%;
+  background:var(--v10-cream);
+  transform:translateX(-50%);
+}
+
+/* Intro and chronology navigation. */
+.history-v11 .v10-intro{
+  padding:44px 0 46px;
+  border-bottom:0;
+}
+
+.history-v11 .v10-intro>small{
+  margin-bottom:14px;
+  color:var(--red);
+  font-size:12px;
+  letter-spacing:.12em;
+}
+
+.history-v11 .v10-intro h2{
+  max-width:18em;
+  margin:0;
+  font-size:clamp(28px,4.2vw,40px);
+  font-weight:500;
+  line-height:1.32;
+  letter-spacing:0;
+}
+
+.history-v11 .v10-intro p{
+  margin:18px 0 0;
+  color:var(--soft);
+  font-size:18px;
+  line-height:1.7;
+}
+
+.history-v11 .v10-era-nav-wrap{
+  border-top:1px solid var(--ink);
+  border-bottom:1px solid var(--ink);
+}
+
+.history-v11 .v10-era-nav a{
+  min-width:112px;
+  gap:2px;
+  padding:13px 18px 12px 0;
+}
+
+.history-v11 .v10-era-nav a+a{
+  padding-left:18px;
+  border-left:1px solid var(--rule);
+}
+
+.history-v11 .v10-era-nav span,
+.history-v11 .v10-era-nav strong{
+  font-size:12px;
+}
+
+.history-v11 .v10-era-nav strong{
+  color:var(--ink);
+  letter-spacing:.035em;
+}
+
+/* Eras: stronger type, tighter rhythm, fewer repeated visual layers. */
+.history-v11 .v10-era{
+  background:var(--paper);
+  border-bottom:1px solid var(--ink);
+}
+
+.history-v11 .v10-era-inner{
+  padding:38px 0 42px;
+}
+
+.history-v11 .v10-era-head{
+  display:grid;
+  grid-template-columns:auto 1fr;
+  column-gap:12px;
+  align-items:start;
+}
+
+.history-v11 .v10-era-head>div{
+  display:contents;
+}
+
+.history-v11 .v10-era-no,
+.history-v11 .v10-era-label{
+  display:inline-block;
+  margin:0 0 15px;
+  padding:0;
+  font-size:12px;
+  line-height:1.2;
+  letter-spacing:.12em;
+}
+
+.history-v11 .v10-era-no{
+  grid-column:1;
+  color:var(--ink);
+}
+
+.history-v11 .v10-era-label{
+  grid-column:2;
+  color:var(--red);
+}
+
+.history-v11 .v10-era h2{
+  grid-column:1 / -1;
+  max-width:13em;
+  margin:0;
+  font-size:clamp(29px,4.8vw,46px);
+  font-weight:500;
+  line-height:1.22;
+  letter-spacing:-.015em;
+}
+
+.history-v11 .v10-teaser{
+  grid-column:1 / -1;
+  max-width:39em;
+  margin:16px 0 0;
+  color:var(--ink);
+  font-size:17px;
+  line-height:1.78;
+}
+
+.history-v11 .v10-copy{
+  max-width:43em;
+  margin:22px 0 0;
+  padding-top:18px;
+  border-top:1px solid var(--rule);
+}
+
+.history-v11 .v10-copy p{
+  margin:0 0 1em;
+  color:var(--soft);
+  font-size:16px;
+  line-height:1.9;
+}
+
+.history-v11 .v10-overline{
+  margin-bottom:10px!important;
+  color:var(--red)!important;
+  font-size:12px!important;
+  letter-spacing:.12em;
+}
+
+/* Single records read as archive captions rather than cards. */
+.history-v11 .v10-index-block{
+  margin-top:24px;
+  border-top:1px solid var(--ink);
+}
+
+.history-v11 .v10-index-head,
+.history-v11 .v10-rail-head{
+  min-height:36px;
+  padding:9px 0 8px;
+  color:var(--soft);
+  font-size:12px;
+  line-height:1.35;
+  letter-spacing:.1em;
+}
+
+.history-v11 .v10-single-entry{
+  grid-template-columns:124px minmax(220px,.85fr) minmax(0,1fr) auto;
+  gap:16px;
+  min-height:78px;
+  padding:13px 0;
+  border-bottom:1px solid var(--ink);
+}
+
+.history-v11 .v10-single-entry small,
+.history-v11 .v10-single-entry b,
+.history-v11 .v10-owner-line small{
+  color:var(--soft);
+  font-size:12px;
+  letter-spacing:.08em;
+}
+
+.history-v11 .v10-single-entry strong,
+.history-v11 .v10-owner-line strong{
+  font-size:21px;
+  line-height:1.2;
+}
+
+.history-v11 .v10-single-entry>span,
+.history-v11 .v10-owner-line>span{
+  color:var(--soft);
+  font-size:14px;
+  line-height:1.55;
+}
+
+.history-v11 .v10-single-entry b{
+  color:var(--red);
+}
+
+.history-v11 .v10-owner-line{
+  grid-template-columns:124px minmax(220px,.85fr) minmax(0,1fr) auto;
+  gap:16px;
+  min-height:68px;
+  padding:11px 0;
+  border-bottom:1px solid var(--ink);
+}
+
+/* Multi-item specimen rails: exactly two complete records per view. */
+.history-v11 .v10-rail-block{
+  margin-top:24px;
+}
+
+.history-v11 .v10-rail{
+  gap:0;
+  margin-top:0;
+  padding:0;
+  border-bottom:1px solid var(--ink);
+  scroll-snap-type:x mandatory;
+}
+
+.history-v11 .v10-milestone-rail{
+  grid-auto-columns:50%;
+}
+
+.history-v11 .v10-milestone-tile{
+  height:178px;
+  padding:12px 14px 11px 0;
+  border:0;
+  border-right:1px solid var(--rule);
+  background:transparent;
+  scroll-snap-align:start;
+  scroll-snap-stop:always;
+}
+
+.history-v11 .v10-milestone-tile+ .v10-milestone-tile{
+  padding-left:14px;
+}
+
+.history-v11 .v10-milestone-tile small,
+.history-v11 .v10-milestone-tile>b{
+  color:var(--soft);
+  font-size:12px;
+  letter-spacing:.07em;
+}
+
+.history-v11 .v10-milestone-tile strong{
+  margin-top:8px;
+  font-size:clamp(18px,2.5vw,22px);
+  line-height:1.08;
+}
+
+.history-v11 .v10-milestone-tile>span{
+  margin-top:9px;
+  color:var(--ink);
+  font-size:13px;
+  font-weight:500;
+  line-height:1.48;
+}
+
+.history-v11 .v10-milestone-tile>b{
+  color:var(--red);
+}
+
+/* Real owner-note documents stay intact and behave like a contact sheet. */
+.history-v11 .v11-owner-grid{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  border-bottom:1px solid var(--ink);
+}
+
+.history-v11 .v10-owner-card{
+  min-width:0;
+  padding:12px 12px 12px 0;
+}
+
+.history-v11 .v10-era-nav a:focus-visible,
+.history-v11 .v10-rail:focus-visible,
+.history-v11 .v10-owner-card:focus-visible,
+.history-v11 .v10-current a:focus-visible{
+  outline:2px solid var(--red);
+  outline-offset:3px;
+}
+
+.history-v11 .v10-owner-card+ .v10-owner-card{
+  padding-left:12px;
+  padding-right:0;
+  border-left:1px solid var(--rule);
+}
+
+.history-v11 .v10-owner-card figure{
+  display:grid;
+  grid-template-columns:72px minmax(0,1fr);
+  gap:12px;
+  align-items:center;
+}
+
+.history-v11 .v10-owner-thumb{
+  width:72px;
+  aspect-ratio:1063/1479;
+  padding:0;
+  border:1px solid var(--rule);
+  background:#fff;
+}
+
+.history-v11 .v10-owner-thumb img{
+  object-fit:contain;
+}
+
+.history-v11 .v10-owner-card figcaption{
+  min-width:0;
+  min-height:0;
+  display:grid;
+  grid-template-columns:1fr auto;
+  gap:5px 8px;
+  padding:0;
+}
+
+.history-v11 .v10-owner-card figcaption small{
+  grid-column:1 / -1;
+  color:var(--soft);
+  font-family:Georgia,"Times New Roman",serif;
+  font-size:12px;
+  line-height:1.3;
+  letter-spacing:.07em;
+}
+
+.history-v11 .v10-owner-card figcaption strong{
+  font-size:15px;
+  line-height:1.28;
+}
+
+.history-v11 .v10-owner-card figcaption span{
+  align-self:end;
+  font-size:17px;
+}
+
+.history-v11 .v11-collection-index{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  border-bottom:1px solid var(--ink);
+}
+
+.history-v11 .v11-collection-index>div{
+  min-width:0;
+  padding:12px 12px 13px 0;
+}
+
+.history-v11 .v11-collection-index>div+div{
+  padding-left:12px;
+  padding-right:0;
+  border-left:1px solid var(--rule);
+}
+
+.history-v11 .v11-collection-index small,
+.history-v11 .v11-collection-index strong{
+  display:block;
+}
+
+.history-v11 .v11-collection-index small{
+  color:var(--soft);
+  font-family:Georgia,"Times New Roman",serif;
+  font-size:12px;
+  line-height:1.3;
+  letter-spacing:.07em;
+}
+
+.history-v11 .v11-collection-index strong{
+  margin-top:5px;
+  font-family:Georgia,"Times New Roman",serif;
+  font-size:15px;
+  font-weight:400;
+  line-height:1.3;
+}
+
+/* Ending uses the only mid/late-page black field. */
+.history-v11 .v10-current{
+  min-height:50svh;
+  background:var(--v10-dark);
+  color:var(--v10-cream);
+}
+
+.history-v11 .v10-current-inner{
+  padding-top:54px;
+  padding-bottom:42px;
+}
+
+.history-v11 .v10-current small{
+  color:rgba(245,245,241,.66);
+  font-size:12px;
+}
+
+.history-v11 .v10-current h2{
+  margin-top:12px;
+  font-size:clamp(27px,4.2vw,40px);
+}
+
+.history-v11 .v10-current p{
+  margin-top:16px;
+  font-size:clamp(52px,10vw,92px);
+}
+
+.history-v11 .v10-current a{
+  margin-top:24px;
+  font-size:16px;
+}
+
+.history-v11 .v10-next-inner{
+  padding:28px 0 31px;
+}
+
+.history-v11 .v10-next small{
+  color:var(--red);
+  font-size:12px;
+}
+
+.history-v11 .v10-next strong{
+  font-size:clamp(20px,3.3vw,29px);
+}
+
+.history-v11 .v10-sources{
+  padding:34px 0 52px;
+}
+
+@media(max-width:760px){
+  .history-v11 .v10-cover-title{
+    width:100%;
+  }
+
+  .history-v11 .v10-single-entry,
+  .history-v11 .v10-owner-line{
+    grid-template-columns:1fr auto;
+    gap:7px 12px;
+  }
+
+  .history-v11 .v10-single-entry small,
+  .history-v11 .v10-single-entry strong,
+  .history-v11 .v10-single-entry>span,
+  .history-v11 .v10-owner-line small,
+  .history-v11 .v10-owner-line strong,
+  .history-v11 .v10-owner-line>span{
+    grid-column:1;
+  }
+
+  .history-v11 .v10-single-entry b,
+  .history-v11 .v10-owner-line>b{
+    grid-column:2;
+    grid-row:1 / 4;
+    align-self:center;
+  }
+}
+
+@media(max-width:480px){
+  .history-v11 .section-mast{
+    font-size:10px;
+    letter-spacing:.08em;
+  }
+
+  .history-v11 .v10-cover{
+    min-height:calc(100svh - 56px);
+  }
+
+  .history-v11 .v10-cover-inner{
+    min-height:calc(100svh - 56px);
+    padding-top:22px;
+    padding-bottom:24px;
+  }
+
+  .history-v11 .v10-cover-meta{
+    font-size:10px;
+  }
+
+  .history-v11 .v10-cover-title>span{
+    font-size:clamp(57px,16.6vw,68px);
+  }
+
+  .history-v11 .v10-cover-title>small{
+    margin-top:15px;
+    margin-bottom:9px;
+    font-size:16px;
+  }
+
+  .history-v11 .v10-cover-title>em{
+    font-size:clamp(29px,8.2vw,34px);
+  }
+
+  .history-v11 .v10-cover-range{
+    margin-top:32px;
+    padding-top:13px;
+    font-size:9px;
+    letter-spacing:.04em;
+  }
+
+  .history-v11 .v10-cover-range span::before{
+    top:-16px;
+    width:4px;
+    height:4px;
+  }
+
+  .history-v11 .v10-intro{
+    padding:34px 0 36px;
+  }
+
+  .history-v11 .v10-intro>small{
+    margin-bottom:11px;
+    font-size:11px;
+  }
+
+  .history-v11 .v10-intro h2{
+    font-size:26px;
+  }
+
+  .history-v11 .v10-intro p{
+    margin-top:15px;
+    font-size:17px;
+  }
+
+  .history-v11 .v10-era-nav a{
+    min-width:88px;
+    padding:10px 12px 9px 0;
+  }
+
+  .history-v11 .v10-era-nav a+a{
+    padding-left:12px;
+  }
+
+  .history-v11 .v10-era-nav span,
+  .history-v11 .v10-era-nav strong{
+    font-size:11px;
+  }
+
+  .history-v11 .v10-era-inner{
+    padding:32px 0 35px;
+  }
+
+  .history-v11 .v10-era-no,
+  .history-v11 .v10-era-label{
+    margin-bottom:12px;
+    font-size:11px;
+  }
+
+  .history-v11 .v10-era h2{
+    max-width:12em;
+    font-size:28px;
+    line-height:1.24;
+  }
+
+  .history-v11 .v10-teaser{
+    margin-top:13px;
+    font-size:16px;
+    line-height:1.75;
+  }
+
+  .history-v11 .v10-copy{
+    margin-top:18px;
+    padding-top:15px;
+  }
+
+  .history-v11 .v10-copy p{
+    font-size:16px;
+    line-height:1.86;
+  }
+
+  .history-v11 .v10-overline{
+    font-size:11px!important;
+  }
+
+  .history-v11 .v10-index-block,
+  .history-v11 .v10-rail-block{
+    margin-top:20px;
+  }
+
+  .history-v11 .v10-index-head,
+  .history-v11 .v10-rail-head{
+    min-height:34px;
+    font-size:11px;
+    letter-spacing:.08em;
+  }
+
+  .history-v11 .v10-single-entry{
+    padding:11px 0 12px;
+  }
+
+  .history-v11 .v10-single-entry small,
+  .history-v11 .v10-single-entry b,
+  .history-v11 .v10-owner-line small{
+    font-size:11px;
+  }
+
+  .history-v11 .v10-single-entry strong,
+  .history-v11 .v10-owner-line strong{
+    font-size:19px;
+  }
+
+  .history-v11 .v10-single-entry>span,
+  .history-v11 .v10-owner-line>span{
+    font-size:13px;
+  }
+
+  .history-v11 .v10-owner-line{
+    padding:10px 0 11px;
+  }
+
+  .history-v11 .v10-milestone-tile{
+    height:178px;
+    padding:11px 10px 10px 0;
+  }
+
+  .history-v11 .v10-milestone-tile+ .v10-milestone-tile{
+    padding-left:10px;
+  }
+
+  .history-v11 .v10-milestone-tile small,
+  .history-v11 .v10-milestone-tile>b{
+    font-size:11px;
+  }
+
+  .history-v11 .v10-milestone-tile strong{
+    margin-top:7px;
+    font-size:16px;
+  }
+
+  .history-v11 .v10-milestone-tile>span{
+    margin-top:8px;
+    font-size:12px;
+  }
+
+  .history-v11 .v10-owner-card{
+    padding:10px 9px 10px 0;
+  }
+
+  .history-v11 .v10-owner-card+ .v10-owner-card{
+    padding-left:9px;
+  }
+
+  .history-v11 .v10-owner-card figure{
+    grid-template-columns:54px minmax(0,1fr);
+    gap:8px;
+  }
+
+  .history-v11 .v10-owner-thumb{
+    width:54px;
+  }
+
+  .history-v11 .v10-owner-card figcaption{
+    gap:4px 5px;
+  }
+
+  .history-v11 .v10-owner-card figcaption small,
+  .history-v11 .v11-collection-index small{
+    font-size:11px;
+  }
+
+  .history-v11 .v10-owner-card figcaption strong,
+  .history-v11 .v11-collection-index strong{
+    font-size:13px;
+  }
+
+  .history-v11 .v10-owner-card figcaption span{
+    font-size:15px;
+  }
+
+  .history-v11 .v11-collection-index>div{
+    padding:10px 9px 11px 0;
+  }
+
+  .history-v11 .v11-collection-index>div+div{
+    padding-left:9px;
+  }
+
+  .history-v11 .v10-current{
+    min-height:46svh;
+  }
+
+  .history-v11 .v10-current small{
+    font-size:11px;
+  }
+
+  .history-v11 .v10-current p{
+    font-size:50px;
+  }
+
+  .history-v11 .v10-next-inner{
+    padding:25px 0 28px;
+  }
+
+  .history-v11 .v10-next small{
+    font-size:11px;
+  }
+
+  .history-v11 .v10-next strong{
+    font-size:20px;
+  }
+}
+
+@media(max-width:340px){
+  .history-v11 .v10-cover-meta span:last-child{
+    display:none;
+  }
+
+  .history-v11 .v10-cover-title>span{
+    font-size:52px;
+  }
+
+  .history-v11 .v10-cover-title>em{
+    font-size:27px;
+  }
+
+  .history-v11 .v10-cover-range span:nth-child(2),
+  .history-v11 .v10-cover-range span:nth-child(4){
+    display:none;
+  }
+
+  .history-v11 .v10-era h2{
+    font-size:26px;
+  }
+
+  .history-v11 .v10-milestone-tile{
+    height:178px;
+  }
+
+  .history-v11 .v10-owner-card figure{
+    grid-template-columns:46px minmax(0,1fr);
+    gap:7px;
+  }
+
+  .history-v11 .v10-owner-thumb{
+    width:46px;
+  }
+
+  .history-v11 .v10-owner-card figcaption small{
+    display:none;
+  }
+}

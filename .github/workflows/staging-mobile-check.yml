@@ -1,8 +1,8 @@
-name: Staging HISTORY v10 Check
+name: Staging HISTORY v11 Check
 
 on:
   push:
-    branches: ["staging/history-v10"]
+    branches: ["staging/history-v11"]
   workflow_dispatch:
 
 permissions:
@@ -28,7 +28,7 @@ jobs:
             src/data/owners-directory.json \
             public/images)
           if [ -n "$changed" ]; then
-            echo 'Protected editorial data or source images changed in HISTORY v10:'
+            echo 'Protected editorial data or source images changed in HISTORY v11:'
             echo "$changed"
             exit 1
           fi
@@ -57,46 +57,52 @@ jobs:
             test -f "$f" || { echo "missing file: $f"; exit 1; }
           done
 
-      - name: Verify HISTORY v10 completion criteria
+      - name: Verify HISTORY v11 completion criteria
         run: |
           set -e
 
-          grep -Fq 'history-v10' dist/history/index.html || { echo 'v10 marker missing'; exit 1; }
+          grep -Fq 'history-v11' dist/history/index.html || { echo 'v11 marker missing'; exit 1; }
           grep -Fq 'v10-cover' dist/history/index.html || { echo 'HISTORY cover missing'; exit 1; }
           grep -Fq 'v10-milestone-rail' dist/history/index.html || { echo 'milestone rail missing'; exit 1; }
-          grep -Fq 'v10-owner-rail' dist/history/index.html || { echo 'owner note rail missing'; exit 1; }
+          grep -Fq 'v11-owner-grid' dist/history/index.html || { echo 'owner note contact sheet missing'; exit 1; }
+          grep -Fq 'v11-collection-index' dist/history/index.html || { echo 'collection index missing'; exit 1; }
           grep -Fq 'v10-owner-line' dist/history/index.html || { echo 'single owner note row missing'; exit 1; }
 
-          grep -Fq 'grid-auto-columns:calc((100% - 8px)/2)' src/styles/history-v8.css || {
+          grep -Fq 'grid-auto-columns:50%' src/styles/history-v11.css || {
             echo 'mobile rails are not exactly two-up'
             exit 1
           }
 
-          grep -Fq 'object-fit:contain' src/styles/history-v8.css || {
+          grep -Fq 'object-fit:contain' src/styles/history-v11.css || {
             echo 'owner-note images are not contained'
             exit 1
           }
 
-          if grep -Fq 'object-fit:cover' src/styles/history-v8.css; then
-            echo 'cropping rule detected in HISTORY v10'
+          if grep -Fq 'object-fit:cover' src/styles/history-v11.css; then
+            echo 'cropping rule detected in HISTORY v11'
             exit 1
           fi
 
-          if grep -Fq 'margin-right:calc((100vw' src/styles/history-v8.css; then
+          if grep -Fq 'margin-right:calc((100vw' src/styles/history-v11.css; then
             echo 'partial-card teaser layout detected'
             exit 1
           fi
 
-          grep -Fq -- '--paper:#f2f0ea' src/styles/history-v8.css || { echo 'neutral paper palette missing'; exit 1; }
-          grep -Fq -- '--ink:#1c1a17' src/styles/history-v8.css || { echo 'neutral ink palette missing'; exit 1; }
-          grep -Fq -- '--soft:#6f6a61' src/styles/history-v8.css || { echo 'AA soft text palette missing'; exit 1; }
-          grep -Fq -- '--red:#8b3a32' src/styles/history-v8.css || { echo 'muted accent palette missing'; exit 1; }
+          grep -Fq -- '--paper:#f7f7f4' src/styles/history-v11.css || { echo 'neutral paper palette missing'; exit 1; }
+          grep -Fq -- '--ink:#171715' src/styles/history-v11.css || { echo 'neutral ink palette missing'; exit 1; }
+          grep -Fq -- '--soft:#45443f' src/styles/history-v11.css || { echo 'strong secondary text palette missing'; exit 1; }
+          grep -Fq -- '--red:#81342f' src/styles/history-v11.css || { echo 'muted accent palette missing'; exit 1; }
 
           grep -Fq '所有個体から見る。' dist/history/index.html || { echo "OWNER'S NOTE definition missing"; exit 1; }
           grep -Fq '次に気になっているものと、そのデータ。' dist/history/index.html || { echo 'RESEARCH definition missing'; exit 1; }
 
-          if grep -Fq 'history-v9' dist/history/index.html; then
-            echo 'legacy v9 markup remains'
+          if grep -Fq 'アラームを、腕へ。' dist/history/index.html; then
+            echo 'retired HISTORY catchphrase remains'
+            exit 1
+          fi
+
+          if grep -Fq 'v10-owner-empty' dist/history/index.html; then
+            echo 'empty owner-note poster placeholder remains'
             exit 1
           fi
 
@@ -136,6 +142,6 @@ jobs:
       - name: Upload staging build artifact
         uses: actions/upload-artifact@v4
         with:
-          name: staging-history-v10-dist
+          name: staging-history-v11-dist
           path: dist
           retention-days: 7
