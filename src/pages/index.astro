@@ -23,64 +23,81 @@ const schema = {
     <meta name="theme-color" content="#171410" />
     <SeoHead title={title} description={description} path="" schema={schema} />
   </head>
-  <body class="home-v3">
-    <SectionMast rightLabel="ALARM WRISTWATCH ARCHIVE" />
+  <body class="home-v4">
+    <SectionMast rightLabel="ALARM WRISTWATCHES" />
 
     <main>
-      <section class="home-v3-cover" aria-labelledby="home-v3-title">
-        <div class="home-v3-photo-placeholder" aria-hidden="true">
+      <section class="home-v4-cover" aria-labelledby="home-v4-title">
+        <div class="home-v4-photo-placeholder" aria-hidden="true">
           <span>COLLECTION PHOTOGRAPH / TEMP</span>
         </div>
 
-        <div class="shell home-v3-cover-inner">
-          <div class="home-v3-cover-copy">
-            <h1 id="home-v3-title"><span>VINTAGE</span><span>ALARM</span></h1>
-            <p>アラームを、腕へ。</p>
-          </div>
-          <div class="home-v3-scroll" aria-hidden="true"><span>SCROLL</span><b>↓</b></div>
+        <div class="shell home-v4-cover-inner">
+          <h1 id="home-v4-title"><span>VINTAGE</span><span>ALARM</span></h1>
+          <div class="home-v4-scroll" aria-hidden="true"><span>SCROLL</span><b>↓</b></div>
         </div>
       </section>
 
-      <section class="shell home-v3-intro" aria-label="VINTAGE ALARMについて">
-        <small>MECHANICAL ALARM WRISTWATCH ARCHIVE</small>
-        <p>機械式アラーム腕時計を、<br />実機・音・資料から読む。</p>
+      <section class="shell home-v4-intro" aria-label="VINTAGE ALARMについて">
+        <small>MECHANICAL ALARM WRISTWATCHES</small>
+        <p>機械式アラーム腕時計を、<br />歴史・実機・資料から、<br />現代の感覚で読む。</p>
       </section>
 
-      <section class="home-v3-history-band">
-        <div class="shell">
-          <a class="home-v3-history" href={`${base}history/`}>
-            <span class="home-v3-no">01</span>
+      <section class="shell home-v4-contents" aria-label="VINTAGE ALARM CONTENTS">
+        <header class="home-v4-contents-head">
+          <span>CONTENTS</span>
+          <span>01 — 04</span>
+        </header>
+
+        <nav class="home-v4-nav" aria-label="VINTAGE ALARM メインコンテンツ">
+          <a href={`${base}history/`}>
+            <span class="home-v4-no">01</span>
             <div>
-              <small>ENTER</small>
-              <h2>HISTORY</h2>
-              <p>鐘から現在まで。アラーム腕時計の歴史を読む</p>
+              <strong>HISTORY</strong>
+              <small>アラーム腕時計の歴史をたどる。</small>
             </div>
             <b aria-hidden="true">→</b>
           </a>
-        </div>
-      </section>
 
-      <section class="shell home-v3-secondary">
-        <a href={`${base}history/#research`}>
-          <span class="home-v3-no">02</span>
-          <div>
-            <small>RESEARCH</small>
-            <p>気になっているもの、調査中の個体</p>
-          </div>
-          <b aria-hidden="true">→</b>
-        </a>
+          <a href={`${base}history/#milestones`}>
+            <span class="home-v4-no">02</span>
+            <div>
+              <strong>MILESTONES</strong>
+              <small>歴史の節目になったアラーム腕時計。</small>
+            </div>
+            <b aria-hidden="true">→</b>
+          </a>
+
+          <a href={`${base}owners-notes/`}>
+            <span class="home-v4-no">03</span>
+            <div>
+              <strong>OWNER'S NOTES</strong>
+              <small>所有個体から見る。</small>
+            </div>
+            <b aria-hidden="true">→</b>
+          </a>
+
+          <a href={`${base}history/#research`}>
+            <span class="home-v4-no">04</span>
+            <div>
+              <strong>RESEARCH</strong>
+              <small>次に気になっているものと、そのデータ。</small>
+            </div>
+            <b aria-hidden="true">→</b>
+          </a>
+        </nav>
       </section>
     </main>
 
     <style>
-      .home-v3-cover{
+      .home-v4-cover{
         position:relative;
         min-height:calc(100svh - 64px);
         overflow:hidden;
         background:#171410;
         color:#eee9df;
       }
-      .home-v3-photo-placeholder{
+      .home-v4-photo-placeholder{
         position:absolute;
         inset:0;
         background:
@@ -88,27 +105,27 @@ const schema = {
           radial-gradient(circle at 78% 62%,rgba(116,94,70,.14),transparent 26%),
           linear-gradient(145deg,#211d18 0%,#12100d 58%,#090807 100%);
       }
-      .home-v3-photo-placeholder::before,
-      .home-v3-photo-placeholder::after{
+      .home-v4-photo-placeholder::before,
+      .home-v4-photo-placeholder::after{
         content:"";
         position:absolute;
         border:1px solid rgba(238,233,223,.10);
-        transform:rotate(-17deg);
       }
-      .home-v3-photo-placeholder::before{
+      .home-v4-photo-placeholder::before{
         width:56%;
         aspect-ratio:1/1.35;
         left:-7%;
         top:12%;
+        transform:rotate(-17deg);
       }
-      .home-v3-photo-placeholder::after{
+      .home-v4-photo-placeholder::after{
         width:42%;
         aspect-ratio:1/1.45;
         right:-8%;
         bottom:8%;
         transform:rotate(16deg);
       }
-      .home-v3-photo-placeholder>span{
+      .home-v4-photo-placeholder>span{
         position:absolute;
         top:24px;
         left:50%;
@@ -120,7 +137,7 @@ const schema = {
         font-size:9px;
         letter-spacing:.18em;
       }
-      .home-v3-cover-inner{
+      .home-v4-cover-inner{
         position:relative;
         z-index:1;
         display:flex;
@@ -130,7 +147,7 @@ const schema = {
         padding-top:110px;
         padding-bottom:42px;
       }
-      .home-v3-cover-copy h1{
+      .home-v4-cover h1{
         margin:0;
         font-family:Georgia,"Times New Roman",serif;
         font-size:clamp(72px,13vw,122px);
@@ -138,13 +155,8 @@ const schema = {
         line-height:.80;
         letter-spacing:-.035em;
       }
-      .home-v3-cover-copy h1 span{display:block}
-      .home-v3-cover-copy p{
-        margin:34px 0 0;
-        font-size:clamp(20px,3.4vw,30px);
-        letter-spacing:.08em;
-      }
-      .home-v3-scroll{
+      .home-v4-cover h1 span{display:block}
+      .home-v4-scroll{
         display:flex;
         align-items:center;
         gap:12px;
@@ -154,12 +166,13 @@ const schema = {
         font-size:9px;
         letter-spacing:.16em;
       }
-      .home-v3-scroll b{font-size:17px;font-weight:400;letter-spacing:0}
-      .home-v3-intro{
-        padding:70px 0 82px;
+      .home-v4-scroll b{font-size:17px;font-weight:400;letter-spacing:0}
+
+      .home-v4-intro{
+        padding:72px 0 82px;
         border-bottom:1px solid var(--ink);
       }
-      .home-v3-intro small{
+      .home-v4-intro small{
         display:block;
         margin-bottom:28px;
         color:var(--soft);
@@ -167,146 +180,127 @@ const schema = {
         font-size:10px;
         letter-spacing:.16em;
       }
-      .home-v3-intro p{
+      .home-v4-intro p{
         margin:0;
-        max-width:18em;
+        max-width:19em;
         font-size:clamp(24px,4.2vw,36px);
         line-height:1.72;
         letter-spacing:.015em;
       }
-      .home-v3-history-band{
-        border-bottom:1px solid var(--ink);
-        background:#ebe4d8;
-      }
-      .home-v3-history{
-        display:grid;
-        grid-template-columns:54px minmax(0,1fr) auto;
-        gap:24px;
-        align-items:end;
-        min-height:310px;
-        padding:58px 0 48px;
-        color:inherit;
-        text-decoration:none;
-      }
-      .home-v3-no{
-        align-self:start;
-        color:var(--soft);
-        font-family:Georgia,"Times New Roman",serif;
-        font-size:11px;
-        letter-spacing:.12em;
-      }
-      .home-v3-history small,
-      .home-v3-secondary small{
+
+      .home-v4-contents{padding:58px 0 86px}
+      .home-v4-contents-head{
+        display:flex;
+        justify-content:space-between;
+        gap:18px;
+        padding-bottom:14px;
         color:var(--soft);
         font-family:Georgia,"Times New Roman",serif;
         font-size:10px;
         letter-spacing:.16em;
       }
-      .home-v3-history h2{
-        margin:8px 0 28px;
-        font-size:clamp(48px,8vw,78px);
-        line-height:.9;
-        letter-spacing:-.02em;
-      }
-      .home-v3-history p{
-        margin:0;
-        color:var(--soft);
-        font-size:16px;
-        line-height:1.75;
-      }
-      .home-v3-history>b,
-      .home-v3-secondary b{
-        font-family:Georgia,"Times New Roman",serif;
-        font-size:26px;
-        font-weight:400;
-      }
-      .home-v3-secondary{padding:0 0 74px}
-      .home-v3-secondary>a{
+      .home-v4-nav{border-top:1px solid var(--ink)}
+      .home-v4-nav>a{
         display:grid;
         grid-template-columns:54px minmax(0,1fr) auto;
         gap:24px;
         align-items:center;
-        min-height:112px;
+        min-height:122px;
+        padding:20px 0;
         border-bottom:1px solid var(--ink);
         text-decoration:none;
       }
-      .home-v3-secondary p{
-        margin:5px 0 0;
+      .home-v4-no{
+        align-self:start;
+        padding-top:5px;
+        color:var(--soft);
+        font-family:Georgia,"Times New Roman",serif;
+        font-size:11px;
+        letter-spacing:.12em;
+      }
+      .home-v4-nav strong{
+        display:block;
+        font-family:Georgia,"Times New Roman",serif;
+        font-size:clamp(27px,4.5vw,38px);
+        font-weight:400;
+        line-height:1;
+        letter-spacing:.01em;
+      }
+      .home-v4-nav small{
+        display:block;
+        margin-top:10px;
         color:var(--soft);
         font-size:14px;
-        line-height:1.55;
+        line-height:1.6;
+      }
+      .home-v4-nav b{
+        font-family:Georgia,"Times New Roman",serif;
+        font-size:24px;
+        font-weight:400;
       }
 
       @media(max-width:480px){
-        .home-v3-cover{min-height:calc(100svh - 56px)}
-        .home-v3-photo-placeholder>span{top:18px;font-size:7px}
-        .home-v3-cover-inner{
+        .home-v4-cover{min-height:calc(100svh - 56px)}
+        .home-v4-photo-placeholder>span{top:18px;font-size:7px}
+        .home-v4-cover-inner{
           min-height:calc(100svh - 56px);
           padding-top:82px;
           padding-bottom:32px;
         }
-        .home-v3-cover-copy h1{
+        .home-v4-cover h1{
           font-size:clamp(60px,18vw,76px);
           line-height:.82;
         }
-        .home-v3-cover-copy p{
-          margin-top:25px;
-          font-size:19px;
-        }
-        .home-v3-scroll{margin-top:38px}
-        .home-v3-intro{padding:52px 0 60px}
-        .home-v3-intro small{
+        .home-v4-scroll{margin-top:38px}
+
+        .home-v4-intro{padding:52px 0 60px}
+        .home-v4-intro small{
           margin-bottom:22px;
           font-size:8px;
           letter-spacing:.13em;
         }
-        .home-v3-intro p{
-          font-size:clamp(22px,6vw,27px);
+        .home-v4-intro p{
+          font-size:clamp(21px,5.9vw,27px);
           line-height:1.72;
         }
-        .home-v3-history{
+
+        .home-v4-contents{padding:42px 0 64px}
+        .home-v4-contents-head{font-size:8px}
+        .home-v4-nav>a{
           grid-template-columns:34px minmax(0,1fr) auto;
           gap:12px;
-          min-height:250px;
-          padding:42px 0 38px;
+          min-height:106px;
+          padding:18px 0;
         }
-        .home-v3-history h2{
-          margin:8px 0 22px;
-          font-size:clamp(46px,14vw,59px);
+        .home-v4-no{font-size:10px}
+        .home-v4-nav strong{font-size:clamp(24px,7.3vw,30px)}
+        .home-v4-nav small{
+          margin-top:8px;
+          font-size:13px;
+          line-height:1.5;
         }
-        .home-v3-history p{
-          max-width:19em;
-          font-size:14px;
-          line-height:1.65;
-        }
-        .home-v3-secondary{padding-bottom:58px}
-        .home-v3-secondary>a{
-          grid-template-columns:34px minmax(0,1fr) auto;
-          gap:12px;
-          min-height:94px;
-        }
-        .home-v3-secondary p{font-size:13px}
+        .home-v4-nav b{font-size:21px}
       }
 
       @media(max-width:340px){
-        .home-v3-cover-copy h1{font-size:58px}
-        .home-v3-cover-copy p{font-size:18px}
-        .home-v3-intro p{font-size:21px}
-        .home-v3-history h2{font-size:44px}
+        .home-v4-cover h1{font-size:58px}
+        .home-v4-intro p{font-size:20px}
+        .home-v4-nav strong{font-size:23px}
+        .home-v4-nav small{font-size:12px}
       }
     </style>
 
     <style is:global>
-      .home-v3 .section-mast{
+      .home-v4 .section-mast{
         background:#171410;
         color:#c9c1b5;
       }
-      .home-v3 .section-mast .mast-link{display:none}
-      .home-v3 .section-mast .section-menu>summary::before{
+      .home-v4 .section-mast .mast-link{display:none}
+      .home-v4 .section-mast .section-menu>summary::before{
         border-color:rgba(238,233,223,.34);
       }
       @media(max-width:480px){
-        .home-v3 .section-mast{
+        .home-v4 .section-mast{
           font-size:8px;
           letter-spacing:.08em;
         }
