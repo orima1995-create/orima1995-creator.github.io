@@ -616,3 +616,275 @@
   .v8-cover-title .wristwatch{font-size:30px}
   .v8-era h2{font-size:28px}
 }
+
+
+/* HISTORY v9 — density correction */
+
+.history-v9 .v8-era-inner{
+  padding-top:44px;
+  padding-bottom:48px;
+}
+.history-v9 .v8-copy{
+  margin-top:24px;
+}
+.history-v9 .v8-rail-block{
+  margin-top:30px;
+}
+.history-v9 .v8-rail-head{
+  padding-top:8px;
+  padding-bottom:7px;
+}
+
+/* Single-item milestone: compact editorial record, not a hero card */
+.history-v9 .v8-single-feature{
+  margin-top:28px;
+  padding:18px 0 20px;
+}
+.history-v9 .v8-single-year{
+  font-size:clamp(88px,17vw,170px);
+  top:-.04em;
+}
+.history-v9 .v8-single-content h3{
+  font-size:clamp(31px,5.5vw,52px);
+}
+.history-v9 .v8-single-content .v8-hook{
+  margin-top:14px;
+  font-size:15px;
+}
+.history-v9 .v8-single-content .v8-summary{
+  display:none;
+}
+.history-v9 .v8-single-content .v8-status{
+  margin-top:14px;
+}
+
+/* 1940s: one compact milestone + one thin owner note row */
+.v9-single-stack{
+  margin-top:30px;
+  border-top:1px solid var(--ink);
+}
+.v9-single-milestone{
+  position:relative;
+  padding:20px 0 22px;
+  border-bottom:1px solid var(--ink);
+}
+.v9-single-milestone h3{
+  margin:8px 0 0;
+  font-family:Georgia,"Times New Roman",serif;
+  font-size:clamp(33px,6vw,52px);
+  font-weight:400;
+  line-height:1;
+}
+.v9-single-milestone p{
+  margin:12px 0 0;
+  font-size:15px;
+  font-weight:600;
+  line-height:1.55;
+}
+.v9-single-milestone .v8-status{
+  margin-top:12px;
+}
+.v9-owner-row{
+  display:grid;
+  grid-template-columns:minmax(180px,.7fr) minmax(0,1fr) auto;
+  gap:20px;
+  align-items:center;
+  min-height:92px;
+  padding:14px 0;
+  border-bottom:1px solid var(--ink);
+}
+.v9-owner-row>div{
+  display:grid;
+  gap:4px;
+}
+.v9-owner-row small{
+  color:var(--soft);
+  font-family:Georgia,"Times New Roman",serif;
+  font-size:8px;
+  letter-spacing:.14em;
+}
+.v9-owner-row strong{
+  font-family:Georgia,"Times New Roman",serif;
+  font-size:22px;
+  font-weight:400;
+  line-height:1.1;
+}
+.v9-owner-row>span{
+  color:var(--soft);
+  font-size:13px;
+  line-height:1.5;
+}
+.v9-owner-row b{
+  font-family:Georgia,"Times New Roman",serif;
+  font-size:20px;
+  font-weight:400;
+}
+
+/* Milestone rails: index-sized, not mini-articles */
+.history-v9 .v8-swipe-rail{
+  grid-auto-columns:minmax(250px,34%);
+  gap:10px;
+  margin-top:12px;
+}
+.history-v9 .v8-card{
+  min-height:220px;
+  padding:17px;
+}
+.history-v9 .v8-card h3{
+  margin-top:9px;
+  font-size:clamp(23px,3.2vw,31px);
+}
+.history-v9 .v8-card .v8-hook{
+  margin-top:13px;
+  font-size:13px;
+  line-height:1.5;
+}
+.history-v9 .v8-card .v8-summary{
+  display:none;
+}
+.history-v9 .v8-card .v8-status{
+  padding-top:12px;
+}
+
+/* OWNER'S NOTES: thumbnail index only */
+.history-v9 .v9-owner-rail{
+  grid-auto-columns:minmax(210px,28%);
+}
+.v9-owner-card{
+  display:block;
+  overflow:hidden;
+  border:1px solid var(--ink);
+  color:inherit;
+  background:rgba(255,255,255,.14);
+  text-decoration:none;
+  scroll-snap-align:start;
+}
+.v9-owner-thumb{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  height:160px;
+  overflow:hidden;
+  border-bottom:1px solid var(--ink);
+  background:#ded6ca;
+}
+.v9-owner-thumb img{
+  display:block;
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  object-position:center top;
+}
+.v9-owner-empty{
+  padding:14px;
+  color:var(--soft);
+  font-family:Georgia,"Times New Roman",serif;
+  font-size:9px;
+  letter-spacing:.15em;
+}
+.v9-owner-caption{
+  display:flex;
+  justify-content:space-between;
+  gap:12px;
+  align-items:center;
+  min-height:58px;
+  padding:10px 12px;
+}
+.v9-owner-caption strong{
+  min-width:0;
+  font-family:Georgia,"Times New Roman",serif;
+  font-size:16px;
+  font-weight:400;
+  line-height:1.15;
+}
+.v9-owner-caption span{
+  flex:0 0 auto;
+  font-family:Georgia,"Times New Roman",serif;
+  font-size:18px;
+}
+
+@media(max-width:760px){
+  .history-v9 .v8-swipe-rail{
+    grid-auto-columns:64%;
+  }
+  .history-v9 .v9-owner-rail{
+    grid-auto-columns:54%;
+  }
+}
+
+@media(max-width:480px){
+  .history-v9 .v8-intro{
+    padding-top:38px;
+    padding-bottom:40px;
+  }
+  .history-v9 .v8-era-inner{
+    padding-top:38px;
+    padding-bottom:42px;
+  }
+  .history-v9 .v8-copy{
+    margin-top:22px;
+  }
+  .history-v9 .v8-rail-block{
+    margin-top:26px;
+  }
+  .history-v9 .v8-swipe-rail{
+    grid-auto-columns:68%;
+    gap:8px;
+    margin-top:10px;
+  }
+  .history-v9 .v8-card{
+    min-height:208px;
+    padding:15px;
+  }
+  .history-v9 .v8-card h3{
+    font-size:22px;
+  }
+  .history-v9 .v8-card .v8-hook{
+    font-size:12px;
+  }
+
+  .v9-single-stack{
+    margin-top:24px;
+  }
+  .v9-single-milestone{
+    padding:16px 0 18px;
+  }
+  .v9-single-milestone h3{
+    font-size:31px;
+  }
+  .v9-single-milestone p{
+    font-size:14px;
+  }
+  .v9-owner-row{
+    grid-template-columns:minmax(0,1fr) auto;
+    gap:12px;
+    min-height:78px;
+    padding:11px 0;
+  }
+  .v9-owner-row>span{
+    grid-column:1/-1;
+    grid-row:2;
+    font-size:12px;
+  }
+  .v9-owner-row b{
+    grid-column:2;
+    grid-row:1;
+  }
+  .v9-owner-row strong{
+    font-size:20px;
+  }
+
+  .history-v9 .v9-owner-rail{
+    grid-auto-columns:56%;
+  }
+  .v9-owner-thumb{
+    height:132px;
+  }
+  .v9-owner-caption{
+    min-height:52px;
+    padding:9px 10px;
+  }
+  .v9-owner-caption strong{
+    font-size:14px;
+  }
+}
