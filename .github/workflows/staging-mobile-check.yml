@@ -1,8 +1,8 @@
-name: Staging HISTORY v7 Check
+name: Staging HISTORY v8 Check
 
 on:
   push:
-    branches: ["staging/history-v7"]
+    branches: ["staging/history-v8"]
   workflow_dispatch:
 
 permissions:
@@ -28,7 +28,7 @@ jobs:
             src/data/owners-directory.json \
             public/images)
           if [ -n "$changed" ]; then
-            echo 'Protected editorial data or source images changed in HISTORY v7:'
+            echo 'Protected editorial data or source images changed in HISTORY v8:'
             echo "$changed"
             exit 1
           fi
@@ -57,25 +57,38 @@ jobs:
             test -f "$f" || { echo "missing file: $f"; exit 1; }
           done
 
-      - name: Verify HISTORY v7 editorial structure
+      - name: Verify HISTORY v8 cover and swipe system
         run: |
           set -e
-          grep -Fq 'v7-hero-milestone' dist/history/index.html || { echo '1910s hero milestone missing'; exit 1; }
-          grep -Fq 'v7-1940-grid' dist/history/index.html || { echo '1940s split layout missing'; exit 1; }
-          grep -Fq 'v7-milestone-rail' dist/history/index.html || { echo '1950s milestone rail missing'; exit 1; }
-          grep -Fq 'v7-owner-posters' dist/history/index.html || { echo '1950s owner poster stage missing'; exit 1; }
-          grep -Fq 'v7-compare' dist/history/index.html || { echo '1960s comparison layout missing'; exit 1; }
-          grep -Fq 'v7-transition' dist/history/index.html || { echo '1970s transition layout missing'; exit 1; }
-          grep -Fq 'v7-current' dist/history/index.html || { echo 'CURRENT ending missing'; exit 1; }
-          grep -Fq 'v7-next' dist/history/index.html || { echo 'RESEARCH exit missing'; exit 1; }
-          grep -Fq '所有個体から見る。' dist/history/index.html || { echo "OWNER'S NOTE definition missing"; exit 1; }
-          grep -Fq '次に気になっているものと、そのデータ。' dist/history/index.html || { echo 'RESEARCH definition missing'; exit 1; }
-          if grep -Fq 'history-v5-record' dist/history/index.html; then
-            echo 'legacy repeated record layout remains'
+          grep -Fq 'v8-cover' dist/history/index.html || { echo 'dark HISTORY cover missing'; exit 1; }
+          grep -Fq 'HISTORY</span>' dist/history/index.html || { echo 'HISTORY cover title missing'; exit 1; }
+          grep -Fq 'OF THE' dist/history/index.html || { echo 'cover subtitle missing'; exit 1; }
+          grep -Fq 'WRISTWATCH' dist/history/index.html || { echo 'cover wristwatch title missing'; exit 1; }
+
+          rails=$(grep -o 'v8-swipe-rail' dist/history/index.html | wc -l)
+          if [ "$rails" -lt 4 ]; then
+            echo "expected at least 4 swipe rails, found $rails"
             exit 1
           fi
-          if grep -Fq 'history-v5-research' dist/history/index.html; then
-            echo 'RESEARCH rendered as HISTORY chapter'
+
+          grep -Fq '1950年代のマイルストーン' dist/history/index.html
+          grep -Fq '1950年代の所有個体' dist/history/index.html
+          grep -Fq '1960年代のマイルストーン' dist/history/index.html
+          grep -Fq '1970年代のマイルストーン' dist/history/index.html
+
+          grep -Fq '所有個体から見る。' dist/history/index.html || { echo "OWNER'S NOTE definition missing"; exit 1; }
+          grep -Fq '次に気になっているものと、そのデータ。' dist/history/index.html || { echo 'RESEARCH definition missing'; exit 1; }
+
+          if grep -Fq 'v7-compare' dist/history/index.html; then
+            echo 'legacy 1960s vertical comparison remains'
+            exit 1
+          fi
+          if grep -Fq 'v7-transition' dist/history/index.html; then
+            echo 'legacy 1970s vertical transition remains'
+            exit 1
+          fi
+          if grep -Fq 'v7-owner-list' dist/history/index.html; then
+            echo 'legacy vertical owner list remains'
             exit 1
           fi
 
@@ -110,6 +123,6 @@ jobs:
       - name: Upload staging build artifact
         uses: actions/upload-artifact@v4
         with:
-          name: staging-history-v7-dist
+          name: staging-history-v8-dist
           path: dist
           retention-days: 7
