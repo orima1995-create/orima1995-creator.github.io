@@ -1,13 +1,9 @@
 ---
 import SeoHead from '../components/SeoHead.astro';
 import SectionMast from '../components/SectionMast.astro';
-import ownersDirectory from '../data/owners-directory.json';
 import '../styles/site.css';
+
 const base = import.meta.env.BASE_URL;
-const ownerEntries = [...ownersDirectory.entries].sort((a, b) => Number(b.ownerNumber) - Number(a.ownerNumber));
-const featured = ownerEntries[0];
-const featureHref = `${base}${featured.href.replace(/^\//, '')}`;
-const featureImage = `${base}${featured.image.replace(/^\//, '')}`;
 const title = 'VINTAGE ALARM｜機械式アラーム腕時計の歴史・実機・資料';
 const description = '機械式アラーム腕時計を、歴史・実機・音・資料から読むオンライン誌。Pierce Duofonをはじめ、各時代のアラーム腕時計と機構を整理する。';
 const schema = {
@@ -24,120 +20,296 @@ const schema = {
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#f3eee4" />
+    <meta name="theme-color" content="#171410" />
     <SeoHead title={title} description={description} path="" schema={schema} />
   </head>
-  <body>
-    <SectionMast rightLabel="ALARM WRISTWATCHES" />
+  <body class="home-v3">
+    <SectionMast rightLabel="ALARM WRISTWATCH ARCHIVE" />
+
     <main>
-      <section class="shell home-cover">
-        <div class="home-cover-title">
-          <h1><span>VINTAGE</span><span>ALARM</span></h1>
-          <p>アラームを、腕へ。</p>
+      <section class="home-v3-cover" aria-labelledby="home-v3-title">
+        <div class="home-v3-photo-placeholder" aria-hidden="true">
+          <span>COLLECTION PHOTOGRAPH / TEMP</span>
         </div>
-        <div class="home-cover-index" aria-label="VINTAGE ALARM 構成">
-          <span>HISTORY</span>
-          <span>OWNER'S NOTES</span>
-          <span>RESEARCH</span>
+
+        <div class="shell home-v3-cover-inner">
+          <div class="home-v3-cover-copy">
+            <h1 id="home-v3-title"><span>VINTAGE</span><span>ALARM</span></h1>
+            <p>アラームを、腕へ。</p>
+          </div>
+          <div class="home-v3-scroll" aria-hidden="true"><span>SCROLL</span><b>↓</b></div>
         </div>
       </section>
 
-      <section class="shell home-feature-section" aria-labelledby="home-feature-title">
-        <div class="home-section-line">
-          <span>OWNER'S NOTE / {featured.ownerNumber}</span>
-          <a href={`${base}owners-notes/`}>ALL NOTES →</a>
+      <section class="shell home-v3-intro" aria-label="VINTAGE ALARMについて">
+        <small>MECHANICAL ALARM WRISTWATCH ARCHIVE</small>
+        <p>機械式アラーム腕時計を、<br />実機・音・資料から読む。</p>
+      </section>
+
+      <section class="home-v3-history-band">
+        <div class="shell">
+          <a class="home-v3-history" href={`${base}history/`}>
+            <span class="home-v3-no">01</span>
+            <div>
+              <small>ENTER</small>
+              <h2>HISTORY</h2>
+              <p>鐘から現在まで。アラーム腕時計の歴史を読む</p>
+            </div>
+            <b aria-hidden="true">→</b>
+          </a>
         </div>
-        <a class="home-feature" href={featureHref}>
-          <div class="home-feature-image">
-            <img src={featureImage} alt="" loading="lazy" />
+      </section>
+
+      <section class="shell home-v3-secondary">
+        <a href={`${base}history/#research`}>
+          <span class="home-v3-no">02</span>
+          <div>
+            <small>RESEARCH</small>
+            <p>気になっているもの、調査中の個体</p>
           </div>
-          <div class="home-feature-copy">
-            <small>{featured.brand}</small>
-            <h2 id="home-feature-title">{featured.name}</h2>
-            <p>{featured.catch}</p>
-            <span>→</span>
-          </div>
+          <b aria-hidden="true">→</b>
         </a>
-      </section>
-
-      <section class="shell home-index-section" aria-label="VINTAGE ALARM メインコンテンツ">
-        <div class="home-section-line"><span>INDEX</span></div>
-        <div class="home-index-primary">
-          <a href={`${base}history/`}>
-            <span>01</span>
-            <strong>HISTORY</strong>
-            <small>鐘から現在まで。アラーム腕時計の歴史を読む</small>
-            <b>→</b>
-          </a>
-          <a href={`${base}owners-notes/`}>
-            <span>02</span>
-            <strong>OWNER'S<br />NOTES</strong>
-            <small>所有個体を、実機・操作・音から読む</small>
-            <b>→</b>
-          </a>
-        </div>
-        <nav class="home-index-secondary" aria-label="VINTAGE ALARM サブコンテンツ">
-          <a href={`${base}history/#milestones`}><span>03</span><strong>MILESTONES</strong><b>→</b></a>
-          <a href={`${base}history/#research`}><span>04</span><strong>RESEARCH</strong><b>→</b></a>
-        </nav>
       </section>
     </main>
 
     <style>
-      .home-cover{padding:88px 0 50px;border-bottom:1px solid var(--ink)}
-      .home-cover-title h1{margin:0;font-family:Georgia,"Times New Roman",serif;font-size:clamp(64px,13vw,116px);font-weight:400;line-height:.82;letter-spacing:-.025em}
-      .home-cover-title h1 span{display:block}
-      .home-cover-title p{margin:42px 0 0;font-size:clamp(21px,4vw,34px);letter-spacing:.05em}
-      .home-cover-index{display:flex;gap:18px;margin-top:54px;padding-top:13px;border-top:1px solid var(--rule);color:var(--soft);font-family:Georgia,"Times New Roman",serif;font-size:10px;letter-spacing:.12em}
-      .home-feature-section,.home-index-section{padding:54px 0 76px}
-      .home-index-section{border-top:1px solid var(--ink)}
-      .home-section-line{display:flex;justify-content:space-between;gap:20px;margin-bottom:16px;color:var(--soft);font-family:Georgia,"Times New Roman",serif;font-size:11px;letter-spacing:.14em}
-      .home-section-line a{color:inherit;text-decoration:none}
-      .home-feature{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(260px,.95fr);min-height:390px;border:1px solid var(--ink);color:inherit;text-decoration:none}
-      .home-feature-image{min-height:0;overflow:hidden;background:#d8d0c2}
-      .home-feature-image img{width:100%;height:100%;object-fit:cover;object-position:center top}
-      .home-feature-copy{display:flex;flex-direction:column;padding:36px}
-      .home-feature-copy small{font-family:Georgia,"Times New Roman",serif;font-size:11px;letter-spacing:.16em}
-      .home-feature-copy h2{margin:14px 0 0;font-size:clamp(34px,5vw,56px);line-height:.95}
-      .home-feature-copy p{margin:24px 0 0;color:var(--soft);font-size:17px;line-height:1.7}
-      .home-feature-copy>span{margin-top:auto;align-self:flex-end;font-family:Georgia,"Times New Roman",serif;font-size:28px}
-      .home-index-primary{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));border-top:1px solid var(--ink);border-left:1px solid var(--ink)}
-      .home-index-primary a{display:grid;grid-template-rows:auto auto 1fr auto;min-height:280px;padding:24px;border-right:1px solid var(--ink);border-bottom:1px solid var(--ink);text-decoration:none}
-      .home-index-primary span,.home-index-secondary span{color:var(--soft);font-family:Georgia,"Times New Roman",serif;font-size:12px}
-      .home-index-primary strong{margin-top:26px;font-family:Georgia,"Times New Roman",serif;font-size:clamp(29px,4vw,42px);font-weight:400;line-height:.95}
-      .home-index-primary small{align-self:end;margin-top:30px;color:var(--soft);font-size:14px;line-height:1.65}
-      .home-index-primary b{justify-self:end;margin-top:20px;font-family:Georgia,"Times New Roman",serif;font-size:25px;font-weight:400}
-      .home-index-secondary{border-top:1px solid var(--ink)}
-      .home-index-secondary a{display:grid;grid-template-columns:38px 1fr auto;gap:12px;align-items:center;min-height:66px;border-bottom:1px solid var(--ink);text-decoration:none}
-      .home-index-secondary strong{font-family:Georgia,"Times New Roman",serif;font-size:18px;font-weight:400;letter-spacing:.02em}
-      .home-index-secondary b{font-size:19px;font-weight:400}
-      @media(max-width:480px){
-        .home-cover{padding:54px 0 34px}
-        .home-cover-title h1{font-size:clamp(58px,18vw,74px)}
-        .home-cover-title p{margin-top:27px;font-size:20px}
-        .home-cover-index{gap:11px;margin-top:38px;padding-top:10px;font-size:8px;letter-spacing:.09em}
-        .home-feature-section,.home-index-section{padding:36px 0 54px}
-        .home-section-line{margin-bottom:12px;font-size:9px}
-        .home-feature{grid-template-columns:1fr;min-height:0}
-        .home-feature-image{aspect-ratio:1/1}
-        .home-feature-copy{display:grid;grid-template-columns:1fr auto;padding:18px}
-        .home-feature-copy small{grid-column:1/-1;font-size:9px}
-        .home-feature-copy h2{grid-column:1/-1;margin-top:9px;font-size:32px}
-        .home-feature-copy p{margin-top:14px;font-size:15px;line-height:1.55}
-        .home-feature-copy>span{align-self:end;font-size:24px}
-        .home-index-primary{grid-template-columns:repeat(2,minmax(0,1fr))}
-        .home-index-primary a{min-height:224px;padding:16px}
-        .home-index-primary strong{margin-top:20px;font-size:clamp(22px,6.2vw,27px)}
-        .home-index-primary small{margin-top:22px;font-size:12px;line-height:1.55}
-        .home-index-primary b{margin-top:14px;font-size:21px}
-        .home-index-secondary a{min-height:60px}
-        .home-index-secondary strong{font-size:16px}
+      .home-v3-cover{
+        position:relative;
+        min-height:calc(100svh - 64px);
+        overflow:hidden;
+        background:#171410;
+        color:#eee9df;
       }
+      .home-v3-photo-placeholder{
+        position:absolute;
+        inset:0;
+        background:
+          radial-gradient(circle at 22% 26%,rgba(174,145,106,.16),transparent 24%),
+          radial-gradient(circle at 78% 62%,rgba(116,94,70,.14),transparent 26%),
+          linear-gradient(145deg,#211d18 0%,#12100d 58%,#090807 100%);
+      }
+      .home-v3-photo-placeholder::before,
+      .home-v3-photo-placeholder::after{
+        content:"";
+        position:absolute;
+        border:1px solid rgba(238,233,223,.10);
+        transform:rotate(-17deg);
+      }
+      .home-v3-photo-placeholder::before{
+        width:56%;
+        aspect-ratio:1/1.35;
+        left:-7%;
+        top:12%;
+      }
+      .home-v3-photo-placeholder::after{
+        width:42%;
+        aspect-ratio:1/1.45;
+        right:-8%;
+        bottom:8%;
+        transform:rotate(16deg);
+      }
+      .home-v3-photo-placeholder>span{
+        position:absolute;
+        top:24px;
+        left:50%;
+        transform:translateX(-50%);
+        width:max-content;
+        max-width:80%;
+        color:rgba(238,233,223,.42);
+        font-family:Georgia,"Times New Roman",serif;
+        font-size:9px;
+        letter-spacing:.18em;
+      }
+      .home-v3-cover-inner{
+        position:relative;
+        z-index:1;
+        display:flex;
+        flex-direction:column;
+        justify-content:flex-end;
+        min-height:calc(100svh - 64px);
+        padding-top:110px;
+        padding-bottom:42px;
+      }
+      .home-v3-cover-copy h1{
+        margin:0;
+        font-family:Georgia,"Times New Roman",serif;
+        font-size:clamp(72px,13vw,122px);
+        font-weight:400;
+        line-height:.80;
+        letter-spacing:-.035em;
+      }
+      .home-v3-cover-copy h1 span{display:block}
+      .home-v3-cover-copy p{
+        margin:34px 0 0;
+        font-size:clamp(20px,3.4vw,30px);
+        letter-spacing:.08em;
+      }
+      .home-v3-scroll{
+        display:flex;
+        align-items:center;
+        gap:12px;
+        margin-top:52px;
+        color:rgba(238,233,223,.62);
+        font-family:Georgia,"Times New Roman",serif;
+        font-size:9px;
+        letter-spacing:.16em;
+      }
+      .home-v3-scroll b{font-size:17px;font-weight:400;letter-spacing:0}
+      .home-v3-intro{
+        padding:70px 0 82px;
+        border-bottom:1px solid var(--ink);
+      }
+      .home-v3-intro small{
+        display:block;
+        margin-bottom:28px;
+        color:var(--soft);
+        font-family:Georgia,"Times New Roman",serif;
+        font-size:10px;
+        letter-spacing:.16em;
+      }
+      .home-v3-intro p{
+        margin:0;
+        max-width:18em;
+        font-size:clamp(24px,4.2vw,36px);
+        line-height:1.72;
+        letter-spacing:.015em;
+      }
+      .home-v3-history-band{
+        border-bottom:1px solid var(--ink);
+        background:#ebe4d8;
+      }
+      .home-v3-history{
+        display:grid;
+        grid-template-columns:54px minmax(0,1fr) auto;
+        gap:24px;
+        align-items:end;
+        min-height:310px;
+        padding:58px 0 48px;
+        color:inherit;
+        text-decoration:none;
+      }
+      .home-v3-no{
+        align-self:start;
+        color:var(--soft);
+        font-family:Georgia,"Times New Roman",serif;
+        font-size:11px;
+        letter-spacing:.12em;
+      }
+      .home-v3-history small,
+      .home-v3-secondary small{
+        color:var(--soft);
+        font-family:Georgia,"Times New Roman",serif;
+        font-size:10px;
+        letter-spacing:.16em;
+      }
+      .home-v3-history h2{
+        margin:8px 0 28px;
+        font-size:clamp(48px,8vw,78px);
+        line-height:.9;
+        letter-spacing:-.02em;
+      }
+      .home-v3-history p{
+        margin:0;
+        color:var(--soft);
+        font-size:16px;
+        line-height:1.75;
+      }
+      .home-v3-history>b,
+      .home-v3-secondary b{
+        font-family:Georgia,"Times New Roman",serif;
+        font-size:26px;
+        font-weight:400;
+      }
+      .home-v3-secondary{padding:0 0 74px}
+      .home-v3-secondary>a{
+        display:grid;
+        grid-template-columns:54px minmax(0,1fr) auto;
+        gap:24px;
+        align-items:center;
+        min-height:112px;
+        border-bottom:1px solid var(--ink);
+        text-decoration:none;
+      }
+      .home-v3-secondary p{
+        margin:5px 0 0;
+        color:var(--soft);
+        font-size:14px;
+        line-height:1.55;
+      }
+
+      @media(max-width:480px){
+        .home-v3-cover{min-height:calc(100svh - 56px)}
+        .home-v3-photo-placeholder>span{top:18px;font-size:7px}
+        .home-v3-cover-inner{
+          min-height:calc(100svh - 56px);
+          padding-top:82px;
+          padding-bottom:32px;
+        }
+        .home-v3-cover-copy h1{
+          font-size:clamp(60px,18vw,76px);
+          line-height:.82;
+        }
+        .home-v3-cover-copy p{
+          margin-top:25px;
+          font-size:19px;
+        }
+        .home-v3-scroll{margin-top:38px}
+        .home-v3-intro{padding:52px 0 60px}
+        .home-v3-intro small{
+          margin-bottom:22px;
+          font-size:8px;
+          letter-spacing:.13em;
+        }
+        .home-v3-intro p{
+          font-size:clamp(22px,6vw,27px);
+          line-height:1.72;
+        }
+        .home-v3-history{
+          grid-template-columns:34px minmax(0,1fr) auto;
+          gap:12px;
+          min-height:250px;
+          padding:42px 0 38px;
+        }
+        .home-v3-history h2{
+          margin:8px 0 22px;
+          font-size:clamp(46px,14vw,59px);
+        }
+        .home-v3-history p{
+          max-width:19em;
+          font-size:14px;
+          line-height:1.65;
+        }
+        .home-v3-secondary{padding-bottom:58px}
+        .home-v3-secondary>a{
+          grid-template-columns:34px minmax(0,1fr) auto;
+          gap:12px;
+          min-height:94px;
+        }
+        .home-v3-secondary p{font-size:13px}
+      }
+
       @media(max-width:340px){
-        .home-cover-index{gap:8px;font-size:7px}
-        .home-feature-copy h2{font-size:29px}
-        .home-index-primary strong{font-size:20px}
-        .home-index-primary small{font-size:11px}
+        .home-v3-cover-copy h1{font-size:58px}
+        .home-v3-cover-copy p{font-size:18px}
+        .home-v3-intro p{font-size:21px}
+        .home-v3-history h2{font-size:44px}
+      }
+    </style>
+
+    <style is:global>
+      .home-v3 .section-mast{
+        background:#171410;
+        color:#c9c1b5;
+      }
+      .home-v3 .section-mast .mast-link{display:none}
+      .home-v3 .section-mast .section-menu>summary::before{
+        border-color:rgba(238,233,223,.34);
+      }
+      @media(max-width:480px){
+        .home-v3 .section-mast{
+          font-size:8px;
+          letter-spacing:.08em;
+        }
       }
     </style>
   </body>

@@ -1,8 +1,8 @@
-name: Staging Mobile v2 Check
+name: Staging Mobile v3 Check
 
 on:
   push:
-    branches: ["staging/mobile-v2"]
+    branches: ["staging/mobile-v3"]
   workflow_dispatch:
 
 permissions:
@@ -57,13 +57,22 @@ jobs:
             test -f "$f" || { echo "missing file: $f"; exit 1; }
           done
 
-      - name: Verify mobile v2 structure
+      - name: Verify mobile v3 TOP structure
         run: |
           set -e
-          grep -Fq 'home-feature-section' dist/index.html || { echo 'editorial home feature missing'; exit 1; }
-          grep -Fq 'home-index-primary' dist/index.html || { echo 'home hierarchy missing'; exit 1; }
+          grep -Fq 'home-v3-cover' dist/index.html || { echo 'v3 cover missing'; exit 1; }
+          grep -Fq 'COLLECTION PHOTOGRAPH / TEMP' dist/index.html || { echo 'cover photo placeholder missing'; exit 1; }
+          grep -Fq 'home-v3-history' dist/index.html || { echo 'history primary route missing'; exit 1; }
+          grep -Fq 'home-v3-secondary' dist/index.html || { echo 'research secondary route missing'; exit 1; }
+          if grep -Fq "OWNER'S NOTE /" dist/index.html; then
+            echo "OWNER'S NOTE feature leaked into TOP"
+            exit 1
+          fi
+          if grep -Fq 'MILESTONES' dist/index.html; then
+            echo 'MILESTONES duplicated on TOP'
+            exit 1
+          fi
           grep -Fq 'owners-mobile-rail' dist/owners-notes/index.html || { echo 'mobile owners rail missing'; exit 1; }
-          grep -R -Fq 'scroll-snap-type:x mandatory' dist/_astro dist/owners-notes/index.html || { echo 'owners swipe snapping missing'; exit 1; }
           grep -R -Fq 'prefers-reduced-motion' dist/_astro || { echo 'mobile shared CSS missing from build'; exit 1; }
 
       - name: Guard editorial output
@@ -89,6 +98,6 @@ jobs:
       - name: Upload staging build artifact
         uses: actions/upload-artifact@v4
         with:
-          name: staging-mobile-v2-dist
+          name: staging-mobile-v3-dist
           path: dist
           retention-days: 7
