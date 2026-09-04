@@ -1,8 +1,8 @@
-name: Staging Mobile v3 Check
+name: Staging Mobile v4 Check
 
 on:
   push:
-    branches: ["staging/mobile-v3"]
+    branches: ["staging/mobile-v4"]
   workflow_dispatch:
 
 permissions:
@@ -57,19 +57,20 @@ jobs:
             test -f "$f" || { echo "missing file: $f"; exit 1; }
           done
 
-      - name: Verify mobile v3 TOP structure
+      - name: Verify mobile v4 TOP structure
         run: |
           set -e
-          grep -Fq 'home-v3-cover' dist/index.html || { echo 'v3 cover missing'; exit 1; }
+          grep -Fq 'home-v4-cover' dist/index.html || { echo 'v4 cover missing'; exit 1; }
           grep -Fq 'COLLECTION PHOTOGRAPH / TEMP' dist/index.html || { echo 'cover photo placeholder missing'; exit 1; }
-          grep -Fq 'home-v3-history' dist/index.html || { echo 'history primary route missing'; exit 1; }
-          grep -Fq 'home-v3-secondary' dist/index.html || { echo 'research secondary route missing'; exit 1; }
-          if grep -Fq "OWNER'S NOTE /" dist/index.html; then
-            echo "OWNER'S NOTE feature leaked into TOP"
-            exit 1
-          fi
-          if grep -Fq 'MILESTONES' dist/index.html; then
-            echo 'MILESTONES duplicated on TOP'
+          grep -Fq '現代の感覚で読む。' dist/index.html || { echo 'modern translation theme missing'; exit 1; }
+          grep -Fq 'HISTORY' dist/index.html
+          grep -Fq 'MILESTONES' dist/index.html
+          grep -Fq "OWNER'S NOTES" dist/index.html
+          grep -Fq 'RESEARCH' dist/index.html
+          grep -Fq '所有個体から見る。' dist/index.html || { echo "OWNER'S NOTES definition drifted"; exit 1; }
+          grep -Fq '次に気になっているものと、そのデータ。' dist/index.html || { echo 'RESEARCH definition drifted'; exit 1; }
+          if grep -Fq 'アラームを、腕へ。' dist/index.html; then
+            echo 'retired catch remains on TOP'
             exit 1
           fi
           grep -Fq 'owners-mobile-rail' dist/owners-notes/index.html || { echo 'mobile owners rail missing'; exit 1; }
@@ -98,6 +99,6 @@ jobs:
       - name: Upload staging build artifact
         uses: actions/upload-artifact@v4
         with:
-          name: staging-mobile-v3-dist
+          name: staging-mobile-v4-dist
           path: dist
           retention-days: 7
