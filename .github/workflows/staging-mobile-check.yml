@@ -1,8 +1,8 @@
-name: Staging Mobile v4 Check
+name: Staging HISTORY v5 Check
 
 on:
   push:
-    branches: ["staging/mobile-v4"]
+    branches: ["staging/history-v5"]
   workflow_dispatch:
 
 permissions:
@@ -17,18 +17,18 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Guard design-only scope
+      - name: Guard editorial content and source images
         run: |
           set -e
-          git fetch origin main
-          changed=$(git diff --name-only origin/main...HEAD -- \
+          git fetch origin staging/mobile-v4
+          changed=$(git diff --name-only origin/staging/mobile-v4...HEAD -- \
             src/content \
             src/data/history-content.json \
             src/data/history-catalog.ts \
             src/data/owners-directory.json \
             public/images)
           if [ -n "$changed" ]; then
-            echo 'Editorial content or source images changed in mobile staging:'
+            echo 'Protected editorial data or source images changed in HISTORY v5:'
             echo "$changed"
             exit 1
           fi
@@ -57,26 +57,28 @@ jobs:
             test -f "$f" || { echo "missing file: $f"; exit 1; }
           done
 
-      - name: Verify mobile v4 TOP structure
+      - name: Verify HISTORY v5 structure
         run: |
           set -e
-          grep -Fq 'home-v4-cover' dist/index.html || { echo 'v4 cover missing'; exit 1; }
-          grep -Fq 'COLLECTION PHOTOGRAPH / TEMP' dist/index.html || { echo 'cover photo placeholder missing'; exit 1; }
-          grep -Fq '現代の感覚で読む。' dist/index.html || { echo 'modern translation theme missing'; exit 1; }
-          grep -Fq 'HISTORY' dist/index.html
-          grep -Fq 'MILESTONES' dist/index.html
-          grep -Fq "OWNER'S NOTES" dist/index.html
-          grep -Fq 'RESEARCH' dist/index.html
-          grep -Fq '所有個体から見る。' dist/index.html || { echo "OWNER'S NOTES definition drifted"; exit 1; }
-          grep -Fq '次に気になっているものと、そのデータ。' dist/index.html || { echo 'RESEARCH definition drifted'; exit 1; }
-          if grep -Fq 'アラームを、腕へ。' dist/index.html; then
-            echo 'retired catch remains on TOP'
+          grep -Fq 'history-v5-era-nav' dist/history/index.html || { echo 'era nav missing'; exit 1; }
+          grep -Fq 'history-v5-chapter' dist/history/index.html || { echo 'continuous chapters missing'; exit 1; }
+          grep -Fq 'history-v5-owner-poster' dist/history/index.html || { echo 'owner note poster treatment missing'; exit 1; }
+          grep -Fq '次に気になっているものと、そのデータ。' dist/history/index.html || { echo 'RESEARCH landing missing'; exit 1; }
+          grep -Fq '機械式アラーム腕時計の歴史' dist/history/index.html || { echo 'HISTORY title missing'; exit 1; }
+          if grep -Fq 'class="history-chapter"' dist/history/index.html; then
+            echo 'legacy accordion chapters remain'
             exit 1
           fi
-          grep -Fq 'owners-mobile-rail' dist/owners-notes/index.html || { echo 'mobile owners rail missing'; exit 1; }
-          grep -R -Fq 'prefers-reduced-motion' dist/_astro || { echo 'mobile shared CSS missing from build'; exit 1; }
 
-      - name: Guard editorial output
+      - name: Verify TOP v4 stays intact
+        run: |
+          set -e
+          grep -Fq 'home-v4-cover' dist/index.html
+          grep -Fq '現代の感覚で読む。' dist/index.html
+          grep -Fq '所有個体から見る。' dist/index.html
+          grep -Fq '次に気になっているものと、そのデータ。' dist/index.html
+
+      - name: Guard watch invariants
         run: |
           set -e
           grep -Fq '鳴る黄金のクロノメーター' dist/cyma-time-o-vox/index.html
@@ -99,6 +101,6 @@ jobs:
       - name: Upload staging build artifact
         uses: actions/upload-artifact@v4
         with:
-          name: staging-mobile-v4-dist
+          name: staging-history-v5-dist
           path: dist
           retention-days: 7
