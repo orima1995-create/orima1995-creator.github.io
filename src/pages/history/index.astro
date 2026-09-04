@@ -5,13 +5,16 @@ import { historyCatalogByGroup } from '../../data/history-catalog';
 import { historyContent } from '../../data/history-content';
 import ownersDirectory from '../../data/owners-directory.json';
 import '../../styles/site.css';
-import '../../styles/history-v5.css';
+import '../../styles/history-v7.css';
 
 const base = import.meta.env.BASE_URL;
+
 const milestoneCards = (era: '1910s' | '1940s' | '1950s' | '1960s' | 'electronic') =>
   historyCatalogByGroup.milestones.filter((entry) => entry.era === era && entry.featured);
+
 const ownerCards = (era: '1940s' | '1950s') =>
   historyCatalogByGroup.owners.filter((entry) => entry.era === era && entry.featured);
+
 const ownerDirectoryEntry = (entryName: string) =>
   ownersDirectory.entries.find((note) => {
     const current = entryName.toUpperCase();
@@ -29,6 +32,17 @@ const era1960s = historyContent.era1960s;
 const electronic = historyContent.electronic;
 const current = historyContent.current;
 const sources = historyContent.sources;
+
+const milestones1910s = milestoneCards('1910s');
+const milestones1940s = milestoneCards('1940s');
+const milestones1950s = milestoneCards('1950s');
+const milestones1960s = milestoneCards('1960s');
+const milestones1970s = milestoneCards('electronic');
+const owners1940s = ownerCards('1940s');
+const owners1950s = ownerCards('1950s').map((entry) => ({
+  entry,
+  note: ownerDirectoryEntry(entry.name)
+}));
 
 const eraNav = [
   { href: '#before', no: '00', label: 'BEFORE' },
@@ -85,19 +99,22 @@ const schema = {
     <meta name="theme-color" content="#f3eee4" />
     <SeoHead title={title} description={description} path="history/" type="article" schema={schema} />
   </head>
-  <body>
+  <body class="history-v7">
     <SectionMast rightLabel="HISTORY" />
 
     <main>
-      <section class="shell history-v5-hero">
-        <div class="eyebrow">{hero.eyebrow}</div>
+      <section class="shell v7-hero">
+        <div class="v7-hero-top">
+          <span>{hero.eyebrow}</span>
+          <span>00 — 06</span>
+        </div>
         <h1>HISTORY</h1>
-        <p class="history-v5-title-jp">機械式アラーム腕時計の歴史</p>
-        <p class="history-v5-kicker">{hero.kicker[0]}<br />{hero.kicker[1]}</p>
+        <p class="v7-hero-jp">機械式アラーム腕時計の歴史</p>
+        <p class="v7-hero-kicker">{hero.kicker[0]}<br />{hero.kicker[1]}</p>
       </section>
 
-      <div class="history-v5-era-nav-wrap">
-        <nav class="shell history-v5-era-nav" aria-label="歴史の年代ナビゲーション">
+      <div class="v7-era-nav-wrap">
+        <nav class="shell v7-era-nav" aria-label="歴史の年代ナビゲーション">
           {eraNav.map((item) => (
             <a href={item.href}>
               <span>{item.no}</span>
@@ -107,268 +124,240 @@ const schema = {
         </nav>
       </div>
 
-      <section class="history-v5-chapter" id="before">
-        <div class="shell history-v5-chapter-inner">
-          <header class="history-v5-chapter-head">
-            <span class="history-v5-no">{before.chapterNo}</span>
+      <section class="v7-era v7-before" id="before">
+        <div class="shell v7-era-inner">
+          <header class="v7-era-head">
+            <span class="v7-era-no">{before.chapterNo}</span>
             <div>
-              <p class="history-v5-chapter-label">{before.label}</p>
+              <p class="v7-era-label">{before.label}</p>
               <h2>{before.title}</h2>
-              <p class="history-v5-teaser">{before.teaser}</p>
+              <p class="v7-teaser">{before.teaser}</p>
             </div>
           </header>
-          <div class="history-v5-body">
-            <p class="history-v5-overline">{before.overline}</p>
+
+          <div class="v7-copy">
+            <p class="v7-overline">{before.overline}</p>
             {before.intro.map((paragraph) => <p>{paragraph}</p>)}
           </div>
         </div>
       </section>
 
-      <section class="history-v5-chapter" id="1910s">
-        <div class="shell history-v5-chapter-inner">
-          <header class="history-v5-chapter-head">
-            <span class="history-v5-no">{era1910s.chapterNo}</span>
+      <section class="v7-era v7-1910s" id="1910s">
+        <div class="shell v7-era-inner">
+          <header class="v7-era-head">
+            <span class="v7-era-no">{era1910s.chapterNo}</span>
             <div>
-              <p class="history-v5-chapter-label">{era1910s.label}</p>
+              <p class="v7-era-label">{era1910s.label}</p>
               <h2>{era1910s.title}</h2>
-              <p class="history-v5-teaser">{era1910s.teaser}</p>
+              <p class="v7-teaser">{era1910s.teaser}</p>
             </div>
           </header>
-          <div class="history-v5-body">
-            <p class="history-v5-overline">{era1910s.overline}</p>
+
+          <div class="v7-copy">
+            <p class="v7-overline">{era1910s.overline}</p>
             <p>{era1910s.intro}</p>
           </div>
 
-          <section class="history-v5-shelf" id="milestones" aria-labelledby="milestones-1910s">
-            <div class="history-v5-shelf-head"><span id="milestones-1910s">MILESTONES</span><span>1910s</span></div>
-            <div class="history-v5-records">
-              {milestoneCards('1910s').map((entry) => (
-                <article class="history-v5-record">
-                  <small>{entry.meta}</small>
+          <section class="v7-hero-milestone" id="milestones" aria-label="1910年代のマイルストーン">
+            {milestones1910s.map((entry) => (
+              <>
+                <span class="v7-hero-milestone-year" aria-hidden="true">{entry.meta.slice(0, 4)}</span>
+                <article class="v7-hero-milestone-content">
+                  <small class="v7-meta">{entry.meta}</small>
                   <h3>{entry.name}</h3>
-                  <div class="history-v5-record-copy">
-                    <p class="history-v5-hook">{entry.hook}</p>
-                    <p>{entry.cardSummary}</p>
-                    <span class="history-v5-status">{entry.cardStatus}</span>
-                  </div>
+                  <p class="v7-hook">{entry.hook}</p>
+                  <p class="v7-summary">{entry.cardSummary}</p>
+                  <span class="v7-status">{entry.cardStatus}</span>
                 </article>
-              ))}
-            </div>
+              </>
+            ))}
           </section>
         </div>
       </section>
 
-      <section class="history-v5-chapter" id="1940s">
-        <div class="shell history-v5-chapter-inner">
-          <header class="history-v5-chapter-head">
-            <span class="history-v5-no">{era1940s.chapterNo}</span>
+      <section class="v7-era v7-1940s" id="1940s">
+        <div class="shell v7-era-inner">
+          <header class="v7-era-head">
+            <span class="v7-era-no">{era1940s.chapterNo}</span>
             <div>
-              <p class="history-v5-chapter-label">{era1940s.label}</p>
+              <p class="v7-era-label">{era1940s.label}</p>
               <h2>{era1940s.title}</h2>
-              <p class="history-v5-teaser">{era1940s.teaser}</p>
+              <p class="v7-teaser">{era1940s.teaser}</p>
             </div>
           </header>
-          <div class="history-v5-body">
-            <p class="history-v5-overline">{era1940s.overline}</p>
+
+          <div class="v7-copy">
+            <p class="v7-overline">{era1940s.overline}</p>
             <p>{era1940s.intro}</p>
           </div>
 
-          <section class="history-v5-shelf">
-            <div class="history-v5-shelf-head"><span>MILESTONES</span><span>1940s</span></div>
-            <div class="history-v5-records">
-              {milestoneCards('1940s').map((entry) => (
-                <article class="history-v5-record">
-                  <small>{entry.meta}</small>
-                  <h3>{entry.name}</h3>
-                  <div class="history-v5-record-copy">
-                    <p class="history-v5-hook">{entry.hook}</p>
-                    <p>{entry.cardSummary}</p>
-                    <span class="history-v5-status">{entry.cardStatus}</span>
-                  </div>
-                </article>
-              ))}
-            </div>
-          </section>
+          <div class="v7-1940-grid">
+            {milestones1940s.map((entry) => (
+              <article class="v7-cricket">
+                <small class="v7-meta">{entry.meta}</small>
+                <h3>{entry.name}</h3>
+                <p class="v7-hook">{entry.hook}</p>
+                <p class="v7-summary">{entry.cardSummary}</p>
+                <span class="v7-status">{entry.cardStatus}</span>
+              </article>
+            ))}
 
-          <section class="history-v5-shelf">
-            <div class="history-v5-shelf-head"><span>OWNER'S NOTES</span><span>FROM THE COLLECTION</span></div>
-            <div class="history-v6-owner-stack">
-              {ownerCards('1940s').map((entry) => {
-                const note = ownerDirectoryEntry(entry.name);
-                return note ? (
-                  <a class="history-v6-owner-feature" href={`${base}${note.href.replace(/^\//, '')}`}>
-                    <div class="history-v6-owner-feature-image">
-                      <img src={`${base}${note.image.replace(/^\//, '')}`} alt="" loading="lazy" />
-                    </div>
-                    <div class="history-v6-owner-feature-copy">
-                      <small>{entry.meta}</small>
-                      <h3>{entry.name}</h3>
-                      <p>{entry.cardSummary}</p>
-                      <b aria-hidden="true">→</b>
-                    </div>
-                  </a>
-                ) : (
-                  <article class="history-v5-owner-text">
-                    <small>{entry.meta}</small>
-                    <h3>{entry.name}</h3>
-                    <p>{entry.cardSummary}</p>
-                    <span class="history-v5-status">{entry.cardStatus}</span>
-                  </article>
-                );
-              })}
-            </div>
-          </section>
+            {owners1940s.map((entry) => (
+              <article class="v7-owner-inset">
+                <small>OWNER'S NOTE / {entry.meta}</small>
+                <h3>{entry.name}</h3>
+                <p class="v7-hook">{entry.hook}</p>
+                <p class="v7-summary">{entry.cardSummary}</p>
+                <span class="v7-status">{entry.cardStatus}</span>
+              </article>
+            ))}
+          </div>
         </div>
       </section>
 
-      <section class="history-v5-chapter" id="1950s">
-        <div class="shell history-v5-chapter-inner">
-          <header class="history-v5-chapter-head">
-            <span class="history-v5-no">{era1950s.chapterNo}</span>
+      <section class="v7-era v7-1950s" id="1950s">
+        <div class="shell v7-era-inner">
+          <header class="v7-era-head">
+            <span class="v7-era-no">{era1950s.chapterNo}</span>
             <div>
-              <p class="history-v5-chapter-label">{era1950s.label}</p>
+              <p class="v7-era-label">{era1950s.label}</p>
               <h2>{era1950s.title}</h2>
-              <p class="history-v5-teaser">{era1950s.teaser}</p>
+              <p class="v7-teaser">{era1950s.teaser}</p>
             </div>
           </header>
-          <div class="history-v5-body">
+
+          <div class="v7-copy">
             <p>{era1950s.intro}</p>
           </div>
 
-          <section class="history-v5-shelf">
-            <div class="history-v5-shelf-head"><span>MILESTONES</span><span>1950s</span></div>
-            <div class="history-v5-records">
-              {milestoneCards('1950s').map((entry) => (
-                <article class="history-v5-record">
-                  <small>{entry.meta}</small>
-                  <h3>{entry.name}</h3>
-                  <div class="history-v5-record-copy">
-                    <p class="history-v5-hook">{entry.hook}</p>
-                    <p>{entry.cardSummary}</p>
-                    <span class="history-v5-status">{entry.cardStatus}</span>
-                  </div>
-                </article>
+          <div class="v7-rail-label">
+            <span>MILESTONES</span>
+            <span>SWIPE →</span>
+          </div>
+
+          <div class="v7-milestone-rail" aria-label="1950年代のマイルストーン">
+            {milestones1950s.map((entry) => (
+              <article class="v7-rail-card">
+                <small class="v7-meta">{entry.meta}</small>
+                <h3>{entry.name}</h3>
+                <p class="v7-hook">{entry.hook}</p>
+                <p class="v7-summary">{entry.cardSummary}</p>
+                <span class="v7-status">{entry.cardStatus}</span>
+              </article>
+            ))}
+          </div>
+
+          <section class="v7-owner-stage" aria-labelledby="owners-1950s">
+            <div class="v7-owner-stage-head">
+              <span id="owners-1950s">OWNER'S NOTES</span>
+              <span>所有個体から見る。</span>
+            </div>
+
+            <div class="v7-owner-posters">
+              {owners1950s.filter(({ note }) => note).map(({ entry, note }) => (
+                <a class="v7-owner-poster" href={`${base}${note!.href.replace(/^\//, '')}`}>
+                  <figure>
+                    <img src={`${base}${note!.image.replace(/^\//, '')}`} alt="" loading="lazy" />
+                    <figcaption>
+                      <span>{note!.brand} {note!.name}</span>
+                      <span>→</span>
+                    </figcaption>
+                  </figure>
+                </a>
               ))}
             </div>
-          </section>
 
-          <section class="history-v5-shelf">
-            <div class="history-v5-shelf-head"><span>OWNER'S NOTES</span><span>FROM THE COLLECTION</span></div>
-            <div class="history-v6-owner-stack">
-              {ownerCards('1950s').map((entry) => {
-                const note = ownerDirectoryEntry(entry.name);
-                return note ? (
-                  <a class="history-v6-owner-feature" href={`${base}${note.href.replace(/^\//, '')}`}>
-                    <div class="history-v6-owner-feature-image">
-                      <img src={`${base}${note.image.replace(/^\//, '')}`} alt="" loading="lazy" />
-                    </div>
-                    <div class="history-v6-owner-feature-copy">
-                      <small>{entry.meta}</small>
-                      <h3>{entry.name}</h3>
-                      <p>{entry.cardSummary}</p>
-                      <b aria-hidden="true">→</b>
-                    </div>
-                  </a>
-                ) : (
-                  <article class="history-v5-owner-text">
-                    <small>{entry.meta}</small>
-                    <h3>{entry.name}</h3>
-                    <p>{entry.cardSummary}</p>
-                    <span class="history-v5-status">{entry.cardStatus}</span>
-                  </article>
-                );
-              })}
+            <div class="v7-owner-list">
+              {owners1950s.filter(({ note }) => !note).map(({ entry }) => (
+                <article class="v7-owner-row">
+                  <small>{entry.meta}</small>
+                  <h3>{entry.name}</h3>
+                  <p>{entry.cardSummary}</p>
+                </article>
+              ))}
             </div>
           </section>
         </div>
       </section>
 
-      <section class="history-v5-chapter" id="1960s">
-        <div class="shell history-v5-chapter-inner">
-          <header class="history-v5-chapter-head">
-            <span class="history-v5-no">{era1960s.chapterNo}</span>
+      <section class="v7-era v7-1960s" id="1960s">
+        <div class="shell v7-era-inner">
+          <header class="v7-era-head">
+            <span class="v7-era-no">{era1960s.chapterNo}</span>
             <div>
-              <p class="history-v5-chapter-label">{era1960s.label}</p>
+              <p class="v7-era-label">{era1960s.label}</p>
               <h2>{era1960s.title}</h2>
-              <p class="history-v5-teaser">{era1960s.teaser}</p>
+              <p class="v7-teaser">{era1960s.teaser}</p>
             </div>
           </header>
-          <div class="history-v5-body">
+
+          <div class="v7-copy">
             <p>{era1960s.intro}</p>
           </div>
 
-          <section class="history-v5-shelf">
-            <div class="history-v5-shelf-head"><span>MILESTONES</span><span>1960s</span></div>
-            <div class="history-v5-records">
-              {milestoneCards('1960s').map((entry) => (
-                <article class="history-v5-record">
-                  <small>{entry.meta}</small>
-                  <h3>{entry.name}</h3>
-                  <div class="history-v5-record-copy">
-                    <p class="history-v5-hook">{entry.hook}</p>
-                    <p>{entry.cardSummary}</p>
-                    <span class="history-v5-status">{entry.cardStatus}</span>
-                  </div>
-                </article>
-              ))}
-            </div>
-          </section>
+          <div class="v7-compare" aria-label="1960年代のマイルストーン">
+            {milestones1960s.map((entry) => (
+              <article class="v7-compare-card">
+                <small class="v7-meta">{entry.meta}</small>
+                <h3>{entry.name}</h3>
+                <p class="v7-hook">{entry.hook}</p>
+                <p class="v7-summary">{entry.cardSummary}</p>
+                <span class="v7-status">{entry.cardStatus}</span>
+              </article>
+            ))}
+          </div>
         </div>
       </section>
 
-      <section class="history-v5-chapter" id="electronic">
-        <div class="shell history-v5-chapter-inner">
-          <header class="history-v5-chapter-head">
-            <span class="history-v5-no">{electronic.chapterNo}</span>
+      <section class="v7-era v7-1970s" id="electronic">
+        <div class="shell v7-era-inner">
+          <header class="v7-era-head">
+            <span class="v7-era-no">{electronic.chapterNo}</span>
             <div>
-              <p class="history-v5-chapter-label">{electronic.label}</p>
+              <p class="v7-era-label">{electronic.label}</p>
               <h2>{electronic.title}</h2>
-              <p class="history-v5-teaser">{electronic.teaser}</p>
+              <p class="v7-teaser">{electronic.teaser}</p>
             </div>
           </header>
-          <div class="history-v5-body">
+
+          <div class="v7-copy">
             {electronic.body.map((paragraph) => <p>{paragraph}</p>)}
           </div>
 
-          <section class="history-v5-shelf">
-            <div class="history-v5-shelf-head"><span>MILESTONES</span><span>1970s</span></div>
-            <div class="history-v5-records">
-              {milestoneCards('electronic').map((entry) => (
-                <article class="history-v5-record">
-                  <small>{entry.meta}</small>
-                  <h3>{entry.name}</h3>
-                  <div class="history-v5-record-copy">
-                    <p class="history-v5-hook">{entry.hook}</p>
-                    <p>{entry.cardSummary}</p>
-                    <span class="history-v5-status">{entry.cardStatus}</span>
-                  </div>
-                </article>
-              ))}
-            </div>
-          </section>
+          <div class="v7-transition" aria-label="1970年代の転換点">
+            {milestones1970s.map((entry) => (
+              <article class="v7-transition-card">
+                <small class="v7-meta">{entry.meta}</small>
+                <h3>{entry.name}</h3>
+                <p class="v7-hook">{entry.hook}</p>
+                <p class="v7-summary">{entry.cardSummary}</p>
+                <span class="v7-status">{entry.cardStatus}</span>
+              </article>
+            ))}
+          </div>
         </div>
       </section>
 
-      <section class="history-v5-current" id="current">
-        <div class="shell history-v5-current-inner">
+      <section class="v7-current" id="current">
+        <div class="shell v7-current-inner">
           <small>{current.storyNo}</small>
           <h2>{current.title}</h2>
-          <p class="history-v5-current-name">{current.name}</p>
+          <p class="v7-current-name">{current.name}</p>
           <a href={`${base}${current.href}`}>{current.linkLabel}</a>
         </div>
       </section>
 
-      <aside class="history-v6-next" id="research" aria-label="次のリサーチ">
-        <div class="shell history-v6-next-inner">
+      <aside class="v7-next" id="research" aria-label="次のリサーチ">
+        <div class="shell v7-next-inner">
           <small>NEXT / RESEARCH</small>
-          <div>
+          <div class="v7-next-line">
             <strong>次に気になっているものと、そのデータ。</strong>
             <span aria-hidden="true">→</span>
           </div>
         </div>
       </aside>
 
-      <section class="shell history-v5-sources">
+      <section class="shell v7-sources">
         <details>
           <summary>{sources.summary}</summary>
           <ul>{sources.items.map((item) => <li>{item}</li>)}</ul>
