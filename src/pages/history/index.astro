@@ -12,8 +12,6 @@ const milestoneCards = (era: '1910s' | '1940s' | '1950s' | '1960s' | 'electronic
   historyCatalogByGroup.milestones.filter((entry) => entry.era === era && entry.featured);
 const ownerCards = (era: '1940s' | '1950s') =>
   historyCatalogByGroup.owners.filter((entry) => entry.era === era && entry.featured);
-const researchCards = historyCatalogByGroup.research.filter((entry) => entry.featured);
-
 const ownerDirectoryEntry = (entryName: string) =>
   ownersDirectory.entries.find((note) => {
     const current = entryName.toUpperCase();
@@ -96,9 +94,6 @@ const schema = {
         <h1>HISTORY</h1>
         <p class="history-v5-title-jp">機械式アラーム腕時計の歴史</p>
         <p class="history-v5-kicker">{hero.kicker[0]}<br />{hero.kicker[1]}</p>
-        <div class="history-v5-lead">
-          {hero.lead.map((paragraph) => <p>{paragraph}</p>)}
-        </div>
       </section>
 
       <div class="history-v5-era-nav-wrap">
@@ -197,15 +192,15 @@ const schema = {
 
           <section class="history-v5-shelf">
             <div class="history-v5-shelf-head"><span>OWNER'S NOTES</span><span>FROM THE COLLECTION</span></div>
-            <div class="history-v5-owner-grid">
+            <div class="history-v6-owner-stack">
               {ownerCards('1940s').map((entry) => {
                 const note = ownerDirectoryEntry(entry.name);
                 return note ? (
-                  <a class="history-v5-owner-poster" href={`${base}${note.href.replace(/^\//, '')}`}>
-                    <div class="history-v5-owner-poster-image">
+                  <a class="history-v6-owner-feature" href={`${base}${note.href.replace(/^\//, '')}`}>
+                    <div class="history-v6-owner-feature-image">
                       <img src={`${base}${note.image.replace(/^\//, '')}`} alt="" loading="lazy" />
                     </div>
-                    <div class="history-v5-owner-copy">
+                    <div class="history-v6-owner-feature-copy">
                       <small>{entry.meta}</small>
                       <h3>{entry.name}</h3>
                       <p>{entry.cardSummary}</p>
@@ -259,15 +254,15 @@ const schema = {
 
           <section class="history-v5-shelf">
             <div class="history-v5-shelf-head"><span>OWNER'S NOTES</span><span>FROM THE COLLECTION</span></div>
-            <div class="history-v5-owner-grid">
+            <div class="history-v6-owner-stack">
               {ownerCards('1950s').map((entry) => {
                 const note = ownerDirectoryEntry(entry.name);
                 return note ? (
-                  <a class="history-v5-owner-poster" href={`${base}${note.href.replace(/^\//, '')}`}>
-                    <div class="history-v5-owner-poster-image">
+                  <a class="history-v6-owner-feature" href={`${base}${note.href.replace(/^\//, '')}`}>
+                    <div class="history-v6-owner-feature-image">
                       <img src={`${base}${note.image.replace(/^\//, '')}`} alt="" loading="lazy" />
                     </div>
-                    <div class="history-v5-owner-copy">
+                    <div class="history-v6-owner-feature-copy">
                       <small>{entry.meta}</small>
                       <h3>{entry.name}</h3>
                       <p>{entry.cardSummary}</p>
@@ -354,29 +349,6 @@ const schema = {
         </div>
       </section>
 
-      <section class="history-v5-research" id="research">
-        <div class="shell">
-          <small>RESEARCH</small>
-          <h2>次に気になっているものと、そのデータ。</h2>
-
-          {researchCards.length > 0 && (
-            <div class="history-v5-records">
-              {researchCards.map((entry) => (
-                <article class="history-v5-record">
-                  <small>{entry.meta}</small>
-                  <h3>{entry.name}</h3>
-                  <div class="history-v5-record-copy">
-                    <p class="history-v5-hook">{entry.hook}</p>
-                    <p>{entry.cardSummary}</p>
-                    <span class="history-v5-status">{entry.cardStatus}</span>
-                  </div>
-                </article>
-              ))}
-            </div>
-          )}
-        </div>
-      </section>
-
       <section class="history-v5-current" id="current">
         <div class="shell history-v5-current-inner">
           <small>{current.storyNo}</small>
@@ -385,6 +357,16 @@ const schema = {
           <a href={`${base}${current.href}`}>{current.linkLabel}</a>
         </div>
       </section>
+
+      <aside class="history-v6-next" id="research" aria-label="次のリサーチ">
+        <div class="shell history-v6-next-inner">
+          <small>NEXT / RESEARCH</small>
+          <div>
+            <strong>次に気になっているものと、そのデータ。</strong>
+            <span aria-hidden="true">→</span>
+          </div>
+        </div>
+      </aside>
 
       <section class="shell history-v5-sources">
         <details>
