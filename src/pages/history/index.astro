@@ -96,28 +96,28 @@ const schema = {
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#171410" />
+    <meta name="theme-color" content="#1b1a18" />
     <SeoHead title={title} description={description} path="history/" type="article" schema={schema} />
   </head>
-  <body class="history-v8 history-v9">
+  <body class="history-v10">
     <SectionMast rightLabel="HISTORY" />
 
     <main>
-      <section class="v8-cover" aria-labelledby="history-v8-cover-title">
-        <div class="shell v8-cover-inner">
-          <div class="v8-cover-meta">
+      <section class="v10-cover" aria-labelledby="history-v10-cover-title">
+        <div class="shell v10-cover-inner">
+          <div class="v10-cover-meta">
             <span>HISTORY / 00 — 06</span>
             <span>ALARM WRISTWATCHES</span>
           </div>
 
-          <h1 class="v8-cover-title" id="history-v8-cover-title">
-            <span class="history">HISTORY</span>
-            <span class="of-the">OF THE</span>
-            <span class="alarm">ALARM</span>
-            <span class="wristwatch">WRISTWATCH</span>
+          <h1 class="v10-cover-title" id="history-v10-cover-title">
+            <span>HISTORY</span>
+            <small>OF THE</small>
+            <span>ALARM</span>
+            <em>WRISTWATCH</em>
           </h1>
 
-          <div class="v8-cover-range">
+          <div class="v10-cover-range">
             <span>16C</span>
             <span>→</span>
             <span>CURRENT</span>
@@ -125,14 +125,14 @@ const schema = {
         </div>
       </section>
 
-      <section class="shell v8-intro">
+      <section class="shell v10-intro">
         <small>{hero.eyebrow}</small>
         <h1>機械式アラーム腕時計の歴史</h1>
         <p>{hero.kicker[0]}<br />{hero.kicker[1]}</p>
       </section>
 
-      <div class="v8-era-nav-wrap">
-        <nav class="shell v8-era-nav" aria-label="歴史の年代ナビゲーション">
+      <div class="v10-era-nav-wrap">
+        <nav class="shell v10-era-nav" aria-label="歴史の年代ナビゲーション">
           {eraNav.map((item) => (
             <a href={item.href}>
               <span>{item.no}</span>
@@ -142,153 +142,151 @@ const schema = {
         </nav>
       </div>
 
-      <section class="v8-era" id="before">
-        <div class="shell v8-era-inner">
-          <header class="v8-era-head">
-            <span class="v8-era-no">{before.chapterNo}</span>
+      <section class="v10-era" id="before">
+        <div class="shell v10-era-inner">
+          <header class="v10-era-head">
+            <span class="v10-era-no">{before.chapterNo}</span>
             <div>
-              <p class="v8-era-label">{before.label}</p>
+              <p class="v10-era-label">{before.label}</p>
               <h2>{before.title}</h2>
-              <p class="v8-teaser">{before.teaser}</p>
+              <p class="v10-teaser">{before.teaser}</p>
             </div>
           </header>
 
-          <div class="v8-copy">
-            <p class="v8-overline">{before.overline}</p>
+          <div class="v10-copy">
+            <p class="v10-overline">{before.overline}</p>
             {before.intro.map((paragraph) => <p>{paragraph}</p>)}
           </div>
         </div>
       </section>
 
-      <section class="v8-era" id="1910s">
-        <div class="shell v8-era-inner">
-          <header class="v8-era-head">
-            <span class="v8-era-no">{era1910s.chapterNo}</span>
+      <section class="v10-era" id="1910s">
+        <div class="shell v10-era-inner">
+          <header class="v10-era-head">
+            <span class="v10-era-no">{era1910s.chapterNo}</span>
             <div>
-              <p class="v8-era-label">{era1910s.label}</p>
+              <p class="v10-era-label">{era1910s.label}</p>
               <h2>{era1910s.title}</h2>
-              <p class="v8-teaser">{era1910s.teaser}</p>
+              <p class="v10-teaser">{era1910s.teaser}</p>
             </div>
           </header>
 
-          <div class="v8-copy">
-            <p class="v8-overline">{era1910s.overline}</p>
+          <div class="v10-copy">
+            <p class="v10-overline">{era1910s.overline}</p>
             <p>{era1910s.intro}</p>
           </div>
 
-          <section class="v8-single-feature" id="milestones" aria-label="1910年代のマイルストーン">
+          <section class="v10-index-block" id="milestones" aria-label="1910年代のマイルストーン">
+            <div class="v10-index-head"><span>MILESTONE</span><span>1910s</span></div>
             {milestones1910s.map((entry) => (
-              <>
-                <span class="v8-single-year" aria-hidden="true">{entry.meta.slice(0, 4)}</span>
-                <article class="v8-single-content">
-                  <small class="v8-meta">{entry.meta}</small>
-                  <h3>{entry.name}</h3>
-                  <p class="v8-hook">{entry.hook}</p>
-                  <span class="v8-status">{entry.cardStatus}</span>
-                </article>
-              </>
+              <article class="v10-single-entry">
+                <small>{entry.meta}</small>
+                <strong>{entry.name}</strong>
+                <span>{entry.hook}</span>
+                <b>{entry.cardStatus}</b>
+              </article>
             ))}
           </section>
         </div>
       </section>
 
-      <section class="v8-era v8-1940s" id="1940s">
-        <div class="shell v8-era-inner">
-          <header class="v8-era-head">
-            <span class="v8-era-no">{era1940s.chapterNo}</span>
+      <section class="v10-era" id="1940s">
+        <div class="shell v10-era-inner">
+          <header class="v10-era-head">
+            <span class="v10-era-no">{era1940s.chapterNo}</span>
             <div>
-              <p class="v8-era-label">{era1940s.label}</p>
+              <p class="v10-era-label">{era1940s.label}</p>
               <h2>{era1940s.title}</h2>
-              <p class="v8-teaser">{era1940s.teaser}</p>
+              <p class="v10-teaser">{era1940s.teaser}</p>
             </div>
           </header>
 
-          <div class="v8-copy">
-            <p class="v8-overline">{era1940s.overline}</p>
+          <div class="v10-copy">
+            <p class="v10-overline">{era1940s.overline}</p>
             <p>{era1940s.intro}</p>
           </div>
 
-          <div class="v9-single-stack">
+          <section class="v10-index-block" aria-label="1940年代の記録">
+            <div class="v10-index-head"><span>MILESTONE</span><span>1940s</span></div>
             {milestones1940s.map((entry) => (
-              <article class="v9-single-milestone">
-                <small class="v8-meta">{entry.meta}</small>
-                <h3>{entry.name}</h3>
-                <p>{entry.hook}</p>
-                <span class="v8-status">{entry.cardStatus}</span>
+              <article class="v10-single-entry">
+                <small>{entry.meta}</small>
+                <strong>{entry.name}</strong>
+                <span>{entry.hook}</span>
+                <b>{entry.cardStatus}</b>
               </article>
             ))}
 
             {owners1940s.map((entry) => (
-              <article class="v9-owner-row">
-                <div>
-                  <small>OWNER'S NOTE</small>
-                  <strong>{entry.name}</strong>
-                </div>
+              <article class="v10-owner-line">
+                <small>OWNER'S NOTE</small>
+                <strong>{entry.name}</strong>
                 <span>{entry.hook}</span>
                 <b aria-hidden="true">→</b>
               </article>
             ))}
-          </div>
+          </section>
         </div>
       </section>
 
-      <section class="v8-era" id="1950s">
-        <div class="shell v8-era-inner">
-          <header class="v8-era-head">
-            <span class="v8-era-no">{era1950s.chapterNo}</span>
+      <section class="v10-era" id="1950s">
+        <div class="shell v10-era-inner">
+          <header class="v10-era-head">
+            <span class="v10-era-no">{era1950s.chapterNo}</span>
             <div>
-              <p class="v8-era-label">{era1950s.label}</p>
+              <p class="v10-era-label">{era1950s.label}</p>
               <h2>{era1950s.title}</h2>
-              <p class="v8-teaser">{era1950s.teaser}</p>
+              <p class="v10-teaser">{era1950s.teaser}</p>
             </div>
           </header>
 
-          <div class="v8-copy">
-            <p>{era1950s.intro}</p>
-          </div>
+          <div class="v10-copy"><p>{era1950s.intro}</p></div>
 
-          <section class="v8-rail-block" aria-labelledby="milestones-1950s">
-            <div class="v8-rail-head">
-              <span id="milestones-1950s">MILESTONES</span>
+          <section class="v10-rail-block" aria-labelledby="milestones-1950s">
+            <div class="v10-rail-head">
+              <span id="milestones-1950s">MILESTONES / {String(milestones1950s.length).padStart(2, '0')}</span>
               <span>SWIPE →</span>
             </div>
-            <div class="v8-swipe-rail" aria-label="1950年代のマイルストーン">
+            <div class="v10-rail v10-milestone-rail" aria-label="1950年代のマイルストーン">
               {milestones1950s.map((entry) => (
-                <article class="v8-card">
-                  <small class="v8-meta">{entry.meta}</small>
-                  <h3>{entry.name}</h3>
-                  <p class="v8-hook">{entry.hook}</p>
-                  <span class="v8-status">{entry.cardStatus}</span>
+                <article class="v10-milestone-tile">
+                  <small>{entry.meta}</small>
+                  <strong>{entry.name}</strong>
+                  <span>{entry.hook}</span>
+                  <b>{entry.cardStatus}</b>
                 </article>
               ))}
             </div>
           </section>
 
-          <section class="v8-rail-block" aria-labelledby="owners-1950s">
-            <div class="v8-rail-head">
-              <span id="owners-1950s">OWNER'S NOTES</span>
+          <section class="v10-rail-block" aria-labelledby="owners-1950s">
+            <div class="v10-rail-head">
+              <span id="owners-1950s">OWNER'S NOTES / {String(owners1950s.length).padStart(2, '0')}</span>
               <span>所有個体から見る。 / SWIPE →</span>
             </div>
-
-            <div class="v8-swipe-rail v9-owner-rail" aria-label="1950年代の所有個体">
+            <div class="v10-rail v10-owner-rail" aria-label="1950年代の所有個体">
               {owners1950s.map(({ entry, note }) => (
                 note ? (
-                  <a class="v9-owner-card" href={`${base}${note.href.replace(/^\//, '')}`}>
-                    <div class="v9-owner-thumb">
-                      <img src={`${base}${note.image.replace(/^\//, '')}`} alt="" loading="lazy" />
-                    </div>
-                    <div class="v9-owner-caption">
-                      <strong>{entry.name}</strong>
-                      <span aria-hidden="true">→</span>
-                    </div>
+                  <a class="v10-owner-card" href={`${base}${note.href.replace(/^\//, '')}`}>
+                    <figure>
+                      <div class="v10-owner-thumb">
+                        <img src={`${base}${note.image.replace(/^\//, '')}`} alt="" loading="lazy" />
+                      </div>
+                      <figcaption>
+                        <strong>{entry.name}</strong>
+                        <span aria-hidden="true">→</span>
+                      </figcaption>
+                    </figure>
                   </a>
                 ) : (
-                  <article class="v9-owner-card v9-owner-card-text">
-                    <div class="v9-owner-thumb v9-owner-empty">OWNER'S NOTE</div>
-                    <div class="v9-owner-caption">
-                      <strong>{entry.name}</strong>
-                      <span aria-hidden="true">→</span>
-                    </div>
+                  <article class="v10-owner-card v10-owner-card-text">
+                    <figure>
+                      <div class="v10-owner-thumb v10-owner-empty">OWNER'S NOTE</div>
+                      <figcaption>
+                        <strong>{entry.name}</strong>
+                        <span aria-hidden="true">→</span>
+                      </figcaption>
+                    </figure>
                   </article>
                 )
               ))}
@@ -297,33 +295,31 @@ const schema = {
         </div>
       </section>
 
-      <section class="v8-era" id="1960s">
-        <div class="shell v8-era-inner">
-          <header class="v8-era-head">
-            <span class="v8-era-no">{era1960s.chapterNo}</span>
+      <section class="v10-era" id="1960s">
+        <div class="shell v10-era-inner">
+          <header class="v10-era-head">
+            <span class="v10-era-no">{era1960s.chapterNo}</span>
             <div>
-              <p class="v8-era-label">{era1960s.label}</p>
+              <p class="v10-era-label">{era1960s.label}</p>
               <h2>{era1960s.title}</h2>
-              <p class="v8-teaser">{era1960s.teaser}</p>
+              <p class="v10-teaser">{era1960s.teaser}</p>
             </div>
           </header>
 
-          <div class="v8-copy">
-            <p>{era1960s.intro}</p>
-          </div>
+          <div class="v10-copy"><p>{era1960s.intro}</p></div>
 
-          <section class="v8-rail-block" aria-labelledby="milestones-1960s">
-            <div class="v8-rail-head">
-              <span id="milestones-1960s">MILESTONES</span>
+          <section class="v10-rail-block" aria-labelledby="milestones-1960s">
+            <div class="v10-rail-head">
+              <span id="milestones-1960s">MILESTONES / {String(milestones1960s.length).padStart(2, '0')}</span>
               <span>SWIPE →</span>
             </div>
-            <div class="v8-swipe-rail" aria-label="1960年代のマイルストーン">
-              {milestones1960s.map((entry, index) => (
-                <article class:list={['v8-card', index === 0 && 'is-dark']}>
-                  <small class="v8-meta">{entry.meta}</small>
-                  <h3>{entry.name}</h3>
-                  <p class="v8-hook">{entry.hook}</p>
-                  <span class="v8-status">{entry.cardStatus}</span>
+            <div class="v10-rail v10-milestone-rail" aria-label="1960年代のマイルストーン">
+              {milestones1960s.map((entry) => (
+                <article class="v10-milestone-tile">
+                  <small>{entry.meta}</small>
+                  <strong>{entry.name}</strong>
+                  <span>{entry.hook}</span>
+                  <b>{entry.cardStatus}</b>
                 </article>
               ))}
             </div>
@@ -331,33 +327,33 @@ const schema = {
         </div>
       </section>
 
-      <section class="v8-era" id="electronic">
-        <div class="shell v8-era-inner">
-          <header class="v8-era-head">
-            <span class="v8-era-no">{electronic.chapterNo}</span>
+      <section class="v10-era" id="electronic">
+        <div class="shell v10-era-inner">
+          <header class="v10-era-head">
+            <span class="v10-era-no">{electronic.chapterNo}</span>
             <div>
-              <p class="v8-era-label">{electronic.label}</p>
+              <p class="v10-era-label">{electronic.label}</p>
               <h2>{electronic.title}</h2>
-              <p class="v8-teaser">{electronic.teaser}</p>
+              <p class="v10-teaser">{electronic.teaser}</p>
             </div>
           </header>
 
-          <div class="v8-copy">
+          <div class="v10-copy">
             {electronic.body.map((paragraph) => <p>{paragraph}</p>)}
           </div>
 
-          <section class="v8-rail-block" aria-labelledby="milestones-1970s">
-            <div class="v8-rail-head">
-              <span id="milestones-1970s">MILESTONES</span>
+          <section class="v10-rail-block" aria-labelledby="milestones-1970s">
+            <div class="v10-rail-head">
+              <span id="milestones-1970s">MILESTONES / {String(milestones1970s.length).padStart(2, '0')}</span>
               <span>SWIPE →</span>
             </div>
-            <div class="v8-swipe-rail" aria-label="1970年代のマイルストーン">
-              {milestones1970s.map((entry, index) => (
-                <article class:list={['v8-card', index === milestones1970s.length - 1 && 'is-dark']}>
-                  <small class="v8-meta">{entry.meta}</small>
-                  <h3>{entry.name}</h3>
-                  <p class="v8-hook">{entry.hook}</p>
-                  <span class="v8-status">{entry.cardStatus}</span>
+            <div class="v10-rail v10-milestone-rail" aria-label="1970年代のマイルストーン">
+              {milestones1970s.map((entry) => (
+                <article class="v10-milestone-tile">
+                  <small>{entry.meta}</small>
+                  <strong>{entry.name}</strong>
+                  <span>{entry.hook}</span>
+                  <b>{entry.cardStatus}</b>
                 </article>
               ))}
             </div>
@@ -365,26 +361,26 @@ const schema = {
         </div>
       </section>
 
-      <section class="v8-current" id="current">
-        <div class="shell v8-current-inner">
+      <section class="v10-current" id="current">
+        <div class="shell v10-current-inner">
           <small>{current.storyNo}</small>
           <h2>{current.title}</h2>
-          <p class="v8-current-name">{current.name}</p>
+          <p>{current.name}</p>
           <a href={`${base}${current.href}`}>{current.linkLabel}</a>
         </div>
       </section>
 
-      <aside class="v8-next" id="research" aria-label="次のリサーチ">
-        <div class="shell v8-next-inner">
+      <aside class="v10-next" id="research" aria-label="次のリサーチ">
+        <div class="shell v10-next-inner">
           <small>NEXT / RESEARCH</small>
-          <div class="v8-next-line">
+          <div>
             <strong>次に気になっているものと、そのデータ。</strong>
             <span aria-hidden="true">→</span>
           </div>
         </div>
       </aside>
 
-      <section class="shell v8-sources">
+      <section class="shell v10-sources">
         <details>
           <summary>{sources.summary}</summary>
           <ul>{sources.items.map((item) => <li>{item}</li>)}</ul>
