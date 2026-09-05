@@ -1,8 +1,8 @@
-name: Staging HISTORY v12 Check
+name: Staging HISTORY v13 Check
 
 on:
   push:
-    branches: ["staging/history-v12"]
+    branches: ["staging/history-v13"]
   workflow_dispatch:
 
 permissions:
@@ -18,8 +18,7 @@ jobs:
       - name: Guard TOP, editorial data and original images
         run: |
           set -e
-          git fetch origin staging/history-v11
-          changed=$(git diff --name-only origin/staging/history-v11...HEAD -- src/pages/index.astro src/content src/data public/images src/styles/site.css src/styles/mobile-v1.css)
+          changed=$(git diff --name-only b165466d4c2b691dfb119ecf8235a8931dd71e09 HEAD -- src/pages/index.astro src/content src/data public/images src/styles/site.css src/styles/mobile-v1.css src/components/SectionMast.astro src/components/SeoHead.astro .github/workflows/deploy-pages.yml)
           if [ -n "$changed" ]; then
             echo "Protected source changed: $changed"
             exit 1
@@ -39,7 +38,7 @@ jobs:
       - name: Audit actual layout and interactions at 320, 390, 768 and 1280 pixels
         env:
           HISTORY_SCREENSHOT_DIR: .history-review
-        run: node scripts/check-history-layout.mjs
+        run: node scripts/check-history-v13.mjs
       - name: Guard existing pages and watch invariants
         run: |
           set -e
@@ -52,7 +51,7 @@ jobs:
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: staging-history-v12-review
+          name: staging-history-v13-review
           path: |
             dist
             .history-review

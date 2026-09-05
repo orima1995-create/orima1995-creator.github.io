@@ -1,109 +1,74 @@
 ---
 import SeoHead from '../../components/SeoHead.astro';
 import SectionMast from '../../components/SectionMast.astro';
-import HistoryMilestones from '../../components/HistoryMilestones.astro';
+import HistoryMilestones from '../../components/HistoryMilestonesV13.astro';
 import { historyCatalogByGroup } from '../../data/history-catalog';
 import { historyContent } from '../../data/history-content';
 import ownersDirectory from '../../data/owners-directory.json';
 import '../../styles/site.css';
-import '../../styles/history-v12.css';
-
-const base = import.meta.env.BASE_URL;
-const milestones = (era: string) => historyCatalogByGroup.milestones.filter((entry) => entry.era === era && entry.featured);
-const owners = historyCatalogByGroup.owners.filter((entry) => entry.era === '1950s' && entry.featured).map((entry) => ({
-  entry,
-  note: ownersDirectory.entries.find((note) => entry.id === note.href.split('/')[1])
-}));
-const basis = historyCatalogByGroup.owners.find((entry) => entry.id === 'basis-bfg90')!;
-const { before, era1910s, era1940s, era1950s, era1960s, electronic, current, sources } = historyContent;
-const eras = [
-  { id: 'before', no: '00', label: 'BEFORE', title: ['腕時計より前の', 'アラーム。'], paragraphs: before.intro },
-  { id: '1910s', no: '01', label: '1910s', title: ['アラームを、', '腕時計のサイズへ。'], paragraphs: [era1910s.intro] },
-  { id: '1940s', no: '02', label: '1940s', title: ['密閉と音量という', '矛盾を解決する。'], paragraphs: [era1940s.intro] },
-  { id: '1950s', no: '03', label: '1950s', title: ['様々な需要に、', '様々な回答。'], paragraphs: [era1950s.intro] },
-  { id: '1960s', no: '04', label: '1960s', title: ['用途と機構が', '広がる。'], paragraphs: [era1960s.intro] },
-  { id: 'electronic', no: '05', label: '1970s', title: ['自動巻きの成熟と', '電子化。'], paragraphs: electronic.body }
+import '../../styles/history-v13.css';
+const base=import.meta.env.BASE_URL;
+const milestones=(era:string)=>historyCatalogByGroup.milestones.filter(entry=>entry.era===era&&entry.featured);
+const owners=historyCatalogByGroup.owners.filter(entry=>entry.era==='1950s'&&entry.featured).map(entry=>({entry,note:ownersDirectory.entries.find(note=>entry.id===note.href.split('/')[1])}));
+const basis=historyCatalogByGroup.owners.find(entry=>entry.id==='basis-bfg90')!;
+const {before,era1910s,era1940s,era1950s,era1960s,electronic,current,sources}=historyContent;
+const eras=[
+ {id:'before',no:'00',label:'BEFORE',title:before.title,paragraphs:before.intro},
+ {id:'1910s',no:'01',label:'1910s',title:era1910s.title,paragraphs:[era1910s.intro]},
+ {id:'1940s',no:'02',label:'1940s',title:era1940s.title,paragraphs:[era1940s.intro]},
+ {id:'1950s',no:'03',label:'1950s',title:era1950s.title,paragraphs:era1950s.intro.split('\n')},
+ {id:'1960s',no:'04',label:'1960s',title:era1960s.title,paragraphs:[era1960s.intro]},
+ {id:'electronic',no:'05',label:'1970s',title:electronic.title,paragraphs:electronic.body}
 ];
-const title = 'アラーム腕時計の歴史｜Eterna・Cricket・Memovox・Duofon・Time-O-Vox｜VINTAGE ALARM';
-const description = '鐘や携帯時計から、Eterna、Vulcain Cricket、Memovox、AS 1475、Pierce Duofon、Omega Memomatic、電子式アラームまで。「時間を知らせる」腕時計の歴史を辿る。';
-const schema = {
-  '@context': 'https://schema.org',
-  '@graph': [
-    { '@type': 'Article', headline: 'アラーム腕時計の歴史', description, inLanguage: 'ja', mainEntityOfPage: 'https://orima1995-create.github.io/orima1995-creator.github.io/history/', isPartOf: { '@type': 'WebSite', name: 'VINTAGE ALARM', url: 'https://orima1995-create.github.io/orima1995-creator.github.io/' } },
-    { '@type': 'BreadcrumbList', itemListElement: [
-      { '@type': 'ListItem', position: 1, name: 'VINTAGE ALARM', item: 'https://orima1995-create.github.io/orima1995-creator.github.io/' },
-      { '@type': 'ListItem', position: 2, name: 'HISTORY', item: 'https://orima1995-create.github.io/orima1995-creator.github.io/history/' }
-    ] }
-  ]
-};
+const title='アラーム腕時計の歴史｜Eterna・Cricket・Memovox・Duofon・Time-O-Vox｜VINTAGE ALARM';
+const description='鐘や携帯時計から、Eterna、Vulcain Cricket、Memovox、AS 1475、Pierce Duofon、Omega Memomatic、電子式アラームまで。「時間を知らせる」腕時計の歴史を辿る。';
+const root='https://orima1995-create.github.io/orima1995-creator.github.io/';
+const schema={'@context':'https://schema.org','@graph':[
+ {'@type':'Article',headline:'アラーム腕時計の歴史',description,inLanguage:'ja',mainEntityOfPage:root+'history/',isPartOf:{'@type':'WebSite',name:'VINTAGE ALARM',url:root}},
+ {'@type':'BreadcrumbList',itemListElement:[{'@type':'ListItem',position:1,name:'VINTAGE ALARM',item:root},{'@type':'ListItem',position:2,name:'HISTORY',item:root+'history/'}]}
+]};
 ---
-<!doctype html>
-<html lang="ja">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#171918" />
-    <link rel="icon" href="data:," />
-    <SeoHead title={title} description={description} path="history/" type="article" schema={schema} />
-  </head>
-  <body class="history-v12">
-    <div class="history-mast"><SectionMast rightLabel="HISTORY" /></div>
-    <main>
-      <section class="history-cover" aria-labelledby="history-title">
-        <div class="shell">
-          <div class="cover-meta"><span>ALARM WRISTWATCHES</span><span>16C — CURRENT</span></div>
-          <h1 id="history-title">HISTORY<span>アラーム腕時計の歴史</span></h1>
-          <div class="cover-footer">
-            <p>時刻を見るだけではなく、<br />設定した時刻を知らせる。</p>
-            <a href="#before" aria-label="歴史を読み始める">↓</a>
-          </div>
-        </div>
-      </section>
-      <nav class="shell history-nav" aria-label="歴史の年代ナビゲーション">
-        {eras.map((era) => <a href={`#${era.id}`}><span>{era.no}</span>{era.label}</a>)}
-        <a href="#current"><span>06</span>CURRENT</a>
-      </nav>
-      {eras.map((era) => (
-        <section class="chronology-era" id={era.id}>
-          <div class="shell">
-            <div class="era-story">
-              <header>
-                <p class="era-label"><span>{era.no}</span>{era.id === 'before' ? 'BEFORE THE WRIST' : era.label}</p>
-                <h2>{era.title.map((line) => <span>{line}</span>)}</h2>
-              </header>
-              <div class="era-copy">{era.paragraphs.map((paragraph) => <p>{paragraph}</p>)}</div>
-            </div>
-            {era.id !== 'before' && <HistoryMilestones entries={milestones(era.id)} id={era.id === '1910s' ? 'milestones' : `milestones-${era.id}`} label={`${era.label}のマイルストーン`} />}
-            {era.id === '1940s' && (
-              <div class="basis-record"><small>COLLECTION INDEX</small><strong>{basis.name}</strong><p>{basis.hook}</p></div>
-            )}
-            {era.id === '1950s' && (
-              <section class="owner-section" aria-labelledby="owner-title">
-                <div class="owner-heading"><h3 id="owner-title">OWNER'S NOTES</h3><p>所有個体から見る。</p></div>
-                <div class="owner-documents">
-                  {owners.map(({ entry, note }) => note && (
-                    <a href={`${base}${note.href.replace(/^\//, '')}`} class="owner-document">
-                      <figure>
-                        <div class="owner-original"><img src={`${base}${note.image.replace(/^\//, '')}`} alt="" loading="lazy" width={entry.id === 'pierce-duofon' ? 1179 : 1063} height={entry.id === 'pierce-duofon' ? 1646 : 1479} /></div>
-                        <figcaption><strong>{entry.id === 'cyma-time-o-vox' ? 'CYMA TIME-O-VOX' : entry.name}</strong><span aria-hidden="true">↗</span></figcaption>
-                      </figure>
-                    </a>
-                  ))}
-                </div>
-                <div class="collection-index"><small>COLLECTION INDEX</small><div>{owners.map(({ entry, note }) => !note && <span>{entry.name}</span>)}</div></div>
-              </section>
-            )}
-          </div>
-        </section>
-      ))}
-      <section class="history-current shell" id="current">
-        <div><p class="era-label"><span>06</span>CURRENT</p><h2>{current.title}</h2></div>
-        <a href={`${base}${current.href}`}><span>{current.name}</span><small>見る <b aria-hidden="true">↗</b></small></a>
-      </section>
-      <aside class="history-research shell" id="research" aria-label="次のリサーチ">
-        <h2>RESEARCH</h2><p>次に気になっているものと、<wbr />そのデータ。</p>
-      </aside>
-      <section class="history-sources shell"><details><summary>{sources.summary}</summary><ul>{sources.items.map((item) => <li>{item}</li>)}</ul></details></section>
-    </main>
-  </body>
-</html>
+<!doctype html><html lang="ja"><head>
+ <meta charset="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/><meta name="theme-color" content="#1c201c"/><link rel="icon" href="data:,"/>
+ <link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+ <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Noto+Serif+JP:wght@400;500;600&display=swap" rel="stylesheet"/>
+ <SeoHead title={title} description={description} path="history/" type="article" schema={schema}/>
+</head><body class="history-v13">
+ <a class="history-skip" href="#before">本文へ</a><div class="history-mast"><SectionMast rightLabel="HISTORY"/></div>
+ <main><section class="history-cover-v13" aria-labelledby="history-title"><div class="shell">
+  <div class="cover-meta"><span>HISTORY</span><span>01 / CONTENTS</span></div>
+  <h1 id="history-title"><span>HISTORY</span><em>of the</em><span>ALARM</span><small>WRISTWATCH</small></h1>
+  <div class="cover-dates" aria-label="歴史の節目"><a href="#1910s"><strong>1914</strong><span>ETERNA<br/>CAL.68</span></a><a href="#1940s"><strong>1947</strong><span>VULCAIN<br/>CRICKET</span></a><a href="#1950s"><strong>1956</strong><span>MEMOVOX<br/>AUTOMATIC</span></a><a href="#electronic"><strong>1976</strong><span>CITIZEN<br/>LC ALARM</span></a></div>
+  <div class="cover-foot"><p>時刻を見るだけではなく、<br/>設定した時刻を知らせる。</p><a href="#before" aria-label="歴史を読み始める">↓</a></div>
+ </div></section>
+ <nav class="history-era-nav" aria-label="歴史の年代ナビゲーション"><div class="shell">{eras.map(era=><a href={`#${era.id}`}>{era.label}</a>)}<a href="#current">CURRENT</a></div></nav>
+ <aside class="history-test-banner shell"><span>TEST v13</span><p>サムネイル写真は仮使用です。<a href="#test-images">詳細</a></p></aside>
+ {eras.map(era=><section class:list={['chronology-era',{'has-owners':era.id==='1950s','is-before':era.id==='before'}]} id={era.id} aria-labelledby={`title-${era.id}`}><div class="shell chapter-layout">
+  <div class="chapter-date"><strong>{era.label.endsWith('s')?<>{era.label.slice(0,-1)}<small>s</small></>:era.label}</strong><span>CHAPTER {era.no}</span></div>
+  <h2 class="chapter-title" id={`title-${era.id}`}>{era.title}</h2>
+  <div class="chapter-copy">{era.paragraphs.map(paragraph=><p>{paragraph.replaceAll('\n','')}</p>)}</div>
+  {era.id!=='before'&&<HistoryMilestones entries={milestones(era.id)} id={era.id==='1910s'?'milestones':`milestones-${era.id}`} label={`${era.label}のマイルストーン`}/>}
+  {era.id==='1940s'&&<div class="basis-record"><small>COLLECTION INDEX</small><span>{basis.name}</span><p>{basis.hook}</p></div>}
+  {era.id==='1950s'&&<aside class="history-owners" aria-label="OWNER'S NOTES">
+   <div class="collection-lead"><p>所有個体から見る。</p><a href={`${base}owners-notes/`} aria-label="OWNER'S NOTES一覧">一覧 ↗</a></div>
+   <div class="owner-tiles">{owners.map(({entry,note})=>note&&<a class:list={['owner-tile',{'has-photo':entry.id==='cyma-time-o-vox'}]} href={`${base}${note.href.replace(/^\//,'')}`} aria-label={`OWNER'S NOTE：${entry.id==='pierce-duofon'?'PIERCE DUOFON':'CYMA TIME-O-VOX'}`}>
+    <div class="tile-photo">{entry.id==='cyma-time-o-vox'?<img src={`${base}images/cyma-time-o-vox/ムーブメント.jpg`} alt="CYMA実機ムーブメント写真（テスト版で仮使用）" loading="lazy" width="2112" height="1600"/>:<span>写真選定中</span>}</div>
+    <span class="tile-kind">OWNER'S NOTE</span><span class="tile-name"><small>{entry.id==='pierce-duofon'?'PIERCE':'CYMA'}</small>{entry.id==='pierce-duofon'?'DUOFON':'TIME-O-VOX'}</span><span class="tile-arrow" aria-hidden="true">↗</span>
+   </a>)}</div>
+   <details class="collection-records"><summary>COLLECTION INDEX</summary><ul>{owners.map(({entry,note})=>!note&&<li>{entry.name}<span>OWNER'S NOTE未公開</span></li>)}</ul></details>
+  </aside>}
+ </div></section>)}
+ <section class="history-current-v13 shell" id="current" aria-labelledby="current-title"><div class="chapter-date"><strong>CURRENT</strong><span>CHAPTER 06</span></div><div><h2 id="current-title">{current.title}</h2><a class="current-link" href={`${base}${current.href}`}><span>{current.name}</span><span aria-hidden="true">↗</span></a></div></section>
+ <aside class="history-research-v13 shell" id="research" aria-label="次のリサーチ"><h2>RESEARCH</h2><p>次に気になっているものと、そのデータ。</p></aside>
+ <section class="history-sources-v13 shell"><details><summary>{sources.summary}</summary><ul>{sources.items.map(item=><li>{item}</li>)}</ul></details></section>
+ <aside class="history-test-details shell" id="test-images"><h2>テスト版の画像について</h2><p>Pierceのサムネイル写真は未選定です。CYMAは既存の実機ムーブメント写真を仮使用しています。OWNER'S NOTE原本の生成・加工・差し替えは行っていません。</p><a href="#1950s">サムネイルへ戻る ↑</a></aside>
+ </main>
+ <script>
+  const links=[...document.querySelectorAll<HTMLAnchorElement>('.history-era-nav a')];
+  const sections=[...document.querySelectorAll<HTMLElement>('.chronology-era, #current')];
+  const update=()=>{let active='';for(const section of sections)if(section.getBoundingClientRect().top<=180)active=section.id;for(const link of links){if(link.hash===`#${active}`)link.setAttribute('aria-current','location');else link.removeAttribute('aria-current');}};
+  let pending=false;window.addEventListener('scroll',()=>{if(!pending){pending=true;requestAnimationFrame(()=>{update();pending=false;});}},{passive:true});
+  window.addEventListener('resize',update);window.addEventListener('hashchange',update);document.fonts.ready.then(update);
+  document.querySelectorAll<HTMLAnchorElement>('.section-menu-panel a').forEach(link=>link.addEventListener('click',()=>link.closest('details')?.removeAttribute('open')));update();
+ </script>
+</body></html>

@@ -1,0 +1,21 @@
+---
+import type { HistoryCatalogEntry } from '../data/history-catalog';
+const { entries, id, label } = Astro.props as { entries: HistoryCatalogEntry[]; id: string; label: string };
+const display: Record<string, [string, string, string]> = {
+ 'eterna-1914':['小型化','ETERNA ALARM','Cal.68。約13リーニュ、1香箱。'],
+ 'vulcain-cricket':['音響','VULCAIN CRICKET','二重底の音響構造。'],
+ 'as1475':['量産','AS 1475','量産を支えたアラーム・キャリバー。'],
+ 'memovox-automatic':['自動巻き','MEMOVOX AUTOMATIC','時計側を自動巻き化。アラームは手巻き。'],
+ 'vulcain-golden-voice':['小型化','GOLDEN VOICE','女性用アラーム腕時計。'],
+ 'jlc-parking':['駐車時間','MEMOVOX PARKING','駐車時間用の目盛り。'],
+ 'vulcain-cricket-nautical':['潜水','CRICKET NAUTICAL','減圧表を備えるアラーム腕時計。'],
+ 'seiko-bell-matic':['自動巻き','BELL-MATIC','時計側は自動巻き。アラームは手巻き。'],
+ 'omega-memomatic':['動力・設定','OMEGA MEMOMATIC','1香箱で駆動。分単位でアラーム時刻を設定。'],
+ 'as5007-5008':['自動巻き','AS 5007 / 5008','時計用とアラーム用の双方をローターで巻き上げる。'],
+ 'citizen-criston-lc-alarm':['電子化','CITIZEN LC ALARM','水晶発振・液晶表示。圧電素子とチタン振動板。']
+};
+---
+{entries.length > 0 && <section class:list={['history-evidence',{'is-single':entries.length===1}]} id={id} aria-label={label} data-milestones>
+ {entries.length>1 && <header class="evidence-heading"><h3>MILESTONES</h3><span>{entries[0].meta.split(' / ')[0]} — {entries.at(-1)?.meta.split(' / ')[0]}</span></header>}
+ <div class="evidence-grid">{entries.map(entry=>{const [topic,name,summary]=display[entry.id]||['',entry.name,entry.cardSummary];return <article class="evidence-item" data-entry={entry.id} data-full-name={entry.name}><div class="evidence-meta"><time>{entry.meta.split(' / ')[0]}</time><small>{topic}</small></div><h4>{name}</h4><p>{summary}</p></article>;})}</div>
+</section>}
