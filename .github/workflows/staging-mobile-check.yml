@@ -1,8 +1,8 @@
-name: Staging HISTORY v11 Check
+name: Staging HISTORY v12 Check
 
 on:
   push:
-    branches: ["staging/history-v11"]
+    branches: ["staging/history-v12"]
   workflow_dispatch:
 
 permissions:
@@ -12,136 +12,49 @@ jobs:
   verify:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout staging
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-
-      - name: Guard editorial content and source images
+      - name: Guard TOP, editorial data and original images
         run: |
           set -e
-          git fetch origin staging/mobile-v4
-          changed=$(git diff --name-only origin/staging/mobile-v4...HEAD -- \
-            src/content \
-            src/data/history-content.json \
-            src/data/history-catalog.ts \
-            src/data/owners-directory.json \
-            public/images)
+          git fetch origin staging/history-v11
+          changed=$(git diff --name-only origin/staging/history-v11...HEAD -- src/pages/index.astro src/content src/data public/images src/styles/site.css src/styles/mobile-v1.css)
           if [ -n "$changed" ]; then
-            echo 'Protected editorial data or source images changed in HISTORY v11:'
-            echo "$changed"
+            echo "Protected source changed: $changed"
             exit 1
           fi
-
-      - name: Setup Node
-        uses: actions/setup-node@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: 22
           cache: npm
-
-      - name: Install
-        run: npm ci
-
-      - name: Build
-        run: npm run build
-
-      - name: Verify required pages
+      - name: Install and build
+        run: |
+          npm ci
+          npm run build
+      - name: Install browser audit runtime
+        run: |
+          npm install --no-save --package-lock=false playwright@1.62.1
+          npx playwright install --with-deps chromium
+      - name: Audit actual layout and interactions at 320, 390, 768 and 1280 pixels
+        env:
+          HISTORY_SCREENSHOT_DIR: .history-review
+        run: node scripts/check-history-layout.mjs
+      - name: Guard existing pages and watch invariants
         run: |
           set -e
-          for f in \
-            dist/index.html \
-            dist/history/index.html \
-            dist/owners-notes/index.html \
-            dist/pierce-duofon/index.html \
-            dist/cyma-time-o-vox/index.html; do
-            test -f "$f" || { echo "missing file: $f"; exit 1; }
+          for f in dist/index.html dist/history/index.html dist/owners-notes/index.html dist/pierce-duofon/index.html dist/cyma-time-o-vox/index.html; do
+            test -f "$f"
           done
-
-      - name: Verify HISTORY v11 completion criteria
-        run: |
-          set -e
-
-          grep -Fq 'history-v11' dist/history/index.html || { echo 'v11 marker missing'; exit 1; }
-          grep -Fq 'v10-cover' dist/history/index.html || { echo 'HISTORY cover missing'; exit 1; }
-          grep -Fq 'v10-milestone-rail' dist/history/index.html || { echo 'milestone rail missing'; exit 1; }
-          grep -Fq 'v11-owner-grid' dist/history/index.html || { echo 'owner note contact sheet missing'; exit 1; }
-          grep -Fq 'v11-collection-index' dist/history/index.html || { echo 'collection index missing'; exit 1; }
-          grep -Fq 'v10-owner-line' dist/history/index.html || { echo 'single owner note row missing'; exit 1; }
-
-          grep -Fq 'grid-auto-columns:50%' src/styles/history-v11.css || {
-            echo 'mobile rails are not exactly two-up'
-            exit 1
-          }
-
-          grep -Fq 'object-fit:contain' src/styles/history-v11.css || {
-            echo 'owner-note images are not contained'
-            exit 1
-          }
-
-          if grep -Fq 'object-fit:cover' src/styles/history-v11.css; then
-            echo 'cropping rule detected in HISTORY v11'
-            exit 1
-          fi
-
-          if grep -Fq 'margin-right:calc((100vw' src/styles/history-v11.css; then
-            echo 'partial-card teaser layout detected'
-            exit 1
-          fi
-
-          grep -Fq -- '--paper:#f7f7f4' src/styles/history-v11.css || { echo 'neutral paper palette missing'; exit 1; }
-          grep -Fq -- '--ink:#171715' src/styles/history-v11.css || { echo 'neutral ink palette missing'; exit 1; }
-          grep -Fq -- '--soft:#45443f' src/styles/history-v11.css || { echo 'strong secondary text palette missing'; exit 1; }
-          grep -Fq -- '--red:#81342f' src/styles/history-v11.css || { echo 'muted accent palette missing'; exit 1; }
-
-          grep -Fq '所有個体から見る。' dist/history/index.html || { echo "OWNER'S NOTE definition missing"; exit 1; }
-          grep -Fq '次に気になっているものと、そのデータ。' dist/history/index.html || { echo 'RESEARCH definition missing'; exit 1; }
-
-          if grep -Fq 'アラームを、腕へ。' dist/history/index.html; then
-            echo 'retired HISTORY catchphrase remains'
-            exit 1
-          fi
-
-          if grep -Fq 'v10-owner-empty' dist/history/index.html; then
-            echo 'empty owner-note poster placeholder remains'
-            exit 1
-          fi
-
-          if grep -Fq 'is-dark' dist/history/index.html; then
-            echo 'mid-page dark milestone card remains'
-            exit 1
-          fi
-
-      - name: Verify TOP v4 stays intact
-        run: |
-          set -e
           grep -Fq 'home-v4-cover' dist/index.html
-          grep -Fq '現代の感覚で読む。' dist/index.html
-          grep -Fq '所有個体から見る。' dist/index.html
-          grep -Fq '次に気になっているものと、そのデータ。' dist/index.html
-
-      - name: Guard watch invariants
-        run: |
-          set -e
-          grep -Fq '鳴る黄金のクロノメーター' dist/cyma-time-o-vox/index.html
-          grep -Fq '通知のオーパーツ' dist/pierce-duofon/index.html
           grep -Fq '1香箱' dist/cyma-time-o-vox/index.html
           grep -Fq '2香箱' dist/pierce-duofon/index.html
-
-      - name: Guard small-screen CSS
-        run: |
-          set -e
-          if grep -R -Fq 'word-break:break-all' dist/_astro; then
-            echo 'break-all detected'
-            exit 1
-          fi
-          if grep -R -Eiq 'width:[[:space:]]*[1-9][0-9]{3,}px' dist/_astro; then
-            echo 'suspicious fixed width >= 1000px detected'
-            exit 1
-          fi
-
-      - name: Upload staging build artifact
-        uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v4
+        if: always()
         with:
-          name: staging-history-v11-dist
-          path: dist
+          name: staging-history-v12-review
+          path: |
+            dist
+            .history-review
+          include-hidden-files: true
           retention-days: 7

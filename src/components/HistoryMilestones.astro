@@ -1,0 +1,56 @@
+---
+import type { HistoryCatalogEntry } from '../data/history-catalog';
+const { entries, id, label } = Astro.props as { entries: HistoryCatalogEntry[]; id: string; label: string };
+---
+<section class="chronology-index" aria-labelledby={`${id}-label`} data-milestones>
+  <div class="index-heading">
+    <h3 id={`${id}-label`}>MILESTONES</h3>
+    <span>{String(entries.length).padStart(2, '0')}</span>
+  </div>
+  <div class:list={['milestone-list', { 'is-single': entries.length === 1 }]} id={id} aria-label={label}>
+    {entries.map((entry) => (
+      <article class="milestone">
+        <small>{entry.meta}</small>
+        <h4>{entry.name}</h4>
+        <p>{entry.hook}</p>
+      </article>
+    ))}
+  </div>
+  {entries.length > 2 && (
+    <div class="rail-controls" hidden>
+      <span class="rail-position" aria-live="polite" aria-atomic="true">01–02 / {String(entries.length).padStart(2, '0')}</span>
+      <div>
+        <button type="button" data-direction="-1" aria-label={`${label}：前の項目`} aria-controls={id}>←</button>
+        <button type="button" data-direction="1" aria-label={`${label}：次の項目`} aria-controls={id}>→</button>
+      </div>
+    </div>
+  )}
+</section>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-milestones]').forEach((section) => {
+    const rail = section.querySelector<HTMLElement>('.milestone-list')!;
+    const controls = section.querySelector<HTMLElement>('.rail-controls');
+    if (!controls) return;
+    const buttons = [...controls.querySelectorAll<HTMLButtonElement>('button')];
+    const position = controls.querySelector<HTMLElement>('.rail-position')!;
+    const update = () => {
+      const overflow = rail.scrollWidth > rail.clientWidth + 1;
+      controls.hidden = !overflow;
+      if (!overflow) { rail.removeAttribute('tabindex'); return; }
+      rail.tabIndex = 0;
+      const step = rail.children[0].getBoundingClientRect().width;
+      const first = Math.round(rail.scrollLeft / step) + 1;
+      position.textContent = `${String(first).padStart(2, '0')}–${String(Math.min(first + 1, rail.children.length)).padStart(2, '0')} / ${String(rail.children.length).padStart(2, '0')}`;
+      buttons[0].disabled = rail.scrollLeft < 1;
+      buttons[1].disabled = rail.scrollLeft >= rail.scrollWidth - rail.clientWidth - 1;
+    };
+    buttons.forEach((button) => button.addEventListener('click', () => {
+      rail.scrollTo({ left: rail.scrollLeft + Number(button.dataset.direction) * rail.clientWidth, behavior: 'instant' });
+      update();
+    }));
+    rail.addEventListener('scroll', update, { passive: true });
+    new ResizeObserver(update).observe(rail);
+    update();
+  });
+</script>
