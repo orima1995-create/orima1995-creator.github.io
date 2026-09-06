@@ -2,6 +2,8 @@
 import SectionMast from '../../../components/SectionMast.astro';
 import OwnerNoteEndNav from '../../../components/OwnerNoteEndNav.astro';
 import '../../../styles/site.css';
+import '../../../styles/owners-v15.css';
+import OwnerFonts from '../../../components/OwnerFonts.astro';
 const base = import.meta.env.BASE_URL;
 const ownerNoteImage = `${base}images/cyma-time-o-vox/Cyma timeovox .png`;
 ---
@@ -11,10 +13,11 @@ const ownerNoteImage = `${base}images/cyma-time-o-vox/Cyma timeovox .png`;
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="robots" content="noindex,follow" />
-    <meta name="theme-color" content="#f3eee4" />
+    <meta name="theme-color" content="#f7f8f4" />
+    <OwnerFonts />
     <title>CYMA TIME-O-VOX OWNER'S NOTE｜VINTAGE ALARM</title>
   </head>
-  <body>
+  <body class="owners-v15">
     <SectionMast rightLabel="OWNER'S NOTE" />
     <main>
       <div class="shell owner-note-zoom-page">
