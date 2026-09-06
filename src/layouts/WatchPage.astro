@@ -9,6 +9,8 @@ import DeepDive from '../components/DeepDive.astro';
 import Sources from '../components/Sources.astro';
 import OwnerNoteEndNav from '../components/OwnerNoteEndNav.astro';
 import '../styles/site.css';
+import '../styles/owners-v15.css';
+import OwnerFonts from '../components/OwnerFonts.astro';
 
 const { watch } = Astro.props;
 const siteRoot = 'https://orima1995-create.github.io/orima1995-creator.github.io/';
@@ -73,10 +75,11 @@ const schema = {
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#f3eee4" />
+    <meta name="theme-color" content="#f7f8f4" />
+    <OwnerFonts />
     <SeoHead title={pageTitle} description={description} path={pagePath} image={watch.ownersNote.image} type="article" schema={schema} />
   </head>
-  <body>
+  <body class="owners-v15">
     <SectionMast rightLabel="OWNER'S NOTE" />
     <main>
       <WatchHero brand={watch.brand} model={watch.model} catchLines={watch.catch} ownerNumber={watch.ownerNumber} />
