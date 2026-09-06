@@ -23,9 +23,10 @@ try{
  if(screens)await page.screenshot({path:path.join(screens,'history-v17-lab-390-closed.png'),fullPage:true});
  await summary.click();assert(await page.locator('.chapter-b').evaluate(e=>e.open));
  const rail=page.locator('.shelf-rail');const geom=await rail.evaluate(e=>({client:e.clientWidth,scroll:e.scrollWidth,first:e.firstElementChild.getBoundingClientRect().width}));assert(geom.scroll>geom.client);assert(geom.first<geom.client);
+ await rail.evaluate(e=>e.scrollLeft=0);
+ if(screens)await page.screenshot({path:path.join(screens,'history-v17-lab-390-open.png'),fullPage:true});
  const before=await rail.evaluate(e=>e.scrollLeft);await rail.evaluate(e=>e.scrollBy({left:e.clientWidth,behavior:'instant'}));const after=await rail.evaluate(e=>e.scrollLeft);assert(after>before);
  assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth),await page.evaluate(()=>document.documentElement.clientWidth));
- if(screens)await page.screenshot({path:path.join(screens,'history-v17-lab-390-open.png'),fullPage:true});
  assert.deepEqual(errors,[]);console.log(JSON.stringify({width:390,variantA:4,variantB:4,peek:true,touchTarget:true,result:'PASS'}));
  await page.close();
 }finally{await browser.close();await new Promise(resolve=>server.close(resolve));}
