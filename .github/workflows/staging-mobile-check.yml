@@ -1,8 +1,8 @@
-name: Staging HISTORY thumbnail frames Check
+name: Staging OWNER'S NOTES v15 Check
 
 on:
   push:
-    branches: ["staging/history-v14-frames"]
+    branches: ["staging/owners-notes-v15"]
   workflow_dispatch:
 
 permissions:
@@ -39,6 +39,10 @@ jobs:
         env:
           HISTORY_SCREENSHOT_DIR: .history-review
         run: node scripts/check-history-v13.mjs
+      - name: Audit owner directory and both original-note pages
+        env:
+          HISTORY_SCREENSHOT_DIR: .history-review
+        run: node scripts/check-owners-v15.mjs
       - name: Guard existing pages and watch invariants
         run: |
           set -e
