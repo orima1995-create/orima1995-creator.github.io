@@ -81,8 +81,9 @@ jobs:
           check_text 'id="milestones"' dist/history/index.html
           check_text 'id="research"' dist/history/index.html
           check_text 'owners-notes/' dist/history/index.html
-          check_text '鳴る黄金のクロノメーター' dist/owners-notes/index.html
-          check_text '通知のオーパーツ' dist/owners-notes/index.html
+          check_text '所有個体から見る。' dist/owners-notes/index.html
+          check_text 'TIME-O-VOX' dist/owners-notes/index.html
+          check_text 'DUOFON' dist/owners-notes/index.html
           check_text 'cyma-time-o-vox/#owners-note' dist/owners-notes/index.html
           check_text 'Cyma timeovox .png' dist/owners-notes/index.html
           check_text 'pierce-duofon/#owners-note' dist/owners-notes/index.html
