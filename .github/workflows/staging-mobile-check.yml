@@ -1,8 +1,8 @@
-name: Staging OWNER'S NOTES v15 Check
+name: Staging OWNER'S NOTES v16 Check
 
 on:
   push:
-    branches: ["staging/owners-notes-v15"]
+    branches: ["staging/owners-notes-v16"]
   workflow_dispatch:
 
 permissions:
@@ -35,11 +35,11 @@ jobs:
         run: |
           npm install --no-save --package-lock=false playwright@1.62.1
           npx playwright install --with-deps chromium
-      - name: Audit actual layout and interactions at 320, 390, 768 and 1280 pixels
+      - name: Audit HISTORY layout, owner frames and interactions
         env:
           HISTORY_SCREENSHOT_DIR: .history-review
         run: node scripts/check-history-v13.mjs
-      - name: Audit owner directory and both original-note pages
+      - name: Audit owner directory, thumbnails and original-note pages
         env:
           HISTORY_SCREENSHOT_DIR: .history-review
         run: node scripts/check-owners-v15.mjs
@@ -55,7 +55,7 @@ jobs:
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: staging-history-v13-review
+          name: staging-history-v16-review
           path: |
             dist
             .history-review
