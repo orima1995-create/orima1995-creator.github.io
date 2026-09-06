@@ -1,0 +1,50 @@
+name: HISTORY UX v17 LAB
+
+on:
+  push:
+    branches: ["staging/history-v17-lab"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Guard v16 production candidate
+        run: |
+          set -e
+          changed=$(git diff --name-only 1fc9dcb8e65bc2c7bac6222a6dc08195891c32bb HEAD -- src/pages/history/index.astro src/pages/owners-notes src/layouts src/data public/images src/styles/history-v13.css src/styles/owners-v15.css src/components/OwnerThumbnailFrame.astro)
+          if [ -n "$changed" ]; then
+            echo "v16 protected source changed: $changed"
+            exit 1
+          fi
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - name: Install and build
+        run: |
+          npm ci
+          npm run build
+      - name: Install Chromium
+        run: |
+          npm install --no-save --package-lock=false playwright@1.62.1
+          npx playwright install --with-deps chromium
+      - name: Audit 390px A/B lab
+        env:
+          HISTORY_SCREENSHOT_DIR: .history-review
+        run: node scripts/check-history-v17-lab.mjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: history-v17-lab-review
+          path: |
+            dist/history-lab
+            .history-review
+          include-hidden-files: true
+          retention-days: 7
