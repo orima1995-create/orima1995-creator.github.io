@@ -24,7 +24,8 @@ try{for(const width of [320,390,768,1280]){
  assert.equal(await page.locator('.rail-controls').count(),0);
  for(const grid of await page.locator('.evidence-grid,.owner-tiles').all()){assert(await grid.evaluate(e=>e.scrollWidth<=e.clientWidth+1));}
  await page.locator('[id="1950s"]').scrollIntoViewIfNeeded();
- await page.locator('.tile-photo img').evaluateAll(imgs=>Promise.all(imgs.map(img=>img.decode())));
+ assert.equal(await page.locator('.owner-frame').count(),3);assert.equal(await page.locator('.owner-frame img').count(),0);
+ for(const frame of await page.locator('.owner-frame').all()){assert(await frame.locator('.frame-name strong').innerText());assert(await frame.evaluate(e=>e.scrollWidth<=e.clientWidth+1));}
  const tileGeometry=await page.locator('.owner-tile').evaluateAll(els=>els.map(e=>({left:e.getBoundingClientRect().left,right:e.getBoundingClientRect().right,top:e.getBoundingClientRect().top,width:e.clientWidth,height:e.clientHeight})));
  assert.equal(tileGeometry.length,2);if(width<=760){assert.equal(tileGeometry[0].top,tileGeometry[1].top);assert(tileGeometry.every(t=>t.left>=0&&t.right<=width&&t.height<=170));}
  if(screens){await page.locator('.has-owners').screenshot({path:path.join(screens,`history-v13-1950s-${width}.png`)});await page.goto(origin+base+'history/');await page.screenshot({path:path.join(screens,`history-v13-cover-${width}.png`)});}

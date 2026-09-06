@@ -16,6 +16,6 @@ const display: Record<string, [string, string, string]> = {
 };
 ---
 {entries.length > 0 && <section class:list={['history-evidence',{'is-single':entries.length===1}]} id={id} aria-label={label} data-milestones>
- {entries.length>1 && <header class="evidence-heading"><h3>MILESTONES</h3><span>{entries[0].meta.split(' / ')[0]} — {entries.at(-1)?.meta.split(' / ')[0]}</span></header>}
+ <header class="evidence-heading"><h3>MILESTONES</h3>{entries.length>1 && <span>{entries[0].meta.split(' / ')[0]} — {entries.at(-1)?.meta.split(' / ')[0]}</span>}</header>
  <div class="evidence-grid">{entries.map(entry=>{const [topic,name,summary]=display[entry.id]||['',entry.name,entry.cardSummary];return <article class="evidence-item" data-entry={entry.id} data-full-name={entry.name}><div class="evidence-meta"><time>{entry.meta.split(' / ')[0]}</time><small>{topic}</small></div><h4>{name}</h4><p>{summary}</p></article>;})}</div>
 </section>}

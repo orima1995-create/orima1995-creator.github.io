@@ -2,6 +2,7 @@
 import SeoHead from '../../components/SeoHead.astro';
 import SectionMast from '../../components/SectionMast.astro';
 import HistoryMilestones from '../../components/HistoryMilestonesV13.astro';
+import OwnerThumbnailFrame from '../../components/OwnerThumbnailFrame.astro';
 import { historyCatalogByGroup } from '../../data/history-catalog';
 import { historyContent } from '../../data/history-content';
 import ownersDirectory from '../../data/owners-directory.json';
@@ -42,26 +43,23 @@ const schema={'@context':'https://schema.org','@graph':[
   <div class="cover-foot"><p>時刻を見るだけではなく、<br/>設定した時刻を知らせる。</p><a href="#before" aria-label="歴史を読み始める">↓</a></div>
  </div></section>
  <nav class="history-era-nav" aria-label="歴史の年代ナビゲーション"><div class="shell">{eras.map(era=><a href={`#${era.id}`}>{era.label}</a>)}<a href="#current">CURRENT</a></div></nav>
- <aside class="history-test-banner shell"><span>TEST v13</span><p>サムネイル写真は仮使用です。<a href="#test-images">詳細</a></p></aside>
+ <aside class="history-test-banner shell"><span>TEST v14</span><p>サムネイルは写真枠で表示しています。<a href="#test-images">詳細</a></p></aside>
  {eras.map(era=><section class:list={['chronology-era',{'has-owners':era.id==='1950s','is-before':era.id==='before'}]} id={era.id} aria-labelledby={`title-${era.id}`}><div class="shell chapter-layout">
   <div class="chapter-date"><strong>{era.label.endsWith('s')?<>{era.label.slice(0,-1)}<small>s</small></>:era.label}</strong><span>CHAPTER {era.no}</span></div>
   <h2 class="chapter-title" id={`title-${era.id}`}>{era.title}</h2>
   <div class="chapter-copy">{era.paragraphs.map(paragraph=><p>{paragraph.replaceAll('\n','')}</p>)}</div>
   {era.id!=='before'&&<HistoryMilestones entries={milestones(era.id)} id={era.id==='1910s'?'milestones':`milestones-${era.id}`} label={`${era.label}のマイルストーン`}/>}
-  {era.id==='1940s'&&<div class="basis-record"><small>COLLECTION INDEX</small><span>{basis.name}</span><p>{basis.hook}</p></div>}
+  {era.id==='1940s'&&<div class="basis-record basis-frame"><OwnerThumbnailFrame brand="BASIS" name="ALARM" published={false}/><p>{basis.hook}</p></div>}
   {era.id==='1950s'&&<aside class="history-owners" aria-label="OWNER'S NOTES">
    <div class="collection-lead"><p>所有個体から見る。</p><a href={`${base}owners-notes/`} aria-label="OWNER'S NOTES一覧">一覧 ↗</a></div>
-   <div class="owner-tiles">{owners.map(({entry,note})=>note&&<a class:list={['owner-tile',{'has-photo':entry.id==='cyma-time-o-vox'}]} href={`${base}${note.href.replace(/^\//,'')}`} aria-label={`OWNER'S NOTE：${entry.id==='pierce-duofon'?'PIERCE DUOFON':'CYMA TIME-O-VOX'}`}>
-    <div class="tile-photo">{entry.id==='cyma-time-o-vox'?<img src={`${base}images/cyma-time-o-vox/ムーブメント.jpg`} alt="CYMA実機ムーブメント写真（テスト版で仮使用）" loading="lazy" width="2112" height="1600"/>:<span>写真選定中</span>}</div>
-    <span class="tile-kind">OWNER'S NOTE</span><span class="tile-name"><small>{entry.id==='pierce-duofon'?'PIERCE':'CYMA'}</small>{entry.id==='pierce-duofon'?'DUOFON':'TIME-O-VOX'}</span><span class="tile-arrow" aria-hidden="true">↗</span>
-   </a>)}</div>
+   <div class="owner-tiles">{owners.map(({note})=>note&&<OwnerThumbnailFrame brand={note.brand} name={note.name} href={`${base}${note.href.replace(/^\//,'')}`}/>)}</div>
    <details class="collection-records"><summary>COLLECTION INDEX</summary><ul>{owners.map(({entry,note})=>!note&&<li>{entry.name}<span>OWNER'S NOTE未公開</span></li>)}</ul></details>
   </aside>}
  </div></section>)}
  <section class="history-current-v13 shell" id="current" aria-labelledby="current-title"><div class="chapter-date"><strong>CURRENT</strong><span>CHAPTER 06</span></div><div><h2 id="current-title">{current.title}</h2><a class="current-link" href={`${base}${current.href}`}><span>{current.name}</span><span aria-hidden="true">↗</span></a></div></section>
  <aside class="history-research-v13 shell" id="research" aria-label="次のリサーチ"><h2>RESEARCH</h2><p>次に気になっているものと、そのデータ。</p></aside>
  <section class="history-sources-v13 shell"><details><summary>{sources.summary}</summary><ul>{sources.items.map(item=><li>{item}</li>)}</ul></details></section>
- <aside class="history-test-details shell" id="test-images"><h2>テスト版の画像について</h2><p>Pierceのサムネイル写真は未選定です。CYMAは既存の実機ムーブメント写真を仮使用しています。OWNER'S NOTE原本の生成・加工・差し替えは行っていません。</p><a href="#1950s">サムネイルへ戻る ↑</a></aside>
+ <aside class="history-test-details shell" id="test-images"><h2>テスト版の写真枠について</h2><p>写真の配置を確認するための枠です。時計名を表示し、公開済みのOWNER'S NOTEへリンクしています。原本画像は変更していません。</p><a href="#1950s">サムネイルへ戻る ↑</a></aside>
  </main>
  <script>
   const links=[...document.querySelectorAll<HTMLAnchorElement>('.history-era-nav a')];

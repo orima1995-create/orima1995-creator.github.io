@@ -1,8 +1,8 @@
-name: Staging HISTORY v13 Check
+name: Staging HISTORY thumbnail frames Check
 
 on:
   push:
-    branches: ["staging/history-v13"]
+    branches: ["staging/history-v14-frames"]
   workflow_dispatch:
 
 permissions:

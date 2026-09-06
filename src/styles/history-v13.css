@@ -25,4 +25,5 @@
 }
 @media(max-width:350px){.history-v13 .shell{width:calc(100% - 36px)}.history-v13 .mast-link{font-size:17px}.chapter-layout,.has-owners .chapter-layout,.history-current-v13{grid-template-columns:82px minmax(0,1fr);column-gap:15px}.chapter-date strong{font-size:30px}.chapter-title{font-size:24px;line-height:1.6}.evidence-grid{column-gap:16px}.evidence-meta time{font-size:14px}.evidence-meta small{font-size:11px}.owner-tile{aspect-ratio:1.02}.tile-kind{left:9px;right:9px;top:10px}.tile-name{left:9px;bottom:10px;right:24px}.tile-arrow{right:8px;bottom:10px}.history-current-v13 .chapter-date strong{font-size:16px}.history-current-v13 h2{font-size:23px}.current-link{font-size:22px;flex-wrap:wrap}}
 @media(prefers-reduced-motion:reduce){html:has(.history-v13){scroll-behavior:auto}}
+.basis-frame{display:block}.basis-frame .owner-frame{width:calc(50% - 5px)}.basis-frame p{margin-top:10px;text-align:left}
 @media print{.history-era-nav,.history-test-banner,.history-test-details,.section-menu{display:none}.history-cover-v13{break-after:page}.chapter-layout{break-inside:avoid}}
