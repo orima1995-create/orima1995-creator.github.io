@@ -39,12 +39,14 @@ try{for(const width of [320,390,768,1280]){
  assert.equal(await chapter.locator('.owner-frame').count(),4);
  assert.equal(await chapter.locator('.owner-frame img').count(),2);
  for(const img of await chapter.locator('.owner-frame img').all())assert(await img.evaluate(e=>e.complete&&e.naturalWidth>0));
+ const fit=await chapter.evaluate(e=>({client:e.clientHeight,scroll:e.scrollHeight,bottom:e.getBoundingClientRect().bottom,last:[...e.querySelectorAll('.owner-frame')].at(-1)?.getBoundingClientRect().bottom||0,frames:[...e.querySelectorAll('.owner-frame')].map(x=>({client:x.clientHeight,scroll:x.scrollHeight}))}));
+ assert(fit.scroll<=fit.client+1,`${width}: chapter vertical overflow`);assert(fit.last<=fit.bottom+1,`${width}: owner frame escapes chapter`);assert(fit.frames.every(x=>x.scroll<=x.client+1),`${width}: owner frame content clipped`);
  const rail=chapter.locator('.shelf-rail-v18');
  const rg=await rail.evaluate(e=>({client:e.clientWidth,scroll:e.scrollWidth,first:e.firstElementChild.getBoundingClientRect().width,tops:[...e.children].map(c=>c.getBoundingClientRect().top)}));
  if(width<=760){assert(rg.scroll>rg.client,`${width}: shelf should scroll`);assert(rg.first<rg.client,`${width}: peek should remain`);}
  else{assert(rg.scroll<=rg.client+1,`${width}: desktop shelf overflow`);assert(Math.abs(rg.tops[0]-rg.tops[1])<1,`${width}: desktop two-column shelf`);}
  await checkPage('1950 open');
- if(width===390&&screens)await chapter.screenshot({path:path.join(screens,'history-v18-390-1950s-open.png')});
+ if(width===390&&screens){await chapter.screenshot({path:path.join(screens,'history-v18-390-1950s-open.png')});await page.screenshot({path:path.join(screens,'history-v18-390-1950s-page.png'),fullPage:true});}
  if(width===1280&&screens)await chapter.screenshot({path:path.join(screens,'history-v18-1280-1950s-open.png')});
 
  await page.goto(origin+base+'history/',{waitUntil:'networkidle'});await page.locator('.history-era-nav a[href="#1940s"]').click();await page.waitForTimeout(150);
