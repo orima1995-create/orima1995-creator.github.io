@@ -1,0 +1,85 @@
+---
+import SectionMast from '../../components/SectionMast.astro';
+import HistoryMilestones from '../../components/HistoryMilestonesV13.astro';
+import { historyCatalogByGroup } from '../../data/history-catalog';
+import { historyContent } from '../../data/history-content';
+import '../../styles/site.css';
+import '../../styles/history-v17-lab.css';
+
+const base=import.meta.env.BASE_URL;
+const era=historyContent.era1950s;
+const milestones=historyCatalogByGroup.milestones.filter(entry=>entry.era==='1950s'&&entry.featured);
+const display:Record<string,[string,string,string]>={
+ 'as1475':['量産','AS 1475','量産を支えたアラーム・キャリバー。'],
+ 'memovox-automatic':['自動巻き','MEMOVOX AUTOMATIC','時計側を自動巻き化。アラームは手巻き。'],
+ 'vulcain-golden-voice':['小型化','GOLDEN VOICE','女性用アラーム腕時計。'],
+ 'jlc-parking':['駐車時間','MEMOVOX PARKING','駐車時間用の目盛り。']
+};
+const paragraphs=era.intro.split('\n');
+---
+<!doctype html>
+<html lang="ja">
+<head>
+ <meta charset="utf-8"/>
+ <meta name="viewport" content="width=device-width, initial-scale=1"/>
+ <meta name="robots" content="noindex,nofollow"/>
+ <meta name="theme-color" content="#f7f8f4"/>
+ <link rel="preconnect" href="https://fonts.googleapis.com"/>
+ <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+ <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Noto+Serif+JP:wght@400;500;600&display=swap" rel="stylesheet"/>
+ <title>HISTORY UX v17 LAB｜1950s A/B</title>
+</head>
+<body class="history-v17-lab">
+ <SectionMast rightLabel="HISTORY / LAB"/>
+ <main>
+  <header class="lab-intro shell">
+   <div><span>HISTORY UX v17 LAB</span><strong>1950s / 390px A/B</strong></div>
+   <a href={`${base}history/#1950s`}>v16へ戻る ↗</a>
+  </header>
+
+  <section class="lab-variant shell" aria-labelledby="variant-a">
+   <div class="lab-label"><span>A / CURRENT</span><p>完全表示・2列。v16の基準。</p></div>
+   <article class="chapter-a">
+    <header class="chapter-head">
+     <div class="chapter-date"><strong>1950<small>s</small></strong><span>CHAPTER 03</span></div>
+     <h1 id="variant-a">{era.title}</h1>
+    </header>
+    <div class="chapter-copy">{paragraphs.map(p=><p>{p}</p>)}</div>
+    <HistoryMilestones entries={milestones} id="lab-a-milestones" label="1950sのマイルストーン A"/>
+   </article>
+  </section>
+
+  <section class="lab-variant shell" aria-labelledby="variant-b">
+   <div class="lab-label"><span>B / LAB</span><p>段階表示＋PEEK。操作系だけ現代化。</p></div>
+   <details class="chapter-b">
+    <summary>
+     <span class="chapter-index">03</span>
+     <span class="chapter-summary-copy">
+      <small>1950s</small>
+      <strong id="variant-b">{era.title}</strong>
+      <span>量産・小型化・自動巻き・用途の拡張。</span>
+     </span>
+     <span class="chapter-toggle" aria-hidden="true"><i></i></span>
+    </summary>
+    <div class="chapter-b-body">
+     <div class="chapter-copy">{paragraphs.map(p=><p>{p}</p>)}</div>
+     <section class="shelf-b" aria-labelledby="shelf-b-title">
+      <header><h2 id="shelf-b-title">MILESTONES</h2><span>{milestones.length}</span></header>
+      <div class="shelf-rail" tabindex="0" aria-label="1950年代のマイルストーン">
+       {milestones.map((entry,index)=>{
+        const [topic,name,summary]=display[entry.id]||['',entry.name,entry.cardSummary];
+        return <article class="shelf-card" data-lab-card={entry.id}>
+         <div class="card-meta"><time>{entry.meta.split(' / ')[0]}</time><span>{topic}</span></div>
+         <h3>{name}</h3>
+         <p>{summary}</p>
+         <small>{index+1} / {milestones.length}</small>
+        </article>
+       })}
+      </div>
+     </section>
+    </div>
+   </details>
+  </section>
+ </main>
+</body>
+</html>
