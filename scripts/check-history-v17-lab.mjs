@@ -1,0 +1,31 @@
+import assert from 'node:assert/strict';
+import {createServer} from 'node:http';
+import {readFile,stat,mkdir} from 'node:fs/promises';
+import path from 'node:path';
+import {chromium} from 'playwright';
+const root=path.resolve('dist'),base='/orima1995-creator.github.io/';
+const server=createServer(async(req,res)=>{try{const url=new URL(req.url,'http://localhost');if(!url.pathname.startsWith(base))throw Error();let file=path.resolve(root,decodeURIComponent(url.pathname.slice(base.length)));if(file!==root&&!file.startsWith(root+path.sep))throw Error();if((await stat(file)).isDirectory())file=path.join(file,'index.html');res.setHeader('Content-Type',({'.html':'text/html; charset=utf-8','.css':'text/css','.js':'text/javascript','.jpg':'image/jpeg','.png':'image/png','.webp':'image/webp'})[path.extname(file)]||'application/octet-stream');res.end(await readFile(file));}catch{res.writeHead(404).end();}});
+await new Promise(resolve=>server.listen(0,'127.0.0.1',resolve));
+const origin=`http://127.0.0.1:${server.address().port}`,screens=process.env.HISTORY_SCREENSHOT_DIR;
+if(screens)await mkdir(screens,{recursive:true});
+const browser=await chromium.launch({headless:true});
+try{
+ const page=await browser.newPage({viewport:{width:390,height:1000}}),errors=[];
+ page.on('pageerror',e=>errors.push(e.message));
+ page.on('response',r=>{if(r.url().startsWith(origin)&&r.status()>=400)errors.push(r.status()+' '+r.url());});
+ await page.goto(origin+base+'history-lab/',{waitUntil:'networkidle'});await page.evaluate(()=>document.fonts.ready);
+ assert.equal(await page.locator('.lab-variant').count(),2);
+ assert.equal(await page.locator('#lab-a-milestones [data-entry]').count(),4);
+ assert.equal(await page.locator('.shelf-card').count(),4);
+ assert.equal(await page.locator('.chapter-b').getAttribute('open'),null);
+ const pageWidth=await page.evaluate(()=>document.documentElement.clientWidth),scrollWidth=await page.evaluate(()=>document.documentElement.scrollWidth);assert.equal(pageWidth,scrollWidth);
+ const summary=page.locator('.chapter-b>summary'),target=await summary.locator('.chapter-toggle').evaluate(e=>({w:e.clientWidth,h:e.clientHeight}));assert(target.w>=44&&target.h>=44);
+ if(screens)await page.screenshot({path:path.join(screens,'history-v17-lab-390-closed.png'),fullPage:true});
+ await summary.click();assert(await page.locator('.chapter-b').evaluate(e=>e.open));
+ const rail=page.locator('.shelf-rail');const geom=await rail.evaluate(e=>({client:e.clientWidth,scroll:e.scrollWidth,first:e.firstElementChild.getBoundingClientRect().width}));assert(geom.scroll>geom.client);assert(geom.first<geom.client);
+ const before=await rail.evaluate(e=>e.scrollLeft);await rail.evaluate(e=>e.scrollBy({left:e.clientWidth,behavior:'instant'}));const after=await rail.evaluate(e=>e.scrollLeft);assert(after>before);
+ assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth),await page.evaluate(()=>document.documentElement.clientWidth));
+ if(screens)await page.screenshot({path:path.join(screens,'history-v17-lab-390-open.png'),fullPage:true});
+ assert.deepEqual(errors,[]);console.log(JSON.stringify({width:390,variantA:4,variantB:4,peek:true,touchTarget:true,result:'PASS'}));
+ await page.close();
+}finally{await browser.close();await new Promise(resolve=>server.close(resolve));}
