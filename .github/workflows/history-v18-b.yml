@@ -1,0 +1,63 @@
+name: HISTORY v18 B Staging
+
+on:
+  push:
+    branches: ["staging/history-v18-b"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Guard v16 protected content and originals
+        run: |
+          set -e
+          base=1fc9dcb8e65bc2c7bac6222a6dc08195891c32bb
+          changed=$(git diff --name-only "$base" HEAD -- src/pages/index.astro src/pages/owners-notes src/layouts src/data src/content src/styles/site.css src/styles/owners-v15.css src/components/OwnerThumbnailFrame.astro .github/workflows/deploy-pages.yml)
+          if [ -n "$changed" ]; then
+            echo "Protected source changed: $changed"
+            exit 1
+          fi
+          image_changed=$(git diff --name-only "$base" HEAD -- public/images | grep -v '^public/images/history-motifs/' || true)
+          if [ -n "$image_changed" ]; then
+            echo "Original image changed: $image_changed"
+            exit 1
+          fi
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - name: Install and build
+        run: |
+          npm ci
+          npm run build
+      - name: Install Chromium
+        run: |
+          npm install --no-save --package-lock=false playwright@1.62.1
+          npx playwright install --with-deps chromium
+      - name: Audit B chapters, motifs and PEEK
+        env:
+          HISTORY_SCREENSHOT_DIR: .history-review
+        run: node scripts/check-history-v18.mjs
+      - name: Guard existing page invariants
+        run: |
+          set -e
+          for f in dist/index.html dist/history/index.html dist/owners-notes/index.html dist/pierce-duofon/index.html dist/cyma-time-o-vox/index.html; do test -f "$f"; done
+          grep -Fq 'home-v4-cover' dist/index.html
+          grep -Fq '1香箱' dist/cyma-time-o-vox/index.html
+          grep -Fq '2香箱' dist/pierce-duofon/index.html
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: history-v18-b-review
+          path: |
+            dist/history
+            .history-review
+          include-hidden-files: true
+          retention-days: 7
