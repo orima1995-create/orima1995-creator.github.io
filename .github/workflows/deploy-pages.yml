@@ -160,8 +160,9 @@ jobs:
               && grep -Fq "id=\"research\"" <<<"$history_html" \
               && grep -Fq "cyma-time-o-vox/" <<<"$history_html" \
               && grep -Fq "owners-notes/" <<<"$history_html" \
-              && grep -Fq "鳴る黄金のクロノメーター" <<<"$owners_html" \
-              && grep -Fq "通知のオーパーツ" <<<"$owners_html" \
+              && grep -Fq "所有個体から見る。" <<<"$owners_html" \
+              && grep -Fq "TIME-O-VOX" <<<"$owners_html" \
+              && grep -Fq "DUOFON" <<<"$owners_html" \
               && grep -Fq "cyma-time-o-vox/#owners-note" <<<"$owners_html" \
               && grep -Fq "Cyma timeovox .png" <<<"$owners_html" \
               && grep -Fq "pierce-duofon/#owners-note" <<<"$owners_html" \
