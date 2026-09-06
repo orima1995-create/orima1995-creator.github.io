@@ -50,7 +50,7 @@ jobs:
           for f in dist/index.html dist/history/index.html dist/owners-notes/index.html dist/pierce-duofon/index.html dist/cyma-time-o-vox/index.html dist/cyma-time-o-vox/owners-note/index.html; do
             test -f "$f"
           done
-          grep -Fq 'home-v4-cover' dist/index.html
+          grep -Fq 'VINTAGE ALARM' dist/index.html
           grep -Fq '1香箱' dist/cyma-time-o-vox/index.html
           grep -Fq '2香箱' dist/pierce-duofon/index.html
       - uses: actions/upload-artifact@v4
