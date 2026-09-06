@@ -30,13 +30,13 @@ try{for(const width of [320,390,768,1280]){
  assert.equal(await page.locator('#milestones-1950s [data-entry]').count(),4);
  assert.equal(await page.locator('.rail-controls').count(),0);
  for(const grid of await page.locator('.evidence-grid,.owner-tiles').all())assert(await grid.evaluate(e=>e.scrollWidth<=e.clientWidth+1));
- assert.equal(await page.locator('#1940s .owner-frame').count(),1);
- assert.equal(await page.locator('#1950s .owner-frame').count(),4);
+ assert.equal(await page.locator('[id="1940s"] .owner-frame').count(),1);
+ assert.equal(await page.locator('[id="1950s"] .owner-frame').count(),4);
  assert.equal(await page.locator('.owner-frame').count(),5);
  assert.equal(await page.locator('.owner-frame img').count(),2);
  for(const img of await page.locator('.owner-frame img').all())assert(await img.evaluate(e=>e.complete&&e.naturalWidth>0));
  for(const frame of await page.locator('.owner-frame').all()){assert(await frame.locator('.frame-name strong').innerText());assert(await frame.evaluate(e=>e.scrollWidth<=e.clientWidth+1));}
- const frameGeometry=await page.locator('#1950s .owner-frame').evaluateAll(els=>els.map(e=>({left:e.getBoundingClientRect().left,right:e.getBoundingClientRect().right,top:e.getBoundingClientRect().top,width:e.clientWidth,height:e.clientHeight})));
+ const frameGeometry=await page.locator('[id="1950s"] .owner-frame').evaluateAll(els=>els.map(e=>({left:e.getBoundingClientRect().left,right:e.getBoundingClientRect().right,top:e.getBoundingClientRect().top,width:e.clientWidth,height:e.clientHeight})));
  assert.equal(frameGeometry.length,4);
  if(width<=760){
   assert(Math.abs(frameGeometry[0].top-frameGeometry[1].top)<1);
@@ -45,7 +45,7 @@ try{for(const width of [320,390,768,1280]){
   assert(frameGeometry.every(t=>t.left>=0&&t.right<=width&&t.height<=190));
  }
  assert.equal(await page.locator('.owner-tile').count(),2);
- if(screens){await page.locator('#1950s').screenshot({path:path.join(screens,`history-v16-1950s-${width}.png`)});await page.goto(origin+base+'history/');await page.screenshot({path:path.join(screens,`history-v16-cover-${width}.png`)});}
+ if(screens){await page.locator('[id="1950s"]').screenshot({path:path.join(screens,`history-v16-1950s-${width}.png`)});await page.goto(origin+base+'history/');await page.screenshot({path:path.join(screens,`history-v16-cover-${width}.png`)});}
  const links=await page.locator('.history-era-nav a').evaluateAll(els=>els.map(e=>({href:e.href,hash:e.hash})));
  for(const link of links){await page.goto(link.href);await page.waitForTimeout(120);assert(await page.locator(`[id="${link.hash.slice(1)}"]`).isVisible());}
  await page.locator('.history-sources-v13 summary').click();assert(await page.locator('.history-sources-v13 li').first().isVisible());
