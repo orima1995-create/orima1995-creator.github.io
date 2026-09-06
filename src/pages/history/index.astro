@@ -1,13 +1,14 @@
 ---
 import SeoHead from '../../components/SeoHead.astro';
 import SectionMast from '../../components/SectionMast.astro';
-import HistoryMilestones from '../../components/HistoryMilestonesV13.astro';
+import HistoryMilestones from '../../components/HistoryMilestonesV18.astro';
 import OwnerThumbnailFrame from '../../components/OwnerThumbnailFrame.astro';
 import { historyCatalogByGroup } from '../../data/history-catalog';
 import { historyContent } from '../../data/history-content';
 import ownersDirectory from '../../data/owners-directory.json';
 import '../../styles/site.css';
 import '../../styles/history-v13.css';
+import '../../styles/history-v18.css';
 const base=import.meta.env.BASE_URL;
 const milestones=(era:string)=>historyCatalogByGroup.milestones.filter(entry=>entry.era===era&&entry.featured);
 const ownersForEra=(era:string)=>historyCatalogByGroup.owners
@@ -26,12 +27,12 @@ const ownersForEra=(era:string)=>historyCatalogByGroup.owners
  });
 const {before,era1910s,era1940s,era1950s,era1960s,electronic,current,sources}=historyContent;
 const eras=[
- {id:'before',no:'00',label:'BEFORE',title:before.title,paragraphs:before.intro},
- {id:'1910s',no:'01',label:'1910s',title:era1910s.title,paragraphs:[era1910s.intro]},
- {id:'1940s',no:'02',label:'1940s',title:era1940s.title,paragraphs:[era1940s.intro]},
- {id:'1950s',no:'03',label:'1950s',title:era1950s.title,paragraphs:era1950s.intro.split('\n')},
- {id:'1960s',no:'04',label:'1960s',title:era1960s.title,paragraphs:[era1960s.intro]},
- {id:'electronic',no:'05',label:'1970s',title:electronic.title,paragraphs:electronic.body}
+ {id:'before',no:'00',label:'BEFORE',title:before.title,paragraphs:before.intro,teaser:'鐘・時計塔・携帯時計。',motif:'images/history-motifs/before-clocktower.svg',motifClass:'motif-before'},
+ {id:'1910s',no:'01',label:'1910s',title:era1910s.title,paragraphs:[era1910s.intro],teaser:'アラームが、腕へ移る。'},
+ {id:'1940s',no:'02',label:'1940s',title:era1940s.title,paragraphs:[era1940s.intro],teaser:'機械式アラーム腕時計が量産へ。'},
+ {id:'1950s',no:'03',label:'1950s',title:era1950s.title,paragraphs:era1950s.intro.split('\n'),teaser:'量産・小型化・自動巻き・用途の拡張。',motif:'images/history-motifs/1950s-train.svg',motifClass:'motif-1950s'},
+ {id:'1960s',no:'04',label:'1960s',title:era1960s.title,paragraphs:[era1960s.intro],teaser:'用途と構成が広がる。'},
+ {id:'electronic',no:'05',label:'1970s',title:electronic.title,paragraphs:electronic.body,teaser:'電子式アラームへ。'}
 ];
 const title='アラーム腕時計の歴史｜Eterna・Cricket・Memovox・Duofon・Time-O-Vox｜VINTAGE ALARM';
 const description='鐘や携帯時計から、Eterna、Vulcain Cricket、Memovox、AS 1475、Pierce Duofon、Omega Memomatic、電子式アラームまで。「時間を知らせる」腕時計の歴史を辿る。';
@@ -46,7 +47,7 @@ const schema={'@context':'https://schema.org','@graph':[
  <link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Noto+Serif+JP:wght@400;500;600&display=swap" rel="stylesheet"/>
  <SeoHead title={title} description={description} path="history/" type="article" schema={schema}/>
-</head><body class="history-v13">
+</head><body class="history-v13 history-v18">
  <a class="history-skip" href="#before">本文へ</a><div class="history-mast"><SectionMast rightLabel="HISTORY"/></div>
  <main><section class="history-cover-v13" aria-labelledby="history-title"><div class="shell">
   <div class="cover-meta"><span>HISTORY</span><span>01 / CONTENTS</span></div>
@@ -57,16 +58,22 @@ const schema={'@context':'https://schema.org','@graph':[
  <nav class="history-era-nav" aria-label="歴史の年代ナビゲーション"><div class="shell">{eras.map(era=><a href={`#${era.id}`}>{era.label}</a>)}<a href="#current">CURRENT</a></div></nav>
  {eras.map(era=>{
   const eraOwners=ownersForEra(era.id);
-  return <section class:list={['chronology-era',{'has-owners':eraOwners.length>0,'is-before':era.id==='before'}]} id={era.id} aria-labelledby={`title-${era.id}`}><div class="shell chapter-layout">
-   <div class="chapter-date"><strong>{era.label.endsWith('s')?<>{era.label.slice(0,-1)}<small>s</small></>:era.label}</strong><span>CHAPTER {era.no}</span></div>
-   <h2 class="chapter-title" id={`title-${era.id}`}>{era.title}</h2>
-   <div class="chapter-copy">{era.paragraphs.map(paragraph=><p>{paragraph.replaceAll('\n','')}</p>)}</div>
-   {era.id!=='before'&&<HistoryMilestones entries={milestones(era.id)} id={era.id==='1910s'?'milestones':`milestones-${era.id}`} label={`${era.label}のマイルストーン`}/>}
-   {eraOwners.length>0&&<aside class="history-owners" aria-label="OWNER'S NOTES">
-    <div class="collection-lead"><p>所有個体から見る。</p><a href={`${base}owners-notes/`} aria-label="OWNER'S NOTES一覧">一覧 ↗</a></div>
-    <div class="owner-tiles">{eraOwners.map(({note,brand,name,href,image})=><OwnerThumbnailFrame brand={brand} name={name} href={href} image={image} published={!!note}/>)}</div>
-   </aside>}
-  </div></section>
+  return <details class:list={['chronology-era','chapter-v18',{'has-owners':eraOwners.length>0,'is-before':era.id==='before','has-motif':!!era.motif}]} id={era.id} aria-labelledby={`title-${era.id}`}>
+   <summary class="chapter-summary-v18">
+    <span class="chapter-index-v18">{era.no}</span>
+    <span class="chapter-summary-copy-v18"><small>{era.label}</small><h2 id={`title-${era.id}`}>{era.title}</h2><span>{era.teaser}</span></span>
+    {era.motif&&<img class:list={['chapter-motif-v18',era.motifClass]} src={`${base}${era.motif}`} alt="" aria-hidden="true"/>}
+    <span class="chapter-toggle-v18" aria-hidden="true"><i></i></span>
+   </summary>
+   <div class:list={['shell','chapter-body-v18',{'has-owners-body-v18':eraOwners.length>0}]}>
+    <div class="chapter-copy">{era.paragraphs.map(paragraph=><p>{paragraph.replaceAll('\n','')}</p>)}</div>
+    {era.id!=='before'&&<HistoryMilestones entries={milestones(era.id)} id={era.id==='1910s'?'milestones':`milestones-${era.id}`} label={`${era.label}のマイルストーン`}/>}
+    {eraOwners.length>0&&<aside class="history-owners" aria-label="OWNER'S NOTES">
+     <div class="collection-lead"><p>所有個体から見る。</p><a href={`${base}owners-notes/`} aria-label="OWNER'S NOTES一覧">一覧 ↗</a></div>
+     <div class="owner-tiles">{eraOwners.map(({note,brand,name,href,image})=><OwnerThumbnailFrame brand={brand} name={name} href={href} image={image} published={!!note}/>)}</div>
+    </aside>}
+   </div>
+  </details>
  })}
  <section class="history-current-v13 shell" id="current" aria-labelledby="current-title"><div class="chapter-date"><strong>CURRENT</strong><span>CHAPTER 06</span></div><div><h2 id="current-title">{current.title}</h2><a class="current-link" href={`${base}${current.href}`}><span>{current.name}</span><span aria-hidden="true">↗</span></a></div></section>
  <aside class="history-research-v13 shell" id="research" aria-label="次のリサーチ"><h2>RESEARCH</h2><p>次に気になっているものと、そのデータ。</p></aside>
@@ -74,10 +81,22 @@ const schema={'@context':'https://schema.org','@graph':[
  </main>
  <script>
   const links=[...document.querySelectorAll<HTMLAnchorElement>('.history-era-nav a')];
-  const sections=[...document.querySelectorAll<HTMLElement>('.chronology-era, #current')];
+  const chapters=[...document.querySelectorAll<HTMLDetailsElement>('details.chronology-era')];
+  const sections=[...chapters,...document.querySelectorAll<HTMLElement>('#current')];
+  const revealTarget=(scroll=false)=>{
+   if(!location.hash)return;
+   const target=document.getElementById(decodeURIComponent(location.hash.slice(1)));
+   if(!target)return;
+   const chapter=target.matches('details.chronology-era')?target:target.closest('details.chronology-era');
+   if(chapter instanceof HTMLDetailsElement)chapter.open=true;
+   if(scroll)requestAnimationFrame(()=>target.scrollIntoView({block:'start'}));
+  };
   const update=()=>{let active='';for(const section of sections)if(section.getBoundingClientRect().top<=180)active=section.id;for(const link of links){if(link.hash===`#${active}`)link.setAttribute('aria-current','location');else link.removeAttribute('aria-current');}};
+  document.querySelectorAll<HTMLAnchorElement>('a[href^="#"]').forEach(link=>link.addEventListener('click',()=>{const target=document.getElementById(decodeURIComponent(link.hash.slice(1)));const chapter=target?.matches('details.chronology-era')?target:target?.closest('details.chronology-era');if(chapter instanceof HTMLDetailsElement)chapter.open=true;}));
   let pending=false;window.addEventListener('scroll',()=>{if(!pending){pending=true;requestAnimationFrame(()=>{update();pending=false;});}},{passive:true});
-  window.addEventListener('resize',update);window.addEventListener('hashchange',update);document.fonts.ready.then(update);
-  document.querySelectorAll<HTMLAnchorElement>('.section-menu-panel a').forEach(link=>link.addEventListener('click',()=>link.closest('details')?.removeAttribute('open')));update();
+  window.addEventListener('resize',update);window.addEventListener('hashchange',()=>{revealTarget(true);update();});
+  chapters.forEach(chapter=>chapter.addEventListener('toggle',update));
+  document.fonts.ready.then(()=>{revealTarget(!!location.hash);update();});
+  document.querySelectorAll<HTMLAnchorElement>('.section-menu-panel a').forEach(link=>link.addEventListener('click',()=>link.closest('details')?.removeAttribute('open')));
  </script>
 </body></html>
