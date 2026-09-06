@@ -1,389 +1,102 @@
 ---
 import SeoHead from '../../components/SeoHead.astro';
 import SectionMast from '../../components/SectionMast.astro';
+import HistoryMilestones from '../../components/HistoryMilestonesV18.astro';
+import OwnerThumbnailFrame from '../../components/OwnerThumbnailFrame.astro';
 import { historyCatalogByGroup } from '../../data/history-catalog';
 import { historyContent } from '../../data/history-content';
+import ownersDirectory from '../../data/owners-directory.json';
 import '../../styles/site.css';
-import '../../styles/history-magazine.css';
-
-const base = import.meta.env.BASE_URL;
-const milestoneCards = (era: '1910s' | '1940s' | '1950s' | '1960s' | 'electronic') =>
-  historyCatalogByGroup.milestones.filter((entry) => entry.era === era && entry.featured);
-const ownerCards = (era: '1940s' | '1950s') =>
-  historyCatalogByGroup.owners.filter((entry) => entry.era === era && entry.featured);
-const researchCards = (era: '1950s') =>
-  historyCatalogByGroup.research.filter((entry) => entry.era === era && entry.featured);
-
-const hero = historyContent.hero;
-const before = historyContent.before;
-const era1910s = historyContent.era1910s;
-const era1940s = historyContent.era1940s;
-const era1950s = historyContent.era1950s;
-const era1960s = historyContent.era1960s;
-const electronic = historyContent.electronic;
-const current = historyContent.current;
-const sources = historyContent.sources;
-
-const historyIndex = [
-  { href: '#before', no: before.chapterNo, label: `${before.label} — ${before.title}` },
-  { href: '#1910s', no: era1910s.chapterNo, label: `${era1910s.label} — ${era1910s.title}` },
-  { href: '#1940s', no: era1940s.chapterNo, label: `${era1940s.label} — ${era1940s.title}` },
-  { href: '#1950s', no: era1950s.chapterNo, label: `${era1950s.label} — ${era1950s.title}` },
-  { href: '#1960s', no: era1960s.chapterNo, label: `${era1960s.label} — ${era1960s.title}` },
-  { href: '#electronic', no: electronic.chapterNo, label: `${electronic.label} — ${electronic.indexTitle}` },
-  { href: '#current', no: current.chapterNo, label: current.title }
-] as const;
-
-const title = 'アラーム腕時計の歴史｜Eterna・Cricket・Memovox・Duofon・Time-O-Vox｜VINTAGE ALARM';
-const description = '鐘や携帯時計から、Eterna、Vulcain Cricket、Memovox、AS 1475、Pierce Duofon、Omega Memomatic、電子式アラームまで。「時間を知らせる」腕時計の歴史を辿る。';
-const schema = {
-  '@context': 'https://schema.org',
-  '@graph': [
-    {
-      '@type': 'Article',
-      headline: 'アラーム腕時計の歴史',
-      description,
-      inLanguage: 'ja',
-      mainEntityOfPage: 'https://orima1995-create.github.io/orima1995-creator.github.io/history/',
-      isPartOf: {
-        '@type': 'WebSite',
-        name: 'VINTAGE ALARM',
-        url: 'https://orima1995-create.github.io/orima1995-creator.github.io/'
-      }
-    },
-    {
-      '@type': 'BreadcrumbList',
-      itemListElement: [
-        {
-          '@type': 'ListItem',
-          position: 1,
-          name: 'VINTAGE ALARM',
-          item: 'https://orima1995-create.github.io/orima1995-creator.github.io/'
-        },
-        {
-          '@type': 'ListItem',
-          position: 2,
-          name: 'HISTORY',
-          item: 'https://orima1995-create.github.io/orima1995-creator.github.io/history/'
-        }
-      ]
-    }
-  ]
-};
+import '../../styles/history-v13.css';
+import '../../styles/history-v18.css';
+const base=import.meta.env.BASE_URL;
+const milestones=(era:string)=>historyCatalogByGroup.milestones.filter(entry=>entry.era===era&&entry.featured);
+const ownersForEra=(era:string)=>historyCatalogByGroup.owners
+ .filter(entry=>entry.era===era&&entry.featured)
+ .map(entry=>{
+  const note=ownersDirectory.entries.find(note=>entry.id===note.href.split('/')[1]);
+  const [fallbackBrand,...fallbackName]=entry.name.split(' ');
+  return {
+   entry,
+   note,
+   brand:note?.brand??fallbackBrand,
+   name:note?.name??fallbackName.join(' '),
+   href:note? `${base}${note.href.replace(/^\//,'')}`:undefined,
+   image:note? `${base}${note.image.replace(/^\//,'')}`:undefined
+  };
+ });
+const {before,era1910s,era1940s,era1950s,era1960s,electronic,current,sources}=historyContent;
+const eras=[
+ {id:'before',no:'00',label:'BEFORE',title:before.title,paragraphs:before.intro,teaser:'鐘・時計塔・携帯時計。',motif:'images/history-motifs/before-clocktower.svg',motifClass:'motif-before'},
+ {id:'1910s',no:'01',label:'1910s',title:era1910s.title,paragraphs:[era1910s.intro],teaser:'アラームが、腕へ移る。'},
+ {id:'1940s',no:'02',label:'1940s',title:era1940s.title,paragraphs:[era1940s.intro],teaser:'機械式アラーム腕時計が量産へ。'},
+ {id:'1950s',no:'03',label:'1950s',title:era1950s.title,paragraphs:era1950s.intro.split('\n'),teaser:'量産・小型化・自動巻き・用途の拡張。',motif:'images/history-motifs/1950s-train.svg',motifClass:'motif-1950s'},
+ {id:'1960s',no:'04',label:'1960s',title:era1960s.title,paragraphs:[era1960s.intro],teaser:'用途と構成が広がる。'},
+ {id:'electronic',no:'05',label:'1970s',title:electronic.title,paragraphs:electronic.body,teaser:'電子式アラームへ。'}
+];
+const title='アラーム腕時計の歴史｜Eterna・Cricket・Memovox・Duofon・Time-O-Vox｜VINTAGE ALARM';
+const description='鐘や携帯時計から、Eterna、Vulcain Cricket、Memovox、AS 1475、Pierce Duofon、Omega Memomatic、電子式アラームまで。「時間を知らせる」腕時計の歴史を辿る。';
+const root='https://orima1995-create.github.io/orima1995-creator.github.io/';
+const schema={'@context':'https://schema.org','@graph':[
+ {'@type':'Article',headline:'アラーム腕時計の歴史',description,inLanguage:'ja',mainEntityOfPage:root+'history/',isPartOf:{'@type':'WebSite',name:'VINTAGE ALARM',url:root}},
+ {'@type':'BreadcrumbList',itemListElement:[{'@type':'ListItem',position:1,name:'VINTAGE ALARM',item:root},{'@type':'ListItem',position:2,name:'HISTORY',item:root+'history/'}]}
+]};
 ---
-<!doctype html>
-<html lang="ja">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#f3eee4" />
-    <SeoHead title={title} description={description} path="history/" type="article" schema={schema} />
-    <style is:inline>
-      .history-shelf-actions{display:flex;align-items:center;gap:12px;flex:0 0 auto}
-      @media(max-width:480px){.history-shelf-actions{gap:8px}}
-    </style>
-  </head>
-  <body>
-    <SectionMast rightLabel="HISTORY" />
-
-    <main>
-      <section class="shell history-hero history-hero-magazine">
-        <div class="eyebrow">{hero.eyebrow}</div>
-        <h1>{hero.title}</h1>
-        <p class="history-kicker">{hero.kicker[0]}<br class="history-title-break" />{hero.kicker[1]}</p>
-        <div class="history-lead">
-          {hero.lead.map((paragraph) => <p>{paragraph}</p>)}
-        </div>
-      </section>
-
-      <nav class="shell history-index history-index-magazine" aria-label="歴史の目次">
-        {historyIndex.map((item) => (
-          <a href={item.href}><span>{item.no}</span><strong>{item.label}</strong></a>
-        ))}
-      </nav>
-
-      <div class="history-chapters">
-        <details class="history-chapter" id="before">
-          <summary class="shell history-chapter-summary">
-            <span class="history-chapter-no">{before.chapterNo}</span>
-            <span class="history-chapter-heading"><small>{before.label}</small><strong>{before.title}</strong></span>
-            <span class="history-chapter-teaser">{before.teaser}</span>
-            <span class="history-chapter-toggle" aria-hidden="true">＋</span>
-          </summary>
-          <div class="history-chapter-body">
-            <div class="shell history-story-inner history-story-inner-compact">
-              <p class="history-overline">{before.overline}</p>
-              <div class="history-story-copy history-story-copy-flat">
-                {before.intro.map((paragraph) => <p>{paragraph}</p>)}
-              </div>
-            </div>
-          </div>
-        </details>
-
-        <details class="history-chapter" id="1910s">
-          <summary class="shell history-chapter-summary">
-            <span class="history-chapter-no">{era1910s.chapterNo}</span>
-            <span class="history-chapter-heading"><small>{era1910s.label}</small><strong>{era1910s.title}</strong></span>
-            <span class="history-chapter-teaser">{era1910s.teaser}</span>
-            <span class="history-chapter-toggle" aria-hidden="true">＋</span>
-          </summary>
-          <div class="history-chapter-body history-chapter-paper">
-            <div class="shell history-decade-intro">
-              <p class="history-overline">{era1910s.overline}</p>
-              <p>{era1910s.intro}</p>
-            </div>
-
-            <div class="shell history-shelf" id="milestones" data-shelf>
-              <div class="history-shelf-head">
-                <div><span>MILESTONES</span></div>
-                {milestoneCards('1910s').length > 1 && (
-                  <div class="history-shelf-actions"><div class="history-shelf-controls" aria-label="マイルストーンを横に移動"><button type="button" data-prev aria-label="前へ">←</button><button type="button" data-next aria-label="次へ">→</button></div></div>
-                )}
-              </div>
-              <div class="history-card-track" data-track>
-                {milestoneCards('1910s').map((entry) => (
-                  <article class="history-card history-card-milestone">
-                    <small>{entry.meta}</small><h3>{entry.name}</h3><p class="history-card-hook">{entry.hook}</p><p>{entry.cardSummary}</p><span class="history-card-status">{entry.cardStatus}</span>
-                  </article>
-                ))}
-              </div>
-            </div>
-          </div>
-        </details>
-
-        <details class="history-chapter" id="1940s">
-          <summary class="shell history-chapter-summary">
-            <span class="history-chapter-no">{era1940s.chapterNo}</span>
-            <span class="history-chapter-heading"><small>{era1940s.label}</small><strong>{era1940s.title}</strong></span>
-            <span class="history-chapter-teaser">{era1940s.teaser}</span>
-            <span class="history-chapter-toggle" aria-hidden="true">＋</span>
-          </summary>
-          <div class="history-chapter-body">
-            <div class="shell history-decade-intro">
-              <p class="history-overline">{era1940s.overline}</p>
-              <p>{era1940s.intro}</p>
-            </div>
-
-            <div class="shell history-shelf" data-shelf>
-              <div class="history-shelf-head">
-                <div><span>MILESTONES</span></div>
-                {milestoneCards('1940s').length > 1 && (
-                  <div class="history-shelf-actions"><div class="history-shelf-controls" aria-label="マイルストーンを横に移動"><button type="button" data-prev aria-label="前へ">←</button><button type="button" data-next aria-label="次へ">→</button></div></div>
-                )}
-              </div>
-              <div class="history-card-track" data-track>
-                {milestoneCards('1940s').map((entry) => (
-                  <article class="history-card history-card-milestone">
-                    <small>{entry.meta}</small><h3>{entry.name}</h3><p class="history-card-hook">{entry.hook}</p><p>{entry.cardSummary}</p><span class="history-card-status">{entry.cardStatus}</span>
-                  </article>
-                ))}
-              </div>
-            </div>
-
-            <div class="shell history-shelf history-shelf-owner" data-shelf>
-              <div class="history-shelf-head"><div><span>OWNER'S NOTES</span></div></div>
-              <div class="history-card-track" data-track>
-                {ownerCards('1940s').map((entry) => (
-                  entry.hrefKind === 'site' ? (
-                    <a class="history-card history-card-owner history-card-link" href={`${base}${entry.href}`}>
-                      <small>{entry.meta}</small><h3>{entry.name}</h3><p class="history-card-hook">{entry.hook}</p><p>{entry.cardSummary}</p><span class="history-card-status">{entry.cardStatus}</span>
-                    </a>
-                  ) : (
-                    <article class="history-card history-card-owner">
-                      <small>{entry.meta}</small><h3>{entry.name}</h3><p class="history-card-hook">{entry.hook}</p><p>{entry.cardSummary}</p><span class="history-card-status">{entry.cardStatus}</span>
-                    </article>
-                  )
-                ))}
-              </div>
-            </div>
-          </div>
-        </details>
-
-        <details class="history-chapter" id="1950s">
-          <summary class="shell history-chapter-summary">
-            <span class="history-chapter-no">{era1950s.chapterNo}</span>
-            <span class="history-chapter-heading"><small>{era1950s.label}</small><strong>{era1950s.title}</strong></span>
-            <span class="history-chapter-teaser">{era1950s.teaser}</span>
-            <span class="history-chapter-toggle" aria-hidden="true">＋</span>
-          </summary>
-          <div class="history-chapter-body">
-            <div class="shell history-decade-intro"><p>{era1950s.intro}</p></div>
-
-            <div class="shell history-shelf" data-shelf>
-              <div class="history-shelf-head">
-                <div><span>MILESTONES</span></div>
-                {milestoneCards('1950s').length > 1 && (
-                  <div class="history-shelf-actions"><div class="history-shelf-controls" aria-label="マイルストーンを横に移動"><button type="button" data-prev aria-label="前へ">←</button><button type="button" data-next aria-label="次へ">→</button></div></div>
-                )}
-              </div>
-              <div class="history-card-track" data-track>
-                {milestoneCards('1950s').map((entry) => (
-                  <article class="history-card history-card-milestone">
-                    <small>{entry.meta}</small><h3>{entry.name}</h3><p class="history-card-hook">{entry.hook}</p><p>{entry.cardSummary}</p><span class="history-card-status">{entry.cardStatus}</span>
-                  </article>
-                ))}
-              </div>
-            </div>
-
-            <div class="shell history-shelf history-shelf-owner" data-shelf>
-              <div class="history-shelf-head">
-                <div><span>OWNER'S NOTES</span></div>
-                {ownerCards('1950s').length > 1 && (
-                  <div class="history-shelf-actions"><div class="history-shelf-controls" aria-label="オーナーズノートを横に移動"><button type="button" data-prev aria-label="前へ">←</button><button type="button" data-next aria-label="次へ">→</button></div></div>
-                )}
-              </div>
-              <div class="history-card-track" data-track>
-                {ownerCards('1950s').map((entry) => (
-                  entry.hrefKind === 'site' ? (
-                    <a class="history-card history-card-owner history-card-link" href={`${base}${entry.href}`}>
-                      <small>{entry.meta}</small><h3>{entry.name}</h3><p class="history-card-hook">{entry.hook}</p><p>{entry.cardSummary}</p><span class="history-card-status">{entry.cardStatus}</span>
-                    </a>
-                  ) : (
-                    <article class="history-card history-card-owner">
-                      <small>{entry.meta}</small><h3>{entry.name}</h3><p class="history-card-hook">{entry.hook}</p><p>{entry.cardSummary}</p><span class="history-card-status">{entry.cardStatus}</span>
-                    </article>
-                  )
-                ))}
-              </div>
-            </div>
-
-            {researchCards('1950s').length > 0 ? (
-              <div class="shell history-shelf history-shelf-interest" id="research" data-shelf>
-                <div class="history-shelf-head"><div><span>RESEARCH</span></div></div>
-                <div class="history-card-track" data-track>
-                  {researchCards('1950s').map((entry) => (
-                    entry.hrefKind === 'site' ? (
-                      <a class="history-card history-card-interest history-card-link" href={`${base}${entry.href}`}>
-                        <small>{entry.meta}</small><h3>{entry.name}</h3><p class="history-card-hook">{entry.hook}</p><p>{entry.cardSummary}</p><span class="history-card-status">{entry.cardStatus}</span>
-                      </a>
-                    ) : (
-                      <article class="history-card history-card-interest">
-                        <small>{entry.meta}</small><h3>{entry.name}</h3><p class="history-card-hook">{entry.hook}</p><p>{entry.cardSummary}</p><span class="history-card-status">{entry.cardStatus}</span>
-                      </article>
-                    )
-                  ))}
-                </div>
-              </div>
-            ) : (
-              <span id="research" hidden></span>
-            )}
-          </div>
-        </details>
-
-        <details class="history-chapter" id="1960s">
-          <summary class="shell history-chapter-summary">
-            <span class="history-chapter-no">{era1960s.chapterNo}</span>
-            <span class="history-chapter-heading"><small>{era1960s.label}</small><strong>{era1960s.title}</strong></span>
-            <span class="history-chapter-teaser">{era1960s.teaser}</span>
-            <span class="history-chapter-toggle" aria-hidden="true">＋</span>
-          </summary>
-          <div class="history-chapter-body history-chapter-paper">
-            <div class="shell history-decade-intro"><p>{era1960s.intro}</p></div>
-
-            <div class="shell history-shelf" data-shelf>
-              <div class="history-shelf-head">
-                <div><span>MILESTONES</span></div>
-                {milestoneCards('1960s').length > 1 && (
-                  <div class="history-shelf-actions"><div class="history-shelf-controls" aria-label="マイルストーンを横に移動"><button type="button" data-prev aria-label="前へ">←</button><button type="button" data-next aria-label="次へ">→</button></div></div>
-                )}
-              </div>
-              <div class="history-card-track" data-track>
-                {milestoneCards('1960s').map((entry) => (
-                  <article class="history-card history-card-milestone">
-                    <small>{entry.meta}</small><h3>{entry.name}</h3><p class="history-card-hook">{entry.hook}</p><p>{entry.cardSummary}</p><span class="history-card-status">{entry.cardStatus}</span>
-                  </article>
-                ))}
-              </div>
-            </div>
-          </div>
-        </details>
-
-        <details class="history-chapter" id="electronic">
-          <summary class="shell history-chapter-summary">
-            <span class="history-chapter-no">{electronic.chapterNo}</span>
-            <span class="history-chapter-heading"><small>{electronic.label}</small><strong>{electronic.title}</strong></span>
-            <span class="history-chapter-teaser">{electronic.teaser}</span>
-            <span class="history-chapter-toggle" aria-hidden="true">＋</span>
-          </summary>
-          <div class="history-chapter-body">
-            <div class="shell history-story-inner history-story-inner-compact">
-              <div class="history-story-copy history-story-copy-flat">
-                {electronic.body.map((paragraph) => <p>{paragraph}</p>)}
-              </div>
-            </div>
-
-            <div class="shell history-shelf" data-shelf>
-              <div class="history-shelf-head">
-                <div><span>MILESTONES</span></div>
-                {milestoneCards('electronic').length > 1 && (
-                  <div class="history-shelf-actions"><div class="history-shelf-controls" aria-label="マイルストーンを横に移動"><button type="button" data-prev aria-label="前へ">←</button><button type="button" data-next aria-label="次へ">→</button></div></div>
-                )}
-              </div>
-              <div class="history-card-track" data-track>
-                {milestoneCards('electronic').map((entry) => (
-                  <article class="history-card history-card-milestone">
-                    <small>{entry.meta}</small><h3>{entry.name}</h3><p class="history-card-hook">{entry.hook}</p><p>{entry.cardSummary}</p><span class="history-card-status">{entry.cardStatus}</span>
-                  </article>
-                ))}
-              </div>
-            </div>
-          </div>
-        </details>
-      </div>
-
-      <section class="history-current" id="current">
-        <div class="shell history-current-inner">
-          <p class="history-story-no">{current.storyNo}</p>
-          <h2>{current.title}</h2>
-          <p class="history-current-name">{current.name}</p>
-          <a class="history-next" href={`${base}${current.href}`}>{current.linkLabel}</a>
-        </div>
-      </section>
-
-      <section class="shell history-sources">
-        <details>
-          <summary>{sources.summary}</summary>
-          <ul>{sources.items.map((item) => <li>{item}</li>)}</ul>
-        </details>
-      </section>
-    </main>
-
-    <script is:inline>
-      const chapters = [...document.querySelectorAll('.history-chapter')];
-
-      const openHashChapter = () => {
-        if (!location.hash) return;
-        const target = document.getElementById(location.hash.slice(1));
-        if (!(target instanceof Element)) return;
-        const chapter = target instanceof HTMLDetailsElement && target.classList.contains('history-chapter')
-          ? target
-          : target.closest('.history-chapter');
-        if (!(chapter instanceof HTMLDetailsElement)) return;
-        chapters.forEach((item) => {
-          if (item !== chapter) item.open = false;
-        });
-        chapter.open = true;
-        requestAnimationFrame(() => target.scrollIntoView({ block: 'start', behavior: 'smooth' }));
-      };
-
-      window.addEventListener('hashchange', openHashChapter);
-      window.addEventListener('DOMContentLoaded', openHashChapter);
-
-      document.querySelectorAll('[data-shelf]').forEach((shelf) => {
-        const track = shelf.querySelector('[data-track]');
-        const prev = shelf.querySelector('[data-prev]');
-        const next = shelf.querySelector('[data-next]');
-        if (!(track instanceof HTMLElement)) return;
-
-        const move = (direction) => {
-          const card = track.querySelector('.history-card');
-          const amount = card instanceof HTMLElement ? card.getBoundingClientRect().width + 16 : track.clientWidth * 0.85;
-          track.scrollBy({ left: amount * direction, behavior: 'smooth' });
-        };
-
-        prev?.addEventListener('click', () => move(-1));
-        next?.addEventListener('click', () => move(1));
-      });
-    </script>
-  </body>
-</html>
+<!doctype html><html lang="ja"><head>
+ <meta charset="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/><meta name="theme-color" content="#1c201c"/><link rel="icon" href="data:,"/>
+ <link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+ <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Noto+Serif+JP:wght@400;500;600&display=swap" rel="stylesheet"/>
+ <SeoHead title={title} description={description} path="history/" type="article" schema={schema}/>
+</head><body class="history-v13 history-v18">
+ <a class="history-skip" href="#before">本文へ</a><div class="history-mast"><SectionMast rightLabel="HISTORY"/></div>
+ <main><section class="history-cover-v13" aria-labelledby="history-title"><div class="shell">
+  <div class="cover-meta"><span>HISTORY</span><span>01 / CONTENTS</span></div>
+  <h1 id="history-title"><span>HISTORY</span><em>of the</em><span>ALARM</span><small>WRISTWATCH</small></h1>
+  <div class="cover-dates" aria-label="歴史の節目"><a href="#1910s"><strong>1914</strong><span>ETERNA<br/>CAL.68</span></a><a href="#1940s"><strong>1947</strong><span>VULCAIN<br/>CRICKET</span></a><a href="#1950s"><strong>1956</strong><span>MEMOVOX<br/>AUTOMATIC</span></a><a href="#electronic"><strong>1976</strong><span>CITIZEN<br/>LC ALARM</span></a></div>
+  <div class="cover-foot"><p>時刻を見るだけではなく、<br/>設定した時刻を知らせる。</p><a href="#before" aria-label="歴史を読み始める">↓</a></div>
+ </div></section>
+ <nav class="history-era-nav" aria-label="歴史の年代ナビゲーション"><div class="shell">{eras.map(era=><a href={`#${era.id}`}>{era.label}</a>)}<a href="#current">CURRENT</a></div></nav>
+ {eras.map(era=>{
+  const eraOwners=ownersForEra(era.id);
+  return <details class:list={['chronology-era','chapter-v18',{'has-owners':eraOwners.length>0,'is-before':era.id==='before','has-motif':!!era.motif}]} id={era.id} aria-labelledby={`title-${era.id}`}>
+   <summary class="chapter-summary-v18">
+    <span class="chapter-index-v18">{era.no}</span>
+    <span class="chapter-summary-copy-v18"><small>{era.label}</small><h2 id={`title-${era.id}`}>{era.title}</h2><span>{era.teaser}</span></span>
+    {era.motif&&<img class:list={['chapter-motif-v18',era.motifClass]} src={`${base}${era.motif}`} alt="" aria-hidden="true"/>}
+    <span class="chapter-toggle-v18" aria-hidden="true"><i></i></span>
+   </summary>
+   <div class:list={['shell','chapter-body-v18',{'has-owners-body-v18':eraOwners.length>0}]}>
+    <div class="chapter-copy">{era.paragraphs.map(paragraph=><p>{paragraph.replaceAll('\n','')}</p>)}</div>
+    {era.id!=='before'&&<HistoryMilestones entries={milestones(era.id)} id={era.id==='1910s'?'milestones':`milestones-${era.id}`} label={`${era.label}のマイルストーン`}/>}
+    {eraOwners.length>0&&<aside class="history-owners" aria-label="OWNER'S NOTES">
+     <div class="collection-lead"><p>所有個体から見る。</p><a href={`${base}owners-notes/`} aria-label="OWNER'S NOTES一覧">一覧 ↗</a></div>
+     <div class="owner-tiles">{eraOwners.map(({note,brand,name,href,image})=><OwnerThumbnailFrame brand={brand} name={name} href={href} image={image} published={!!note}/>)}</div>
+    </aside>}
+   </div>
+  </details>
+ })}
+ <section class="history-current-v13 shell" id="current" aria-labelledby="current-title"><div class="chapter-date"><strong>CURRENT</strong><span>CHAPTER 06</span></div><div><h2 id="current-title">{current.title}</h2><a class="current-link" href={`${base}${current.href}`}><span>{current.name}</span><span aria-hidden="true">↗</span></a></div></section>
+ <aside class="history-research-v13 shell" id="research" aria-label="次のリサーチ"><h2>RESEARCH</h2><p>次に気になっているものと、そのデータ。</p></aside>
+ <section class="history-sources-v13 shell"><details><summary>{sources.summary}</summary><ul>{sources.items.map(item=><li>{item}</li>)}</ul></details></section>
+ </main>
+ <script>
+  const links=[...document.querySelectorAll<HTMLAnchorElement>('.history-era-nav a')];
+  const chapters=[...document.querySelectorAll<HTMLDetailsElement>('details.chronology-era')];
+  const sections=[...chapters,...document.querySelectorAll<HTMLElement>('#current')];
+  const revealTarget=(scroll=false)=>{
+   if(!location.hash)return;
+   const target=document.getElementById(decodeURIComponent(location.hash.slice(1)));
+   if(!target)return;
+   const chapter=target.matches('details.chronology-era')?target:target.closest('details.chronology-era');
+   if(chapter instanceof HTMLDetailsElement)chapter.open=true;
+   if(scroll)requestAnimationFrame(()=>target.scrollIntoView({block:'start'}));
+  };
+  const update=()=>{let active='';for(const section of sections)if(section.getBoundingClientRect().top<=180)active=section.id;for(const link of links){if(link.hash===`#${active}`)link.setAttribute('aria-current','location');else link.removeAttribute('aria-current');}};
+  document.querySelectorAll<HTMLAnchorElement>('a[href^="#"]').forEach(link=>link.addEventListener('click',()=>{const target=document.getElementById(decodeURIComponent(link.hash.slice(1)));const chapter=target?.matches('details.chronology-era')?target:target?.closest('details.chronology-era');if(chapter instanceof HTMLDetailsElement)chapter.open=true;}));
+  let pending=false;window.addEventListener('scroll',()=>{if(!pending){pending=true;requestAnimationFrame(()=>{update();pending=false;});}},{passive:true});
+  window.addEventListener('resize',update);window.addEventListener('hashchange',()=>{revealTarget(true);update();});
+  chapters.forEach(chapter=>chapter.addEventListener('toggle',update));
+  document.fonts.ready.then(()=>{revealTarget(!!location.hash);update();});
+  document.querySelectorAll<HTMLAnchorElement>('.section-menu-panel a').forEach(link=>link.addEventListener('click',()=>link.closest('details')?.removeAttribute('open')));
+ </script>
+</body></html>
