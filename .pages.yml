@@ -77,7 +77,7 @@ content:
         type: object
         fields:
           - { name: youtubeId, label: YouTube URL / ID, type: string }
-          - { name: xUrl, label: Original post on X, type: string }
+          - { name: xUrl, label: OWNER'S NOTE post on X, type: string }
       - name: deepDive
         label: DEEP DIVE
         type: object
@@ -95,6 +95,8 @@ content:
             label: Paragraphs
             type: text
             list: true
+          - { name: linkLabel, label: 補足リンク文言, type: string }
+          - { name: linkUrl, label: 補足リンクURL, type: string }
           - name: images
             label: 補足画像
             type: object
