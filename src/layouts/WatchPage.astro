@@ -89,7 +89,7 @@ const schema = {
       </div>
       {watch.video && <AlarmVideo video={watch.video} title={`${watch.brand} ${watch.model}`} />}
       <DeepDive items={watch.deepDive} />
-      <Sources sources={watch.sources} />
+      <Sources sources={watch.sources} meta={watch.sourceMeta} />
       {nextOwnerNote && (
         <OwnerNoteEndNav
           nextHref={nextOwnerNote.href}
