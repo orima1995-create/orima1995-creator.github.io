@@ -10,7 +10,7 @@ ownersNote:
   image: "/images/pierce-duofon/owners-note.jpg"
   lead:
     - "マナーモードの祖先!?"
-    - "1950's通知のオーパーツ。"
+    - "1950年代、通知のオーパーツ。"
     - "通知の気遣いまで、ぜんぶ機械仕掛け。"
   guideTitle: "簡易操作ガイド"
   guide:
