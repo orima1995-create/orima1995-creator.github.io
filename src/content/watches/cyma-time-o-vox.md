@@ -41,6 +41,7 @@ spec:
   notes: 18KYG、Chronomètre表記、2プッシャー、透かしラグ
 video:
   youtubeId: https://youtube.com/shorts/OONH0JZqCK0?si=nAgbRc1aJ_TUBi6r
+  xUrl: https://x.com/Rimacroissant/status/2072623772142854432?s=20
 deepDive:
   - number: "01"
     title: CYMAとは
@@ -100,8 +101,6 @@ deepDive:
         R.464では、アラームが作動すると巻上げ中間車が巻上げ側から切り離される。
         そのため、アラームが鳴っている間もリューズは回転しない。
       - 静止画だけでは分かりにくい切り替わりなので、実機の輪列が動く約6秒の動画をXに掲載している。
-    linkLabel: 輪列の動きをXで見る
-    linkUrl: https://x.com/Rimacroissant/status/2085277918473883977?s=20
   - number: "05"
     title: Time-O-Voxのケースとラグ
     paragraphs:
