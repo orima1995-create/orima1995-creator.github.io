@@ -19,14 +19,14 @@ const Tag = href ? 'a' : 'div';
   .owner-frame{position:relative;display:flex;flex-direction:column;isolation:auto;min-width:0;min-height:138px;aspect-ratio:auto;overflow:visible;border:1px solid var(--rule,#bcc5b2);background:transparent;color:var(--ink,#232720);text-decoration:none;padding:10px;font-family:var(--sans,sans-serif)}
   .owner-frame::after{display:none}
   .frame-kind{font-size:10px;line-height:1.4;letter-spacing:.04em;color:var(--soft,#58634e)}
-  .frame-space,.frame-media{flex:1;display:grid;place-items:center;min-height:48px;margin:6px 0;color:var(--soft,#58634e)}
+  .frame-space,.frame-media{display:grid;place-items:center;aspect-ratio:1.16;margin:8px 0 10px;color:var(--soft,#58634e)}
   .frame-space{font-size:11px;letter-spacing:.08em}
-  .frame-media{overflow:hidden}
-  .frame-media img{display:block;width:100%;height:64px;object-fit:contain}
+  .frame-media{overflow:hidden;background:rgba(88,99,78,.035)}
+  .frame-media img{display:block;width:100%;height:100%;object-fit:cover}
   .frame-caption{display:flex;gap:5px;align-items:end;justify-content:space-between;padding-top:8px;border-top:1px solid var(--rule,#bcc5b2)}
   .frame-name{min-width:0}.frame-name small{display:block;font-size:11px;line-height:1.5}.frame-name strong{display:block;font-size:13px;font-weight:500;line-height:1.4;overflow-wrap:anywhere}
   .frame-status{font-size:14px;line-height:1.5;flex:none}.owner-frame:not(a) .frame-status{font-size:10px}
   a.owner-frame:hover{border-color:var(--ink,#232720)}
-  @media(min-width:761px){.owner-frame{min-height:148px}.frame-media img{height:72px}.frame-caption{flex-wrap:wrap}.owner-frame:not(a){max-width:240px}}
-  @media(max-width:350px){.owner-frame{padding:8px;min-height:138px}.frame-media img{height:58px}.frame-name strong{font-size:12px}.frame-kind{font-size:10px}}
+  @media(min-width:761px){.owner-frame{min-height:148px}.frame-caption{flex-wrap:wrap}.owner-frame:not(a){max-width:240px}}
+  @media(max-width:350px){.owner-frame{padding:8px;min-height:138px}.frame-media{aspect-ratio:1.1}.frame-name strong{font-size:12px}.frame-kind{font-size:10px}}
 </style>
