@@ -20,6 +20,10 @@ try{
   const chapter=page.locator('#electronic');
   assert(await chapter.evaluate(e=>e.open));
   const geom=await page.evaluate(()=>({c:document.documentElement.clientWidth,s:document.documentElement.scrollWidth}));
+  if(geom.c!==geom.s){
+    const offenders=await page.evaluate(()=>[...document.querySelectorAll('*')].map(el=>{const r=el.getBoundingClientRect();return {tag:el.tagName,cls:(el as HTMLElement).className?.toString?.()||'',text:(el.textContent||'').trim().slice(0,80),left:Math.round(r.left),right:Math.round(r.right),width:Math.round(r.width)}}).filter(x=>x.right>document.documentElement.clientWidth+1||x.left<-1).slice(0,20));
+    console.log('OFFENDERS '+width+' '+JSON.stringify(offenders));
+  }
   assert.equal(geom.c,geom.s,`${width}: overflow`);
   const title=chapter.locator('h2');
   assert.equal(await title.innerText(),'自動巻きの成熟と電子⁠化。');
