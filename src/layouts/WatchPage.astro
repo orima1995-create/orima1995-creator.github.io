@@ -6,6 +6,7 @@ import OwnersNote from '../components/OwnersNote.astro';
 import WatchSpec from '../components/WatchSpec.astro';
 import AlarmVideo from '../components/AlarmVideo.astro';
 import DeepDive from '../components/DeepDive.astro';
+import SpecimenGallery from '../components/SpecimenGallery.astro';
 import Sources from '../components/Sources.astro';
 import OwnerNoteEndNav from '../components/OwnerNoteEndNav.astro';
 import '../styles/site.css';
@@ -89,6 +90,7 @@ const schema = {
       </div>
       {watch.video && <AlarmVideo video={watch.video} title={`${watch.brand} ${watch.model}`} />}
       <DeepDive items={watch.deepDive} />
+      {watch.specimenGallery?.length > 0 && <SpecimenGallery items={watch.specimenGallery} title={`${watch.brand} ${watch.model}`} />}
       <Sources sources={watch.sources} />
       {nextOwnerNote && (
         <OwnerNoteEndNav
