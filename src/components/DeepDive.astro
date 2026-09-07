@@ -23,7 +23,10 @@ const resolveImage = (path: string) => /^https?:\/\//.test(path)
             {item.subtitle && <h3>{item.subtitle}</h3>}
             {item.paragraphs.map((paragraph: string, index: number) => {
               const imagesAfter = images.filter((image: any) => image.afterParagraph === index + 1);
-              const refs = item.citationRefs?.[index] ?? [];
+              const refs = (item.citationRefs?.[index] ?? '')
+                .split(',')
+                .map((ref: string) => ref.trim())
+                .filter(Boolean);
               return (
                 <>
                   <p>
