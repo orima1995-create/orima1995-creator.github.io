@@ -19,7 +19,7 @@ try{
  await page.goto(origin+base+'history/#1950s',{waitUntil:'networkidle'});
  await page.evaluate(()=>document.fonts.ready);
  assert(await page.locator('[id="1950s"]').evaluate(e=>e.open));
- assert.equal(await page.locator('#1950s img[src*="owners-thumbnails"]').count(),2);
+ assert.equal(await page.locator('[id="1950s"] img[src*="owners-thumbnails"]').count(),2);
  await page.screenshot({path:path.join(screens,'history-1950s-thumbnails-390.png'),fullPage:true});
  const widths=await page.evaluate(()=>({c:document.documentElement.clientWidth,s:document.documentElement.scrollWidth}));
  assert(widths.s<=widths.c+40);
