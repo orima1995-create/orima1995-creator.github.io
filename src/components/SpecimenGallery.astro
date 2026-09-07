@@ -10,53 +10,222 @@ const resolveImage = (path: string) => /^https?:\/\//.test(path)
     <h2 id="specimen-gallery-title">掲載個体</h2>
     <span aria-hidden="true">SWIPE →</span>
   </div>
+
   <div class="specimen-gallery-track" role="list" aria-label={`${title} 掲載個体ギャラリー`}>
-    {items.map((item: any, index: number) => (
-      <figure class="specimen-gallery-card" role="listitem">
-        <img
-          src={resolveImage(item.image)}
-          alt={item.alt || `${title} ${item.label || `掲載個体 ${index + 1}`}`}
-          loading="lazy"
-          decoding="async"
-        />
-        <figcaption>
-          <span>{String(index + 1).padStart(2, '0')}</span>
-          <strong>{item.label || `VIEW ${String(index + 1).padStart(2, '0')}`}</strong>
-        </figcaption>
-      </figure>
-    ))}
+    {items.map((item: any, index: number) => {
+      const src = resolveImage(item.image);
+      const alt = item.alt || `${title} ${item.label || `掲載個体 ${index + 1}`}`;
+      return (
+        <figure class="specimen-gallery-card" role="listitem">
+          <button
+            class="specimen-gallery-open"
+            type="button"
+            data-lightbox-src={src}
+            data-lightbox-alt={alt}
+            aria-label={`${alt}を拡大表示`}
+          >
+            <span class="specimen-gallery-media">
+              <img
+                src={src}
+                alt={alt}
+                loading="lazy"
+                decoding="async"
+              />
+              <span class="specimen-gallery-zoom" aria-hidden="true">＋</span>
+            </span>
+          </button>
+          <figcaption>
+            <span>{String(index + 1).padStart(2, '0')}</span>
+            <strong>{item.label || `VIEW ${String(index + 1).padStart(2, '0')}`}</strong>
+          </figcaption>
+        </figure>
+      );
+    })}
+  </div>
+
+  <div class="specimen-lightbox" hidden aria-hidden="true">
+    <button class="specimen-lightbox-close" type="button" aria-label="拡大表示を閉じる">×</button>
+    <img src="" alt="" />
   </div>
 </section>
+
+<script>
+  document.querySelectorAll('.specimen-gallery').forEach((gallery) => {
+    const lightbox = gallery.querySelector('.specimen-lightbox');
+    const lightboxImage = lightbox?.querySelector('img');
+    const closeButton = lightbox?.querySelector('.specimen-lightbox-close');
+    if (!lightbox || !lightboxImage || !closeButton) return;
+
+    let lastTrigger = null;
+
+    const closeLightbox = () => {
+      lightbox.hidden = true;
+      lightbox.setAttribute('aria-hidden', 'true');
+      document.documentElement.classList.remove('specimen-lightbox-open');
+      if (lastTrigger instanceof HTMLElement) lastTrigger.focus();
+    };
+
+    gallery.querySelectorAll('.specimen-gallery-open').forEach((button) => {
+      button.addEventListener('click', () => {
+        lastTrigger = button;
+        const src = button.getAttribute('data-lightbox-src') || '';
+        const alt = button.getAttribute('data-lightbox-alt') || '';
+        lightboxImage.setAttribute('src', src);
+        lightboxImage.setAttribute('alt', alt);
+        lightbox.hidden = false;
+        lightbox.setAttribute('aria-hidden', 'false');
+        document.documentElement.classList.add('specimen-lightbox-open');
+        if (closeButton instanceof HTMLElement) closeButton.focus();
+      });
+    });
+
+    closeButton.addEventListener('click', closeLightbox);
+    lightbox.addEventListener('click', (event) => {
+      if (event.target === lightbox) closeLightbox();
+    });
+
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape' && !lightbox.hidden) closeLightbox();
+    });
+  });
+</script>
 
 <style>
   .specimen-gallery{overflow:hidden}
   .specimen-gallery-head{display:flex;align-items:end;justify-content:space-between;gap:16px}
   .specimen-gallery-head h2{margin-bottom:0}
-  .specimen-gallery-head>span{flex:none;padding-bottom:4px;color:var(--soft,#58634e);font:600 10px/1.4 var(--sans,sans-serif);letter-spacing:.08em}
+  .specimen-gallery-head>span{
+    flex:none;
+    padding-bottom:4px;
+    color:var(--soft,#58634e);
+    font:600 10px/1.4 var(--sans,sans-serif);
+    letter-spacing:.08em
+  }
+
   .specimen-gallery-track{
-    display:grid;
-    grid-auto-flow:column;
-    grid-auto-columns:minmax(0,calc((100% - 32px)/3));
+    display:flex;
     gap:16px;
     margin-top:18px;
     overflow-x:auto;
     overscroll-behavior-inline:contain;
     scroll-snap-type:x mandatory;
     scrollbar-width:thin;
-    padding-bottom:12px;
+    padding:0 0 12px;
     -webkit-overflow-scrolling:touch;
   }
-  .specimen-gallery-card{scroll-snap-align:start;margin:0;min-width:0}
-  .specimen-gallery-card img{display:block;width:100%;aspect-ratio:4/5;object-fit:contain;border:1px solid rgba(31,28,24,.16);background:rgba(88,99,78,.035)}
-  .specimen-gallery-card figcaption{display:grid;grid-template-columns:28px minmax(0,1fr);gap:8px;margin-top:9px;padding-top:8px;border-top:1px solid var(--rule,#bcc5b2);font-family:var(--sans,sans-serif)}
+  .specimen-gallery-card{
+    flex:0 0 calc((100% - 32px)/3);
+    scroll-snap-align:start;
+    margin:0;
+    min-width:0;
+  }
+
+  .specimen-gallery-open{
+    appearance:none;
+    display:block;
+    width:100%;
+    margin:0;
+    padding:0;
+    border:0;
+    background:none;
+    color:inherit;
+    font:inherit;
+    text-align:inherit;
+    cursor:zoom-in;
+  }
+  .specimen-gallery-media{
+    position:relative;
+    display:block;
+    width:100%;
+    aspect-ratio:4/5;
+    overflow:hidden;
+    border:1px solid rgba(31,28,24,.16);
+    background:rgba(88,99,78,.035);
+  }
+  .specimen-gallery-media img{
+    display:block;
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    object-position:center;
+  }
+  .specimen-gallery-zoom{
+    position:absolute;
+    right:8px;
+    bottom:8px;
+    display:grid;
+    place-items:center;
+    width:24px;
+    height:24px;
+    border:1px solid rgba(247,248,244,.65);
+    border-radius:50%;
+    background:rgba(31,28,24,.62);
+    color:#fff;
+    font:400 15px/1 var(--sans,sans-serif);
+    pointer-events:none;
+  }
+
+  .specimen-gallery-card figcaption{
+    display:grid;
+    grid-template-columns:28px minmax(0,1fr);
+    gap:8px;
+    margin-top:9px;
+    padding-top:8px;
+    border-top:1px solid var(--rule,#bcc5b2);
+    font-family:var(--sans,sans-serif)
+  }
   .specimen-gallery-card figcaption span{color:var(--soft,#58634e);font-size:10px}
-  .specimen-gallery-card figcaption strong{font-size:12px;line-height:1.5;font-weight:500;overflow-wrap:anywhere}
+  .specimen-gallery-card figcaption strong{
+    font-size:12px;
+    line-height:1.5;
+    font-weight:500;
+    word-break:keep-all;
+    overflow-wrap:normal;
+  }
+
+  .specimen-lightbox[hidden]{display:none}
+  .specimen-lightbox{
+    position:fixed;
+    inset:0;
+    z-index:9999;
+    display:grid;
+    place-items:center;
+    padding:64px 20px 28px;
+    background:rgba(20,19,17,.92);
+    overscroll-behavior:contain;
+  }
+  .specimen-lightbox img{
+    display:block;
+    max-width:min(1100px,94vw);
+    max-height:86vh;
+    width:auto;
+    height:auto;
+    object-fit:contain;
+  }
+  .specimen-lightbox-close{
+    position:fixed;
+    top:max(18px,env(safe-area-inset-top));
+    right:18px;
+    z-index:1;
+    width:44px;
+    height:44px;
+    border:1px solid rgba(255,255,255,.55);
+    border-radius:50%;
+    background:rgba(20,19,17,.58);
+    color:#fff;
+    font:300 30px/1 var(--sans,sans-serif);
+    cursor:pointer;
+  }
+  :global(html.specimen-lightbox-open){overflow:hidden}
+
   @media(max-width:760px){
-    .specimen-gallery-track{grid-auto-columns:minmax(0,82%);gap:12px;padding-right:18%}
+    .specimen-gallery-track{gap:12px;padding-right:16%}
+    .specimen-gallery-card{flex-basis:84%}
   }
   @media(max-width:480px){
     .specimen-gallery-head>span{font-size:9px}
-    .specimen-gallery-track{margin-top:14px;grid-auto-columns:minmax(0,86%);padding-right:14%}
-    .specimen-gallery-card figcaption strong{font-size:11px}
+    .specimen-gallery-track{margin-top:14px;padding-right:12%}
+    .specimen-gallery-card{flex-basis:88%}
+    .specimen-gallery-card figcaption strong{font-size:12px}
   }
 </style>
