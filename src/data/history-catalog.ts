@@ -10,6 +10,9 @@ export type HistoryCatalogEntry = {
   hook: string;
   cardSummary: string;
   cardStatus: string;
+  displayTopic?: string;
+  displayName?: string;
+  displaySummary?: string;
   featured: boolean;
   href?: string;
   hrefKind?: 'site' | 'external';
