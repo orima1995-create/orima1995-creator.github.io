@@ -19,7 +19,7 @@ const schema={'@context':'https://schema.org','@type':'CollectionPage',name:"OWN
  <body class="owners-v15">
   <SectionMast rightLabel="OWNER'S NOTES"/>
   <main>
-   <header class="shell directory-intro"><div class="eyebrow">OWNER'S NOTES</div><h1>所有個体から見る。</h1></header>
+   <header class="shell directory-intro"><div><div class="eyebrow">OWNER'S NOTES</div><h1>所有個体から見る。</h1></div><p class="directory-meta">OWNED SPECIMENS<br/>COLLECTION</p></header>
    <section class="shell directory-eras" aria-label="OWNER'S NOTE年代別一覧">
     {eras.map(era=><section class="directory-era" aria-labelledby={`owners-${era}`}><h2 id={`owners-${era}`}>{era}</h2><div class="directory-tiles">{entries.filter(entry=>entry.ownedEra===era).map(entry=><OwnerThumbnailFrame brand={entry.brand} name={entry.name} href={`${base}${entry.href.replace(/^\//,'')}`} image={`${base}${entry.image.replace(/^\//,'')}`}/>)}</div></section>)}
    </section>
