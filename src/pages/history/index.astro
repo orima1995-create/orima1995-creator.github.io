@@ -10,6 +10,19 @@ import '../../styles/site.css';
 import '../../styles/history-v13.css';
 import '../../styles/history-v18.css';
 const base=import.meta.env.BASE_URL;
+const jaSegmenter=new Intl.Segmenter('ja',{granularity:'word'});
+const jaParticles=/^(は|が|を|に|へ|で|と|の|も|や|か|から|まで|より|など|って|として|なら|ので|ため)$/;
+const jaClosing=/^[、。！？…）」』】］〉》]+$/;
+const wrapJapanese=(text:string)=>{
+ const groups:string[]=[];
+ for(const part of jaSegmenter.segment(text.replaceAll('\n',''))){
+  const token=part.segment;
+  if(!token) continue;
+  if((jaParticles.test(token)||jaClosing.test(token))&&groups.length) groups[groups.length-1]+=token;
+  else groups.push(token);
+ }
+ return groups;
+};
 const milestones=(era:string)=>historyCatalogByGroup.milestones.filter(entry=>entry.era===era&&entry.featured);
 const ownersForEra=(era:string)=>historyCatalogByGroup.owners
  .filter(entry=>entry.era===era&&entry.featured)
@@ -61,12 +74,12 @@ const schema={'@context':'https://schema.org','@graph':[
   return <details class:list={['chronology-era','chapter-v18',{'has-owners':eraOwners.length>0,'is-before':era.id==='before','has-motif':!!era.motif}]} id={era.id} aria-labelledby={`title-${era.id}`}>
    <summary class="chapter-summary-v18">
     <span class="chapter-index-v18">{era.no}</span>
-    <span class="chapter-summary-copy-v18"><small>{era.label}</small><h2 id={`title-${era.id}`}>{era.title}</h2><span>{era.teaser}</span></span>
+    <span class="chapter-summary-copy-v18"><small>{era.label}</small><h2 id={`title-${era.id}`}>{wrapJapanese(era.title).map(segment=><span class="ja-phrase">{segment}</span>)}</h2><span>{era.teaser}</span></span>
     {era.motif&&<img class:list={['chapter-motif-v18',era.motifClass]} src={`${base}${era.motif}`} alt="" aria-hidden="true"/>}
     <span class="chapter-toggle-v18" aria-hidden="true"><i></i></span>
    </summary>
    <div class:list={['shell','chapter-body-v18',{'has-owners-body-v18':eraOwners.length>0}]}>
-    <div class="chapter-copy">{era.paragraphs.map(paragraph=><p>{paragraph.replaceAll('\n','')}</p>)}</div>
+    <div class="chapter-copy">{era.paragraphs.map(paragraph=><p>{wrapJapanese(paragraph).map(segment=><span class="ja-phrase">{segment}</span>)}</p>)}</div>
     {era.id!=='before'&&<HistoryMilestones entries={milestones(era.id)} id={era.id==='1910s'?'milestones':`milestones-${era.id}`} label={`${era.label}のマイルストーン`}/>}
     {eraOwners.length>0&&<aside class="history-owners" aria-label="OWNER'S NOTES">
      <div class="collection-lead"><p>所有個体から見る。</p><a href={`${base}owners-notes/`} aria-label="OWNER'S NOTES一覧">一覧 ↗</a></div>
