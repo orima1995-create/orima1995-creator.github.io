@@ -46,6 +46,13 @@ try{
     const body=await page.locator('body').textContent();
     assert(body?.includes('リマインドの気遣いまで、ぜんぶ機械仕掛け。'));
     assert(body?.includes('マナーモードの祖先!?'));
+    assert(body?.includes('NEXT OWNER\'S NOTE ／ 次の一本'));
+    assert(!body?.includes('次の変な時計'));
+
+    const cyma=await browser.newPage({viewport:{width,height:width===390?1000:900}});
+    await cyma.goto(origin+base+'cyma-time-o-vox/',{waitUntil:'networkidle'});
+    assert.equal(await cyma.locator('.sources .source-kind').count(),0);
+    await cyma.close();
 
     const sizes=await page.evaluate(()=>({client:document.documentElement.clientWidth,scroll:document.documentElement.scrollWidth}));
     assert(sizes.scroll<=sizes.client+1,`horizontal overflow ${JSON.stringify(sizes)}`);
