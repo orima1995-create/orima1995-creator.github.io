@@ -1,0 +1,33 @@
+name: Rebuilt owner thumbnail audit
+on:
+  push:
+    branches: ["hotfix/rebuild-owner-thumbnails"]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run build
+      - run: |
+          npm install --no-save --package-lock=false playwright@1.62.1
+          npx playwright install --with-deps chromium
+      - env:
+          THUMB_REBUILD_DIR: .thumb-rebuild-review
+        run: node scripts/check-rebuilt-owner-thumbnails.mjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: rebuilt-owner-thumbnails-review
+          path: |
+            .thumb-rebuild-review
+            public/images/owners-thumbnails/*-full.png
+          include-hidden-files: true
+          retention-days: 7
