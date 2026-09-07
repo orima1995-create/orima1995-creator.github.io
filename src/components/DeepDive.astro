@@ -23,9 +23,25 @@ const resolveImage = (path: string) => /^https?:\/\//.test(path)
             {item.subtitle && <h3>{item.subtitle}</h3>}
             {item.paragraphs.map((paragraph: string, index: number) => {
               const imagesAfter = images.filter((image: any) => image.afterParagraph === index + 1);
+              const refs = (item.citationRefs?.[index] ?? '')
+                .split(',')
+                .map((ref: string) => ref.trim())
+                .filter(Boolean);
               return (
                 <>
-                  <p>{paragraph}</p>
+                  <p>
+                    {paragraph}
+                    {refs.length > 0 && (
+                      <sup class="cite-refs" aria-label={`出典 ${refs.join('、')}`}>
+                        {refs.map((ref: string, refIndex: number) => (
+                          <>
+                            {refIndex > 0 && <span aria-hidden="true">,</span>}
+                            <a href={`#source-${ref}`}>{ref}</a>
+                          </>
+                        ))}
+                      </sup>
+                    )}
+                  </p>
                   {imagesAfter.length > 0 && (
                     <div class="deep-media">
                       {imagesAfter.map((image: any) => (
@@ -78,6 +94,10 @@ const resolveImage = (path: string) => /^https?:\/\//.test(path)
   .deep-media figcaption{margin-top:8px;font-size:13px;line-height:1.7;opacity:.72}
   .deep-link{display:inline-flex;gap:8px;align-items:center;margin:8px 0 4px;padding-bottom:3px;border-bottom:1px solid currentColor;text-decoration:none;font-size:14px;font-weight:600;letter-spacing:.01em}
   .deep-link span{font-size:12px}
+  .cite-refs{margin-left:.18em;font:600 10px/1 var(--sans, sans-serif);vertical-align:super;white-space:nowrap}
+  .cite-refs a{color:var(--red,#934932);text-decoration:none;border-bottom:1px solid transparent}
+  .cite-refs a:hover,.cite-refs a:focus-visible{border-bottom-color:currentColor}
+  .cite-refs span{color:var(--soft,#58634e);margin:0 .08em}
   @media(max-width:480px){
     .deep-media{margin:18px 0 24px;gap:14px}
     .deep-media figcaption{font-size:12px;line-height:1.65}
