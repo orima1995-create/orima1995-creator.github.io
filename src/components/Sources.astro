@@ -3,6 +3,7 @@ const { sources, meta = [] } = Astro.props;
 const typeLabel = {
   primary: 'PRIMARY SOURCE',
   reference: 'REFERENCE',
+  provenance: 'PROVENANCE',
   owner: 'OWNER OBSERVATION'
 };
 const structured = Array.isArray(meta) && meta.length === sources.length;
