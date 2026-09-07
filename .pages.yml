@@ -72,6 +72,13 @@ content:
           - { name: winding, label: 手巻き, type: string }
           - { name: acoustic, label: 音響, type: string }
           - { name: notes, label: 特記事項, type: text }
+      - name: specimenGallery
+        label: 掲載個体ギャラリー
+        type: object
+        fields:
+          - { name: front, label: 正面, type: image }
+          - { name: crownSide, label: 側面（リューズ側）, type: image }
+          - { name: caseback, label: 裏面, type: image }
       - name: video
         label: 実機鳴動
         type: object
