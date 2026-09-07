@@ -66,6 +66,8 @@ jobs:
           test -f dist/images/owners-thumbnails/pierce-duofon.jpg
 
           check_text 'id="1950s"' dist/history/index.html
+          check_text "CITIZEN CRYSTRON LC ALARM" dist/history/index.html
+          check_text "量産・小型化・自動巻き・用途の拡張。" dist/history/index.html
           check_text "PIERCE DUOFON" dist/history/index.html
           check_text "TIME-O-VOX" dist/history/index.html
           check_text "cyma-time-o-vox/" dist/history/index.html
@@ -85,6 +87,10 @@ jobs:
           check_text "Cyma timeovox .png" dist/cyma-time-o-vox/owners-note/index.html
           check_text "youtube.com/embed/OONH0JZqCK0" dist/cyma-time-o-vox/index.html
           check_text "2085277918473883977" dist/cyma-time-o-vox/index.html
+
+          grep -Fq "label: HISTORY 本文・MILESTONES" .pages.yml || { echo "Pages CMS HISTORY label/schema drifted"; exit 1; }
+          grep -Fq "name: coverMilestones" .pages.yml || { echo "Pages CMS cover milestones field missing"; exit 1; }
+          grep -Fq "HISTORY・一覧サムネ画像" .pages.yml || { echo "Pages CMS owner thumbnail field missing"; exit 1; }
 
           if find dist -name '*.html' -print0 | xargs -0 grep -q "data:image/.*base64"; then
             echo "Embedded base64 image remains in generated HTML"
