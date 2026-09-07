@@ -40,9 +40,9 @@ try{
       const det=page.locator('.deep-list > details').nth(i);
       if(!(await det.getAttribute('open'))) await det.locator('summary').click();
     }
-    const body=await page.locator('body').innerText();
-    assert(body.includes('そして、アラームにクロノメーター'));
-    assert(body.includes('アラーム時計の一つの極北'));
+    const body=await page.locator('body').textContent();
+    assert(body?.includes('そして、アラームにクロノメーター'));
+    assert(body?.includes('アラーム時計の一つの極北'));
     const sizes=await page.evaluate(()=>({client:document.documentElement.clientWidth,scroll:document.documentElement.scrollWidth}));
     assert(sizes.scroll<=sizes.client+1,`horizontal overflow ${JSON.stringify(sizes)}`);
     if(out) await page.screenshot({path:path.join(out,`cyma-deepdive-${width}.png`),fullPage:true});
