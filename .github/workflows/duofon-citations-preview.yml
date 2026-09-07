@@ -1,0 +1,31 @@
+name: Duofon citations preview
+on:
+  push:
+    branches: ["staging/duofon-citations-preview"]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run build
+      - run: |
+          npm install --no-save --package-lock=false playwright@1.62.1
+          npx playwright install --with-deps chromium
+      - env:
+          DUOFON_SCREENSHOT_DIR: .duofon-preview
+        run: node scripts/check-duofon-citations-preview.mjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: duofon-citations-preview
+          path: .duofon-preview
+          include-hidden-files: true
+          retention-days: 7
