@@ -28,7 +28,7 @@ try{
     const page=await browser.newPage({viewport:{width,height:width===390?1100:900}});
     await page.goto(origin+base+'history/#1950s',{waitUntil:'networkidle'});
     const ch=page.locator('[id="1950s"]');
-    if(!(await ch.getAttribute('open'))) await ch.locator('summary').click();
+    if(!(await ch.evaluate(el=>el.hasAttribute('open')))) await ch.locator('summary').click();
     await page.evaluate(()=>document.fonts.ready);
     const imgs=page.locator('[id="1950s"] .owner-tiles .frame-media img');
     assert.equal(await imgs.count(),2);
