@@ -47,7 +47,7 @@ const resolveImage = (path: string) => /^https?:\/\//.test(path)
     -webkit-overflow-scrolling:touch;
   }
   .specimen-gallery-card{scroll-snap-align:start;margin:0;min-width:0}
-  .specimen-gallery-card img{display:block;width:100%;aspect-ratio:4/5;object-fit:cover;border:1px solid rgba(31,28,24,.16);background:rgba(88,99,78,.035)}
+  .specimen-gallery-card img{display:block;width:100%;aspect-ratio:4/5;object-fit:contain;border:1px solid rgba(31,28,24,.16);background:rgba(88,99,78,.035)}
   .specimen-gallery-card figcaption{display:grid;grid-template-columns:28px minmax(0,1fr);gap:8px;margin-top:9px;padding-top:8px;border-top:1px solid var(--rule,#bcc5b2);font-family:var(--sans,sans-serif)}
   .specimen-gallery-card figcaption span{color:var(--soft,#58634e);font-size:10px}
   .specimen-gallery-card figcaption strong{font-size:12px;line-height:1.5;font-weight:500;overflow-wrap:anywhere}
