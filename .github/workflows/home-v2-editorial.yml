@@ -1,0 +1,38 @@
+name: TOP v2 Editorial Audit
+
+on:
+  push:
+    branches: ["staging/home-v2-editorial"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - name: Install and build
+        run: |
+          npm ci
+          npm run build
+      - name: Install Chromium
+        run: |
+          npm install --no-save --package-lock=false playwright@1.62.1
+          npx playwright install --with-deps chromium
+      - name: Audit TOP v2
+        env:
+          HOME_SCREENSHOT_DIR: .home-review
+        run: node scripts/check-home-v2.mjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: home-v2-editorial-review
+          path: .home-review
+          include-hidden-files: true
+          retention-days: 7
