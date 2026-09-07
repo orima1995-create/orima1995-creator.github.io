@@ -37,5 +37,5 @@ const embed = `https://www.youtube.com/embed/${youtubeId}`;
       referrerpolicy="strict-origin-when-cross-origin"
       allowfullscreen></iframe>
   </div>
-  <a class="x-link" href={video.xUrl} target="_blank" rel="noopener">Original post on X →</a>
+  {video.xUrl && <a class="x-link" href={video.xUrl} target="_blank" rel="noopener">OWNER'S NOTE on X →</a>}
 </section>

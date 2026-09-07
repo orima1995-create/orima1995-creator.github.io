@@ -59,6 +59,11 @@ const resolveImage = (path: string) => /^https?:\/\//.test(path)
                 ))}
               </div>
             )}
+            {item.linkUrl && (
+              <a class="deep-link" href={item.linkUrl} target="_blank" rel="noopener">
+                {item.linkLabel || '関連資料を見る'} <span aria-hidden="true">↗</span>
+              </a>
+            )}
           </div>
         </details>
       );
@@ -71,6 +76,8 @@ const resolveImage = (path: string) => /^https?:\/\//.test(path)
   .deep-media figure{margin:0}
   .deep-media img{display:block;width:100%;height:auto;border:1px solid rgba(31,28,24,.16)}
   .deep-media figcaption{margin-top:8px;font-size:13px;line-height:1.7;opacity:.72}
+  .deep-link{display:inline-flex;gap:8px;align-items:center;margin:8px 0 4px;padding-bottom:3px;border-bottom:1px solid currentColor;text-decoration:none;font-size:14px;font-weight:600;letter-spacing:.01em}
+  .deep-link span{font-size:12px}
   @media(max-width:480px){
     .deep-media{margin:18px 0 24px;gap:14px}
     .deep-media figcaption{font-size:12px;line-height:1.65}
