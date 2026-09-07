@@ -52,7 +52,7 @@ const watches = defineCollection({
     })),
     sourceMeta: z.array(z.object({
       id: z.string(),
-      type: z.enum(['primary', 'reference', 'owner'])
+      type: z.enum(['primary', 'reference', 'provenance', 'owner'])
     })).optional(),
     sources: z.array(z.string())
   })
