@@ -40,7 +40,7 @@ const watches = defineCollection({
       title: z.string(),
       subtitle: z.string().optional(),
       paragraphs: z.array(z.string()),
-      citationRefs: z.array(z.array(z.string())).optional(),
+      citationRefs: z.array(z.string()).optional(),
       linkLabel: z.string().optional(),
       linkUrl: z.string().url().optional(),
       images: z.array(z.object({
@@ -50,14 +50,11 @@ const watches = defineCollection({
         afterParagraph: z.number().int().min(1).optional()
       })).optional()
     })),
-    sources: z.array(z.union([
-      z.string(),
-      z.object({
-        id: z.string(),
-        type: z.enum(['primary', 'reference', 'owner']),
-        text: z.string()
-      })
-    ]))
+    sourceMeta: z.array(z.object({
+      id: z.string(),
+      type: z.enum(['primary', 'reference', 'owner'])
+    })).optional(),
+    sources: z.array(z.string())
   })
 });
 
