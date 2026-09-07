@@ -27,7 +27,7 @@ const milestones=(era:string)=>historyCatalogByGroup.milestones.filter(entry=>en
 const ownersForEra=(era:string)=>historyCatalogByGroup.owners
  .filter(entry=>entry.era===era&&entry.featured)
  .map(entry=>{
-  const note=ownersDirectory.entries.find(note=>entry.id===note.href.split('/')[1]);
+  const note=ownersDirectory.entries.find(note=>entry.id===note.historyId||entry.id===note.href.split('/')[1]);
   const [fallbackBrand,...fallbackName]=entry.name.split(' ');
   return {
    entry,
@@ -38,14 +38,14 @@ const ownersForEra=(era:string)=>historyCatalogByGroup.owners
    image:note? `${base}${note.image.replace(/^\//,'')}`:undefined
   };
  });
-const {before,era1910s,era1940s,era1950s,era1960s,electronic,current,sources}=historyContent;
+const {hero,coverMilestones,before,era1910s,era1940s,era1950s,era1960s,electronic,current,sources}=historyContent;
 const eras=[
- {id:'before',no:'00',label:'BEFORE',title:before.title,paragraphs:before.intro,teaser:'鐘・時計塔・携帯時計。',motif:'images/history-motifs/before-watercolor.png',motifClass:'motif-before'},
- {id:'1910s',no:'01',label:'1910s',title:era1910s.title,paragraphs:[era1910s.intro],teaser:'アラームが、腕へ移る。'},
- {id:'1940s',no:'02',label:'1940s',title:era1940s.title,paragraphs:[era1940s.intro],teaser:'機械式アラーム腕時計が量産へ。'},
- {id:'1950s',no:'03',label:'1950s',title:era1950s.title,paragraphs:era1950s.intro.split('\n'),teaser:'量産・小型化・自動巻き・用途の拡張。',motif:'images/history-motifs/1950s-train-watercolor.png',motifClass:'motif-1950s'},
- {id:'1960s',no:'04',label:'1960s',title:era1960s.title,paragraphs:[era1960s.intro],teaser:'用途と構成が広がる。',motif:'images/history-motifs/1960s-drive-watercolor.png',motifClass:'motif-1960s'},
- {id:'electronic',no:'05',label:'1970s',title:electronic.title,paragraphs:electronic.body,teaser:'電子式アラームへ。',motif:'images/history-motifs/1970s-digital-watercolor.png',motifClass:'motif-1970s'}
+ {id:'before',no:before.chapterNo,label:before.label,title:before.title,paragraphs:before.intro,teaser:before.teaser,motif:'images/history-motifs/before-watercolor.png',motifClass:'motif-before'},
+ {id:'1910s',no:era1910s.chapterNo,label:era1910s.label,title:era1910s.title,paragraphs:[era1910s.intro],teaser:era1910s.teaser},
+ {id:'1940s',no:era1940s.chapterNo,label:era1940s.label,title:era1940s.title,paragraphs:[era1940s.intro],teaser:era1940s.teaser},
+ {id:'1950s',no:era1950s.chapterNo,label:era1950s.label,title:era1950s.title,paragraphs:era1950s.intro.split('\n'),teaser:era1950s.teaser,motif:'images/history-motifs/1950s-train-watercolor.png',motifClass:'motif-1950s'},
+ {id:'1960s',no:era1960s.chapterNo,label:era1960s.label,title:era1960s.title,paragraphs:[era1960s.intro],teaser:era1960s.teaser,motif:'images/history-motifs/1960s-drive-watercolor.png',motifClass:'motif-1960s'},
+ {id:'electronic',no:electronic.chapterNo,label:electronic.label,title:electronic.title,paragraphs:electronic.body,teaser:electronic.teaser,motif:'images/history-motifs/1970s-digital-watercolor.png',motifClass:'motif-1970s'}
 ];
 const title='アラーム腕時計の歴史｜Eterna・Cricket・Memovox・Duofon・Time-O-Vox｜VINTAGE ALARM';
 const description='鐘や携帯時計から、Eterna、Vulcain Cricket、Memovox、AS 1475、Pierce Duofon、Omega Memomatic、電子式アラームまで。「時間を知らせる」腕時計の歴史を辿る。';
@@ -65,8 +65,8 @@ const schema={'@context':'https://schema.org','@graph':[
  <main><section class="history-cover-v13" aria-labelledby="history-title"><div class="shell">
   <div class="cover-meta"><span>HISTORY</span><span>01 / CONTENTS</span></div>
   <h1 id="history-title"><span>HISTORY</span><em>of the</em><span>ALARM</span><small>WRISTWATCH</small></h1>
-  <div class="cover-dates" aria-label="歴史の節目"><a href="#1910s"><strong>1914</strong><span>ETERNA<br/>CAL.68</span></a><a href="#1940s"><strong>1947</strong><span>VULCAIN<br/>CRICKET</span></a><a href="#1950s"><strong>1956</strong><span>MEMOVOX<br/>AUTOMATIC</span></a><a href="#electronic"><strong>1976</strong><span>CITIZEN<br/>LC ALARM</span></a></div>
-  <div class="cover-foot"><p>時刻を見るだけではなく、<br/>設定した時刻を知らせる。</p><a href="#before" aria-label="歴史を読み始める">↓</a></div>
+  <div class="cover-dates" aria-label="歴史の節目">{coverMilestones.map(item=><a href={item.href}><strong>{item.year}</strong><span>{item.line1}<br/>{item.line2}</span></a>)}</div>
+  <div class="cover-foot"><p>{hero.kicker[0]}<br/>{hero.kicker[1]}</p><a href="#before" aria-label="歴史を読み始める">↓</a></div>
  </div></section>
  <nav class="history-era-nav" aria-label="歴史の年代ナビゲーション"><div class="shell">{eras.map(era=><a href={`#${era.id}`}>{era.label}</a>)}<a href="#current">CURRENT</a></div></nav>
  {eras.map(era=>{

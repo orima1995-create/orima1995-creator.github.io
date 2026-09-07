@@ -8,7 +8,8 @@
       "name": "TIME-O-VOX",
       "catch": "鳴る黄金のクロノメーター",
       "image": "/images/owners-thumbnails/cyma-time-o-vox.jpg",
-      "href": "/cyma-time-o-vox/#owners-note"
+      "href": "/cyma-time-o-vox/#owners-note",
+      "historyId": "cyma-time-o-vox"
     },
     {
       "ownerNumber": "01",
@@ -18,7 +19,8 @@
       "name": "DUOFON",
       "catch": "1950's通知のオーパーツ。",
       "image": "/images/owners-thumbnails/pierce-duofon.jpg",
-      "href": "/pierce-duofon/#owners-note"
+      "href": "/pierce-duofon/#owners-note",
+      "historyId": "pierce-duofon"
     }
   ]
 }

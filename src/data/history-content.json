@@ -1,21 +1,15 @@
 {
   "hero": {
-    "eyebrow": "HISTORY OF ALARM WRISTWATCHES",
-    "title": "アラームを、腕へ。",
     "kicker": [
       "時刻を見るだけではなく、",
       "設定した時刻を知らせる。"
-    ],
-    "lead": [
-      "アラーム機構は腕時計より古い。\n携帯時計や懐中時計で小型化された機構は、20世紀に入ると腕時計へ収められていく。"
     ]
   },
   "before": {
     "chapterNo": "00",
-    "label": "BEFORE THE WRIST",
+    "label": "BEFORE",
     "title": "腕時計より前のアラーム。",
-    "teaser": "鐘から携帯時計、懐中時計へ。\nアラームは腕時計以前から小型化されていた。",
-    "overline": "BEFORE THE WRISTWATCH",
+    "teaser": "鐘・時計塔・携帯時計。",
     "intro": [
       "16世紀には携帯できるアラーム時計があり、19世紀には懐中時計や装身具にもアラームや\nリマインダー機構が使われていた。",
       "19世紀末には小型時計を革製ホルダーなどで腕に装着する例が現れ、\n1910年代にはアラームを最初から腕時計として設計する段階へ進む。"
@@ -25,8 +19,7 @@
     "chapterNo": "01",
     "label": "1910s",
     "title": "アラームを、腕時計のサイズへ。",
-    "teaser": "1908年のPatent 42,203と、1914年のEterna Cal.68。",
-    "overline": "ETERNA / 1908–1914",
+    "teaser": "アラームが、腕へ移る。",
     "intro": "1908年のPatent 42,203は、Eternaのアラーム時刻を時計回り・反時計回りの双方から設定できる機構に関する特許。\n1914年、Eternaはベルンのスイス国立博覧会でCal.68搭載のアラーム腕時計を発表した。",
     "cards": [
       {
@@ -38,7 +31,10 @@
         "hook": "最初の量産アラーム腕時計。",
         "cardSummary": "約13リーニュ、1香箱。\nハンマーが底部のベルを叩く。",
         "cardStatus": "MILESTONE",
-        "featured": true
+        "featured": true,
+        "displayTopic": "小型化",
+        "displayName": "ETERNA ALARM",
+        "displaySummary": "Cal.68。約13リーニュ、1香箱。"
       }
     ]
   },
@@ -46,8 +42,7 @@
     "chapterNo": "02",
     "label": "1940s",
     "title": "密閉と音量という矛盾を解決する。",
-    "teaser": "密閉すると音が伝わりにくい。Cricketはケース構造でこの問題に答えた。",
-    "overline": "SOUND / WATER RESISTANCE",
+    "teaser": "機械式アラーム腕時計が量産へ。",
     "intro": "腕時計では、ケースを閉じて水や埃から機構を守るほど、アラーム音は外へ伝わりにくくなる。\n1947年のVulcain Cricketは二重底の音響構造で、装着時の可聴性と防水性を両立した。",
     "cards": [
       {
@@ -59,7 +54,10 @@
         "hook": "THE PRESIDENTS' WATCH",
         "cardSummary": "二重底で音量と防水性を両立。米大統領たちとの縁でも知られる。",
         "cardStatus": "MILESTONE",
-        "featured": true
+        "featured": true,
+        "displayTopic": "音響",
+        "displayName": "VULCAIN CRICKET",
+        "displaySummary": "二重底の音響構造。"
       },
       {
         "id": "basis-bfg90",
@@ -78,7 +76,7 @@
     "chapterNo": "03",
     "label": "1950s",
     "title": "様々な需要に、様々な回答。",
-    "teaser": "量産、小型化、自動巻き、駐車時間、通知の強弱。\n用途に応じた解法が増えていく。",
+    "teaser": "量産・小型化・自動巻き・用途の拡張。",
     "intro": "1950年代には、量産化、小型化、自動巻き、駐車時間の管理、周囲への知らせ方など、アラーム腕時計に求められる役割が広がった。\n各社は動力、音響、操作方法の違いで、それぞれの需要に答えていく。",
     "cards": [
       {
@@ -90,7 +88,10 @@
         "hook": "最も多く使われたアラーム・キャリバー。",
         "cardSummary": "1954–70年に約78万個を生産。派生系まで含めると約140万個。",
         "cardStatus": "MILESTONE",
-        "featured": true
+        "featured": true,
+        "displayTopic": "量産",
+        "displayName": "AS 1475",
+        "displaySummary": "量産を支えたアラーム・キャリバー。"
       },
       {
         "id": "memovox-automatic",
@@ -101,7 +102,10 @@
         "hook": "世界初の自動巻きアラーム腕時計。",
         "cardSummary": "時計側を自動巻き化。アラーム用ゼンマイは手巻き。",
         "cardStatus": "MILESTONE",
-        "featured": true
+        "featured": true,
+        "displayTopic": "自動巻き",
+        "displayName": "MEMOVOX AUTOMATIC",
+        "displaySummary": "時計側を自動巻き化。アラームは手巻き。"
       },
       {
         "id": "vulcain-golden-voice",
@@ -112,7 +116,10 @@
         "hook": "世界初の女性用アラーム腕時計。",
         "cardSummary": "19.7mmの2香箱ムーブメントと金製メンブレン。",
         "cardStatus": "MILESTONE",
-        "featured": true
+        "featured": true,
+        "displayTopic": "小型化",
+        "displayName": "GOLDEN VOICE",
+        "displaySummary": "女性用アラーム腕時計。"
       },
       {
         "id": "jlc-parking",
@@ -123,7 +130,10 @@
         "hook": "駐車時間を知らせる最初のアラーム腕時計。",
         "cardSummary": "内側のディスクに駐車時間用の目盛りを加えたMemovox。",
         "cardStatus": "MILESTONE",
-        "featured": true
+        "featured": true,
+        "displayTopic": "駐車時間",
+        "displayName": "MEMOVOX PARKING",
+        "displaySummary": "駐車時間用の目盛り。"
       },
       {
         "id": "wittnauer-10wa",
@@ -179,7 +189,7 @@
     "chapterNo": "04",
     "label": "1960s",
     "title": "用途と機構が広がる。",
-    "teaser": "潜水、自動巻き、複合機能。\nアラームの用途と構成が広がる。",
+    "teaser": "用途と構成が広がる。",
     "intro": "1960年代には、アラームがダイバーズウォッチや自動巻き機構と組み合わされ、\n用途と構成の幅が格段に広がった。",
     "cards": [
       {
@@ -191,7 +201,10 @@
         "hook": "水中で聞こえるアラームを、ダイバーズへ。",
         "cardSummary": "減圧表を備え、Hannes Kellerの潜水でも使用された。",
         "cardStatus": "MILESTONE",
-        "featured": true
+        "featured": true,
+        "displayTopic": "潜水",
+        "displayName": "CRICKET NAUTICAL",
+        "displaySummary": "減圧表を備えるアラーム腕時計。"
       },
       {
         "id": "seiko-bell-matic",
@@ -202,7 +215,10 @@
         "hook": "日本独自開発の自動巻きアラーム。",
         "cardSummary": "時計側は自動巻き、アラーム用ゼンマイは手巻き。",
         "cardStatus": "MILESTONE",
-        "featured": true
+        "featured": true,
+        "displayTopic": "自動巻き",
+        "displayName": "BELL-MATIC",
+        "displaySummary": "時計側は自動巻き。アラームは手巻き。"
       },
       {
         "id": "omega-memomatic",
@@ -213,7 +229,10 @@
         "hook": "アラームの動力まで自動巻き。",
         "cardSummary": "1香箱で時刻とアラームを駆動し、分単位でアラーム時刻を設定できる。",
         "cardStatus": "MILESTONE",
-        "featured": true
+        "featured": true,
+        "displayTopic": "動力・設定",
+        "displayName": "OMEGA MEMOMATIC",
+        "displaySummary": "1香箱で駆動。分単位でアラーム時刻を設定。"
       }
     ]
   },
@@ -221,8 +240,7 @@
     "chapterNo": "05",
     "label": "1970s",
     "title": "自動巻きの成熟と電子⁠化。",
-    "indexTitle": "自動巻きの成熟と電子⁠化。",
-    "teaser": "機械式アラームの自動巻きが進む一方、電子式アラームも登場する。",
+    "teaser": "電子式アラームへ。",
     "body": [
       "1970年代には、機械式アラームの自動巻き機構がさらに進化する一方、\n回路と発音体を使う電子式アラームも腕時計へ広がっていく。"
     ],
@@ -236,27 +254,30 @@
         "hook": "2香箱の両方をローターで自動巻き。",
         "cardSummary": "5007 / 5008では、時計用とアラーム用の双方をローターで巻き上げる。",
         "cardStatus": "MILESTONE",
-        "featured": true
+        "featured": true,
+        "displayTopic": "自動巻き",
+        "displayName": "AS 5007 / 5008",
+        "displaySummary": "時計用とアラーム用の双方をローターで巻き上げる。"
       },
       {
         "id": "citizen-criston-lc-alarm",
         "group": "milestone",
         "sort": 120,
         "meta": "1976 / CITIZEN",
-        "name": "CRISTON LC ALARM",
+        "name": "CRYSTRON LC ALARM",
         "hook": "世界初のデジタル式アラーム機能付き腕時計。",
         "cardSummary": "水晶発振・液晶表示。圧電素子とチタン振動板でアラームを鳴らす。",
         "cardStatus": "MILESTONE",
-        "featured": true
+        "featured": true,
+        "displayTopic": "電子化",
+        "displayName": "CITIZEN CRYSTRON LC ALARM",
+        "displaySummary": "水晶発振・液晶表示。圧電素子とチタン振動板。"
       }
     ]
   },
   "current": {
-    "chapterNo": "06",
-    "storyNo": "CURRENT",
     "title": "現状の到達点。",
     "name": "SMARTWATCH",
-    "linkLabel": "見る →",
     "href": "history/smartwatch/"
   },
   "sources": {
@@ -268,5 +289,31 @@
       "Citizen Watch, 歴代モデル「アラーム」(1958) / 「クリストロン LCアラーム」(1976).",
       "前史の補助資料：The Metropolitan Museum of Art / The British Museum / Deutsches Uhrenmuseum / Musée international d'horlogerie / The Worshipful Company of Clockmakers."
     ]
-  }
+  },
+  "coverMilestones": [
+    {
+      "year": "1914",
+      "line1": "ETERNA",
+      "line2": "CAL.68",
+      "href": "#1910s"
+    },
+    {
+      "year": "1947",
+      "line1": "VULCAIN",
+      "line2": "CRICKET",
+      "href": "#1940s"
+    },
+    {
+      "year": "1956",
+      "line1": "MEMOVOX",
+      "line2": "AUTOMATIC",
+      "href": "#1950s"
+    },
+    {
+      "year": "1976",
+      "line1": "CITIZEN",
+      "line2": "LC ALARM",
+      "href": "#electronic"
+    }
+  ]
 }
