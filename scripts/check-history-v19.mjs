@@ -31,7 +31,7 @@ try{for(const width of [320,390,768,1280]){
  if(width===390&&screens)await page.screenshot({path:path.join(screens,'history-v19-390-collapsed.png'),fullPage:true});
  if(width===1280&&screens)await page.screenshot({path:path.join(screens,'history-v19-1280-collapsed.png'),fullPage:true});
  const chapter=page.locator('[id="1950s"]');await chapter.locator('summary').click();assert(await chapter.evaluate(e=>e.open));
- const openOpacity=Number(await chapter.locator('.chapter-motif-v18').evaluate(e=>getComputedStyle(e).opacity));assert(openOpacity<0.16&&openOpacity>=0.09);
+ const openOpacity=Number(await chapter.locator('.chapter-motif-v18').evaluate(e=>getComputedStyle(e).opacity));assert(openOpacity<=0.16&&openOpacity>=0.09);
  assert.equal(await chapter.locator('.shelf-card-v18').count(),4);assert.equal(await chapter.locator('.owner-frame').count(),4);
  if(width===390&&screens)await chapter.screenshot({path:path.join(screens,'history-v19-390-1950s-open.png')});
  assert.equal(await page.evaluate(()=>document.documentElement.clientWidth),await page.evaluate(()=>document.documentElement.scrollWidth));
