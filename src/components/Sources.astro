@@ -1,11 +1,45 @@
 ---
 const { sources } = Astro.props;
+const typeLabel = {
+  primary: 'PRIMARY SOURCE',
+  reference: 'REFERENCE',
+  owner: 'OWNER OBSERVATION'
+};
 ---
 <section class="section shell sources" aria-label="参考資料・出典">
   <details>
     <summary>参考資料・出典</summary>
-    <ul>
-      {sources.map((source: string) => <li>{source}</li>)}
-    </ul>
+    <ol class="source-list">
+      {sources.map((source: any, index: number) => {
+        const structured = typeof source !== 'string';
+        const id = structured ? source.id : String(index + 1);
+        const label = structured ? typeLabel[source.type as keyof typeof typeLabel] : null;
+        const text = structured ? source.text : source;
+
+        return (
+          <li id={`source-${id}`}>
+            <span class="source-no" aria-hidden="true">{id}</span>
+            <div class="source-copy">
+              {label && <span class="source-kind">{label}</span>}
+              <span>{text}</span>
+            </div>
+          </li>
+        );
+      })}
+    </ol>
   </details>
 </section>
+
+<style>
+  .source-list{list-style:none;margin:0;padding:6px 0 22px}
+  .source-list li{display:grid;grid-template-columns:28px minmax(0,1fr);gap:12px;padding:18px 0;border-bottom:1px solid var(--rule,#bcc5b2);scroll-margin-top:24px}
+  .source-list li:last-child{border-bottom:0}
+  .source-no{color:var(--red,#934932);font:600 12px/1.5 var(--sans,sans-serif);padding-top:3px}
+  .source-copy{min-width:0;color:var(--soft,#58634e);font-size:14px;line-height:1.9}
+  .source-kind{display:inline-block;margin:0 8px 6px 0;padding:2px 7px;border:1px solid var(--rule,#bcc5b2);font:600 10px/1.5 var(--sans,sans-serif);letter-spacing:.06em;color:var(--soft,#58634e);vertical-align:.08em}
+  @media(max-width:480px){
+    .source-list li{grid-template-columns:24px minmax(0,1fr);gap:10px;padding:16px 0}
+    .source-copy{font-size:13px;line-height:1.85}
+    .source-kind{font-size:9px}
+  }
+</style>
