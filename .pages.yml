@@ -124,7 +124,7 @@ content:
             summary: "{id} / {type}"
         fields:
           - { name: id, label: 出典番号, type: string }
-          - { name: type, label: 種別 primary / reference / owner, type: string }
+          - { name: type, label: 種別 primary / reference / provenance / owner, type: string }
       - name: sources
         label: 参考資料・出典
         type: string
