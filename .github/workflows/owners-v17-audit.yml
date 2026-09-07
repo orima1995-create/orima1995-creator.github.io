@@ -1,0 +1,32 @@
+name: OWNER'S NOTES v17 visual audit
+on:
+  push:
+    branches: ["staging/owners-v17-refine"]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: |
+          npm ci
+          npm run build
+      - run: |
+          npm install --no-save --package-lock=false playwright@1.62.1
+          npx playwright install --with-deps chromium
+      - env:
+          OWNERS_SCREENSHOT_DIR: .owners-review
+        run: node scripts/check-owners-v17.mjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: owners-v17-refine-review
+          path: .owners-review
+          include-hidden-files: true
+          retention-days: 7
