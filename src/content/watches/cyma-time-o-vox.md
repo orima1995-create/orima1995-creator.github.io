@@ -53,6 +53,10 @@ deepDive:
         Cieを設立。1891年、Sandozはタヴァンヌへ移り、Tavannes Watch Co.を立ち上げた。
       - 20世紀に入ると、CYMA名で超薄型ムーブメントや高精度時計を展開。1910年にはスイス有数の大規模時計工場へ成長し、1920年代には部品の互換性を進めたメーカーとしても記録されている。
       - Time-O-Voxでは、1香箱、2プッシャー、独特の切替機構など、一般的なアラーム腕時計とは異なる構成が採られている。ここからは、その仕組みを実機と資料で追う。
+    citationRefs:
+      - "3"
+      - "3"
+      - "1,3"
   - number: "02"
     title: 2つのプッシャーとWippe
     subtitle: リューズの接続先を切り替える
@@ -68,6 +72,10 @@ deepDive:
         その切り替えを担うのが、Wippe（揺動レバー）と呼ばれる機構。
         上下のプッシャーの動きを受けて、リューズからどの歯車へ力を伝えるかを切り替える。
         つまり、プッシャーで機能を選ぶと、内部ではリューズにつながる歯車そのものが切り替わる。
+    citationRefs:
+      - "1"
+      - "1"
+      - "1"
     images:
       - src: /images/cyma-time-o-vox/ムーブメント.jpg
         caption: Cal.R.464のムーブメント全景。ケース右側にリューズと上下2つのプッシャーが並ぶ。
@@ -95,6 +103,12 @@ deepDive:
         掲載個体では、鳴動時間を制御するタイミングホイールが約6秒間作動する様子を実機動画で確認できる。
         静止画では分かりにくい動きなので、Xに動画を掲載している。
       - 掲載個体の実測では、1回の鳴動で約9時間分のパワーリザーブを消費した。
+    citationRefs:
+      - "1"
+      - "1,3"
+      - "1"
+      - "6"
+      - "5"
     linkLabel: タイミングホイールの約6秒の動きをXで見る
     linkUrl: https://x.com/Rimacroissant/status/2085277918473883977?s=20
   - number: "04"
@@ -105,6 +119,9 @@ deepDive:
       - |-
         R.464では、アラームが作動すると巻上げ中間車が巻上げ側から切り離される。
         そのため、アラームが鳴っている間もリューズは回転しない。
+    citationRefs:
+      - "3"
+      - "1,3"
   - number: "05"
     title: Time-O-Voxのケースとラグ
     paragraphs:
@@ -118,6 +135,28 @@ deepDive:
       - 今回掲載するOWNER'S NOTE個体は、購入書類上では約1956年、34mm、18Kイエローゴールド、Weber &
         Cie製ケースとして記録されている。
       - 文献に掲載される14K個体と同じ系統の透かしラグを持ちながら、18Kで仕立てられた実例になる。
+    citationRefs:
+      - "2,3"
+      - "2"
+      - "2"
+      - "2"
+      - "2"
+      - "2,3"
+      - "4"
+      - "2,4"
+sourceMeta:
+  - id: "1"
+    type: reference
+  - id: "2"
+    type: reference
+  - id: "3"
+    type: reference
+  - id: "4"
+    type: provenance
+  - id: "5"
+    type: owner
+  - id: "6"
+    type: owner
 sources:
   - B. Humbert, 『Die Armband-Weckeruhr』Calibre TIME-O-VOX
     No.464（R.464の単一香箱、2プッシャー、Wippe、輪列・鳴動停止機構）
@@ -128,4 +167,5 @@ sources:
   - Chrono24 Kaufzertifikat / Plus Ultra AG invoice, Cyma Time-O-Vox Chronomètre
     ref.1283, 18K yellow gold, circa 1956
   - 掲載個体の実測記録（1回の鳴動で約9時間分のパワーリザーブ消費）
+  - 掲載個体の実機動画（タイミングホイールが約6秒間作動する様子）
 ---
