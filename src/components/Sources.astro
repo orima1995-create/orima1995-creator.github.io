@@ -1,32 +1,38 @@
 ---
-const { sources } = Astro.props;
+const { sources, meta = [] } = Astro.props;
 const typeLabel = {
   primary: 'PRIMARY SOURCE',
   reference: 'REFERENCE',
   owner: 'OWNER OBSERVATION'
 };
+const structured = Array.isArray(meta) && meta.length === sources.length;
 ---
 <section class="section shell sources" aria-label="参考資料・出典">
   <details>
     <summary>参考資料・出典</summary>
-    <ol class="source-list">
-      {sources.map((source: any, index: number) => {
-        const structured = typeof source !== 'string';
-        const id = structured ? source.id : String(index + 1);
-        const label = structured ? typeLabel[source.type as keyof typeof typeLabel] : null;
-        const text = structured ? source.text : source;
+    {structured ? (
+      <ol class="source-list">
+        {sources.map((source: string, index: number) => {
+          const itemMeta = meta[index];
+          const id = itemMeta?.id || String(index + 1);
+          const label = typeLabel[itemMeta?.type as keyof typeof typeLabel];
 
-        return (
-          <li id={`source-${id}`}>
-            <span class="source-no" aria-hidden="true">{id}</span>
-            <div class="source-copy">
-              {label && <span class="source-kind">{label}</span>}
-              <span>{text}</span>
-            </div>
-          </li>
-        );
-      })}
-    </ol>
+          return (
+            <li id={`source-${id}`}>
+              <span class="source-no" aria-hidden="true">{id}</span>
+              <div class="source-copy">
+                {label && <span class="source-kind">{label}</span>}
+                <span>{source}</span>
+              </div>
+            </li>
+          );
+        })}
+      </ol>
+    ) : (
+      <ul>
+        {sources.map((source: string) => <li>{source}</li>)}
+      </ul>
+    )}
   </details>
 </section>
 
