@@ -60,10 +60,10 @@ jobs:
           check_text "history/#1950s" dist/pierce-duofon/index.html
 
           check_text "cyma-time-o-vox/#owners-note" dist/owners-notes/index.html
-          check_text "images/owners-thumbnails/cyma-time-o-vox.jpg" dist/owners-notes/index.html
-          check_text "images/owners-thumbnails/pierce-duofon.jpg" dist/owners-notes/index.html
-          test -f dist/images/owners-thumbnails/cyma-time-o-vox.jpg
-          test -f dist/images/owners-thumbnails/pierce-duofon.jpg
+          check_text "images/owners-thumbnails/cyma-time-o-vox-full.png" dist/owners-notes/index.html
+          check_text "images/owners-thumbnails/pierce-duofon-full.png" dist/owners-notes/index.html
+          test -f dist/images/owners-thumbnails/cyma-time-o-vox-full.png
+          test -f dist/images/owners-thumbnails/pierce-duofon-full.png
 
           check_text 'id="1950s"' dist/history/index.html
           check_text "CITIZEN CRYSTRON LC ALARM" dist/history/index.html

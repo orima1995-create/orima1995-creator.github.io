@@ -85,10 +85,10 @@ jobs:
           check_text 'TIME-O-VOX' dist/owners-notes/index.html
           check_text 'DUOFON' dist/owners-notes/index.html
           check_text 'cyma-time-o-vox/#owners-note' dist/owners-notes/index.html
-          check_text 'images/owners-thumbnails/cyma-time-o-vox.jpg' dist/owners-notes/index.html
-          check_text 'images/owners-thumbnails/pierce-duofon.jpg' dist/owners-notes/index.html
-          test -f dist/images/owners-thumbnails/cyma-time-o-vox.jpg
-          test -f dist/images/owners-thumbnails/pierce-duofon.jpg
+          check_text 'images/owners-thumbnails/cyma-time-o-vox-full.png' dist/owners-notes/index.html
+          check_text 'images/owners-thumbnails/pierce-duofon-full.png' dist/owners-notes/index.html
+          test -f dist/images/owners-thumbnails/cyma-time-o-vox-full.png
+          test -f dist/images/owners-thumbnails/pierce-duofon-full.png
           check_text 'pierce-duofon/#owners-note' dist/owners-notes/index.html
           check_text 'smartwatch-part-4.webp' dist/history/smartwatch/index.html
           check_text 'もっと静かな時代へ戻る' dist/history/smartwatch/index.html
@@ -167,8 +167,8 @@ jobs:
               && grep -Fq "TIME-O-VOX" <<<"$owners_html" \
               && grep -Fq "DUOFON" <<<"$owners_html" \
               && grep -Fq "cyma-time-o-vox/#owners-note" <<<"$owners_html" \
-              && grep -Fq "images/owners-thumbnails/cyma-time-o-vox.jpg" <<<"$owners_html" \
-              && grep -Fq "images/owners-thumbnails/pierce-duofon.jpg" <<<"$owners_html" \
+              && grep -Fq "images/owners-thumbnails/cyma-time-o-vox-full.png" <<<"$owners_html" \
+              && grep -Fq "images/owners-thumbnails/pierce-duofon-full.png" <<<"$owners_html" \
               && grep -Fq "pierce-duofon/#owners-note" <<<"$owners_html" \
               && ! grep -Fq "個体ページへ" <<<"$owners_html" \
               && grep -Fq "smartwatch-part-4.webp" <<<"$smart_html" \
