@@ -31,11 +31,11 @@ const watches = defineCollection({
       acoustic: z.string(),
       notes: z.string()
     }),
-    specimenGallery: z.object({
-      front: z.string().optional(),
-      crownSide: z.string().optional(),
-      caseback: z.string().optional()
-    }).optional(),
+    specimenGallery: z.array(z.object({
+      image: z.string(),
+      label: z.string().optional(),
+      alt: z.string().optional()
+    })).optional(),
     video: z.object({
       youtubeId: z.string(),
       xUrl: z.string().url().optional()
