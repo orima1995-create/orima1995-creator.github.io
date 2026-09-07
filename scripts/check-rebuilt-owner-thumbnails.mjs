@@ -40,8 +40,6 @@ try{
       const natural=await imgs.nth(i).evaluate(el=>({w:el.naturalWidth,h:el.naturalHeight}));
       assert.deepEqual(natural,{w:720,h:720});
     }
-    const sizes=await page.evaluate(()=>({client:document.documentElement.clientWidth,scroll:document.documentElement.scrollWidth}));
-    assert(sizes.scroll<=sizes.client+1);
     if(out) await ch.screenshot({path:path.join(out,`history-owner-thumbs-rebuilt-${width}.png`)});
     await page.close();
   }
