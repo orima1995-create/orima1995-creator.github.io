@@ -46,9 +46,9 @@ deepDive:
       - "自社製ムーブメントには13リーニュのクロノグラフCal.130／134があり、1950年代にはCorrectomaticを投入している。Correctomaticは、ケース側の2つのボタンで緩急針を動かし、時計の進み・遅れを調整する機構だった。"
       - "Duofonに搭載されたCal.135もPierceが自社開発したムーブメントである。"
     citationRefs:
-      - ["4"]
-      - ["4"]
-      - ["4"]
+      - "4"
+      - "4"
+      - "4"
   - number: "02"
     title: "Pierce Cal.135"
     subtitle: "なぜ赤／白で鳴り方が変わるのか"
@@ -57,9 +57,9 @@ deepDive:
       - "WECKERでは、ハンマーがムーブメント外周に配置された音響体を打つことで音を発生させる。SIGNALでは音響体を機構から外し、通常のWECKERとは異なる控えめな通知へ切り替える。1955年のPierce技術資料では、この切り替えを4時位置の操作部を4分の1回転させて行うと説明されている。"
       - "同資料では、アラーム腕時計の用途として「起床」と、決めた時刻を所有者に知らせることの二つを挙げている。会議や社交の場など、大きな音を周囲に聞かせる必要がない場合にはSIGNALを使用することが想定されていた。"
     citationRefs:
-      - ["1"]
-      - ["1"]
-      - ["1"]
+      - "1"
+      - "1"
+      - "1"
   - number: "03"
     title: "Duofonのモデル変遷"
     paragraphs:
@@ -70,12 +70,12 @@ deepDive:
       - "※掲載個体はおそらくこれに分類される"
       - "Duofonのケースについては文献間に記述差がある。一方では、各モデルは主に文字盤で区別され、ケースは共通しているように見えるとされる。別の資料では、34mm・圧入式裏蓋の個体と、36mm・ねじ込み式裏蓋の個体が明確に異なる仕様として掲載されている。"
     citationRefs:
-      - ["2"]
-      - ["1"]
-      - ["2"]
-      - ["2"]
-      - ["2"]
-      - ["2", "4"]
+      - "2"
+      - "1"
+      - "2"
+      - "2"
+      - "2"
+      - "2,4"
   - number: "04"
     title: "Gruen Duotoneとの関係"
     paragraphs:
@@ -83,20 +83,21 @@ deepDive:
       - "GruenではPierce Cal.135をベースとするムーブメントをCal.920 SSとして採用し、Duo-Tone Precisionに搭載している。記録されている一例は33.1mmの金色ケースと圧入式スチール裏蓋を備え、ムーブメントにはGruenによる追加仕上げと署名が施されている。"
       - "Duo-Toneでも、4時位置のリューズから二段階のアラームを切り替える構造が使われている。ムーブメントの基礎はPierce Cal.135で、GruenではCal.920 SSとして扱われた。"
     citationRefs:
-      - ["3", "4"]
-      - ["3", "4"]
-      - ["3", "4"]
-sources:
+      - "3,4"
+      - "3,4"
+      - "3,4"
+sourceMeta:
   - id: "1"
     type: primary
-    text: "Pierce AG, Biel, “Die Wecker-Armbanduhr Duofon mit zwei Lautstärken” (30.8.1955), Leonhard Beitl『Alarm am Arm』(2009) pp.353–355収録"
   - id: "2"
     type: reference
-    text: "Leonhard Beitl, 『Alarm am Arm』(2009), pp.356–358（Pierce Duo Fonのモデル例・Cal.135）"
   - id: "3"
     type: reference
-    text: "Leonhard Beitl, 『Alarm am Arm』(2009), pp.198–199（Gruen Duo-Tone Precision / Cal.920 SS）"
   - id: "4"
     type: reference
-    text: "Michael Philip Horlbeck, 『The Alarm Wristwatch』(Schiffer Publishing, 2007), pp.20, 130–131, 189–190, 218–221（Duofon / Pierce Cal.135 / 可変アラーム音量）"
+sources:
+  - "Pierce AG, Biel, “Die Wecker-Armbanduhr Duofon mit zwei Lautstärken” (30.8.1955), Leonhard Beitl『Alarm am Arm』(2009) pp.353–355収録"
+  - "Leonhard Beitl, 『Alarm am Arm』(2009), pp.356–358（Pierce Duo Fonのモデル例・Cal.135）"
+  - "Leonhard Beitl, 『Alarm am Arm』(2009), pp.198–199（Gruen Duo-Tone Precision / Cal.920 SS）"
+  - "Michael Philip Horlbeck, 『The Alarm Wristwatch』(Schiffer Publishing, 2007), pp.20, 130–131, 189–190, 218–221（Duofon / Pierce Cal.135 / 可変アラーム音量）"
 ---
