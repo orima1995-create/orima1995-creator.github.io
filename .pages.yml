@@ -95,6 +95,10 @@ content:
             label: Paragraphs
             type: text
             list: true
+          - name: citationRefs
+            label: 出典番号（段落順）
+            type: string
+            list: true
           - { name: linkLabel, label: 補足リンク文言, type: string }
           - { name: linkUrl, label: 補足リンクURL, type: string }
           - name: images
@@ -110,6 +114,17 @@ content:
               - { name: caption, label: キャプション, type: text }
               - { name: alt, label: altテキスト, type: string }
               - { name: afterParagraph, label: 何段落目の後に表示, type: number }
+      - name: sourceMeta
+        label: 出典種別
+        type: object
+        list:
+          max: 30
+          collapsible:
+            collapsed: true
+            summary: "{id} / {type}"
+        fields:
+          - { name: id, label: 出典番号, type: string }
+          - { name: type, label: 種別 primary / reference / owner, type: string }
       - name: sources
         label: 参考資料・出典
         type: string
