@@ -140,7 +140,7 @@ content:
           - { name: href, label: OWNER'S NOTEリンク, type: string }
 
   - name: history
-    label: HISTORY 編集
+    label: HISTORY 本文・MILESTONES
     type: file
     path: src/data/history-content.json
     format: json
@@ -213,6 +213,9 @@ content:
               - { name: displayTopic, label: MILESTONE表示カテゴリ, type: string }
               - { name: displayName, label: MILESTONE表示名, type: string }
               - { name: displaySummary, label: MILESTONE表示要約, type: text }
+              - { name: hook, label: 内部フック（現行非表示）, type: text, readonly: true }
+              - { name: cardSummary, label: 内部要約（現行非表示）, type: text, readonly: true }
+              - { name: cardStatus, label: 内部ステータス（現行非表示）, type: string, readonly: true }
               - { name: featured, label: 掲載, type: boolean, readonly: true }
               - { name: href, label: リンク先, type: string, readonly: true }
               - { name: hrefKind, label: リンク種別, type: string, readonly: true }
@@ -244,6 +247,9 @@ content:
               - { name: displayTopic, label: MILESTONE表示カテゴリ, type: string }
               - { name: displayName, label: MILESTONE表示名, type: string }
               - { name: displaySummary, label: MILESTONE表示要約, type: text }
+              - { name: hook, label: 内部フック（現行非表示）, type: text, readonly: true }
+              - { name: cardSummary, label: 内部要約（現行非表示）, type: text, readonly: true }
+              - { name: cardStatus, label: 内部ステータス（現行非表示）, type: string, readonly: true }
               - { name: featured, label: 掲載, type: boolean, readonly: true }
               - { name: href, label: リンク先, type: string, readonly: true }
               - { name: hrefKind, label: リンク種別, type: string, readonly: true }
@@ -275,6 +281,9 @@ content:
               - { name: displayTopic, label: MILESTONE表示カテゴリ, type: string }
               - { name: displayName, label: MILESTONE表示名, type: string }
               - { name: displaySummary, label: MILESTONE表示要約, type: text }
+              - { name: hook, label: 内部フック（現行非表示）, type: text, readonly: true }
+              - { name: cardSummary, label: 内部要約（現行非表示）, type: text, readonly: true }
+              - { name: cardStatus, label: 内部ステータス（現行非表示）, type: string, readonly: true }
               - { name: featured, label: 掲載, type: boolean, readonly: true }
               - { name: href, label: リンク先, type: string, readonly: true }
               - { name: hrefKind, label: リンク種別, type: string, readonly: true }
@@ -306,6 +315,9 @@ content:
               - { name: displayTopic, label: MILESTONE表示カテゴリ, type: string }
               - { name: displayName, label: MILESTONE表示名, type: string }
               - { name: displaySummary, label: MILESTONE表示要約, type: text }
+              - { name: hook, label: 内部フック（現行非表示）, type: text, readonly: true }
+              - { name: cardSummary, label: 内部要約（現行非表示）, type: text, readonly: true }
+              - { name: cardStatus, label: 内部ステータス（現行非表示）, type: string, readonly: true }
               - { name: featured, label: 掲載, type: boolean, readonly: true }
               - { name: href, label: リンク先, type: string, readonly: true }
               - { name: hrefKind, label: リンク種別, type: string, readonly: true }
@@ -340,6 +352,9 @@ content:
               - { name: displayTopic, label: MILESTONE表示カテゴリ, type: string }
               - { name: displayName, label: MILESTONE表示名, type: string }
               - { name: displaySummary, label: MILESTONE表示要約, type: text }
+              - { name: hook, label: 内部フック（現行非表示）, type: text, readonly: true }
+              - { name: cardSummary, label: 内部要約（現行非表示）, type: text, readonly: true }
+              - { name: cardStatus, label: 内部ステータス（現行非表示）, type: string, readonly: true }
               - { name: featured, label: 掲載, type: boolean, readonly: true }
               - { name: href, label: リンク先, type: string, readonly: true }
               - { name: hrefKind, label: リンク種別, type: string, readonly: true }
