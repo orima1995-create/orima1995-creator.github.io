@@ -75,10 +75,14 @@ content:
       - name: specimenGallery
         label: 掲載個体ギャラリー
         type: object
+        list:
+          collapsible:
+            collapsed: true
+            summary: "{label}"
         fields:
-          - { name: front, label: 正面, type: image }
-          - { name: crownSide, label: 側面（リューズ側）, type: image }
-          - { name: caseback, label: 裏面, type: image }
+          - { name: image, label: 画像, type: image, required: true }
+          - { name: label, label: 表示名（例：正面 / 側面 / 裏面）, type: string }
+          - { name: alt, label: altテキスト, type: string }
       - name: video
         label: 実機鳴動
         type: object
