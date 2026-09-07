@@ -1,7 +1,9 @@
 ---
 import SeoHead from '../components/SeoHead.astro';
 import SectionMast from '../components/SectionMast.astro';
+import OwnerFonts from '../components/OwnerFonts.astro';
 import '../styles/site.css';
+import '../styles/home-v2.css';
 const base = import.meta.env.BASE_URL;
 const title = 'VINTAGE ALARM｜機械式アラーム腕時計の歴史・実機・資料';
 const description = '機械式アラーム腕時計を、歴史・実機・音・資料から読むオンライン誌。Pierce Duofonをはじめ、各時代のアラーム腕時計と機構を整理する。';
@@ -19,40 +21,48 @@ const schema = {
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#f3eee4" />
+    <meta name="theme-color" content="#f7f8f4" />
+    <OwnerFonts />
     <SeoHead title={title} description={description} path="" schema={schema} />
   </head>
-  <body>
+  <body class="home-v2">
     <SectionMast rightLabel="ALARM WRISTWATCHES" />
     <main>
-      <section class="shell home-hero">
-        <h1><span>VINTAGE</span><span>ALARM</span></h1>
-        <p>アラームを、腕へ。</p>
+      <section class="shell home-cover" aria-labelledby="home-title">
+        <h1 id="home-title"><span>VINTAGE</span><span>ALARM</span></h1>
+        <div class="home-cover-art" aria-hidden="true">
+          <img class="art-before" src={`${base}images/history-motifs/before-watercolor.png`} alt="" />
+          <img class="art-train" src={`${base}images/history-motifs/1950s-train-watercolor.png`} alt="" />
+          <img class="art-drive" src={`${base}images/history-motifs/1960s-drive-watercolor.png`} alt="" />
+          <img class="art-digital" src={`${base}images/history-motifs/1970s-digital-watercolor.png`} alt="" />
+        </div>
       </section>
 
-      <nav class="shell home-nav" aria-label="VINTAGE ALARM メインコンテンツ">
+      <nav class="shell home-index" aria-label="VINTAGE ALARM メインコンテンツ">
+        <div class="home-index-head" aria-hidden="true"><span>CONTENTS</span><span>01—04</span></div>
+
         <a href={`${base}history/`}>
-          <span class="home-no">01</span>
-          <div><strong>HISTORY</strong><small>鐘から現在まで。アラーム腕時計の歴史を読む</small></div>
-          <b>→</b>
+          <span class="home-index-no">01</span>
+          <div class="home-index-copy"><strong>HISTORY</strong><small>鐘から現在まで。アラーム腕時計の歴史を読む</small></div>
+          <span class="home-index-arrow" aria-hidden="true">→</span>
         </a>
 
         <a href={`${base}history/#milestones`}>
-          <span class="home-no">02</span>
-          <div><strong>MILESTONES</strong><small>歴史の節目になったアラーム腕時計</small></div>
-          <b>→</b>
+          <span class="home-index-no">02</span>
+          <div class="home-index-copy"><strong>MILESTONES</strong><small>歴史の節目になったアラーム腕時計</small></div>
+          <span class="home-index-arrow" aria-hidden="true">→</span>
         </a>
 
         <a href={`${base}owners-notes/`}>
-          <span class="home-no">03</span>
-          <div><strong>OWNER'S NOTES</strong><small>所有個体を、実機・操作・音から読む</small></div>
-          <b>→</b>
+          <span class="home-index-no">03</span>
+          <div class="home-index-copy"><strong>OWNER'S NOTES</strong><small>所有個体を、実機・操作・音から読む</small></div>
+          <span class="home-index-arrow" aria-hidden="true">→</span>
         </a>
 
         <a href={`${base}history/#research`}>
-          <span class="home-no">04</span>
-          <div><strong>RESEARCH</strong><small>気になっているもの、調査中の個体</small></div>
-          <b>→</b>
+          <span class="home-index-no">04</span>
+          <div class="home-index-copy"><strong>RESEARCH</strong><small>気になっているもの、調査中の個体</small></div>
+          <span class="home-index-arrow" aria-hidden="true">→</span>
         </a>
       </nav>
     </main>
