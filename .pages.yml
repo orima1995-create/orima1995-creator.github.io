@@ -114,7 +114,7 @@ content:
         list: true
 
   - name: ownersDirectory
-    label: OWNER'S NOTES 一覧
+    label: OWNER'S NOTES / HISTORY サムネ
     type: file
     path: src/data/owners-directory.json
     format: json
@@ -130,12 +130,13 @@ content:
             summary: "{ownedEra} / {brand} {name}"
         fields:
           - { name: ownerNumber, label: OWNER'S NOTE No., type: string }
+          - { name: historyId, label: HISTORYカードID, type: string, required: true }
           - { name: ownedEra, label: 所有個体の年代区分, type: string }
           - { name: ownedSortYear, label: 所有個体の並び順年, type: number }
           - { name: brand, label: Brand, type: string }
           - { name: name, label: Model, type: string }
           - { name: catch, label: 一覧専用キャッチ, type: string }
-          - { name: image, label: カード画像, type: image }
+          - { name: image, label: HISTORY・一覧サムネ画像, type: image, required: true }
           - { name: href, label: OWNER'S NOTEリンク, type: string }
 
   - name: history
@@ -144,23 +145,32 @@ content:
     path: src/data/history-content.json
     format: json
     fields:
+      - name: coverMilestones
+        label: 表紙4マイルストーン
+        type: object
+        list:
+          min: 4
+          max: 4
+          collapsible:
+            collapsed: true
+            summary: "{year} / {line1} {line2}"
+        fields:
+          - { name: year, label: 年, type: string, required: true }
+          - { name: line1, label: 1行目, type: string, required: true }
+          - { name: line2, label: 2行目, type: string, required: true }
+          - { name: href, label: ジャンプ先, type: string, required: true, readonly: true }
+
       - name: hero
-        label: 冒頭 / HERO
+        label: 表紙下部コピー
         type: object
         required: true
         fields:
-          - { name: eyebrow, label: 英文見出し, type: string }
-          - { name: title, label: タイトル, type: string }
           - name: kicker
-            label: 導入2行
+            label: 2行コピー
             type: string
             list:
               min: 2
               max: 2
-          - name: lead
-            label: 導入本文
-            type: text
-            list: true
 
       - name: before
         label: 00 / BEFORE THE WRIST
@@ -171,7 +181,6 @@ content:
           - { name: label, label: 章ラベル, type: string, readonly: true }
           - { name: title, label: 章タイトル, type: string }
           - { name: teaser, label: 目次・要約, type: text }
-          - { name: overline, label: Overline, type: string }
           - name: intro
             label: 導入本文
             type: text
@@ -186,7 +195,6 @@ content:
           - { name: label, label: 章ラベル, type: string, readonly: true }
           - { name: title, label: 章タイトル, type: string }
           - { name: teaser, label: 目次・要約, type: text }
-          - { name: overline, label: Overline, type: string }
           - { name: intro, label: 本文, type: text }
           - name: cards
             label: HISTORYカード
@@ -200,11 +208,11 @@ content:
               - { name: id, label: ID, type: string, readonly: true }
               - { name: group, label: 分類, type: string, readonly: true }
               - { name: sort, label: 並び順, type: number, readonly: true }
-              - { name: meta, label: 上部表記, type: string }
-              - { name: name, label: カード名, type: string }
-              - { name: hook, label: フック, type: text }
-              - { name: cardSummary, label: 要約, type: text }
-              - { name: cardStatus, label: ステータス表示, type: string }
+              - { name: meta, label: 年代 / ブランド表記, type: string }
+              - { name: name, label: 内部名 / OWNER表示名, type: string }
+              - { name: displayTopic, label: MILESTONE表示カテゴリ, type: string }
+              - { name: displayName, label: MILESTONE表示名, type: string }
+              - { name: displaySummary, label: MILESTONE表示要約, type: text }
               - { name: featured, label: 掲載, type: boolean, readonly: true }
               - { name: href, label: リンク先, type: string, readonly: true }
               - { name: hrefKind, label: リンク種別, type: string, readonly: true }
@@ -218,7 +226,6 @@ content:
           - { name: label, label: 章ラベル, type: string, readonly: true }
           - { name: title, label: 章タイトル, type: string }
           - { name: teaser, label: 目次・要約, type: text }
-          - { name: overline, label: Overline, type: string }
           - { name: intro, label: 本文, type: text }
           - name: cards
             label: HISTORYカード
@@ -232,11 +239,11 @@ content:
               - { name: id, label: ID, type: string, readonly: true }
               - { name: group, label: 分類, type: string, readonly: true }
               - { name: sort, label: 並び順, type: number, readonly: true }
-              - { name: meta, label: 上部表記, type: string }
-              - { name: name, label: カード名, type: string }
-              - { name: hook, label: フック, type: text }
-              - { name: cardSummary, label: 要約, type: text }
-              - { name: cardStatus, label: ステータス表示, type: string }
+              - { name: meta, label: 年代 / ブランド表記, type: string }
+              - { name: name, label: 内部名 / OWNER表示名, type: string }
+              - { name: displayTopic, label: MILESTONE表示カテゴリ, type: string }
+              - { name: displayName, label: MILESTONE表示名, type: string }
+              - { name: displaySummary, label: MILESTONE表示要約, type: text }
               - { name: featured, label: 掲載, type: boolean, readonly: true }
               - { name: href, label: リンク先, type: string, readonly: true }
               - { name: hrefKind, label: リンク種別, type: string, readonly: true }
@@ -263,11 +270,11 @@ content:
               - { name: id, label: ID, type: string, readonly: true }
               - { name: group, label: 分類, type: string, readonly: true }
               - { name: sort, label: 並び順, type: number, readonly: true }
-              - { name: meta, label: 上部表記, type: string }
-              - { name: name, label: カード名, type: string }
-              - { name: hook, label: フック, type: text }
-              - { name: cardSummary, label: 要約, type: text }
-              - { name: cardStatus, label: ステータス表示, type: string }
+              - { name: meta, label: 年代 / ブランド表記, type: string }
+              - { name: name, label: 内部名 / OWNER表示名, type: string }
+              - { name: displayTopic, label: MILESTONE表示カテゴリ, type: string }
+              - { name: displayName, label: MILESTONE表示名, type: string }
+              - { name: displaySummary, label: MILESTONE表示要約, type: text }
               - { name: featured, label: 掲載, type: boolean, readonly: true }
               - { name: href, label: リンク先, type: string, readonly: true }
               - { name: hrefKind, label: リンク種別, type: string, readonly: true }
@@ -294,11 +301,11 @@ content:
               - { name: id, label: ID, type: string, readonly: true }
               - { name: group, label: 分類, type: string, readonly: true }
               - { name: sort, label: 並び順, type: number, readonly: true }
-              - { name: meta, label: 上部表記, type: string }
-              - { name: name, label: カード名, type: string }
-              - { name: hook, label: フック, type: text }
-              - { name: cardSummary, label: 要約, type: text }
-              - { name: cardStatus, label: ステータス表示, type: string }
+              - { name: meta, label: 年代 / ブランド表記, type: string }
+              - { name: name, label: 内部名 / OWNER表示名, type: string }
+              - { name: displayTopic, label: MILESTONE表示カテゴリ, type: string }
+              - { name: displayName, label: MILESTONE表示名, type: string }
+              - { name: displaySummary, label: MILESTONE表示要約, type: text }
               - { name: featured, label: 掲載, type: boolean, readonly: true }
               - { name: href, label: リンク先, type: string, readonly: true }
               - { name: hrefKind, label: リンク種別, type: string, readonly: true }
@@ -311,7 +318,6 @@ content:
           - { name: chapterNo, label: Chapter No., type: string, readonly: true }
           - { name: label, label: 章ラベル, type: string, readonly: true }
           - { name: title, label: 章タイトル, type: string }
-          - { name: indexTitle, label: 目次タイトル, type: string }
           - { name: teaser, label: 目次・要約, type: text }
           - name: body
             label: 本文
@@ -329,11 +335,11 @@ content:
               - { name: id, label: ID, type: string, readonly: true }
               - { name: group, label: 分類, type: string, readonly: true }
               - { name: sort, label: 並び順, type: number, readonly: true }
-              - { name: meta, label: 上部表記, type: string }
-              - { name: name, label: カード名, type: string }
-              - { name: hook, label: フック, type: text }
-              - { name: cardSummary, label: 要約, type: text }
-              - { name: cardStatus, label: ステータス表示, type: string }
+              - { name: meta, label: 年代 / ブランド表記, type: string }
+              - { name: name, label: 内部名 / OWNER表示名, type: string }
+              - { name: displayTopic, label: MILESTONE表示カテゴリ, type: string }
+              - { name: displayName, label: MILESTONE表示名, type: string }
+              - { name: displaySummary, label: MILESTONE表示要約, type: text }
               - { name: featured, label: 掲載, type: boolean, readonly: true }
               - { name: href, label: リンク先, type: string, readonly: true }
               - { name: hrefKind, label: リンク種別, type: string, readonly: true }
@@ -343,11 +349,8 @@ content:
         type: object
         required: true
         fields:
-          - { name: chapterNo, label: Chapter No., type: string, readonly: true }
-          - { name: storyNo, label: Story No., type: string, readonly: true }
           - { name: title, label: タイトル, type: string }
           - { name: name, label: 表示名, type: string }
-          - { name: linkLabel, label: リンク文言, type: string }
           - { name: href, label: リンク先, type: string, readonly: true }
 
       - name: sources
