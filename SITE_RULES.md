@@ -1,5 +1,7 @@
 # VINTAGE ALARM — 編集・実装ルール
 
+作業前に `AGENTS.md`、`strategy/seo-aio.md`、`measurement/metrics.md` も確認する。
+
 ## 原則
 
 - 資料で確認した事実を書く。必要な関係だけ示し、そこで止める。
@@ -49,7 +51,8 @@
 3. SPEC
 4. 実機鳴動（YouTube 1本 + Original post on X）
 5. DEEP DIVE
-6. 参考資料・出典
+6. 掲載個体ギャラリー（画像がある場合）
+7. 参考資料・出典
 
 ## SPEC
 
@@ -87,6 +90,18 @@
 - TOPは `WebSite`、HISTORYは `Article`、OWNER'S NOTESは`CollectionPage`、WATCH / SMARTWATCHは `CreativeWork` を基本に構造化データを付ける。階層ページには `BreadcrumbList` を付ける。
 - 検索用タイトルやdescriptionに未確認事項・過剰主張を追加しない。
 - SEO目的で本文を水増ししない。本文の編集品質と検索メタデータを分離する。
+
+## 計測・成果観測
+
+- 実装済み / 検証済み / 公開済み / 成果観測済みを分ける。
+- 公開成功を、順位・流入・AI検索露出の成功として報告しない。
+- Search Consoleの表示・クリックと、Web AnalyticsのVisits / Page viewsを混同しない。
+- X / SNS、Organic Search、Direct、その他Referralを可能な範囲で分ける。
+- 同じ流入を複数カテゴリへ二重計上しない。
+- 変更前後を比較する場合は、公開日・変更内容・計測条件を残す。
+- 数字が増減した場合も、SNS投稿、外部言及、季節性、計測変更など別の説明を確認する。
+- 完成済みページは、観測された不足がない限りSEO目的だけで改稿しない。
+- 詳細な定義は `measurement/metrics.md` に従う。
 
 ## 公開前確認
 
