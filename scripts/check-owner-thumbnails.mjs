@@ -27,10 +27,10 @@ try{
   for(const width of [390,1280]){
     const page=await browser.newPage({viewport:{width,height:width===390?1100:900}});
     await page.goto(origin+base+'history/#1950s',{waitUntil:'networkidle'});
-    const ch=page.locator('#1950s');
+    const ch=page.locator('[id="1950s"]');
     if(!(await ch.getAttribute('open'))) await ch.locator('summary').click();
     await page.evaluate(()=>document.fonts.ready);
-    const imgs=page.locator('#1950s .owner-tiles .frame-media img');
+    const imgs=page.locator('[id="1950s"] .owner-tiles .frame-media img');
     assert.equal(await imgs.count(),2);
     for(let i=0;i<2;i++){
       const fit=await imgs.nth(i).evaluate(el=>getComputedStyle(el).objectFit);
