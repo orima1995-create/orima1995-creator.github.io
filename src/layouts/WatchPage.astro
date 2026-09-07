@@ -7,6 +7,7 @@ import WatchSpec from '../components/WatchSpec.astro';
 import AlarmVideo from '../components/AlarmVideo.astro';
 import DeepDive from '../components/DeepDive.astro';
 import SpecimenGallery from '../components/SpecimenGallery.astro';
+import { specimenGalleryBySlug } from '../lib/specimen-gallery';
 import Sources from '../components/Sources.astro';
 import OwnerNoteEndNav from '../components/OwnerNoteEndNav.astro';
 import '../styles/site.css';
@@ -14,6 +15,7 @@ import '../styles/owners-v15.css';
 import OwnerFonts from '../components/OwnerFonts.astro';
 
 const { watch } = Astro.props;
+const specimenGallery = specimenGalleryBySlug[watch.slug] ?? watch.specimenGallery ?? [];
 const siteRoot = 'https://orima1995-create.github.io/orima1995-creator.github.io/';
 const pageTitle = watch.slug === 'pierce-duofon'
   ? 'Pierce Duofon｜Cal.135・2段階アラーム・実機音｜VINTAGE ALARM'
@@ -90,7 +92,7 @@ const schema = {
       </div>
       {watch.video && <AlarmVideo video={watch.video} title={`${watch.brand} ${watch.model}`} />}
       <DeepDive items={watch.deepDive} />
-      {watch.specimenGallery?.length > 0 && <SpecimenGallery items={watch.specimenGallery} title={`${watch.brand} ${watch.model}`} />}
+      {specimenGallery.length > 0 && <SpecimenGallery items={specimenGallery} title={`${watch.brand} ${watch.model}`} />}
       <Sources sources={watch.sources} />
       {nextOwnerNote && (
         <OwnerNoteEndNav

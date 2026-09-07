@@ -1,9 +1,14 @@
 ---
 const { items = [], title = '' } = Astro.props;
 const base = import.meta.env.BASE_URL;
-const resolveImage = (path: string) => /^https?:\/\//.test(path)
-  ? path
-  : `${base}${path.replace(/^\//, '')}`;
+const resolveImage = (image: any) => {
+  if (image && typeof image === 'object' && typeof image.src === 'string') return image.src;
+  const path = typeof image === 'string' ? image : '';
+  if (!path) return '';
+  return /^https?:\/\//.test(path)
+    ? path
+    : `${base}${path.replace(/^\//, '')}`;
+};
 ---
 <section class="section shell specimen-gallery" aria-labelledby="specimen-gallery-title">
   <div class="specimen-gallery-head">

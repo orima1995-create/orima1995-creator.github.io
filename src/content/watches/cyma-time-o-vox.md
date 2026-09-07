@@ -39,22 +39,6 @@ spec:
   winding: 手巻き
   acoustic: ゴング式
   notes: 18KYG、Chronomètre表記、2プッシャー、透かしラグ
-specimenGallery:
-  - image: /images/cyma-time-o-vox/gallery/cyma-front.jpg
-    label: 正面（リストショット）
-    alt: CYMA Time-O-Vox 18K Chronomètre 掲載個体 正面 リストショット
-  - image: /images/cyma-time-o-vox/gallery/cyma-side-pushers.jpg
-    label: 側面（2プッシャー）
-    alt: CYMA Time-O-Vox 18K Chronomètre 側面 2プッシャーとリューズ
-  - image: /images/cyma-time-o-vox/gallery/cyma-lug-closeup.jpg
-    label: 透かしラグ
-    alt: CYMA Time-O-Vox 18K Chronomètre 透かしラグの接写
-  - image: /images/cyma-time-o-vox/gallery/cyma-caseback-inside.jpg
-    label: 裏蓋内側刻印
-    alt: CYMA Time-O-Vox 18K Chronomètre 裏蓋内側刻印 18K 0.750 Weber
-  - image: /images/cyma-time-o-vox/gallery/cyma-movement-r464.jpg
-    label: ムーブメント（Cal.R.464）
-    alt: CYMA Time-O-Vox Cal.R.464 ムーブメント
 video:
   youtubeId: https://youtube.com/shorts/OONH0JZqCK0?si=nAgbRc1aJ_TUBi6r
   xUrl: https://x.com/Rimacroissant/status/2085277918473883977?s=20
