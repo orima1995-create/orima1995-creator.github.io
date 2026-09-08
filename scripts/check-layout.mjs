@@ -24,7 +24,11 @@ try {
 
     for (const route of routes) {
       const url = new URL(route, root).href;
-      await page.goto(url, { waitUntil: 'networkidle' });
+      await page.goto(url, { waitUntil: 'domcontentloaded', timeout: 15000 });
+      await page.waitForFunction(() => [...document.images]
+        .filter((img) => (img.getAttribute('src') || '').trim())
+        .every((img) => img.complete), null, { timeout: 8000 }).catch(() => {});
+      await page.waitForTimeout(250);
 
       const result = await page.evaluate(() => {
         const root = document.documentElement;
