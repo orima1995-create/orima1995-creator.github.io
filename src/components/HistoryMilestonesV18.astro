@@ -6,10 +6,11 @@ const { entries, id, label } = Astro.props as { entries: HistoryCatalogEntry[]; 
  <header class="shelf-heading-v18"><h3>MILESTONES</h3><span>{entries.length}</span></header>
  <div class="shelf-rail-v18" tabindex="0" aria-label={label}>
   {entries.map((entry,index)=>{const topic=entry.displayTopic??'';const name=entry.displayName??entry.name;const summary=entry.displaySummary??entry.cardSummary;return <article class="shelf-card-v18" data-entry={entry.id} data-full-name={entry.name}>
-   <div class="shelf-meta-v18"><time>{entry.meta.split(' / ')[0]}</time><span>{topic}</span></div>
+   <div class="shelf-meta-v18"><time>{entry.displayMeta??entry.meta.split(' / ')[0]}</time>{topic&&<span>{topic}</span>}</div>
    <h4>{name}</h4>
    <p>
     {summary}
+    {entry.displayNote&&<span class="shelf-display-note-v18">{entry.displayNote}</span>}
     {entry.sourceRefs?.length > 0 && <sup class="shelf-source-refs" aria-label={`出典 ${entry.sourceRefs.join('、')}`}>{entry.sourceRefs.map((ref,refIndex)=><>{refIndex>0&&<span aria-hidden="true">,</span>}<a href={`#history-source-${ref}`}>{ref}</a></>)}</sup>}
    </p>
    <small>{index+1} / {entries.length}</small>
