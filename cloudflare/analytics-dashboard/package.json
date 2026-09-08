@@ -13,19 +13,13 @@
   "cloudflare": {
     "bindings": {
       "CF_API_TOKEN": {
-        "description": "Cloudflare API token with **Account > Account Analytics > Read** only."
+        "description": "Cloudflare API token with Account > Account Analytics > Read."
       },
       "CF_ACCOUNT_ID": {
         "description": "Cloudflare Account ID for the Web Analytics account."
       },
       "DASHBOARD_PASSWORD": {
-        "description": "Password used to protect the private analytics dashboard with Basic Auth."
-      },
-      "CF_SITE_TAG": {
-        "description": "Optional Web Analytics siteTag. Leave empty to auto-detect from the configured request host."
-      },
-      "DASHBOARD_USER": {
-        "description": "Optional dashboard username. Defaults to admin."
+        "description": "Password used to protect the private analytics dashboard."
       }
     }
   }
