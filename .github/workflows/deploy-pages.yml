@@ -32,6 +32,8 @@ jobs:
         run: npm ci
       - name: Build Astro site
         run: npm run build
+      - name: Verify OWNER'S NOTES directory
+        run: node scripts/check-owner-directory.mjs
       - name: Verify build output
         run: |
           set -e
