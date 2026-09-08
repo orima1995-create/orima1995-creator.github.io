@@ -26,7 +26,7 @@ function requireBasicAuth(request, env) {
     return new Response("DASHBOARD_PASSWORD is not configured.", { status: 503 });
   }
 
-  const expectedUser = env.DASHBOARD_USER || "admin";
+  const expectedUser = "admin";
   const header = request.headers.get("Authorization") || "";
 
   if (header.startsWith("Basic ")) {
@@ -60,17 +60,14 @@ async function analyticsResponse(url, env) {
     const previousStart = new Date(now.getTime() - days * 2 * 86400000);
     const host = env.REQUEST_HOST || DEFAULT_HOST;
 
-    const siteTag = env.CF_SITE_TAG || await discoverSiteTag(env, host, now);
-
     const [current, previous] = await Promise.all([
-      fetchPeriod(env, siteTag, host, currentStart, now),
-      fetchPeriod(env, siteTag, host, previousStart, currentStart),
+      fetchPeriod(env, host, currentStart, now),
+      fetchPeriod(env, host, previousStart, currentStart),
     ]);
 
     const payload = {
       generatedAt: now.toISOString(),
       rangeDays: days,
-      siteTag,
       host,
       current: normalizePeriod(current),
       previous: normalizePeriod(previous),
@@ -94,58 +91,7 @@ function normalizeRange(value) {
   return [1, 7, 30].includes(days) ? days : 7;
 }
 
-async function discoverSiteTag(env, host, now) {
-  const start = new Date(now.getTime() - 30 * 86400000);
-  const query = `
-query DiscoverWebAnalyticsSite(
-  $accountTag: string!
-  $filter: AccountRumPageloadEventsAdaptiveGroupsFilter_InputObject!
-) {
-  viewer {
-    accounts(filter: { accountTag: $accountTag }) {
-      sites: rumPageloadEventsAdaptiveGroups(
-        filter: $filter
-        limit: 50
-        orderBy: [count_DESC]
-      ) {
-        count
-        dimensions {
-          siteTag
-          requestHost
-        }
-      }
-    }
-  }
-}
-`;
-
-  const data = await cloudflareGraphQL(env, query, {
-    accountTag: env.CF_ACCOUNT_ID,
-    filter: {
-      AND: [
-        {
-          datetime_geq: start.toISOString(),
-          datetime_leq: now.toISOString(),
-        },
-        { requestHost: host },
-        { bot: 0 },
-      ],
-    },
-  });
-
-  const rows = data?.viewer?.accounts?.[0]?.sites || [];
-  const exact = rows.find((row) => row?.dimensions?.requestHost === host && row?.dimensions?.siteTag);
-  const fallback = rows.find((row) => row?.dimensions?.siteTag);
-  const siteTag = exact?.dimensions?.siteTag || fallback?.dimensions?.siteTag;
-
-  if (!siteTag) {
-    throw new Error("Web Analytics siteTag could not be discovered. Set CF_SITE_TAG explicitly.");
-  }
-
-  return siteTag;
-}
-
-async function fetchPeriod(env, siteTag, host, start, end) {
+async function fetchPeriod(env, host, start, end) {
   const query = `
 query VintageAlarmAnalytics(
   $accountTag: string!
@@ -204,7 +150,6 @@ query VintageAlarmAnalytics(
           datetime_geq: start.toISOString(),
           datetime_leq: end.toISOString(),
         },
-        { siteTag },
         { requestHost: host },
         { bot: 0 },
       ],
