@@ -137,9 +137,9 @@
         "sort": 50,
         "meta": "1956 / JAEGER-LECOULTRE",
         "name": "MEMOVOX AUTOMATIC / CAL.815",
-        "displayTopic": "自動巻き",
-        "displayName": "MEMOVOX AUTOMATIC",
-        "displaySummary": "時計側を自動巻き化。アラームは手巻き。",
+        "displayTopic": "",
+        "displayName": "MEMOVOX AUTOMATIC / CAL.815",
+        "displaySummary": "バンパー式で時計側を自動巻き。アラームは手巻き。",
         "hook": "世界初の自動巻きアラーム腕時計。",
         "cardSummary": "時計側を自動巻き化。アラーム用ゼンマイは手巻き。",
         "cardStatus": "MILESTONE",
@@ -148,7 +148,9 @@
           "1",
           "2",
           "3"
-        ]
+        ],
+        "displayMeta": "1956 / JAEGER-LECOULTRE",
+        "displayNote": "世界初の自動巻きアラーム腕時計。"
       },
       {
         "id": "vulcain-golden-voice",
