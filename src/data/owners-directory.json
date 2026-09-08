@@ -9,7 +9,8 @@
       "catch": "鳴る黄金のクロノメーター",
       "image": "/images/owners-thumbnails/cyma-time-o-vox-full.png",
       "href": "/cyma-time-o-vox/#owners-note",
-      "historyId": "cyma-time-o-vox"
+      "historyId": "cyma-time-o-vox",
+      "historyHref": "/history/#1950s"
     },
     {
       "ownerNumber": "01",
@@ -20,7 +21,8 @@
       "catch": "1950's通知のオーパーツ。",
       "image": "/images/owners-thumbnails/pierce-duofon-full.png",
       "href": "/pierce-duofon/#owners-note",
-      "historyId": "pierce-duofon"
+      "historyId": "pierce-duofon",
+      "historyHref": "/history/#1950s"
     }
   ]
 }
