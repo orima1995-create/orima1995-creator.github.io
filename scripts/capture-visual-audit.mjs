@@ -53,6 +53,28 @@ try {
       await target.screenshot({
         path: path.join(outDir, `${viewportName}__focus__${name}.png`)
       });
+
+      if (name === 'history-1950s') {
+        const fitDebug = await target.locator('img[data-smart-watch-fit]').evaluateAll((images) =>
+          images.map((img) => ({
+            alt: img.alt,
+            state: img.dataset.smartFitState || null,
+            transform: img.style.transform || null,
+            bounds: img.dataset.smartFitBounds || null,
+            safetyBounds: img.dataset.smartFitSafetyBounds || null,
+            target: img.dataset.smartFitTarget || null,
+            max: img.dataset.smartFitMax || null,
+            naturalWidth: img.naturalWidth,
+            naturalHeight: img.naturalHeight,
+            boxWidth: img.parentElement?.clientWidth || null,
+            boxHeight: img.parentElement?.clientHeight || null
+          }))
+        );
+        await fs.writeFile(
+          path.join(outDir, `${viewportName}__focus__history-1950s-fit.json`),
+          JSON.stringify(fitDebug, null, 2)
+        );
+      }
     }
 
     await context.close();
