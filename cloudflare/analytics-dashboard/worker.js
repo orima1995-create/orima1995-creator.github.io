@@ -576,7 +576,7 @@ const DASHBOARD_HTML = `<!doctype html>
 <meta name="robots" content="noindex,nofollow,noarchive">
 <title>VINTAGE ALARM ANALYTICS</title>
 <style>
-:root{--paper:#f2eee5;--ink:#181716;--muted:#706d67;--line:#c8c0b3;--card:#faf7f0;--accent:#8d2c23}
+:root{--paper:#f2eee5;--ink:#181716;--muted:#706d67;--line:#c8c0b3;--card:#faf7f0;--accent:#8d2c23;--green:#315c3d;--blue:#365f7d;--gold:#9a7b4f;--violet:#7b5674;--soft:#e7dfd2}
 *{box-sizing:border-box}
 body{margin:0;background:var(--paper);color:var(--ink);font-family:ui-sans-serif,-apple-system,BlinkMacSystemFont,"Segoe UI","Hiragino Kaku Gothic ProN","Yu Gothic",sans-serif}
 main{width:min(1120px,calc(100% - 32px));margin:0 auto;padding:34px 0 64px}
@@ -590,7 +590,7 @@ button.refresh{border-color:var(--ink)}
 .status{display:flex;justify-content:space-between;gap:12px;color:var(--muted);font-size:11px;margin:12px 0 20px}
 .grid{display:grid;grid-template-columns:repeat(12,1fr);gap:12px}
 .card{background:var(--card);border:1px solid var(--line);padding:16px;min-width:0}
-.kpi{grid-column:span 3}
+.kpi{grid-column:span 2}
 .kpi .label,.section-title{font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);font-weight:700}
 .kpi .value{font-family:Georgia,"Times New Roman",serif;font-size:36px;margin-top:7px}
 .delta{font-size:11px;margin-top:4px;color:var(--muted)}
@@ -603,13 +603,13 @@ th{font-size:10px;color:var(--muted);font-weight:600}
 td.num,th.num{text-align:right;font-variant-numeric:tabular-nums}
 .path{display:block;color:var(--muted);font-size:10px;margin-top:2px;overflow-wrap:anywhere}
 .flag{display:inline-block;margin-left:6px;padding:2px 5px;border:1px solid var(--accent);color:var(--accent);font-size:9px;letter-spacing:.08em}
-.flow{grid-column:1/-1}.audit{grid-column:1/-1;border-color:var(--accent);color:var(--accent)}
+.flow{grid-column:1/-1}.audit{grid-column:1/-1;border-color:var(--accent);color:var(--accent)}.chart-card{grid-column:1/-1}.chart-half{grid-column:span 6}.chart-wrap{width:100%;overflow:hidden}.chart-legend{display:flex;gap:14px;flex-wrap:wrap;margin:8px 0 0;font-size:10px;color:var(--muted)}.legend-dot{width:8px;height:8px;border-radius:999px;display:inline-block;margin-right:5px}.low-sample{grid-column:1/-1;border-style:dashed;color:var(--accent);display:flex;justify-content:space-between;gap:12px;align-items:center}.entry-bar{display:grid;grid-template-columns:minmax(120px,1fr) 3fr auto;gap:10px;align-items:center;padding:8px 0;border-top:1px solid #ded7cc;font-size:12px}.entry-track,.flow-track{height:7px;background:var(--soft);overflow:hidden}.entry-fill,.flow-fill{height:100%;background:var(--ink)}.donut-grid{display:grid;grid-template-columns:160px minmax(0,1fr);gap:22px;align-items:center}.donut{width:150px;height:150px;border-radius:50%;position:relative;margin:auto}.donut:after{content:"";position:absolute;inset:28px;border-radius:50%;background:var(--card)}.donut-center{position:absolute;inset:0;display:grid;place-items:center;z-index:1;font-family:Georgia,"Times New Roman",serif;font-size:27px}.mix-list{display:grid;gap:7px;font-size:11px}.mix-row{display:grid;grid-template-columns:10px minmax(0,1fr) auto;gap:7px;align-items:center}.flow-viz{display:grid;gap:8px}.flow-viz-row{display:grid;grid-template-columns:minmax(110px,1fr) auto minmax(110px,1fr) 2fr auto;gap:8px;align-items:center;font-size:11px}.campaign{grid-column:1/-1}.campaign-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-top:12px}.funnel-step{border:1px solid var(--line);padding:10px;min-height:74px}.funnel-step strong{display:block;font-family:Georgia,"Times New Roman",serif;font-size:24px;margin-top:5px}.campaign-form{display:grid;grid-template-columns:2fr 1.4fr 1.6fr repeat(4,1fr) auto;gap:7px;margin-top:14px}.campaign-form input,.campaign-form button{min-width:0;border:1px solid var(--line);background:transparent;padding:8px;font:inherit;font-size:11px}.campaign-list{margin-top:10px;display:grid;gap:6px;font-size:11px}.campaign-item{display:flex;justify-content:space-between;gap:10px;border-top:1px solid #ded7cc;padding-top:7px}.muted{color:var(--muted)}details.raw{grid-column:1/-1}details.raw summary{cursor:pointer;font-size:11px;letter-spacing:.1em;color:var(--muted)}
 .bar-row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px;align-items:center;padding:9px 0;border-top:1px solid #ded7cc;font-size:12px}
 .bar-wrap{grid-column:1/-1;height:3px;background:#e5ded2;margin-top:-3px}
 .bar{height:100%;background:var(--ink)}
 .error{border:1px solid var(--accent);padding:14px;color:var(--accent);background:#fff8f5;white-space:pre-wrap}
 footer{margin-top:22px;color:var(--muted);font-size:10px;line-height:1.6}
-@media(max-width:760px){main{width:min(100% - 20px,1120px);padding-top:20px}header{align-items:flex-start;flex-direction:column}.actions{justify-content:flex-start}.kpi{grid-column:span 6}.pages,.channels,.referrers,.half{grid-column:1/-1}}
+@media(max-width:900px){.kpi{grid-column:span 4}.campaign-form{grid-template-columns:1fr 1fr}.campaign-grid{grid-template-columns:repeat(3,1fr)}}@media(max-width:760px){main{width:min(100% - 20px,1120px);padding-top:20px}header{align-items:flex-start;flex-direction:column}.actions{justify-content:flex-start}.kpi{grid-column:span 6}.pages,.channels,.referrers,.half,.chart-half{grid-column:1/-1}.donut-grid{grid-template-columns:1fr}.campaign-grid{grid-template-columns:repeat(2,1fr)}.campaign-form{grid-template-columns:1fr}.flow-viz-row{grid-template-columns:1fr auto 1fr}.flow-viz-row .flow-track,.flow-viz-row .flow-count{grid-column:1/-1}.status{flex-direction:column}}
 </style>
 </head>
 <body>
@@ -651,7 +651,163 @@ function rows(items,max=8){
     return '<div class="bar-row"><span>'+esc(x.name)+'</span><strong>'+n(x.pageviews)+'</strong><div class="bar-wrap"><div class="bar" style="width:'+width+'%"></div></div></div>';
   }).join("");
 }
+const COLORS={pageviews:"#181716",visits:"#8d2c23",X:"#315c3d",Search:"#365f7d",Direct:"#9a7b4f",Meta:"#7b5674",AI:"#6b6b6b",Other:"#aaa197"};
+function bucketTime(value){
+  if(!value)return NaN;
+  if(/^\d{4}-\d{2}-\d{2}$/.test(value))return new Date(value+"T00:00:00Z").getTime();
+  return new Date(value).getTime();
+}
+function bucketLabel(value){
+  const t=bucketTime(value);
+  if(!Number.isFinite(t))return value;
+  const opts=(windowKey==="1h"||windowKey==="3h"||windowKey==="24h")
+    ?{hour:"2-digit",minute:"2-digit",hour12:false,timeZone:"Asia/Tokyo"}
+    :{month:"numeric",day:"numeric",timeZone:"Asia/Tokyo"};
+  return new Intl.DateTimeFormat("ja-JP",opts).format(new Date(t));
+}
+function lineChart(points,series,campaigns=[]){
+  if(!points?.length)return '<div class="muted">時系列データなし</div>';
+  const w=900,h=250,l=42,r=18,t=18,b=34,iw=w-l-r,ih=h-t-b;
+  const start=new Date(window.__vaWindowStart||points[0].bucket).getTime();
+  const end=new Date(window.__vaWindowEnd||points[points.length-1].bucket).getTime();
+  const values=points.flatMap(p=>series.map(s=>Number(p[s.key]||0)));
+  const max=Math.max(1,...values);
+  const xFor=(bucket,index)=>{
+    const bt=bucketTime(bucket);
+    if(Number.isFinite(bt)&&Number.isFinite(start)&&Number.isFinite(end)&&end>start){
+      return l+Math.max(0,Math.min(1,(bt-start)/(end-start)))*iw;
+    }
+    return l+(points.length<=1?0:index/(points.length-1))*iw;
+  };
+  const yFor=v=>t+ih-(Number(v||0)/max)*ih;
+  const grid=[0,.25,.5,.75,1].map(q=>{
+    const y=t+ih-q*ih;
+    return '<line x1="'+l+'" y1="'+y+'" x2="'+(w-r)+'" y2="'+y+'" stroke="#ded7cc" stroke-width="1"/><text x="'+(l-8)+'" y="'+(y+4)+'" text-anchor="end" font-size="9" fill="#706d67">'+Math.round(max*q)+'</text>';
+  }).join("");
+  const lines=series.map(s=>{
+    const pts=points.map((p,i)=>xFor(p.bucket,i)+','+yFor(p[s.key])).join(" ");
+    return '<polyline fill="none" stroke="'+s.color+'" stroke-width="2.2" points="'+pts+'"/>';
+  }).join("");
+  const tickIdx=[0,Math.floor((points.length-1)/4),Math.floor((points.length-1)/2),Math.floor((points.length-1)*3/4),points.length-1].filter((v,i,a)=>v>=0&&a.indexOf(v)===i);
+  const ticks=tickIdx.map(i=>'<text x="'+xFor(points[i].bucket,i)+'" y="'+(h-8)+'" text-anchor="middle" font-size="9" fill="#706d67">'+esc(bucketLabel(points[i].bucket))+'</text>').join("");
+  const markers=campaigns.map(item=>{
+    if(!item.postedAt)return "";
+    const mt=new Date(item.postedAt).getTime();
+    if(!Number.isFinite(mt)||!Number.isFinite(start)||!Number.isFinite(end)||end<=start||mt<start||mt>end)return "";
+    const x=l+((mt-start)/(end-start))*iw;
+    return '<line x1="'+x+'" y1="'+t+'" x2="'+x+'" y2="'+(t+ih)+'" stroke="#8d2c23" stroke-width="1" stroke-dasharray="4 4"/><text x="'+Math.min(w-r-4,x+4)+'" y="'+(t+11)+'" font-size="9" fill="#8d2c23">'+esc(item.label||"X POST")+'</text>';
+  }).join("");
+  const legend='<div class="chart-legend">'+series.map(s=>'<span><i class="legend-dot" style="background:'+s.color+'"></i>'+esc(s.label)+'</span>').join("")+'</div>';
+  return '<div class="chart-wrap"><svg viewBox="0 0 '+w+' '+h+'" width="100%" role="img">'+grid+lines+markers+ticks+'</svg></div>'+legend;
+}
+function entryBars(pages){
+  const items=[...pages].sort((a,b)=>(b.visits-a.visits)||(b.pageviews-a.pageviews)).slice(0,8);
+  const max=Math.max(1,...items.map(x=>x.visits));
+  return items.map(x=>'<div class="entry-bar"><span><strong>'+esc(x.name)+'</strong><span class="path">'+esc(x.path)+'</span></span><div class="entry-track"><div class="entry-fill" style="width:'+((x.visits/max)*100)+'%"></div></div><strong>'+n(x.visits)+'</strong></div>').join("");
+}
+function channelColor(name){
+  if(name==="X")return COLORS.X;
+  if(name==="Organic Search")return COLORS.Search;
+  if(name==="Direct / Unknown")return COLORS.Direct;
+  if(name==="Instagram"||name==="Facebook"||name==="Other SNS")return COLORS.Meta;
+  if(name==="AI Assistant")return COLORS.AI;
+  return COLORS.Other;
+}
+function trafficMix(channels){
+  const items=channels.filter(x=>x.name!=="Internal Navigation"&&x.visits>0);
+  const total=items.reduce((s,x)=>s+x.visits,0);
+  if(!total)return '<div class="muted">流入データなし</div>';
+  let cursor=0;
+  const stops=items.map(x=>{
+    const start=cursor;
+    cursor+=x.visits/total*100;
+    return channelColor(x.name)+' '+start.toFixed(2)+'% '+cursor.toFixed(2)+'%';
+  });
+  const list=items.map(x=>'<div class="mix-row"><i class="legend-dot" style="background:'+channelColor(x.name)+'"></i><span>'+esc(x.name)+'</span><strong>'+n(x.visits)+' · '+((x.visits/total)*100).toFixed(0)+'%</strong></div>').join("");
+  return '<div class="donut-grid"><div class="donut" style="background:conic-gradient('+stops.join(",")+')"><div class="donut-center">'+n(total)+'</div></div><div class="mix-list">'+list+'</div></div>';
+}
+function flowVisual(items){
+  const list=items.slice(0,10);
+  const max=Math.max(1,...list.map(x=>x.pageviews));
+  if(!list.length)return '<div class="muted">内部遷移データなし</div>';
+  return '<div class="flow-viz">'+list.map(x=>'<div class="flow-viz-row"><strong>'+esc(x.sourceName)+'</strong><span>→</span><strong>'+esc(x.destinationName)+'</strong><div class="flow-track"><div class="flow-fill" style="width:'+((x.pageviews/max)*100)+'%"></div></div><span class="flow-count">'+n(x.pageviews)+'</span></div>').join("")+'</div>';
+}
+const CAMPAIGN_KEY="vaCampaigns";
+function getCampaigns(){
+  try{
+    const parsed=JSON.parse(localStorage.getItem(CAMPAIGN_KEY)||"[]");
+    return Array.isArray(parsed)?parsed:[];
+  }catch{return[]}
+}
+function saveCampaigns(items){
+  localStorage.setItem(CAMPAIGN_KEY,JSON.stringify(items));
+}
+function normalizeTargetPath(value){
+  let out=String(value||"/").trim();
+  if(!out.startsWith("/"))out="/"+out;
+  if(out!=="/"&&!out.endsWith("/"))out+="/";
+  return out;
+}
+function campaignPanel(entryFlows){
+  const campaigns=getCampaigns().sort((a,b)=>String(b.postedAt||"").localeCompare(String(a.postedAt||"")));
+  const active=campaigns[0]||null;
+  if(!active){
+    return '<div class="muted">投稿を登録すると、折れ線に投稿時刻を重ねてファネル比較できる。</div>'+campaignFormHtml();
+  }
+  const xEntries=entryFlows.filter(x=>x.channel==="X").reduce((s,x)=>s+x.visits,0);
+  const targetEntries=entryFlows.filter(x=>x.channel==="X"&&x.destinationPath===active.targetPath).reduce((s,x)=>s+x.visits,0);
+  const steps=[
+    ["IMPRESSIONS",active.impressions],
+    ["LINK CLICKS",active.linkClicks],
+    ["X ENTRIES*",xEntries],
+    ["TARGET ENTRIES*",targetEntries],
+    ["NEXT PAGE*","—"]
+  ];
+  const funnel='<div class="campaign-grid">'+steps.map(([label,val])=>'<div class="funnel-step"><span class="section-title">'+label+'</span><strong>'+esc(val)+'</strong></div>').join("")+'</div>'+
+    '<div class="path">* Cloudflare側は選択期間の比較値。投稿単位の完全な帰属ではない。</div>';
+  const list='<div class="campaign-list">'+campaigns.slice(0,5).map((x,i)=>'<div class="campaign-item"><span><strong>'+esc(x.label)+'</strong> · '+esc(x.postedAt||"時刻未登録")+' · '+esc(x.targetPath||"/")+'</span><button type="button" data-campaign-delete="'+i+'">削除</button></div>').join("")+'</div>';
+  return funnel+campaignFormHtml()+list;
+}
+function campaignFormHtml(){
+  return '<form class="campaign-form" id="campaignForm">'+
+    '<input name="label" placeholder="投稿名" required>'+
+    '<input name="postedAt" type="datetime-local" required>'+
+    '<input name="targetPath" placeholder="/cyma-time-o-vox/" required>'+
+    '<input name="impressions" type="number" min="0" placeholder="imp">'+
+    '<input name="engagements" type="number" min="0" placeholder="eng">'+
+    '<input name="details" type="number" min="0" placeholder="detail">'+
+    '<input name="linkClicks" type="number" min="0" placeholder="click">'+
+    '<button type="submit">ADD</button></form>';
+}
+function bindCampaignUi(){
+  const form=document.getElementById("campaignForm");
+  if(form)form.addEventListener("submit",event=>{
+    event.preventDefault();
+    const fd=new FormData(form);
+    const items=getCampaigns();
+    items.push({
+      label:String(fd.get("label")||"X POST"),
+      postedAt:String(fd.get("postedAt")||""),
+      targetPath:normalizeTargetPath(fd.get("targetPath")),
+      impressions:Number(fd.get("impressions")||0),
+      engagements:Number(fd.get("engagements")||0),
+      details:Number(fd.get("details")||0),
+      linkClicks:Number(fd.get("linkClicks")||0)
+    });
+    saveCampaigns(items);
+    render(window.__vaLastData);
+  });
+  document.querySelectorAll("[data-campaign-delete]").forEach(btn=>btn.addEventListener("click",()=>{
+    const items=getCampaigns().sort((a,b)=>String(b.postedAt||"").localeCompare(String(a.postedAt||"")));
+    items.splice(Number(btn.dataset.campaignDelete),1);
+    saveCampaigns(items);
+    render(window.__vaLastData);
+  }));
+}
 function render(data){
+  window.__vaLastData=data;
+  window.__vaWindowStart=data.windowStart;
+  window.__vaWindowEnd=data.windowEnd;
   const c=data.current,p=data.previous;
   document.getElementById("period").textContent=data.windowLabel || windowKey;
   document.getElementById("updated").textContent='更新 '+new Date(data.generatedAt).toLocaleString("ja-JP");
@@ -661,6 +817,11 @@ function render(data){
   const searchPrev=p.channels.find(x=>x.name==="Organic Search")?.visits||0;
   const entryFlows=c.flows.filter(x=>x.visits>0 && x.channel!=="Internal Navigation");
   const internalFlows=c.flows.filter(x=>x.channel==="Internal Navigation");
+  const campaigns=getCampaigns();
+  const trend=(data.trend||[]).map(x=>({...x,meta:(x.instagram||0)+(x.facebook||0)+(x.otherSns||0)}));
+  const pagesPerVisit=c.visits?c.pageviews/c.visits:0;
+  const watchEntry=c.pages.filter(x=>x.name==="Pierce Duofon"||x.name==="Cyma Time-O-Vox").reduce((s,x)=>s+x.visits,0);
+  const watchShare=c.visits?(watchEntry/c.visits)*100:0;
   const unmapped=c.pages.filter(x=>!x.mapped);
   const audit=unmapped.length
     ? '<section class="card audit"><strong>MAPPING AUDIT</strong> · 未登録Path '+unmapped.map(x=>esc(x.path)).join(", ")+'</section>'
@@ -674,12 +835,23 @@ function render(data){
     '<span class="path">'+esc(x.destinationPath)+'</span></td>'+
     '<td class="num">'+n(x.pageviews)+'</td><td class="num">'+n(x.visits)+'</td></tr>'
   ).join("");
+  const lowSample=c.visits<30?'<section class="card low-sample"><strong>LOW SAMPLE</strong><span>'+n(c.visits)+' visits · まだ傾向断定は保留</span></section>':'';
+  const trafficSeries=[{key:"pageviews",label:"Page views",color:COLORS.pageviews},{key:"visits",label:"Visits",color:COLORS.visits}];
+  const acquisitionSeries=[{key:"x",label:"X",color:COLORS.X},{key:"search",label:"Search",color:COLORS.Search},{key:"direct",label:"Direct",color:COLORS.Direct},{key:"meta",label:"Meta",color:COLORS.Meta}];
   document.getElementById("content").innerHTML=
-  '<div class="grid">'+audit+
-    '<section class="card kpi"><div class="label">PAGE VIEWS</div><div class="value">'+n(c.pageviews)+'</div>'+delta(c.pageviews,p.pageviews)+'</section>'+
+  '<div class="grid">'+audit+lowSample+
     '<section class="card kpi"><div class="label">VISITS</div><div class="value">'+n(c.visits)+'</div>'+delta(c.visits,p.visits)+'</section>'+
+    '<section class="card kpi"><div class="label">PAGE VIEWS</div><div class="value">'+n(c.pageviews)+'</div>'+delta(c.pageviews,p.pageviews)+'</section>'+
     '<section class="card kpi"><div class="label">X VISITS</div><div class="value">'+n(xNow)+'</div>'+delta(xNow,xPrev)+'</section>'+
     '<section class="card kpi"><div class="label">ORGANIC SEARCH</div><div class="value">'+n(searchNow)+'</div>'+delta(searchNow,searchPrev)+'</section>'+
+    '<section class="card kpi"><div class="label">PAGES / VISIT</div><div class="value">'+pagesPerVisit.toFixed(2)+'</div><div class="delta">回遊の粗い指標</div></section>'+
+    '<section class="card kpi"><div class="label">WATCH ENTRY SHARE</div><div class="value">'+watchShare.toFixed(0)+'%</div><div class="delta">'+n(watchEntry)+' watch entries</div></section>'+
+    '<section class="card chart-card"><div class="section-head"><div class="section-title">TRAFFIC TREND</div><span>'+esc(data.trendBucket||"no bucket")+'</span></div>'+lineChart(trend,trafficSeries,campaigns)+(data.trendWarning?'<div class="path">'+esc(data.trendWarning)+'</div>':'')+'</section>'+
+    '<section class="card chart-card"><div class="section-head"><div class="section-title">ACQUISITION TREND</div><span>X / Search / Direct / Meta</span></div>'+lineChart(trend,acquisitionSeries,campaigns)+'</section>'+
+    '<section class="card chart-half"><div class="section-head"><div class="section-title">ENTRY PAGES</div><span>入口回数</span></div>'+entryBars(c.pages)+'</section>'+
+    '<section class="card chart-half"><div class="section-head"><div class="section-title">TRAFFIC MIX</div><span>Visits構成</span></div>'+trafficMix(c.channels)+'</section>'+
+    '<section class="card flow"><div class="section-head"><div class="section-title">SITE FLOW</div><span>内部遷移</span></div>'+flowVisual(internalFlows)+'</section>'+
+    '<section class="card campaign"><div class="section-head"><div class="section-title">CAMPAIGN FUNNEL</div><span>投稿ログはこのブラウザだけに保存</span></div>'+campaignPanel(entryFlows)+'</section>'+
     '<section class="card pages"><div class="section-head"><div class="section-title">PAGES</div><span>'+n(c.pages.length)+' paths</span></div><table><thead><tr><th>PAGE</th><th class="num">PV</th><th class="num">ENTRY VISITS</th></tr></thead><tbody>'+
       c.pages.slice(0,20).map(x=>'<tr><td><strong>'+esc(x.name)+'</strong>'+(!x.mapped?'<span class="flag">UNMAPPED</span>':'')+'<span class="path">'+esc(x.path)+'</span></td><td class="num">'+n(x.pageviews)+'</td><td class="num">'+n(x.visits)+'</td></tr>').join("")+
     '</tbody></table></section>'+
@@ -692,6 +864,7 @@ function render(data){
     '<section class="card half"><div class="section-head"><div class="section-title">COUNTRIES</div></div>'+rows(c.countries,10)+'</section>'+
     '<section class="card half"><div class="section-head"><div class="section-title">DEVICES</div></div>'+rows(c.devices,10)+'</section>'+
   '</div>';
+  bindCampaignUi();
 }
 async function load(){
   document.getElementById("content").innerHTML='<div class="card">Loading Cloudflare Web Analytics…</div>';
