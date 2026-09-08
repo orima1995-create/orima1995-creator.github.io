@@ -1,4 +1,5 @@
 ---
+import SmartWatchFit from './SmartWatchFit.astro';
 const { items = [], title = '' } = Astro.props;
 const base = import.meta.env.BASE_URL;
 const resolveImage = (path: string) => /^https?:\/\//.test(path)
@@ -30,6 +31,9 @@ const resolveImage = (path: string) => /^https?:\/\//.test(path)
                 alt={alt}
                 loading="lazy"
                 decoding="async"
+                data-smart-watch-fit
+                data-smart-fit-target="0.9"
+                data-smart-fit-max="1.45"
               />
               <span class="specimen-gallery-zoom" aria-hidden="true">＋</span>
             </span>
@@ -48,6 +52,7 @@ const resolveImage = (path: string) => /^https?:\/\//.test(path)
     <img src="" alt="" />
   </div>
 </section>
+<SmartWatchFit />
 
 <script>
   document.querySelectorAll('.specimen-gallery').forEach((gallery) => {
@@ -146,7 +151,7 @@ const resolveImage = (path: string) => /^https?:\/\//.test(path)
     display:block;
     width:100%;
     height:100%;
-    object-fit:cover;
+    object-fit:contain;
     object-position:center;
   }
   .specimen-gallery-zoom{
