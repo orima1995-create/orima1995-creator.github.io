@@ -286,3 +286,30 @@ Campaign FunnelのCloudflare側値は選択期間全体の比較値であり、S
 投稿時刻は折れ線グラフのマーカーとして利用する。
 
 Visitsが30未満の選択期間ではLOW SAMPLEを表示し、数件差を傾向として断定しない。
+
+
+## Evidence-gated実装ループ
+
+SEO / GEO / SNS / Analyticsの追加機能は、毎回次の順で進める。
+
+1. 公式ドキュメントを優先して最新仕様をWeb確認する
+2. 「何を知りたいか」を問いに分解する
+3. 取得できる事実 / 推測 / 取得不能を分ける
+4. そのデータで意思決定が変わるかを確認する
+5. 最小実装する
+6. 実データで表示・定義・欠損を監査する
+7. 問題がなければ次の層へ進む
+
+取得できるからという理由だけでKPIやグラフを追加しない。
+公式APIやエクスポート経路が確認できない指標は、自動取得済みのように見せない。
+
+## Search Console / GEOの現在方針
+
+通常SEOはSearch Console Search Analytics APIで自動化候補とする。
+Query / Page / Date / Hour、Clicks / Impressions / CTR / Average Positionを対象とする。
+
+Google検索の生成AIパフォーマンスは、Search Consoleの専用レポートでAI Overviews / AI ModeのImpressions、Page、Country、Device、時系列を確認できる。
+
+ただし専用生成AIレポートの自動取得APIは、実装時点で公式ドキュメント上の専用エンドポイントを確認できていない。
+Search Analytics API接続後に searchAppearance を動的列挙し、生成AIを分離できるか実データで検証する。
+分離できなければ、専用レポートのExportを手動インポートする。
