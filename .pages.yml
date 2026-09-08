@@ -239,9 +239,11 @@ content:
               - { name: sort, label: 並び順, type: number, readonly: true }
               - { name: meta, label: 年代 / ブランド表記, type: string }
               - { name: name, label: 内部名 / OWNER表示名, type: string }
+              - { name: displayMeta, label: MILESTONE表示メタ, type: string }
               - { name: displayTopic, label: MILESTONE表示カテゴリ, type: string }
               - { name: displayName, label: MILESTONE表示名, type: string }
               - { name: displaySummary, label: MILESTONE表示要約, type: text }
+              - { name: displayNote, label: MILESTONE補足表示, type: text }
               - name: sourceRefs
                 label: MILESTONE出典番号
                 type: string
@@ -277,9 +279,11 @@ content:
               - { name: sort, label: 並び順, type: number, readonly: true }
               - { name: meta, label: 年代 / ブランド表記, type: string }
               - { name: name, label: 内部名 / OWNER表示名, type: string }
+              - { name: displayMeta, label: MILESTONE表示メタ, type: string }
               - { name: displayTopic, label: MILESTONE表示カテゴリ, type: string }
               - { name: displayName, label: MILESTONE表示名, type: string }
               - { name: displaySummary, label: MILESTONE表示要約, type: text }
+              - { name: displayNote, label: MILESTONE補足表示, type: text }
               - name: sourceRefs
                 label: MILESTONE出典番号
                 type: string
@@ -315,9 +319,11 @@ content:
               - { name: sort, label: 並び順, type: number, readonly: true }
               - { name: meta, label: 年代 / ブランド表記, type: string }
               - { name: name, label: 内部名 / OWNER表示名, type: string }
+              - { name: displayMeta, label: MILESTONE表示メタ, type: string }
               - { name: displayTopic, label: MILESTONE表示カテゴリ, type: string }
               - { name: displayName, label: MILESTONE表示名, type: string }
               - { name: displaySummary, label: MILESTONE表示要約, type: text }
+              - { name: displayNote, label: MILESTONE補足表示, type: text }
               - name: sourceRefs
                 label: MILESTONE出典番号
                 type: string
@@ -353,9 +359,11 @@ content:
               - { name: sort, label: 並び順, type: number, readonly: true }
               - { name: meta, label: 年代 / ブランド表記, type: string }
               - { name: name, label: 内部名 / OWNER表示名, type: string }
+              - { name: displayMeta, label: MILESTONE表示メタ, type: string }
               - { name: displayTopic, label: MILESTONE表示カテゴリ, type: string }
               - { name: displayName, label: MILESTONE表示名, type: string }
               - { name: displaySummary, label: MILESTONE表示要約, type: text }
+              - { name: displayNote, label: MILESTONE補足表示, type: text }
               - name: sourceRefs
                 label: MILESTONE出典番号
                 type: string
@@ -394,9 +402,11 @@ content:
               - { name: sort, label: 並び順, type: number, readonly: true }
               - { name: meta, label: 年代 / ブランド表記, type: string }
               - { name: name, label: 内部名 / OWNER表示名, type: string }
+              - { name: displayMeta, label: MILESTONE表示メタ, type: string }
               - { name: displayTopic, label: MILESTONE表示カテゴリ, type: string }
               - { name: displayName, label: MILESTONE表示名, type: string }
               - { name: displaySummary, label: MILESTONE表示要約, type: text }
+              - { name: displayNote, label: MILESTONE補足表示, type: text }
               - name: sourceRefs
                 label: MILESTONE出典番号
                 type: string
