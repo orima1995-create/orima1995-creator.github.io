@@ -99,3 +99,36 @@ Worker URLが確定したら、COUNCIL LABのENGINE API URLへ一度設定する
 ## D1
 
 短い共有URLを使う場合だけ、`schema.sql` を適用し `DB` bindingを追加する。現状のハッシュ共有はD1なしでも動く。
+
+
+## Remote MCP / ChatGPT接続
+
+Workerは通常のCOUNCIL LAB APIに加えて、Streamable HTTP互換のMCPエンドポイントを公開する。
+
+- MCP endpoint: `https://<worker-host>/mcp`
+- Tool: `run_council`
+- mode: `general | watch | business | roast`
+- engine: `quick | project | deep-web-10`
+
+`run_council` は、フロントのデモ文を返すのではなく、Worker内部の実Council実行系を直接呼ぶ。
+
+- 各住民が独立に初手を出す
+- 全レスを読んで返信先を自分で選ぶ
+- 維持 / 修正 / 撤回を許可
+- 複数波の継続議論
+- 最後に議長が根拠と反証を比較して裁定
+
+ChatGPT側でカスタムMCPアプリを作成できる環境では、この `/mcp` URLを接続先として登録し、Tool Scanで `run_council` を確認する。
+
+Tool descriptionには「スレ民」「Council」「自律思考バトル」「2ch/5ch民で焼く」「DEEP WEB ×10」が明記されているため、接続後はこれらの呼び方から同じCouncilを使う前提。
+
+### デプロイ前提
+
+GitHub Actionsの `Deploy Council Worker` は、次のrepository secretsが揃った時だけCloudflareへデプロイする。
+
+- `OPENAI_API_KEY`
+- `COUNCIL_VECTOR_STORE_ID`
+- `CLOUDFLARE_API_TOKEN`
+- `CLOUDFLARE_ACCOUNT_ID`
+
+不足時は赤失敗にせず、warningを出してdeployをskipする。
