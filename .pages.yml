@@ -166,6 +166,7 @@ content:
           - { name: catch, label: 一覧専用キャッチ, type: string }
           - { name: image, label: HISTORY・一覧サムネ画像, type: image, required: true }
           - { name: href, label: OWNER'S NOTEリンク, type: string }
+          - { name: historyHref, label: HISTORY戻り先, type: string, required: true }
 
   - name: history
     label: HISTORY 本文・MILESTONES
@@ -241,6 +242,10 @@ content:
               - { name: displayTopic, label: MILESTONE表示カテゴリ, type: string }
               - { name: displayName, label: MILESTONE表示名, type: string }
               - { name: displaySummary, label: MILESTONE表示要約, type: text }
+              - name: sourceRefs
+                label: MILESTONE出典番号
+                type: string
+                list: true
               - { name: hook, label: 内部フック（現行非表示）, type: text, readonly: true }
               - { name: cardSummary, label: 内部要約（現行非表示）, type: text, readonly: true }
               - { name: cardStatus, label: 内部ステータス（現行非表示）, type: string, readonly: true }
@@ -275,6 +280,10 @@ content:
               - { name: displayTopic, label: MILESTONE表示カテゴリ, type: string }
               - { name: displayName, label: MILESTONE表示名, type: string }
               - { name: displaySummary, label: MILESTONE表示要約, type: text }
+              - name: sourceRefs
+                label: MILESTONE出典番号
+                type: string
+                list: true
               - { name: hook, label: 内部フック（現行非表示）, type: text, readonly: true }
               - { name: cardSummary, label: 内部要約（現行非表示）, type: text, readonly: true }
               - { name: cardStatus, label: 内部ステータス（現行非表示）, type: string, readonly: true }
@@ -309,6 +318,10 @@ content:
               - { name: displayTopic, label: MILESTONE表示カテゴリ, type: string }
               - { name: displayName, label: MILESTONE表示名, type: string }
               - { name: displaySummary, label: MILESTONE表示要約, type: text }
+              - name: sourceRefs
+                label: MILESTONE出典番号
+                type: string
+                list: true
               - { name: hook, label: 内部フック（現行非表示）, type: text, readonly: true }
               - { name: cardSummary, label: 内部要約（現行非表示）, type: text, readonly: true }
               - { name: cardStatus, label: 内部ステータス（現行非表示）, type: string, readonly: true }
@@ -343,6 +356,10 @@ content:
               - { name: displayTopic, label: MILESTONE表示カテゴリ, type: string }
               - { name: displayName, label: MILESTONE表示名, type: string }
               - { name: displaySummary, label: MILESTONE表示要約, type: text }
+              - name: sourceRefs
+                label: MILESTONE出典番号
+                type: string
+                list: true
               - { name: hook, label: 内部フック（現行非表示）, type: text, readonly: true }
               - { name: cardSummary, label: 内部要約（現行非表示）, type: text, readonly: true }
               - { name: cardStatus, label: 内部ステータス（現行非表示）, type: string, readonly: true }
@@ -380,6 +397,10 @@ content:
               - { name: displayTopic, label: MILESTONE表示カテゴリ, type: string }
               - { name: displayName, label: MILESTONE表示名, type: string }
               - { name: displaySummary, label: MILESTONE表示要約, type: text }
+              - name: sourceRefs
+                label: MILESTONE出典番号
+                type: string
+                list: true
               - { name: hook, label: 内部フック（現行非表示）, type: text, readonly: true }
               - { name: cardSummary, label: 内部要約（現行非表示）, type: text, readonly: true }
               - { name: cardStatus, label: 内部ステータス（現行非表示）, type: string, readonly: true }
@@ -404,5 +425,13 @@ content:
           - { name: summary, label: 見出し, type: string }
           - name: items
             label: 出典
-            type: text
-            list: true
+            type: object
+            list:
+              min: 1
+              max: 50
+              collapsible:
+                collapsed: true
+                summary: "{id} / {text}"
+            fields:
+              - { name: id, label: 出典番号, type: string, required: true }
+              - { name: text, label: 出典本文, type: text, required: true }
