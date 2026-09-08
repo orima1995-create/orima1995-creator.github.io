@@ -116,6 +116,22 @@ jobs:
             echo "legacy runtime navigation remains in generated output"
             exit 1
           fi
+      - name: Install browser for layout check
+        run: |
+          npm install --no-save --package-lock=false playwright@1.55.0
+          npx playwright install --with-deps chromium
+      - name: Verify rendered mobile layouts
+        run: |
+          npm run preview -- --host 127.0.0.1 --port 4321 > /tmp/vintage-alarm-preview.log 2>&1 &
+          preview_pid=$!
+          trap 'kill "$preview_pid" 2>/dev/null || true' EXIT
+          for attempt in {1..20}; do
+            if curl -fsS http://127.0.0.1:4321/orima1995-creator.github.io/ >/dev/null; then
+              break
+            fi
+            sleep 1
+          done
+          node scripts/check-layout.mjs
       - name: Configure Pages
         uses: actions/configure-pages@v5
       - name: Upload site
