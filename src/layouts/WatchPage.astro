@@ -89,8 +89,8 @@ const schema = {
         <WatchSpec spec={watch.spec} />
       </div>
       {watch.video && <AlarmVideo video={watch.video} title={`${watch.brand} ${watch.model}`} />}
-      <DeepDive items={watch.deepDive} />
       {watch.specimenGallery?.length > 0 && <SpecimenGallery items={watch.specimenGallery} title={`${watch.brand} ${watch.model}`} />}
+      <DeepDive items={watch.deepDive} />
       <Sources sources={watch.sources} meta={watch.sourceMeta} />
       {nextOwnerNote && (
         <OwnerNoteEndNav
