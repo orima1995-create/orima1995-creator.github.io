@@ -19,6 +19,28 @@ const FIXED_PROJECT_SOURCES:SourceInput[]=[
   {id:'alarm-wristwatch',name:'The Alarm Wristwatch',kind:'Project PDF'},
   {id:'typec-rules',name:'TypeC project rules',kind:'Project instructions'}
 ];
+
+const DEFAULT_RESIDENTS:Resident[]=[
+  {id:'source',name:'史料警察',role:'一次資料・文献・推論を分離',bias:'断定に厳しすぎる'},
+  {id:'mechanic',name:'機構オタク',role:'構造・操作・故障から見る',bias:'機構を過大評価しがち'},
+  {id:'market',name:'市場屋',role:'価格・流動性・再取得難度',bias:'価値を値札へ寄せがち'},
+  {id:'historian',name:'時計史厨',role:'前後関係・同時代比較',bias:'歴史的位置づけを重く見すぎる'},
+  {id:'collector',name:'沼の住人',role:'所有・再取得・実機経験',bias:'欲しい気持ちに引っ張られる'},
+  {id:'editor',name:'編集者',role:'伝わる面白さと断定リスク',bias:'物語性へ寄せがち'},
+  {id:'devil',name:'前提破壊班',role:'問い・前提・反証条件を疑う',bias:'否定から入りがち'},
+  {id:'cfo',name:'冷徹なCFO',role:'費用対効果・機会費用',bias:'浪漫を切り捨てがち'},
+  {id:'novice',name:'初見の名無しさん',role:'初見で理解できるか',bias:'専門背景が薄い'},
+  {id:'researcher',name:'検索沼研究員',role:'検索語を広げ反証も拾う',bias:'調査量を増やしすぎる'},
+  {id:'minimal',name:'ミニマリスト',role:'そもそも必要か',bias:'削りすぎる'},
+  {id:'wild',name:'野良の変人',role:'異分野から接続する',bias:'再現性が低い'},
+  {id:'aa',name:'AA職人',role:'空気をAAで切る',bias:'議論を進めない'}
+];
+function pickResidents(mode:CouncilRequest['mode'],engine:CouncilRequest['engine']){
+  const core=mode==='watch'?['source','mechanic','historian','market','editor','devil']:mode==='business'?['cfo','editor','devil','novice','minimal']:mode==='roast'?['devil','editor','novice','wild','minimal']:['editor','devil','novice','wild','minimal'];
+  const extras=DEFAULT_RESIDENTS.map(r=>r.id).filter(id=>!core.includes(id)&&id!=='aa');
+  const wanted=engine==='deep-web-10'?10:engine==='project'?8:6;
+  return [...core,...extras].slice(0,wanted).map(id=>DEFAULT_RESIDENTS.find(r=>r.id===id)!).filter(Boolean);
+}
 const PROJECT_RULES=`このMVPはTypeCプロジェクト専用。毎回次を固定ルールとして扱う。
 - 目の前の資料・Project資料・Web・一般論の順で根拠を扱う。
 - 確認済み、資料記載、Web確認、専門家意見、推論、未確認を混ぜない。
