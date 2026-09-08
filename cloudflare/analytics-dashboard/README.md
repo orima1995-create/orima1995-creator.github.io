@@ -40,12 +40,6 @@ Cloudflare公式ドキュメントに従い、カスタムAPI Tokenへ以下を�
 - CF_ACCOUNT_ID
 - DASHBOARD_PASSWORD
 
-任意:
-- CF_SITE_TAG
-- DASHBOARD_USER（未設定時はadmin）
-
-CF_SITE_TAGを省略した場合、直近30日のRUMデータからREQUEST_HOSTに一致するsiteTagを自動検出する。
-
 CLIを使う場合:
 
 ```bash
