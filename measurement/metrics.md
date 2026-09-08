@@ -47,7 +47,10 @@ Cloudflare Web Analytics / RUMをGraphQL APIから読み、VINTAGE ALARM用の�
 - URL → ページ名
 - ENTRY SOURCE → PAGE
 - SITE FLOW
-- X / SNS
+- X
+- Instagram
+- Facebook
+- Other SNS
 - Organic Search
 - Direct / Unknown
 - AI Assistant
@@ -109,7 +112,10 @@ PC / スマホなどブラウザごとに設定する。
 
 最低限、次を分ける。
 
-- X / SNS
+- X
+- Instagram
+- Facebook
+- Other SNS
 - Organic Search
 - Direct / Unknown
 - Other Referral
@@ -242,3 +248,20 @@ VINTAGE ALARM ANALYTICSの目的はアクセスカウンターではなく、
 6. 次ページへ回遊した
 
 数字が増えた場合も、SNS投稿、外部言及、季節性、管理者アクセス、計測変更など別要因を確認する。
+
+
+## SNSリファラー監査
+
+X / Instagram / Facebookを同一カテゴリにまとめない。
+
+raw `refererHost` が以下を含む場合のみ分類する。
+
+- X: `x.com` / `twitter.com` / `t.co`
+- Instagram: `instagram.com`
+- Facebook: `facebook.com`
+- Other SNS: Threads / WhatsApp / LINE / LinkedIn等
+
+Facebook / InstagramのRefererがあることだけで「公開投稿から人間が来た」と断定しない。
+Web Analyticsは既知Botを除外する設定を使うが、アプリ内プリフェッチ・未識別自動アクセス・Link Shim・DM等の経路は別途raw host / pathで確認する。
+
+特定SNS投稿の成果判定は、SNS側のLink clicksと同時間帯のENTRY SOURCE → PAGEを照合して行う。
