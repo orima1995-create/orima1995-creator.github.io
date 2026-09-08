@@ -32,7 +32,7 @@ try {
         const scrollWidth = Math.max(root.scrollWidth, body?.scrollWidth || 0);
         const clientWidth = root.clientWidth;
         const brokenImages = [...document.images]
-          .filter((img) => img.complete && img.naturalWidth === 0)
+          .filter((img) => (img.getAttribute('src') || '').trim() && img.complete && img.naturalWidth === 0)
           .map((img) => img.currentSrc || img.src);
 
         return {
