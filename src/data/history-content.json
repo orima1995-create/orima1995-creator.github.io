@@ -60,7 +60,11 @@
         "hook": "最初の量産アラーム腕時計。",
         "cardSummary": "約13リーニュ、1香箱。\nハンマーが底部のベルを叩く。",
         "cardStatus": "MILESTONE",
-        "featured": true
+        "featured": true,
+        "sourceRefs": [
+          "1",
+          "2"
+        ]
       }
     ]
   },
@@ -83,7 +87,11 @@
         "hook": "THE PRESIDENTS' WATCH",
         "cardSummary": "二重底で音量と防水性を両立。米大統領たちとの縁でも知られる。",
         "cardStatus": "MILESTONE",
-        "featured": true
+        "featured": true,
+        "sourceRefs": [
+          "1",
+          "2"
+        ]
       },
       {
         "id": "basis-bfg90",
@@ -117,7 +125,11 @@
         "hook": "最も多く使われたアラーム・キャリバー。",
         "cardSummary": "1954–70年に約78万個を生産。派生系まで含めると約140万個。",
         "cardStatus": "MILESTONE",
-        "featured": true
+        "featured": true,
+        "sourceRefs": [
+          "1",
+          "2"
+        ]
       },
       {
         "id": "memovox-automatic",
@@ -131,7 +143,12 @@
         "hook": "世界初の自動巻きアラーム腕時計。",
         "cardSummary": "時計側を自動巻き化。アラーム用ゼンマイは手巻き。",
         "cardStatus": "MILESTONE",
-        "featured": true
+        "featured": true,
+        "sourceRefs": [
+          "1",
+          "2",
+          "3"
+        ]
       },
       {
         "id": "vulcain-golden-voice",
@@ -145,7 +162,12 @@
         "hook": "世界初の女性用アラーム腕時計。",
         "cardSummary": "19.7mmの2香箱ムーブメントと金製メンブレン。",
         "cardStatus": "MILESTONE",
-        "featured": true
+        "featured": true,
+        "sourceRefs": [
+          "1",
+          "2",
+          "5"
+        ]
       },
       {
         "id": "jlc-parking",
@@ -159,7 +181,12 @@
         "hook": "駐車時間を知らせる最初のアラーム腕時計。",
         "cardSummary": "内側のディスクに駐車時間用の目盛りを加えたMemovox。",
         "cardStatus": "MILESTONE",
-        "featured": true
+        "featured": true,
+        "sourceRefs": [
+          "1",
+          "2",
+          "3"
+        ]
       },
       {
         "id": "wittnauer-10wa",
@@ -230,7 +257,11 @@
         "hook": "水中で聞こえるアラームを、ダイバーズへ。",
         "cardSummary": "減圧表を備え、Hannes Kellerの潜水でも使用された。",
         "cardStatus": "MILESTONE",
-        "featured": true
+        "featured": true,
+        "sourceRefs": [
+          "2",
+          "5"
+        ]
       },
       {
         "id": "seiko-bell-matic",
@@ -244,7 +275,12 @@
         "hook": "アラーム腕時計の自動巻きが、バンパー式から中央ローター式へ。",
         "cardSummary": "中央ローターで時計側を自動巻き。アラームは手巻き。",
         "cardStatus": "MILESTONE",
-        "featured": true
+        "featured": true,
+        "sourceRefs": [
+          "1",
+          "2",
+          "6"
+        ]
       },
       {
         "id": "omega-memomatic",
@@ -258,7 +294,11 @@
         "hook": "アラームの動力まで自動巻き。",
         "cardSummary": "1香箱で時刻とアラームを駆動し、分単位でアラーム時刻を設定できる。",
         "cardStatus": "MILESTONE",
-        "featured": true
+        "featured": true,
+        "sourceRefs": [
+          "1",
+          "2"
+        ]
       }
     ]
   },
@@ -275,7 +315,7 @@
         "id": "as5007-5008",
         "group": "milestone",
         "sort": 115,
-        "meta": "1971–73 / A. SCHILD",
+        "meta": "1973 / A. SCHILD",
         "name": "AS 5007 / 5008",
         "displayTopic": "自動巻き",
         "displayName": "AS 5007 / 5008",
@@ -283,7 +323,11 @@
         "hook": "2香箱の両方をローターで自動巻き。",
         "cardSummary": "5007 / 5008では、時計用とアラーム用の双方をローターで巻き上げる。",
         "cardStatus": "MILESTONE",
-        "featured": true
+        "featured": true,
+        "sourceRefs": [
+          "1",
+          "2"
+        ]
       },
       {
         "id": "citizen-criston-lc-alarm",
@@ -297,7 +341,10 @@
         "hook": "世界初のデジタル式アラーム機能付き腕時計。",
         "cardSummary": "水晶発振・液晶表示。圧電素子とチタン振動板でアラームを鳴らす。",
         "cardStatus": "MILESTONE",
-        "featured": true
+        "featured": true,
+        "sourceRefs": [
+          "4"
+        ]
       }
     ]
   },
@@ -309,11 +356,34 @@
   "sources": {
     "summary": "参考資料・出典",
     "items": [
-      "Michael Philip Horlbeck, The Alarm Wristwatch: The History of an Undervalued Feature, Schiffer Publishing, 2007.",
-      "Leonhard Beitl, Alarm am Arm, Historische Uhrenbücher.",
-      "Jaeger-LeCoultre, The Collectibles / Memovox heritage materials.",
-      "Citizen Watch, 歴代モデル「アラーム」(1958) / 「クリストロン LCアラーム」(1976).",
-      "前史の補助資料：The Metropolitan Museum of Art / The British Museum / Deutsches Uhrenmuseum / Musée international d'horlogerie / The Worshipful Company of Clockmakers."
+      {
+        "id": "1",
+        "text": "Michael Philip Horlbeck, The Alarm Wristwatch: The History of an Undervalued Feature, Schiffer Publishing, 2007."
+      },
+      {
+        "id": "2",
+        "text": "Leonhard Beitl, Alarm am Arm, Historische Uhrenbücher."
+      },
+      {
+        "id": "3",
+        "text": "Jaeger-LeCoultre, The Collectibles / Memovox heritage materials."
+      },
+      {
+        "id": "4",
+        "text": "Citizen Watch, 歴代モデル「アラーム」(1958) / 「クリストロン LCアラーム」(1976)."
+      },
+      {
+        "id": "5",
+        "text": "Vulcain, official historical materials for Cricket / Golden Voice / Cricket Nautical."
+      },
+      {
+        "id": "6",
+        "text": "Seiko, official historical materials for Business Bell / alarm watches; Vintage Seiko World Time, Bell-Matic image study (earliest recorded Cal.4006-7000: November 1966); Horlbeck and Beitl for specialist context."
+      },
+      {
+        "id": "7",
+        "text": "前史の補助資料：The Metropolitan Museum of Art / The British Museum / Deutsches Uhrenmuseum / Musée international d'horlogerie / The Worshipful Company of Clockmakers."
+      }
     ]
   }
 }

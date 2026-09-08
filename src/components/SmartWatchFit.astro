@@ -281,7 +281,16 @@
     }
   };
 
-  const applyFit = (img, bounds) => {
+  const parseStoredBounds = (value) => {
+    if (!value) return null;
+    try {
+      return JSON.parse(value);
+    } catch {
+      return null;
+    }
+  };
+
+  const applyFit = (img, bounds, safetyBounds = null) => {
     const box = img.parentElement;
     if (!box || !img.naturalWidth || !img.naturalHeight) return;
 
@@ -311,15 +320,35 @@
     const subjectHeight = bounds.height * imageHeight * baseScale;
 
     const target = clamp(Number(img.dataset.smartFitTarget || 0.86), 0.65, 0.94);
-    const maxZoom = clamp(Number(img.dataset.smartFitMax || 1.7), 1, 2.2);
-    const zoom = clamp(
-      Math.min(
-        (containerWidth * target) / subjectWidth,
-        (containerHeight * target) / subjectHeight
-      ),
-      1,
-      maxZoom
+    let maxZoom = clamp(Number(img.dataset.smartFitMax || 1.7), 1, 2.2);
+
+    // A dial can be detected even when the surrounding scene is too complex to
+    // establish the full watch bounds. In that case keep zoom conservative:
+    // consistent dial size is useful, but never at the cost of obvious clipping.
+    if ((img.dataset.smartFitMode || 'subject') === 'dial' && !safetyBounds) {
+      maxZoom = Math.min(maxZoom, 1.45);
+    }
+
+    let safety = null;
+    if (safetyBounds) {
+      const left = imageLeft + safetyBounds.x * imageWidth * baseScale;
+      const top = imageTop + safetyBounds.y * imageHeight * baseScale;
+      const width = safetyBounds.width * imageWidth * baseScale;
+      const height = safetyBounds.height * imageHeight * baseScale;
+      const margin = Math.max(3, Math.min(containerWidth, containerHeight) * 0.025);
+      const safeZoom = Math.min(
+        (containerWidth - margin * 2) / width,
+        (containerHeight - margin * 2) / height
+      );
+      if (Number.isFinite(safeZoom)) maxZoom = Math.min(maxZoom, Math.max(1, safeZoom));
+      safety = { left, top, width, height, margin };
+    }
+
+    const desiredZoom = Math.min(
+      (containerWidth * target) / subjectWidth,
+      (containerHeight * target) / subjectHeight
     );
+    const zoom = clamp(desiredZoom, 1, maxZoom);
 
     if (!Number.isFinite(zoom) || zoom < 1.06) {
       img.dataset.smartFitState = 'already-fits';
@@ -328,11 +357,21 @@
 
     const subjectCenterX = subjectLeft + subjectWidth / 2;
     const subjectCenterY = subjectTop + subjectHeight / 2;
-    const translateX = containerWidth / 2 - zoom * subjectCenterX;
-    const translateY = containerHeight / 2 - zoom * subjectCenterY;
+    let translateX = containerWidth / 2 - zoom * subjectCenterX;
+    let translateY = containerHeight / 2 - zoom * subjectCenterY;
+
+    if (safety) {
+      const lowerX = safety.margin - zoom * safety.left;
+      const upperX = containerWidth - safety.margin - zoom * (safety.left + safety.width);
+      const lowerY = safety.margin - zoom * safety.top;
+      const upperY = containerHeight - safety.margin - zoom * (safety.top + safety.height);
+
+      if (lowerX <= upperX) translateX = clamp(translateX, lowerX, upperX);
+      if (lowerY <= upperY) translateY = clamp(translateY, lowerY, upperY);
+    }
 
     img.style.transform = `matrix(${zoom},0,0,${zoom},${translateX},${translateY})`;
-    img.dataset.smartFitState = 'auto-framed';
+    img.dataset.smartFitState = safety ? 'auto-framed-safe' : 'auto-framed-conservative';
   };
 
   const prepare = (img) => {
@@ -341,22 +380,19 @@
     const run = () => {
       if (!img.dataset.smartFitBoundsChecked) {
         const mode = img.dataset.smartFitMode || 'subject';
-        const bounds = mode === 'dial'
-          ? (detectDialBounds(img) || detectSubjectBounds(img))
-          : detectSubjectBounds(img);
+        const subjectBounds = detectSubjectBounds(img);
+        const focusBounds = mode === 'dial'
+          ? (detectDialBounds(img) || subjectBounds)
+          : subjectBounds;
+
         img.dataset.smartFitBoundsChecked = '1';
-        if (bounds) img.dataset.smartFitBounds = JSON.stringify(bounds);
+        if (focusBounds) img.dataset.smartFitBounds = JSON.stringify(focusBounds);
+        if (subjectBounds) img.dataset.smartFitSafetyBounds = JSON.stringify(subjectBounds);
       }
 
-      let bounds = null;
-      if (img.dataset.smartFitBounds) {
-        try {
-          bounds = JSON.parse(img.dataset.smartFitBounds);
-        } catch {
-          bounds = null;
-        }
-      }
-      applyFit(img, bounds);
+      const bounds = parseStoredBounds(img.dataset.smartFitBounds);
+      const safetyBounds = parseStoredBounds(img.dataset.smartFitSafetyBounds);
+      applyFit(img, bounds, safetyBounds);
     };
 
     if (img.complete && img.naturalWidth) run();
@@ -377,15 +413,9 @@
     resizeFrame = requestAnimationFrame(() => {
       document.querySelectorAll(SELECTOR).forEach((node) => {
         if (!(node instanceof HTMLImageElement)) return;
-        let bounds = null;
-        if (node.dataset.smartFitBounds) {
-          try {
-            bounds = JSON.parse(node.dataset.smartFitBounds);
-          } catch {
-            bounds = null;
-          }
-        }
-        applyFit(node, bounds);
+        const bounds = parseStoredBounds(node.dataset.smartFitBounds);
+        const safetyBounds = parseStoredBounds(node.dataset.smartFitSafetyBounds);
+        applyFit(node, bounds, safetyBounds);
       });
     });
   }, { passive: true });

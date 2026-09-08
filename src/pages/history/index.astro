@@ -65,7 +65,7 @@ const schema={'@context':'https://schema.org','@graph':[
  <main><section class="history-cover-v13" aria-labelledby="history-title"><div class="shell">
   <div class="cover-meta"><span>HISTORY</span><span>01 / CONTENTS</span></div>
   <h1 id="history-title"><span>HISTORY</span><em>of the</em><span>ALARM</span><small>WRISTWATCH</small></h1>
-  <div class="cover-dates" aria-label="歴史の節目">{coverMilestones.map(item=><a href={item.href}><strong>{item.year}</strong><span>{item.line1}<br/>{item.line2}</span></a>)}</div>
+  <div class="cover-dates" id="milestones" aria-label="歴史の節目">{coverMilestones.map(item=><a href={item.href}><strong>{item.year}</strong><span>{item.line1}<br/>{item.line2}</span></a>)}</div>
   <div class="cover-foot"><p>{hero.kicker[0]}<br/>{hero.kicker[1]}</p><a href="#before" aria-label="歴史を読み始める">↓</a></div>
  </div></section>
  <nav class="history-era-nav" aria-label="歴史の年代ナビゲーション"><div class="shell">{eras.map(era=><a href={`#${era.id}`}>{era.label}</a>)}<a href="#current">CURRENT</a></div></nav>
@@ -80,7 +80,7 @@ const schema={'@context':'https://schema.org','@graph':[
    </summary>
    <div class:list={['shell','chapter-body-v18',{'has-owners-body-v18':eraOwners.length>0}]}>
     <div class="chapter-copy">{era.paragraphs.map(paragraph=><p>{wrapJapanese(paragraph).map(segment=><span class="ja-phrase">{segment}</span>)}</p>)}</div>
-    {era.id!=='before'&&<HistoryMilestones entries={milestones(era.id)} id={era.id==='1910s'?'milestones':`milestones-${era.id}`} label={`${era.label}のマイルストーン`}/>}
+    {era.id!=='before'&&<HistoryMilestones entries={milestones(era.id)} id={`milestones-${era.id}`} label={`${era.label}のマイルストーン`}/>} 
     {eraOwners.length>0&&<aside class="history-owners" aria-label="OWNER'S NOTES">
      <div class="collection-lead"><p>所有個体から見る。</p><a href={`${base}owners-notes/`} aria-label="OWNER'S NOTES一覧">一覧 ↗</a></div>
      <div class="owner-tiles">{eraOwners.map(({note,brand,name,href,image})=><OwnerThumbnailFrame brand={brand} name={name} href={href} image={image} published={!!note}/>)}</div>
@@ -90,7 +90,7 @@ const schema={'@context':'https://schema.org','@graph':[
  })}
  <section class="history-current-v13 shell" id="current" aria-labelledby="current-title"><div class="chapter-date"><strong>CURRENT</strong><span>CHAPTER 06</span></div><div><h2 id="current-title">{current.title}</h2><a class="current-link" href={`${base}${current.href}`}><span>{current.name}</span><span aria-hidden="true">↗</span></a></div></section>
  <aside class="history-research-v13 shell" id="research" aria-label="次のリサーチ"><h2>RESEARCH</h2><p>次に気になっているものと、そのデータ。</p></aside>
- <section class="history-sources-v13 shell"><details><summary>{sources.summary}</summary><ul>{sources.items.map(item=><li>{item}</li>)}</ul></details></section>
+ <section class="history-sources-v13 shell"><details><summary>{sources.summary}</summary><ol class="history-source-list">{sources.items.map(item=><li id={`history-source-${item.id}`}><span class="history-source-no" aria-hidden="true">{item.id}</span><span>{item.text}</span></li>)}</ol></details></section>
  </main>
  <script>
   const links=[...document.querySelectorAll<HTMLAnchorElement>('.history-era-nav a')];

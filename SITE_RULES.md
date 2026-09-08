@@ -38,6 +38,8 @@
 - `OWNER'S NOTES`は、完成したOWNER'S NOTEを所有個体の年代順に並べる一覧ページ。
 - 一覧のデータソースは`src/data/owners-directory.json`とする。
 - `ownedEra` / `ownedSortYear`は所有個体の年代を表す。HISTORYの初出年代とは別データとして管理する。
+- 公開済みOWNER'S NOTEは`historyHref`を明示し、WATCHから戻るHISTORY上の位置を所有個体年代から自動推定しない。
+- WATCH末尾の「次の一本」は`owners-directory.json`の所有個体年代順から生成し、個別WATCH名をテンプレートへハードコードしない。
 - 例：Pierce DuofonはHISTORYでは1950年代の初出として扱えても、所有個体一覧では掲載個体に合わせて1960sへ置ける。
 - 一覧でWATCHページ用の`catch`や`spec.era`を自動流用しない。一覧専用の`catch`と所有個体年代を使う。
 - カードはヒーロー画像、ブランド、モデル名、短い一覧専用キャッチに絞る。

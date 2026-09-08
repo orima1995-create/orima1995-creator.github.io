@@ -13,6 +13,7 @@ export type HistoryCatalogEntry = {
   displayTopic?: string;
   displayName?: string;
   displaySummary?: string;
+  sourceRefs?: string[];
   featured: boolean;
   href?: string;
   hrefKind?: 'site' | 'external';
