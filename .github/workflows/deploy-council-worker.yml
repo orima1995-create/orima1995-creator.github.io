@@ -2,6 +2,11 @@ name: Deploy Council Worker
 
 on:
   workflow_dispatch:
+  push:
+    branches: ["main"]
+    paths:
+      - "council-worker/**"
+      - ".github/workflows/deploy-council-worker.yml"
 
 permissions:
   contents: read
