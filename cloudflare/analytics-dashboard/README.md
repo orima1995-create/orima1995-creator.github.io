@@ -2,6 +2,8 @@
 
 VINTAGE ALARM専用の非公開アクセス解析ダッシュボード。
 
+[![Deploy to Cloudflare](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/orima1995-create/orima1995-creator.github.io/tree/main/cloudflare/analytics-dashboard)
+
 ## 役割
 
 - Cloudflare Web Analytics / RUMをGraphQL APIから読む
@@ -28,28 +30,36 @@ Cloudflare公式ドキュメントに従い、カスタムAPI Tokenへ以下を�
 
 対象アカウントだけに絞る。
 
-## デプロイ
+## 推奨デプロイ
+
+上の Deploy to Cloudflare ボタンを使う。
+このサブディレクトリを独立Workerとして読み込み、必要なSecretをセットしてデプロイする。
+
+必須:
+- CF_API_TOKEN
+- CF_ACCOUNT_ID
+- DASHBOARD_PASSWORD
+
+任意:
+- CF_SITE_TAG
+- DASHBOARD_USER（未設定時はadmin）
+
+CF_SITE_TAGを省略した場合、直近30日のRUMデータからREQUEST_HOSTに一致するsiteTagを自動検出する。
+
+CLIを使う場合:
 
 ```bash
 cd cloudflare/analytics-dashboard
-npx wrangler@latest deploy
-npx wrangler@latest secret put CF_API_TOKEN
-npx wrangler@latest secret put CF_ACCOUNT_ID
-npx wrangler@latest secret put DASHBOARD_PASSWORD
+npm install
+npx wrangler deploy
+npx wrangler secret put CF_API_TOKEN
+npx wrangler secret put CF_ACCOUNT_ID
+npx wrangler secret put DASHBOARD_PASSWORD
 ```
-
-任意:
-
-```bash
-npx wrangler@latest secret put CF_SITE_TAG
-npx wrangler@latest secret put DASHBOARD_USER
-```
-
-`CF_SITE_TAG`を省略した場合、直近30日のRUMデータから `REQUEST_HOST` に一致するsiteTagを自動検出する。
 
 ## URL表示名
 
-Worker内の `friendlyPageName()` で管理する。
+Worker内の friendlyPageName() で管理する。
 新しいOWNER'S NOTEを公開したらここへ追加する。
 
 現在:
