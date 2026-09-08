@@ -74,6 +74,17 @@ deepDive:
       - "3"
       - 1,3
   - number: "02"
+    title: アラームとクロノメーターという矛盾
+    subtitle: 精度を求める時計に、アラームを載せる
+    paragraphs:
+      - R.464は、時計とアラームを一つの香箱で駆動する。アラームを鳴らせば、その分だけ共通のゼンマイを消費する。掲載個体では、1回の鳴動で約9時間分のパワーリザーブを消費した。
+      - ここでいう「矛盾」は、アラームを鳴らしながらクロノメーター試験をするという意味ではない。精度を求める時計に、同じ動力源を使うアラーム機構が同居している、という取り合わせを指す。
+      - 『Alarm am Arm』では、当時クロノメーターとして知られるアラーム腕時計は、CymaのほかにFortis ManagerとVulcainの1モデルのみと記されている。
+    citationRefs:
+      - 1,5
+      - ""
+      - "2"
+  - number: "03"
     title: 2つのプッシャーとWippe
     subtitle: リューズの接続先を切り替える
     paragraphs:
@@ -95,7 +106,7 @@ deepDive:
           プッシャー操作に応じて、内部の接続先が切り替わる。
         alt: CYMA Cal.R.464 Wippeを含む切替機構と上下プッシャー
         afterParagraph: 3
-  - number: "03"
+  - number: "04"
     title: 単一香箱のアラーム
     subtitle: 時計とアラームで動力を共有する
     paragraphs:
@@ -107,12 +118,12 @@ deepDive:
     citationRefs:
       - "1"
       - 1,3
-      - "1"
+      - 1,3
       - "6"
       - "5"
     linkLabel: タイミングホイールの約8秒の動きをXで見る
     linkUrl: https://x.com/Rimacroissant/status/2085277918473883977?s=20
-  - number: "04"
+  - number: "05"
     title: 鳴動中にリューズが回らない
     subtitle: 鳴動中は巻上げ側を切り離す
     paragraphs:
@@ -121,7 +132,7 @@ deepDive:
     citationRefs:
       - "3"
       - 1,3
-  - number: "05"
+  - number: "06"
     title: Time-O-Voxのケースとラグ
     paragraphs:
       - Time-O-Voxは、ムーブメントだけでなくケースにも複数の仕様が確認されている。
@@ -160,11 +171,11 @@ sources:
   - B. Humbert, 『Die Armband-Weckeruhr』Calibre TIME-O-VOX
     No.464（R.464の単一香箱、2プッシャー、Wippe、輪列・鳴動停止機構）
   - Leonhard Beitl, 『Alarm am Arm』(2009), pp.134–136（Cyma
-    Time-O-Voxの金無垢・ステンレス・ラグ仕様）
+    Time-O-Voxの金無垢・ステンレス・ラグ仕様、クロノメーター例）
   - Michael Philip Horlbeck, 『The Alarm Wristwatch』(Schiffer Publishing, 2007),
     Cyma section pp.96–99
   - Chrono24 Kaufzertifikat / Plus Ultra AG invoice, Cyma Time-O-Vox Chronomètre
     ref.1283, 18K yellow gold, circa 1956
   - 掲載個体の実測記録（1回の鳴動で約9時間分のパワーリザーブ消費）
-  - 掲載個体の実機動画（タイミングホイールが約6秒間作動する様子）
+  - 掲載個体の実機動画（タイミングホイールが約8秒間作動する様子）
 ---
