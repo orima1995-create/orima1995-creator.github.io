@@ -269,8 +269,8 @@
         "sort": 105,
         "meta": "1966 / SEIKO",
         "name": "BELL-MATIC / CAL.4006",
-        "displayTopic": "中央ローター",
-        "displayName": "BELL-MATIC",
+        "displayTopic": "",
+        "displayName": "BELL-MATIC / CAL.4006",
         "displaySummary": "中央ローターで時計側を自動巻き。アラームは手巻き。",
         "hook": "アラーム腕時計の自動巻きが、バンパー式から中央ローター式へ。",
         "cardSummary": "中央ローターで時計側を自動巻き。アラームは手巻き。",
@@ -280,7 +280,9 @@
           "1",
           "2",
           "6"
-        ]
+        ],
+        "displayMeta": "1966 / SEIKO",
+        "displayNote": "アラーム腕時計の自動巻きが、バンパー式から中央ローター式へ。"
       },
       {
         "id": "omega-memomatic",
