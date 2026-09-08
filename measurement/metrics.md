@@ -12,36 +12,19 @@
 
 ## 計測の役割分担
 
-### GoatCounter — 来訪者解析
-
-来訪者数・ページ別閲覧・流入元を見る主系統。
-
-公開ページ上にカウンターは表示しない。
-閲覧は管理者だけがGoatCounterダッシュボードで行う。
-
-主に確認する項目:
-
-- Page views / Visits
-- Paths / pages
-- Referrers
-- Campaigns
-- Country / location
-- Browser
-- Screen size
-
-アカウント名は `vintagealarmwatch` を使用する。
-計測エンドポイントは `https://vintagealarmwatch.goatcounter.com/count`。
-
 ### Cloudflare Web Analytics — 性能監視
 
-Cloudflareは来訪分析の主系統にはせず、主にCore Web Vitalsを見る。
+Cloudflareは主にCore Web Vitalsを見る。
 
 - LCP
 - INP
 - CLS
 - Page load time
 
-GoatCounterとCloudflareの数字は目的・集計方法が異なるため一致を期待しない。
+### 来訪者解析
+
+GoatCounterは利用環境でDNS解決できないため採用を取り下げた。
+来訪者解析は別サービスへ切り替える。候補はUmami Cloud。
 
 ## VINTAGE ALARMで分ける流入
 
