@@ -265,3 +265,24 @@ Facebook / InstagramのRefererがあることだけで「公開投稿から人�
 Web Analyticsは既知Botを除外する設定を使うが、アプリ内プリフェッチ・未識別自動アクセス・Link Shim・DM等の経路は別途raw host / pathで確認する。
 
 特定SNS投稿の成果判定は、SNS側のLink clicksと同時間帯のENTRY SOURCE → PAGEを照合して行う。
+
+
+## ダッシュボード可視化原則
+
+上段ほど意思決定、下段ほど原因調査とする。
+
+1. KPI
+2. Traffic Trend
+3. Acquisition Trend
+4. Entry Pages / Traffic Mix
+5. Site Flow
+6. Campaign Funnel
+7. Raw / Audit
+
+時間推移は選択期間に応じて粒度を切り替える。
+Campaign情報は管理者ブラウザのlocalStorageにのみ保存し、GitHubへ分析値をコミットしない。
+
+Campaign FunnelのCloudflare側値は選択期間全体の比較値であり、SNS側Link clicksへの完全帰属とは扱わない。
+投稿時刻は折れ線グラフのマーカーとして利用する。
+
+Visitsが30未満の選択期間ではLOW SAMPLEを表示し、数件差を傾向として断定しない。
