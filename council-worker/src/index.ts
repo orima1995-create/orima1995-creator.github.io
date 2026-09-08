@@ -216,6 +216,74 @@ JSONだけ返す:
   };
 }
 
+
+const MCP_PROTOCOL='2025-06-18';
+const MCP_TOOL={
+  name:'run_council',
+  description:'Run the real autonomous multi-resident anonymous-board debate. Use this when the user asks for スレ民, Council, 自律思考バトル, 2ch/5ch民で焼く, or DEEP WEB ×10. Residents reason independently, choose whom to reply to, may revise or withdraw, continue debate, and a chair judges the evidence. Watch mode uses the fixed TypeC project mirror and vector-store references when available.',
+  inputSchema:{
+    type:'object',
+    properties:{
+      title:{type:'string',description:'Short thread title / debate question.'},
+      body:{type:'string',description:'Full issue, facts, constraints, and what should be decided.'},
+      mode:{type:'string',enum:['general','watch','business','roast'],default:'watch',description:'Debate lens.'},
+      engine:{type:'string',enum:['quick','project','deep-web-10'],default:'project',description:'quick = shorter debate; project = standard project-aware debate; deep-web-10 = ten residents independently search and re-search the web while arguing.'},
+      useWeb:{type:'boolean',default:false,description:'Enable web search outside deep-web-10.'}
+    },
+    required:['title','body'],
+    additionalProperties:false
+  },
+  annotations:{readOnlyHint:true,destructiveHint:false,idempotentHint:false,openWorldHint:true}
+};
+function mcpHeaders(env:Env){
+  const o=origin(env);
+  return {'content-type':'application/json; charset=utf-8','cache-control':'no-store','access-control-allow-origin':o,'access-control-allow-methods':'GET,POST,OPTIONS','access-control-allow-headers':'content-type,authorization,mcp-protocol-version,mcp-session-id','access-control-expose-headers':'mcp-session-id'};
+}
+function mcpResult(id:any,result:any,env:Env,status=200){return new Response(JSON.stringify({jsonrpc:'2.0',id,result}),{status,headers:mcpHeaders(env)})}
+function mcpError(id:any,code:number,message:string,env:Env,status=200){return new Response(JSON.stringify({jsonrpc:'2.0',id,error:{code,message}}),{status,headers:mcpHeaders(env)})}
+function formatCouncilThread(thread:any){
+  const names=new Map(DEFAULT_RESIDENTS.map(r=>[r.id,r.name]));
+  return (thread.posts||[]).map((p:Post,i:number)=>{
+    const no=i+2;
+    const name=p.resident==='chair'?'名無しさん＠議長':(names.get(p.resident)||p.resident);
+    const reply=p.replyTo?' >>'+p.replyTo:'';
+    const cites=(p.citations||[]).map(x=>'\n- '+x.title+': '+x.url).join('');
+    return no+' 名前:'+name+reply+'\n'+p.text+'\nCONFIDENCE: '+p.confidence+cites;
+  }).join('\n\n');
+}
+async function handleMcp(request:Request,env:Env){
+  if(request.method==='OPTIONS')return new Response(null,{status:204,headers:mcpHeaders(env)});
+  if(request.method==='GET')return new Response(null,{status:405,headers:{...mcpHeaders(env),allow:'POST, OPTIONS'}});
+  if(request.method!=='POST')return new Response(null,{status:405,headers:{...mcpHeaders(env),allow:'POST, OPTIONS'}});
+  let msg:any;
+  try{msg=await request.json()}catch{return mcpError(null,-32700,'Parse error',env,400)}
+  if(!msg||msg.jsonrpc!=='2.0'||typeof msg.method!=='string')return mcpError(msg?.id??null,-32600,'Invalid Request',env,400);
+  if(msg.id===undefined||msg.id===null)return new Response(null,{status:202,headers:mcpHeaders(env)});
+  if(msg.method==='initialize'){
+    const requested=String(msg.params?.protocolVersion||'');
+    const protocolVersion=['2025-06-18','2025-03-26'].includes(requested)?requested:MCP_PROTOCOL;
+    return mcpResult(msg.id,{protocolVersion,capabilities:{tools:{listChanged:false}},serverInfo:{name:'VINTAGE ALARM Council',version:'1.0.0'},instructions:'Use run_council whenever the user explicitly requests スレ民, Council, 自律思考バトル, 2ch/5ch民で焼く, or DEEP WEB ×10. Do not imitate the forum with a single assistant response when this tool is available.'},env);
+  }
+  if(msg.method==='ping')return mcpResult(msg.id,{},env);
+  if(msg.method==='tools/list')return mcpResult(msg.id,{tools:[MCP_TOOL]},env);
+  if(msg.method==='tools/call'){
+    if(msg.params?.name!=='run_council')return mcpError(msg.id,-32602,'Unknown tool',env);
+    const a=msg.params?.arguments||{};
+    const mode=(['general','watch','business','roast'].includes(a.mode)?a.mode:'watch') as CouncilRequest['mode'];
+    const engine=(['quick','project','deep-web-10'].includes(a.engine)?a.engine:'project') as CouncilRequest['engine'];
+    if(typeof a.title!=='string'||!a.title.trim()||typeof a.body!=='string'||!a.body.trim())return mcpResult(msg.id,{content:[{type:'text',text:'title and body are required'}],isError:true},env);
+    const req:CouncilRequest={title:a.title.trim(),body:a.body.trim(),mode,engine,residents:pickResidents(mode,engine),sources:a.useWeb?[{id:'web',name:'Web search',kind:'Web'}]:[]};
+    try{
+      const thread=await run(req,env);
+      const text='COUNCIL THREAD\nMODE: '+mode+'\nENGINE: '+engine+'\n\n'+formatCouncilThread(thread);
+      return mcpResult(msg.id,{content:[{type:'text',text}],isError:false},env);
+    }catch(e:any){
+      return mcpResult(msg.id,{content:[{type:'text',text:'Council failed: '+(e?.message||String(e))}],isError:true},env);
+    }
+  }
+  return mcpError(msg.id,-32601,'Method not found',env);
+}
+
 async function persist(env:Env,thread:any){if(!env.DB)return null;const id=crypto.randomUUID().replace(/-/g,'').slice(0,12);await env.DB.prepare('INSERT INTO threads (id, payload, created_at) VALUES (?, ?, ?)').bind(id,JSON.stringify(thread),new Date().toISOString()).run();return id}
 async function run(req:CouncilRequest,env:Env){
   if(!req.title?.trim())throw new Error('title is required');
@@ -245,4 +313,4 @@ async function run(req:CouncilRequest,env:Env){
   return {...thread,shareId};
 }
 
-export default{async fetch(request:Request,env:Env):Promise<Response>{const o=origin(env),url=new URL(request.url);if(request.method==='OPTIONS')return new Response(null,{status:204,headers:headers(o)});if(request.method==='GET'&&url.pathname==='/health')return new Response(JSON.stringify({ok:true,openai:Boolean(env.OPENAI_API_KEY),vectorStore:Boolean(env.COUNCIL_VECTOR_STORE_ID),db:Boolean(env.DB)}),{headers:headers(o)});if(request.method==='GET'&&url.pathname.startsWith('/api/thread/')){if(!env.DB)return new Response(JSON.stringify({error:'DB not configured'}),{status:501,headers:headers(o)});const id=url.pathname.split('/').pop();const row=await env.DB.prepare('SELECT payload FROM threads WHERE id = ?').bind(id).first();if(!row)return new Response(JSON.stringify({error:'not found'}),{status:404,headers:headers(o)});return new Response(row.payload,{headers:headers(o)})}if(request.method==='POST'&&url.pathname==='/api/council'){try{const req=await request.json() as CouncilRequest;const result=await run(req,env);return new Response(JSON.stringify(result),{headers:headers(o)})}catch(e:any){return new Response(JSON.stringify({error:e?.message||String(e)}),{status:500,headers:headers(o)})}}if(request.method==='POST'&&url.pathname==='/api/extend'){try{const req=await request.json() as ContinueRequest;const result=await extendRun(req,env);return new Response(JSON.stringify(result),{headers:headers(o)})}catch(e:any){return new Response(JSON.stringify({error:e?.message||String(e)}),{status:500,headers:headers(o)})}}if(request.method==='POST'&&url.pathname==='/api/next-thread'){try{const req=await request.json() as ContinueRequest;const result=await nextThreadDraft(req,env);return new Response(JSON.stringify(result),{headers:headers(o)})}catch(e:any){return new Response(JSON.stringify({error:e?.message||String(e)}),{status:500,headers:headers(o)})}}return new Response(JSON.stringify({error:'not found'}),{status:404,headers:headers(o)})}}
+export default{async fetch(request:Request,env:Env):Promise<Response>{const o=origin(env),url=new URL(request.url);if(url.pathname==='/mcp')return handleMcp(request,env);if(request.method==='OPTIONS')return new Response(null,{status:204,headers:headers(o)});if(request.method==='GET'&&url.pathname==='/health')return new Response(JSON.stringify({ok:true,openai:Boolean(env.OPENAI_API_KEY),vectorStore:Boolean(env.COUNCIL_VECTOR_STORE_ID),db:Boolean(env.DB)}),{headers:headers(o)});if(request.method==='GET'&&url.pathname.startsWith('/api/thread/')){if(!env.DB)return new Response(JSON.stringify({error:'DB not configured'}),{status:501,headers:headers(o)});const id=url.pathname.split('/').pop();const row=await env.DB.prepare('SELECT payload FROM threads WHERE id = ?').bind(id).first();if(!row)return new Response(JSON.stringify({error:'not found'}),{status:404,headers:headers(o)});return new Response(row.payload,{headers:headers(o)})}if(request.method==='POST'&&url.pathname==='/api/council'){try{const req=await request.json() as CouncilRequest;const result=await run(req,env);return new Response(JSON.stringify(result),{headers:headers(o)})}catch(e:any){return new Response(JSON.stringify({error:e?.message||String(e)}),{status:500,headers:headers(o)})}}if(request.method==='POST'&&url.pathname==='/api/extend'){try{const req=await request.json() as ContinueRequest;const result=await extendRun(req,env);return new Response(JSON.stringify(result),{headers:headers(o)})}catch(e:any){return new Response(JSON.stringify({error:e?.message||String(e)}),{status:500,headers:headers(o)})}}if(request.method==='POST'&&url.pathname==='/api/next-thread'){try{const req=await request.json() as ContinueRequest;const result=await nextThreadDraft(req,env);return new Response(JSON.stringify(result),{headers:headers(o)})}catch(e:any){return new Response(JSON.stringify({error:e?.message||String(e)}),{status:500,headers:headers(o)})}}return new Response(JSON.stringify({error:'not found'}),{status:404,headers:headers(o)})}}
