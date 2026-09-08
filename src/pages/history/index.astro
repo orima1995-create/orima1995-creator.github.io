@@ -90,7 +90,7 @@ const schema={'@context':'https://schema.org','@graph':[
  })}
  <section class="history-current-v13 shell" id="current" aria-labelledby="current-title"><div class="chapter-date"><strong>CURRENT</strong><span>CHAPTER 06</span></div><div><h2 id="current-title">{current.title}</h2><a class="current-link" href={`${base}${current.href}`}><span>{current.name}</span><span aria-hidden="true">↗</span></a></div></section>
  <aside class="history-research-v13 shell" id="research" aria-label="次のリサーチ"><h2>RESEARCH</h2><p>次に気になっているものと、そのデータ。</p></aside>
- <section class="history-sources-v13 shell"><details><summary>{sources.summary}</summary><ul>{sources.items.map(item=><li>{item}</li>)}</ul></details></section>
+ <section class="history-sources-v13 shell"><details><summary>{sources.summary}</summary><ol class="history-source-list">{sources.items.map(item=><li id={`history-source-${item.id}`}><span class="history-source-no" aria-hidden="true">{item.id}</span><span>{item.text}</span></li>)}</ol></details></section>
  </main>
  <script>
   const links=[...document.querySelectorAll<HTMLAnchorElement>('.history-era-nav a')];
