@@ -1,4 +1,30 @@
 {
+  "coverMilestones": [
+    {
+      "year": "1914",
+      "line1": "ETERNA",
+      "line2": "CAL.68",
+      "href": "#1910s"
+    },
+    {
+      "year": "1947",
+      "line1": "VULCAIN",
+      "line2": "CRICKET",
+      "href": "#1940s"
+    },
+    {
+      "year": "1956",
+      "line1": "MEMOVOX",
+      "line2": "AUTOMATIC",
+      "href": "#1950s"
+    },
+    {
+      "year": "1976",
+      "line1": "CITIZEN",
+      "line2": "LC ALARM",
+      "href": "#electronic"
+    }
+  ],
   "hero": {
     "kicker": [
       "時刻を見るだけではなく、",
@@ -20,7 +46,7 @@
     "label": "1910s",
     "title": "アラームを、腕時計のサイズへ。",
     "teaser": "アラームが、腕へ移る。",
-    "intro": "1908年のPatent 42,203は、Eternaのアラーム時刻を時計回り・反時計回りの双方から設定できる機構に関する特許。\n1914年、Eternaはベルンのスイス国立博覧会でCal.68搭載のアラーム腕時計を発表した。",
+    "intro": "1908年、Eternaはアラーム時刻を時計回り・反時計回りのどちらからでも設定できる機構を特許化した（Patent42,203）。\n\nこの特許機構を受け継ぎ、\n1914年にはベルンのスイス国立博覧会で、\nCal.68を搭載したアラーム腕時計を発表した。",
     "cards": [
       {
         "id": "eterna-1914",
@@ -28,13 +54,13 @@
         "sort": 10,
         "meta": "1914 / ETERNA",
         "name": "ETERNA ALARM / CAL.68",
+        "displayTopic": "小型化",
+        "displayName": "ETERNA ALARM",
+        "displaySummary": "Cal.68。約13リーニュ、1香箱。",
         "hook": "最初の量産アラーム腕時計。",
         "cardSummary": "約13リーニュ、1香箱。\nハンマーが底部のベルを叩く。",
         "cardStatus": "MILESTONE",
-        "featured": true,
-        "displayTopic": "小型化",
-        "displayName": "ETERNA ALARM",
-        "displaySummary": "Cal.68。約13リーニュ、1香箱。"
+        "featured": true
       }
     ]
   },
@@ -51,13 +77,13 @@
         "sort": 20,
         "meta": "1947 / VULCAIN",
         "name": "CRICKET",
+        "displayTopic": "音響",
+        "displayName": "VULCAIN CRICKET",
+        "displaySummary": "二重底の音響構造。",
         "hook": "THE PRESIDENTS' WATCH",
         "cardSummary": "二重底で音量と防水性を両立。米大統領たちとの縁でも知られる。",
         "cardStatus": "MILESTONE",
-        "featured": true,
-        "displayTopic": "音響",
-        "displayName": "VULCAIN CRICKET",
-        "displaySummary": "二重底の音響構造。"
+        "featured": true
       },
       {
         "id": "basis-bfg90",
@@ -85,13 +111,13 @@
         "sort": 40,
         "meta": "1954 / A. SCHILD",
         "name": "AS 1475",
+        "displayTopic": "量産",
+        "displayName": "AS 1475",
+        "displaySummary": "量産を支えたアラーム・キャリバー。",
         "hook": "最も多く使われたアラーム・キャリバー。",
         "cardSummary": "1954–70年に約78万個を生産。派生系まで含めると約140万個。",
         "cardStatus": "MILESTONE",
-        "featured": true,
-        "displayTopic": "量産",
-        "displayName": "AS 1475",
-        "displaySummary": "量産を支えたアラーム・キャリバー。"
+        "featured": true
       },
       {
         "id": "memovox-automatic",
@@ -99,13 +125,13 @@
         "sort": 50,
         "meta": "1956 / JAEGER-LECOULTRE",
         "name": "MEMOVOX AUTOMATIC / CAL.815",
+        "displayTopic": "自動巻き",
+        "displayName": "MEMOVOX AUTOMATIC",
+        "displaySummary": "時計側を自動巻き化。アラームは手巻き。",
         "hook": "世界初の自動巻きアラーム腕時計。",
         "cardSummary": "時計側を自動巻き化。アラーム用ゼンマイは手巻き。",
         "cardStatus": "MILESTONE",
-        "featured": true,
-        "displayTopic": "自動巻き",
-        "displayName": "MEMOVOX AUTOMATIC",
-        "displaySummary": "時計側を自動巻き化。アラームは手巻き。"
+        "featured": true
       },
       {
         "id": "vulcain-golden-voice",
@@ -113,13 +139,13 @@
         "sort": 55,
         "meta": "1958 / VULCAIN",
         "name": "GOLDEN VOICE / CAL.406",
+        "displayTopic": "小型化",
+        "displayName": "GOLDEN VOICE",
+        "displaySummary": "女性用アラーム腕時計。",
         "hook": "世界初の女性用アラーム腕時計。",
         "cardSummary": "19.7mmの2香箱ムーブメントと金製メンブレン。",
         "cardStatus": "MILESTONE",
-        "featured": true,
-        "displayTopic": "小型化",
-        "displayName": "GOLDEN VOICE",
-        "displaySummary": "女性用アラーム腕時計。"
+        "featured": true
       },
       {
         "id": "jlc-parking",
@@ -127,13 +153,13 @@
         "sort": 58,
         "meta": "1958 / JAEGER-LECOULTRE",
         "name": "MEMOVOX PARKING",
+        "displayTopic": "駐車時間",
+        "displayName": "MEMOVOX PARKING",
+        "displaySummary": "駐車時間用の目盛り。",
         "hook": "駐車時間を知らせる最初のアラーム腕時計。",
         "cardSummary": "内側のディスクに駐車時間用の目盛りを加えたMemovox。",
         "cardStatus": "MILESTONE",
-        "featured": true,
-        "displayTopic": "駐車時間",
-        "displayName": "MEMOVOX PARKING",
-        "displaySummary": "駐車時間用の目盛り。"
+        "featured": true
       },
       {
         "id": "wittnauer-10wa",
@@ -198,13 +224,13 @@
         "sort": 100,
         "meta": "1961 / VULCAIN",
         "name": "CRICKET NAUTICAL",
+        "displayTopic": "潜水",
+        "displayName": "CRICKET NAUTICAL",
+        "displaySummary": "減圧表を備えるアラーム腕時計。",
         "hook": "水中で聞こえるアラームを、ダイバーズへ。",
         "cardSummary": "減圧表を備え、Hannes Kellerの潜水でも使用された。",
         "cardStatus": "MILESTONE",
-        "featured": true,
-        "displayTopic": "潜水",
-        "displayName": "CRICKET NAUTICAL",
-        "displaySummary": "減圧表を備えるアラーム腕時計。"
+        "featured": true
       },
       {
         "id": "seiko-bell-matic",
@@ -212,13 +238,13 @@
         "sort": 105,
         "meta": "約1968 / SEIKO",
         "name": "BELL-MATIC / CAL.4005・4006",
+        "displayTopic": "自動巻き",
+        "displayName": "BELL-MATIC",
+        "displaySummary": "時計側は自動巻き。アラームは手巻き。",
         "hook": "日本独自開発の自動巻きアラーム。",
         "cardSummary": "時計側は自動巻き、アラーム用ゼンマイは手巻き。",
         "cardStatus": "MILESTONE",
-        "featured": true,
-        "displayTopic": "自動巻き",
-        "displayName": "BELL-MATIC",
-        "displaySummary": "時計側は自動巻き。アラームは手巻き。"
+        "featured": true
       },
       {
         "id": "omega-memomatic",
@@ -226,13 +252,13 @@
         "sort": 110,
         "meta": "1969 / OMEGA",
         "name": "MEMOMATIC / CAL.980",
+        "displayTopic": "動力・設定",
+        "displayName": "OMEGA MEMOMATIC",
+        "displaySummary": "1香箱で駆動。分単位でアラーム時刻を設定。",
         "hook": "アラームの動力まで自動巻き。",
         "cardSummary": "1香箱で時刻とアラームを駆動し、分単位でアラーム時刻を設定できる。",
         "cardStatus": "MILESTONE",
-        "featured": true,
-        "displayTopic": "動力・設定",
-        "displayName": "OMEGA MEMOMATIC",
-        "displaySummary": "1香箱で駆動。分単位でアラーム時刻を設定。"
+        "featured": true
       }
     ]
   },
@@ -251,13 +277,13 @@
         "sort": 115,
         "meta": "1971–73 / A. SCHILD",
         "name": "AS 5007 / 5008",
+        "displayTopic": "自動巻き",
+        "displayName": "AS 5007 / 5008",
+        "displaySummary": "時計用とアラーム用の双方をローターで巻き上げる。",
         "hook": "2香箱の両方をローターで自動巻き。",
         "cardSummary": "5007 / 5008では、時計用とアラーム用の双方をローターで巻き上げる。",
         "cardStatus": "MILESTONE",
-        "featured": true,
-        "displayTopic": "自動巻き",
-        "displayName": "AS 5007 / 5008",
-        "displaySummary": "時計用とアラーム用の双方をローターで巻き上げる。"
+        "featured": true
       },
       {
         "id": "citizen-criston-lc-alarm",
@@ -265,13 +291,13 @@
         "sort": 120,
         "meta": "1976 / CITIZEN",
         "name": "CRYSTRON LC ALARM",
+        "displayTopic": "電子化",
+        "displayName": "CITIZEN CRYSTRON LC ALARM",
+        "displaySummary": "水晶発振・液晶表示。圧電素子とチタン振動板。",
         "hook": "世界初のデジタル式アラーム機能付き腕時計。",
         "cardSummary": "水晶発振・液晶表示。圧電素子とチタン振動板でアラームを鳴らす。",
         "cardStatus": "MILESTONE",
-        "featured": true,
-        "displayTopic": "電子化",
-        "displayName": "CITIZEN CRYSTRON LC ALARM",
-        "displaySummary": "水晶発振・液晶表示。圧電素子とチタン振動板。"
+        "featured": true
       }
     ]
   },
@@ -289,31 +315,5 @@
       "Citizen Watch, 歴代モデル「アラーム」(1958) / 「クリストロン LCアラーム」(1976).",
       "前史の補助資料：The Metropolitan Museum of Art / The British Museum / Deutsches Uhrenmuseum / Musée international d'horlogerie / The Worshipful Company of Clockmakers."
     ]
-  },
-  "coverMilestones": [
-    {
-      "year": "1914",
-      "line1": "ETERNA",
-      "line2": "CAL.68",
-      "href": "#1910s"
-    },
-    {
-      "year": "1947",
-      "line1": "VULCAIN",
-      "line2": "CRICKET",
-      "href": "#1940s"
-    },
-    {
-      "year": "1956",
-      "line1": "MEMOVOX",
-      "line2": "AUTOMATIC",
-      "href": "#1950s"
-    },
-    {
-      "year": "1976",
-      "line1": "CITIZEN",
-      "line2": "LC ALARM",
-      "href": "#electronic"
-    }
-  ]
+  }
 }
