@@ -33,7 +33,11 @@ try {
 
     for (const [name, route] of routes) {
       const url = new URL(route, root).href;
-      await page.goto(url, { waitUntil: 'networkidle' });
+      await page.goto(url, { waitUntil: 'domcontentloaded', timeout: 15000 });
+      await page.waitForFunction(() => [...document.images]
+        .filter((img) => (img.getAttribute('src') || '').trim())
+        .every((img) => img.complete), null, { timeout: 8000 }).catch(() => {});
+      await page.waitForTimeout(250);
       await page.evaluate(() => {
         document.documentElement.classList.add('visual-audit-ready');
         window.scrollTo(0, 0);
@@ -46,7 +50,11 @@ try {
 
     for (const [name, route, selector] of focusCaptures) {
       const url = new URL(route, root).href;
-      await page.goto(url, { waitUntil: 'networkidle' });
+      await page.goto(url, { waitUntil: 'domcontentloaded', timeout: 15000 });
+      await page.waitForFunction(() => [...document.images]
+        .filter((img) => (img.getAttribute('src') || '').trim())
+        .every((img) => img.complete), null, { timeout: 8000 }).catch(() => {});
+      await page.waitForTimeout(250);
       await page.waitForTimeout(250);
       const target = page.locator(selector);
       await target.scrollIntoViewIfNeeded();
