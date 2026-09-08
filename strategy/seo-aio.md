@@ -84,3 +84,29 @@ Pierce Duofonを、完成済みWATCHページの基準個体として扱う。
 - 判断を変える条件
 
 一度に大きく変えず、何が効いたか追える単位で変更する。
+
+
+## 発見性の診断順序
+
+改善判断は以下の順にドリルダウンする。
+
+1. 発見されたか
+   - 通常検索Impressions
+   - Google生成AI Impressions
+   - SNS Impressions
+2. クリックされたか
+   - Search Clicks / CTR
+   - SNS Link Clicks
+3. サイトへ到達したか
+   - Search / X / AI ReferrerのEntry Visits
+4. 狙ったページへ入ったか
+   - Entry Page
+5. 次の興味へ進んだか
+   - refererPath → requestPath
+6. 落ちた場合のみ原因を掘る
+   - Query / Page / Position / CTR
+   - Campaign / Referrer
+   - Device / Country
+   - Raw / Mapping / Bot疑い
+
+「順位が落ちた」「GEOが伸びた」などの結論を、単一指標だけで出さない。
