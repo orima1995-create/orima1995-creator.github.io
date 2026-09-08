@@ -50,8 +50,8 @@
 2. OWNER'S NOTE
 3. SPEC
 4. 実機鳴動（YouTube 1本 + Original post on X）
-5. DEEP DIVE
-6. 掲載個体ギャラリー（画像がある場合）
+5. 掲載個体ギャラリー（画像がある場合）
+6. DEEP DIVE
 7. 参考資料・出典
 
 ## SPEC
