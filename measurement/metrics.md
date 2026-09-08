@@ -10,23 +10,38 @@
 取得できない指標を推測で埋めない。
 計測条件が変わった場合は、比較期間に注記する。
 
-## 最初に導入する計測
+## 計測の役割分担
 
-Cloudflare Web Analyticsを第一候補とする。
+### GoatCounter — 来訪者解析
 
-公開ページ上に来訪者数は表示しない。
-閲覧は管理者だけがダッシュボードで行う。
+来訪者数・ページ別閲覧・流入元を見る主系統。
+
+公開ページ上にカウンターは表示しない。
+閲覧は管理者だけがGoatCounterダッシュボードで行う。
 
 主に確認する項目:
 
-- Visits
-- Page views
-- Top pages
-- Entry / landing pages
+- Page views / Visits
+- Paths / pages
 - Referrers
-- Countries
-- Devices / browsers
-- Core Web Vitals
+- Campaigns
+- Country / location
+- Browser
+- Screen size
+
+アカウント名は `vintagealarmwatch` を使用する。
+計測エンドポイントは `https://vintagealarmwatch.goatcounter.com/count`。
+
+### Cloudflare Web Analytics — 性能監視
+
+Cloudflareは来訪分析の主系統にはせず、主にCore Web Vitalsを見る。
+
+- LCP
+- INP
+- CLS
+- Page load time
+
+GoatCounterとCloudflareの数字は目的・集計方法が異なるため一致を期待しない。
 
 ## VINTAGE ALARMで分ける流入
 
@@ -64,16 +79,16 @@ WATCHページでは、単純PVだけでなく「入口ページになったか�
 - 30日
 
 見る項目:
-- Duofon Visits / Page views
+- Duofon Page views / Visits
 - XからのReferrer
 - SearchからのReferrer
 - Country
-- Device
+- Browser / screen size
 - 他ページへの遷移が確認できる場合はその導線
 
 ## 検索データ
 
-Search Consoleを利用する場合は、CloudflareのVisitsと混同しない。
+Search Consoleを利用する場合は、GoatCounterの訪問データと混同しない。
 
 Search Console:
 - 表示回数
@@ -81,12 +96,22 @@ Search Console:
 - CTR
 - 平均掲載順位
 
-Web Analytics:
+GoatCounter:
 - 実際のサイト訪問
 - ページ閲覧
 - リファラー
+- Campaign
 
 定義が異なるため、数字が一致しなくても片方を誤りと決めつけない。
+
+## X導線
+
+X投稿からリンクする場合は、必要に応じてUTMを使う。
+
+例:
+`?utm_source=x&utm_medium=social&utm_campaign=duofon`
+
+既存投稿からの流入と検索流入を分けて観測する。
 
 ## AI検索観測
 
