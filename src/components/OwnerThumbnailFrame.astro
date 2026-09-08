@@ -1,4 +1,5 @@
 ---
+import SmartWatchFit from './SmartWatchFit.astro';
 const { brand, name, href, image, published = true } = Astro.props as {
   brand: string;
   name: string;
@@ -11,17 +12,18 @@ const Tag = href ? 'a' : 'div';
 <Tag class:list={['owner-frame', {'owner-tile': !!href}]} href={href} aria-label={`${published ? "OWNER'S NOTE" : 'COLLECTION INDEX'}：${brand} ${name}`}>
   <span class="frame-kind">{published ? "OWNER'S NOTE" : 'COLLECTION'}</span>
   {image
-    ? <span class="frame-media"><img src={image} alt={`${brand} ${name}`} loading="lazy" decoding="async" /></span>
+    ? <span class="frame-media"><img src={image} alt={`${brand} ${name}`} loading="lazy" decoding="async" data-smart-watch-fit data-smart-fit-target="0.84" data-smart-fit-max="1.9" /></span>
     : <span class="frame-space" aria-hidden="true"></span>}
   <span class="frame-caption"><span class="frame-name"><small>{brand}</small><strong>{name}</strong></span><span class="frame-status">{href ? '↗' : 'NOTE 未公開'}</span></span>
 </Tag>
+<SmartWatchFit />
 <style>
   .owner-frame{position:relative;display:flex;flex-direction:column;isolation:auto;min-width:0;min-height:138px;aspect-ratio:auto;overflow:visible;border:1px solid var(--rule,#bcc5b2);background:transparent;color:var(--ink,#232720);text-decoration:none;padding:10px;font-family:var(--sans,sans-serif)}
   .owner-frame::after{display:none}
   .frame-kind{font-size:10px;line-height:1.4;letter-spacing:.04em;color:var(--soft,#58634e)}
   .frame-space,.frame-media{display:grid;place-items:center;aspect-ratio:1.16;margin:8px 0 10px;color:var(--soft,#58634e)}
   .frame-space{font-size:11px;letter-spacing:.08em}
-  .frame-media{overflow:hidden;background:rgba(88,99,78,.035)}
+  .frame-media{position:relative;overflow:hidden;background:rgba(88,99,78,.035)}
   .frame-media img{display:block;width:100%;height:100%;object-fit:contain}
   .frame-caption{display:flex;gap:5px;align-items:end;justify-content:space-between;padding-top:8px;border-top:1px solid var(--rule,#bcc5b2)}
   .frame-name{min-width:0}.frame-name small{display:block;font-size:11px;line-height:1.5}.frame-name strong{display:block;font-size:13px;font-weight:500;line-height:1.4;overflow-wrap:anywhere}
