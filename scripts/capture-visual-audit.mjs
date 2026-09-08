@@ -76,6 +76,7 @@ try {
             transform: img.style.transform || null,
             bounds: img.dataset.smartFitBounds || null,
             safetyBounds: img.dataset.smartFitSafetyBounds || null,
+            outerProbe: img.dataset.smartFitOuterProbe || null,
             target: img.dataset.smartFitTarget || null,
             max: img.dataset.smartFitMax || null,
             naturalWidth: img.naturalWidth,
