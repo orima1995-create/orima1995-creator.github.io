@@ -12,7 +12,7 @@ const Tag = href ? 'a' : 'div';
 <Tag class:list={['owner-frame', {'owner-tile': !!href}]} href={href} aria-label={`${published ? "OWNER'S NOTE" : 'COLLECTION INDEX'}：${brand} ${name}`}>
   <span class="frame-kind">{published ? "OWNER'S NOTE" : 'COLLECTION'}</span>
   {image
-    ? <span class="frame-media"><img src={image} alt={`${brand} ${name}`} loading="lazy" decoding="async" data-smart-watch-fit data-smart-fit-target="0.84" data-smart-fit-max="1.9" /></span>
+    ? <span class="frame-media"><img src={image} alt={`${brand} ${name}`} loading="lazy" decoding="async" data-smart-watch-fit data-smart-fit-mode="dial" data-smart-fit-target="0.92" data-smart-fit-max="2.2" /></span>
     : <span class="frame-space" aria-hidden="true"></span>}
   <span class="frame-caption"><span class="frame-name"><small>{brand}</small><strong>{name}</strong></span><span class="frame-status">{href ? '↗' : 'NOTE 未公開'}</span></span>
 </Tag>
