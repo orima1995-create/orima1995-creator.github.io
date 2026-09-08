@@ -7,6 +7,122 @@
 
   const clamp = (value, min, max) => Math.min(max, Math.max(min, value));
 
+  const detectDialBounds = (img) => {
+    try {
+      const naturalWidth = img.naturalWidth;
+      const naturalHeight = img.naturalHeight;
+      if (!naturalWidth || !naturalHeight) return null;
+
+      const limit = 180;
+      const ratio = Math.min(1, limit / Math.max(naturalWidth, naturalHeight));
+      const width = Math.max(24, Math.round(naturalWidth * ratio));
+      const height = Math.max(24, Math.round(naturalHeight * ratio));
+
+      const canvas = document.createElement('canvas');
+      canvas.width = width;
+      canvas.height = height;
+      const ctx = canvas.getContext('2d', { willReadFrequently: true });
+      if (!ctx) return null;
+      ctx.drawImage(img, 0, 0, width, height);
+      const data = ctx.getImageData(0, 0, width, height).data;
+
+      const gray = new Float32Array(width * height);
+      for (let i = 0; i < width * height; i++) {
+        const o = i * 4;
+        gray[i] = data[o] * 0.299 + data[o + 1] * 0.587 + data[o + 2] * 0.114;
+      }
+
+      const edge = new Float32Array(width * height);
+      const samples = [];
+      for (let y = 1; y < height - 1; y++) {
+        for (let x = 1; x < width - 1; x++) {
+          const i = y * width + x;
+          const gx =
+            -gray[(y - 1) * width + (x - 1)] - 2 * gray[y * width + (x - 1)] - gray[(y + 1) * width + (x - 1)] +
+             gray[(y - 1) * width + (x + 1)] + 2 * gray[y * width + (x + 1)] + gray[(y + 1) * width + (x + 1)];
+          const gy =
+            -gray[(y - 1) * width + (x - 1)] - 2 * gray[(y - 1) * width + x] - gray[(y - 1) * width + (x + 1)] +
+             gray[(y + 1) * width + (x - 1)] + 2 * gray[(y + 1) * width + x] + gray[(y + 1) * width + (x + 1)];
+          const magnitude = Math.hypot(gx, gy);
+          edge[i] = magnitude;
+          if ((x + y) % 3 === 0) samples.push(magnitude);
+        }
+      }
+      if (!samples.length) return null;
+      samples.sort((a, b) => a - b);
+      const threshold = samples[Math.floor(samples.length * 0.75)] || 0;
+
+      const minDim = Math.min(width, height);
+      const minRadius = Math.max(8, Math.round(minDim * 0.10));
+      const maxRadius = Math.max(minRadius + 2, Math.round(minDim * 0.29));
+      const centerX = width / 2;
+      const centerY = height / 2;
+      let best = null;
+
+      for (let cy = Math.round(height * 0.20); cy <= height * 0.80; cy += 3) {
+        for (let cx = Math.round(width * 0.20); cx <= width * 0.80; cx += 3) {
+          const nx = (cx - centerX) / Math.max(1, width * 0.5);
+          const ny = (cy - centerY) / Math.max(1, height * 0.5);
+          const centerPrior = Math.max(0.55, 1 - Math.hypot(nx, ny) * 0.25);
+
+          for (let radius = minRadius; radius <= maxRadius; radius += 3) {
+            if (cx - radius < 2 || cx + radius >= width - 2 || cy - radius < 2 || cy + radius >= height - 2) continue;
+
+            let sum = 0;
+            let continuous = 0;
+            const angleCount = 28;
+            for (let k = 0; k < angleCount; k++) {
+              const angle = Math.PI * 2 * k / angleCount;
+              const cos = Math.cos(angle);
+              const sin = Math.sin(angle);
+              let strongest = 0;
+              for (const delta of [-1, 0, 1]) {
+                const x = Math.round(cx + (radius + delta) * cos);
+                const y = Math.round(cy + (radius + delta) * sin);
+                strongest = Math.max(strongest, edge[y * width + x] || 0);
+              }
+              sum += strongest;
+              if (strongest > threshold) continuous++;
+            }
+
+            const continuity = continuous / angleCount;
+            const average = sum / angleCount;
+            const radiusPrior = 0.9 + 0.2 * radius / Math.max(1, maxRadius);
+            const score = average * (0.35 + 0.65 * continuity) * centerPrior * radiusPrior;
+
+            if (!best || score > best.score) {
+              best = { score, cx, cy, radius, average, continuity };
+            }
+          }
+        }
+      }
+
+      if (!best || best.continuity < 0.58 || best.average < threshold * 1.35) return null;
+
+      const padFactor = 1.48;
+      let left = best.cx - best.radius * padFactor;
+      let right = best.cx + best.radius * padFactor;
+      let top = best.cy - best.radius * padFactor;
+      let bottom = best.cy + best.radius * padFactor;
+
+      left = Math.max(0, left);
+      right = Math.min(width, right);
+      top = Math.max(0, top);
+      bottom = Math.min(height, bottom);
+
+      if (right - left < minDim * 0.18 || bottom - top < minDim * 0.18) return null;
+
+      return {
+        x: left / width,
+        y: top / height,
+        width: (right - left) / width,
+        height: (bottom - top) / height
+      };
+    } catch {
+      return null;
+    }
+  };
+
   const detectSubjectBounds = (img) => {
     try {
       const naturalWidth = img.naturalWidth;
@@ -224,7 +340,10 @@
 
     const run = () => {
       if (!img.dataset.smartFitBoundsChecked) {
-        const bounds = detectSubjectBounds(img);
+        const mode = img.dataset.smartFitMode || 'subject';
+        const bounds = mode === 'dial'
+          ? (detectDialBounds(img) || detectSubjectBounds(img))
+          : detectSubjectBounds(img);
         img.dataset.smartFitBoundsChecked = '1';
         if (bounds) img.dataset.smartFitBounds = JSON.stringify(bounds);
       }
