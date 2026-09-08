@@ -1,0 +1,22 @@
+name: Check analytics worker
+
+on:
+  push:
+    paths:
+      - "cloudflare/analytics-dashboard/**"
+      - ".github/workflows/check-analytics-worker.yml"
+  pull_request:
+    paths:
+      - "cloudflare/analytics-dashboard/**"
+      - ".github/workflows/check-analytics-worker.yml"
+
+jobs:
+  syntax:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Check worker JavaScript
+        run: node --check cloudflare/analytics-dashboard/worker.js
