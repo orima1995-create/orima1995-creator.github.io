@@ -104,6 +104,7 @@
       // converge on the perceived size of the whole watch rather than only the dial.
       let framingRadius = best.radius;
       let outerBest = null;
+      let outerProbe = null;
       const outerLimit = Math.min(
         Math.round(best.radius * 1.55),
         best.cx - 2,
@@ -132,14 +133,22 @@
 
         const continuity = continuous / angleCount;
         const average = sum / angleCount;
-        if (continuity < 0.42 || average < threshold * 1.08) continue;
-
         const radiusGain = radius / best.radius;
         const score = average * (0.35 + 0.65 * continuity) * (0.92 + 0.08 * radiusGain);
-        if (!outerBest || score > outerBest.score) {
-          outerBest = { radius, score, continuity, average };
-        }
+        const candidate = { radius, score, continuity, average, radiusGain };
+        if (!outerProbe || score > outerProbe.score) outerProbe = candidate;
+
+        if (continuity < 0.42 || average < threshold * 1.08) continue;
+        if (!outerBest || score > outerBest.score) outerBest = candidate;
       }
+
+      img.dataset.smartFitOuterProbe = JSON.stringify({
+        dialRadius: best.radius,
+        dialAverage: best.average,
+        dialContinuity: best.continuity,
+        threshold,
+        outerProbe
+      });
 
       if (outerBest && outerBest.radius >= best.radius * 1.08) {
         framingRadius = outerBest.radius;
