@@ -1,0 +1,7 @@
+CF_API_TOKEN=
+CF_ACCOUNT_ID=
+DASHBOARD_PASSWORD=
+# Optional. Leave blank to auto-discover the Web Analytics siteTag.
+CF_SITE_TAG=
+# Optional. Defaults to admin.
+DASHBOARD_USER=admin
