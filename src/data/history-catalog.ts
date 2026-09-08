@@ -10,9 +10,11 @@ export type HistoryCatalogEntry = {
   hook: string;
   cardSummary: string;
   cardStatus: string;
+  displayMeta?: string;
   displayTopic?: string;
   displayName?: string;
   displaySummary?: string;
+  displayNote?: string;
   sourceRefs?: string[];
   featured: boolean;
   href?: string;
