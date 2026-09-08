@@ -12,19 +12,51 @@
 
 ## 計測の役割分担
 
-### Cloudflare Web Analytics — 性能監視
+### Cloudflare Web Analytics — 来訪 + 性能
 
-Cloudflareは主にCore Web Vitalsを見る。
+既存のCloudflare Web Analyticsを計測の主系統とする。
 
+来訪:
+- Page views
+- Visits
+- Path
+- Referrer
+- Country
+- Device
+
+性能:
 - LCP
 - INP
 - CLS
 - Page load time
 
-### 来訪者解析
+### VINTAGE ALARM ANALYTICS — 管理者用表示層
 
-GoatCounterは利用環境でDNS解決できないため採用を取り下げた。
-来訪者解析は別サービスへ切り替える。候補はUmami Cloud。
+Cloudflare Web Analytics / RUMをGraphQL APIから読み、VINTAGE ALARM用の名称へ変換して表示する。
+
+実装ソース:
+- `cloudflare/analytics-dashboard/worker.js`
+
+表示:
+- 24時間 / 7日 / 30日
+- Page views / Visits
+- 直前期間比
+- URL → ページ名
+- X / SNS
+- Organic Search
+- Direct / Unknown
+- AI Assistant
+- Other Referral
+- Country
+- Device
+
+Cloudflare API tokenはWorker Secretにのみ保存し、GitHub Pagesやブラウザへ公開しない。
+Worker自身も認証必須とする。
+
+状態:
+- Workerソース実装済み
+- Cloudflareへのデプロイ・Secret設定は別工程
+- デプロイ完了までは「公開済み」と扱わない
 
 ## VINTAGE ALARMで分ける流入
 
@@ -33,7 +65,7 @@ GoatCounterは利用環境でDNS解決できないため採用を取り下げた
 - X / SNS
 - Organic Search
 - Direct / Unknown
-- Other referrals
+- Other Referral
 - AI Assistant系リファラー（取得できる場合）
 
 GoogleのAI検索経由など、通常検索と同じ分類に入るものは独自に二重加算しない。
@@ -66,12 +98,12 @@ WATCHページでは、単純PVだけでなく「入口ページになったか�
 - XからのReferrer
 - SearchからのReferrer
 - Country
-- Browser / screen size
+- Device
 - 他ページへの遷移が確認できる場合はその導線
 
 ## 検索データ
 
-Search Consoleを利用する場合は、GoatCounterの訪問データと混同しない。
+Search Consoleを利用する場合は、Cloudflareの訪問データと混同しない。
 
 Search Console:
 - 表示回数
@@ -79,11 +111,11 @@ Search Console:
 - CTR
 - 平均掲載順位
 
-GoatCounter:
+Cloudflare Web Analytics:
 - 実際のサイト訪問
 - ページ閲覧
 - リファラー
-- Campaign
+- Country / Device
 
 定義が異なるため、数字が一致しなくても片方を誤りと決めつけない。
 
