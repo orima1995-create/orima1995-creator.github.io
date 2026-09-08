@@ -12,6 +12,7 @@ import OwnerNoteEndNav from '../components/OwnerNoteEndNav.astro';
 import '../styles/site.css';
 import '../styles/owners-v15.css';
 import OwnerFonts from '../components/OwnerFonts.astro';
+import ownersDirectory from '../data/owners-directory.json';
 
 const { watch } = Astro.props;
 const siteRoot = 'https://orima1995-create.github.io/orima1995-creator.github.io/';
@@ -26,11 +27,21 @@ const description = watch.slug === 'cyma-time-o-vox'
 const pagePath = `${watch.slug}/`;
 const pageUrl = new URL(pagePath, siteRoot).href;
 const imageUrl = new URL(watch.ownersNote.image.replace(/^\//, ''), siteRoot).href;
-const nextOwnerNote = watch.slug === 'pierce-duofon'
-  ? { href: 'cyma-time-o-vox/#owners-note', name: 'CYMA TIME-O-VOX' }
-  : watch.slug === 'cyma-time-o-vox'
-    ? { href: 'pierce-duofon/#owners-note', name: 'PIERCE DUOFON' }
-    : null;
+const directoryEntries = [...ownersDirectory.entries].sort(
+  (a, b) => a.ownedSortYear - b.ownedSortYear || Number(a.ownerNumber) - Number(b.ownerNumber)
+);
+const directoryIndex = directoryEntries.findIndex((entry) => entry.historyId === watch.slug);
+const currentDirectoryEntry = directoryIndex >= 0 ? directoryEntries[directoryIndex] : null;
+const nextDirectoryEntry = directoryEntries.length > 1 && directoryIndex >= 0
+  ? directoryEntries[(directoryIndex + 1) % directoryEntries.length]
+  : null;
+const nextOwnerNote = nextDirectoryEntry
+  ? {
+      href: nextDirectoryEntry.href,
+      name: `${nextDirectoryEntry.brand} ${nextDirectoryEntry.name}`
+    }
+  : null;
+const historyHref = currentDirectoryEntry?.historyHref ?? '/history/';
 const schema = {
   '@context': 'https://schema.org',
   '@graph': [
@@ -96,7 +107,7 @@ const schema = {
         <OwnerNoteEndNav
           nextHref={nextOwnerNote.href}
           nextName={nextOwnerNote.name}
-          historyHref="history/#1950s"
+          historyHref={historyHref}
         />
       )}
     </main>
