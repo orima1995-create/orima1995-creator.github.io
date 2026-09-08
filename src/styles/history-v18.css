@@ -27,3 +27,6 @@
 @media(max-width:350px){.history-v18 .chapter-summary-v18{width:calc(100% - 36px);grid-template-columns:38px minmax(0,1fr) 22px;gap:6px}.chapter-summary-copy-v18 h2{font-size:18px}.chapter-summary-copy-v18>span{font-size:10px}.chapter-toggle-v18{width:22px}.chapter-motif-v18.motif-before{width:220px}.chapter-motif-v18.motif-1950s{width:280px}.chapter-motif-v18.motif-1960s{width:270px}.chapter-motif-v18.motif-1970s{width:245px}.shelf-rail-v18{grid-auto-columns:calc(100% - 26px);padding-right:26px}}
 @media(prefers-reduced-motion:reduce){.history-v18{scroll-behavior:auto}.chapter-motif-v18{transition:none}}
 @media print{.history-v18 .chapter-v18{display:block}.history-v18 .chapter-v18>.chapter-body-v18{display:grid!important}.history-v18 .chapter-toggle-v18{display:none}}
+
+.history-source-list{list-style:none;margin:0;padding:6px 0 22px}.history-source-list li{display:grid;grid-template-columns:28px minmax(0,1fr);gap:12px;padding:14px 0;border-bottom:1px solid var(--rule);scroll-margin-top:96px;color:var(--soft);font:13px/1.85 var(--sans)}.history-source-list li:last-child{border-bottom:0}.history-source-no{color:var(--accent);font-weight:600}
+@media(max-width:760px){.history-source-list li{grid-template-columns:24px minmax(0,1fr);gap:9px;font-size:12px;line-height:1.8}}
