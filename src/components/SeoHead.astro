@@ -40,8 +40,32 @@ const ogImage = image
 {ogImage && <meta name="twitter:image" content={ogImage} />}
 {schema && <script type="application/ld+json" set:html={JSON.stringify(schema)} />}
 
-<!-- Performance / Core Web Vitals -->
-<script
-  type="module"
-  src="https://static.cloudflareinsights.com/beacon.min.js"
-  data-cf-beacon='{"token":"3f7f9454e132415ebf8ffa04122e16e3"}'></script>
+<!-- Performance / visitor analytics. Admin browsers can opt out with ?__va_analytics=off -->
+<script is:inline>
+  (() => {
+    const key = 'vintageAlarmAnalyticsOptOut';
+    try {
+      const url = new URL(window.location.href);
+      const toggle = url.searchParams.get('__va_analytics');
+
+      if (toggle === 'off') localStorage.setItem(key, '1');
+      if (toggle === 'on') localStorage.removeItem(key);
+
+      if (toggle === 'off' || toggle === 'on') {
+        url.searchParams.delete('__va_analytics');
+        history.replaceState(null, '', url.pathname + url.search + url.hash);
+      }
+
+      if (localStorage.getItem(key) === '1') {
+        document.documentElement.dataset.vaAnalytics = 'off';
+        return;
+      }
+    } catch {}
+
+    const beacon = document.createElement('script');
+    beacon.defer = true;
+    beacon.src = 'https://static.cloudflareinsights.com/beacon.min.js';
+    beacon.dataset.cfBeacon = '{"token":"3f7f9454e132415ebf8ffa04122e16e3"}';
+    document.head.appendChild(beacon);
+  })();
+</script>
