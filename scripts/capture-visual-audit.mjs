@@ -13,8 +13,8 @@ const routes = [
   ['smartwatch', 'history/smartwatch/']
 ];
 const focusCaptures = [
-  ['history-1950s', 'history/#1950s', '#1950s'],
-  ['history-1960s', 'history/#1960s', '#1960s']
+  ['history-1950s', 'history/#1950s', '[id="1950s"]'],
+  ['history-1960s', 'history/#1960s', '[id="1960s"]']
 ];
 
 const viewports = [
