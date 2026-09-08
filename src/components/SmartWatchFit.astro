@@ -1,0 +1,273 @@
+---
+---
+
+<script>
+  const SELECTOR = 'img[data-smart-watch-fit]';
+  const SAMPLE_LIMIT = 220;
+
+  const clamp = (value, min, max) => Math.min(max, Math.max(min, value));
+
+  const detectSubjectBounds = (img) => {
+    try {
+      const naturalWidth = img.naturalWidth;
+      const naturalHeight = img.naturalHeight;
+      if (!naturalWidth || !naturalHeight) return null;
+
+      const ratio = Math.min(1, SAMPLE_LIMIT / Math.max(naturalWidth, naturalHeight));
+      const width = Math.max(1, Math.round(naturalWidth * ratio));
+      const height = Math.max(1, Math.round(naturalHeight * ratio));
+
+      const canvas = document.createElement('canvas');
+      canvas.width = width;
+      canvas.height = height;
+      const ctx = canvas.getContext('2d', { willReadFrequently: true });
+      if (!ctx) return null;
+      ctx.drawImage(img, 0, 0, width, height);
+
+      const pixels = ctx.getImageData(0, 0, width, height).data;
+      const border = [];
+      const pushPixel = (x, y) => {
+        const offset = (y * width + x) * 4;
+        border.push([
+          pixels[offset],
+          pixels[offset + 1],
+          pixels[offset + 2],
+          pixels[offset + 3]
+        ]);
+      };
+
+      for (let x = 0; x < width; x += 2) {
+        pushPixel(x, 0);
+        if (height > 1) pushPixel(x, height - 1);
+      }
+      for (let y = 1; y < height - 1; y += 2) {
+        pushPixel(0, y);
+        if (width > 1) pushPixel(width - 1, y);
+      }
+      if (!border.length) return null;
+
+      const transparentBorderRatio = border.filter(([, , , a]) => a < 32).length / border.length;
+      const alphaMode = transparentBorderRatio >= 0.72;
+
+      let bgR = 0;
+      let bgG = 0;
+      let bgB = 0;
+      let opaqueCount = 0;
+      if (!alphaMode) {
+        for (const [r, g, b, a] of border) {
+          if (a < 200) continue;
+          bgR += r;
+          bgG += g;
+          bgB += b;
+          opaqueCount++;
+        }
+        if (!opaqueCount) return null;
+        bgR /= opaqueCount;
+        bgG /= opaqueCount;
+        bgB /= opaqueCount;
+      }
+
+      let borderVariance = 0;
+      if (!alphaMode) {
+        let count = 0;
+        for (const [r, g, b, a] of border) {
+          if (a < 200) continue;
+          const dr = r - bgR;
+          const dg = g - bgG;
+          const db = b - bgB;
+          borderVariance += (dr * dr + dg * dg + db * db) / 3;
+          count++;
+        }
+        borderVariance = count ? Math.sqrt(borderVariance / count) : Infinity;
+
+        // Complex scenes (wrist shots, desks, patterned backgrounds) are intentionally
+        // left uncropped. Safety is more important than aggressive auto-zoom.
+        if (borderVariance > 22) return null;
+      }
+
+      const distanceThreshold = Math.max(30, borderVariance * 2.4 + 18);
+      const distanceThresholdSq = distanceThreshold * distanceThreshold;
+      const rowCounts = new Uint16Array(height);
+      const columnCounts = new Uint16Array(width);
+
+      for (let y = 0; y < height; y++) {
+        for (let x = 0; x < width; x++) {
+          const offset = (y * width + x) * 4;
+          const r = pixels[offset];
+          const g = pixels[offset + 1];
+          const b = pixels[offset + 2];
+          const a = pixels[offset + 3];
+
+          let foreground = false;
+          if (alphaMode) {
+            foreground = a > 40;
+          } else if (a > 180) {
+            const dr = r - bgR;
+            const dg = g - bgG;
+            const db = b - bgB;
+            foreground = dr * dr + dg * dg + db * db > distanceThresholdSq;
+          }
+
+          if (foreground) {
+            rowCounts[y]++;
+            columnCounts[x]++;
+          }
+        }
+      }
+
+      const rowFloor = Math.max(2, Math.round(width * 0.015));
+      const columnFloor = Math.max(2, Math.round(height * 0.015));
+
+      let top = 0;
+      while (top < height && rowCounts[top] < rowFloor) top++;
+      let bottom = height - 1;
+      while (bottom >= top && rowCounts[bottom] < rowFloor) bottom--;
+      let left = 0;
+      while (left < width && columnCounts[left] < columnFloor) left++;
+      let right = width - 1;
+      while (right >= left && columnCounts[right] < columnFloor) right--;
+
+      if (right <= left || bottom <= top) return null;
+
+      const boxWidth = right - left + 1;
+      const boxHeight = bottom - top + 1;
+      const coverage = (boxWidth * boxHeight) / (width * height);
+
+      if (coverage < 0.025 || coverage > 0.92) return null;
+
+      // If the detected subject is already touching an edge, zooming would create
+      // a real risk of clipping the watch. Fall back to plain contain.
+      const edgeGuardX = Math.max(1, Math.round(width * 0.012));
+      const edgeGuardY = Math.max(1, Math.round(height * 0.012));
+      if (
+        left <= edgeGuardX ||
+        top <= edgeGuardY ||
+        right >= width - 1 - edgeGuardX ||
+        bottom >= height - 1 - edgeGuardY
+      ) return null;
+
+      const padX = Math.max(2, Math.round(boxWidth * 0.08));
+      const padY = Math.max(2, Math.round(boxHeight * 0.08));
+      left = Math.max(0, left - padX);
+      right = Math.min(width - 1, right + padX);
+      top = Math.max(0, top - padY);
+      bottom = Math.min(height - 1, bottom + padY);
+
+      return {
+        x: left / width,
+        y: top / height,
+        width: (right - left + 1) / width,
+        height: (bottom - top + 1) / height
+      };
+    } catch {
+      // External images may taint canvas. Never break the gallery for detection.
+      return null;
+    }
+  };
+
+  const applyFit = (img, bounds) => {
+    const box = img.parentElement;
+    if (!box || !img.naturalWidth || !img.naturalHeight) return;
+
+    img.style.transform = '';
+    img.style.transformOrigin = '0 0';
+
+    if (!bounds) {
+      img.dataset.smartFitState = 'safe-contain';
+      return;
+    }
+
+    const containerWidth = box.clientWidth;
+    const containerHeight = box.clientHeight;
+    if (!containerWidth || !containerHeight) return;
+
+    const imageWidth = img.naturalWidth;
+    const imageHeight = img.naturalHeight;
+    const baseScale = Math.min(containerWidth / imageWidth, containerHeight / imageHeight);
+    const renderedWidth = imageWidth * baseScale;
+    const renderedHeight = imageHeight * baseScale;
+    const imageLeft = (containerWidth - renderedWidth) / 2;
+    const imageTop = (containerHeight - renderedHeight) / 2;
+
+    const subjectLeft = imageLeft + bounds.x * imageWidth * baseScale;
+    const subjectTop = imageTop + bounds.y * imageHeight * baseScale;
+    const subjectWidth = bounds.width * imageWidth * baseScale;
+    const subjectHeight = bounds.height * imageHeight * baseScale;
+
+    const target = clamp(Number(img.dataset.smartFitTarget || 0.86), 0.65, 0.94);
+    const maxZoom = clamp(Number(img.dataset.smartFitMax || 1.7), 1, 2.2);
+    const zoom = clamp(
+      Math.min(
+        (containerWidth * target) / subjectWidth,
+        (containerHeight * target) / subjectHeight
+      ),
+      1,
+      maxZoom
+    );
+
+    if (!Number.isFinite(zoom) || zoom < 1.06) {
+      img.dataset.smartFitState = 'already-fits';
+      return;
+    }
+
+    const subjectCenterX = subjectLeft + subjectWidth / 2;
+    const subjectCenterY = subjectTop + subjectHeight / 2;
+    const translateX = containerWidth / 2 - zoom * subjectCenterX;
+    const translateY = containerHeight / 2 - zoom * subjectCenterY;
+
+    img.style.transform = `matrix(${zoom},0,0,${zoom},${translateX},${translateY})`;
+    img.dataset.smartFitState = 'auto-framed';
+  };
+
+  const prepare = (img) => {
+    if (!(img instanceof HTMLImageElement)) return;
+
+    const run = () => {
+      if (!img.dataset.smartFitBoundsChecked) {
+        const bounds = detectSubjectBounds(img);
+        img.dataset.smartFitBoundsChecked = '1';
+        if (bounds) img.dataset.smartFitBounds = JSON.stringify(bounds);
+      }
+
+      let bounds = null;
+      if (img.dataset.smartFitBounds) {
+        try {
+          bounds = JSON.parse(img.dataset.smartFitBounds);
+        } catch {
+          bounds = null;
+        }
+      }
+      applyFit(img, bounds);
+    };
+
+    if (img.complete && img.naturalWidth) run();
+    else img.addEventListener('load', run, { once: true });
+  };
+
+  const init = () => document.querySelectorAll(SELECTOR).forEach(prepare);
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init, { once: true });
+  } else {
+    init();
+  }
+
+  let resizeFrame = 0;
+  window.addEventListener('resize', () => {
+    cancelAnimationFrame(resizeFrame);
+    resizeFrame = requestAnimationFrame(() => {
+      document.querySelectorAll(SELECTOR).forEach((node) => {
+        if (!(node instanceof HTMLImageElement)) return;
+        let bounds = null;
+        if (node.dataset.smartFitBounds) {
+          try {
+            bounds = JSON.parse(node.dataset.smartFitBounds);
+          } catch {
+            bounds = null;
+          }
+        }
+        applyFit(node, bounds);
+      });
+    });
+  }, { passive: true });
+</script>
