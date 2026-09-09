@@ -22,11 +22,14 @@ VINTAGE ALARM専用の非公開アクセス解析ダッシュボード。
 - Entry Pages 横棒
 - Traffic Mix ドーナツ
 - Site Flow
-- Campaign Funnel
+- Campaign Funnel（折りたたみ）
 - Referrer host / path
 - Country / Device
 - MAPPING AUDIT / UNMAPPED path
 - LOW SAMPLE 警告
+
+主要KPIとグラフを先に表示し、Campaign Funnel、流入元などの監査用テーブル、
+SEO / GEOツールは必要なときだけ開ける折りたたみへまとめている。
 
 Campaign Funnelの投稿情報はブラウザのlocalStorageにのみ保存し、GitHubやCloudflareへ書き込まない。
 投稿時刻を登録するとTraffic Trend / Acquisition Trend上のマーカーとして利用する。
@@ -60,6 +63,7 @@ Worker内のPAGE_NAMESで管理する。
 - TOP
 - HISTORY
 - OWNER'S NOTES
+- Basis Alarm
 - Pierce Duofon
 - Cyma Time-O-Vox
 - Cyma OWNER'S NOTE

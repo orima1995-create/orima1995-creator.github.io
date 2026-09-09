@@ -648,40 +648,42 @@ const DASHBOARD_HTML = `<!doctype html>
 <meta name="robots" content="noindex,nofollow,noarchive">
 <title>VINTAGE ALARM ANALYTICS</title>
 <style>
-:root{--paper:#f2eee5;--ink:#181716;--muted:#706d67;--line:#c8c0b3;--card:#faf7f0;--accent:#8d2c23;--green:#315c3d;--blue:#365f7d;--gold:#9a7b4f;--violet:#7b5674;--soft:#e7dfd2}
+:root{--paper:#f1f4f1;--ink:#17201f;--muted:#687471;--line:#d6ddda;--card:#fbfcfb;--accent:#963c33;--green:#13766e;--blue:#426d87;--gold:#9a7b4f;--violet:#7b5674;--soft:#e8eeeb;--shadow:0 5px 18px rgba(31,52,48,.055)}
 *{box-sizing:border-box}
 body{margin:0;background:var(--paper);color:var(--ink);font-family:ui-sans-serif,-apple-system,BlinkMacSystemFont,"Segoe UI","Hiragino Kaku Gothic ProN","Yu Gothic",sans-serif}
-main{width:min(1120px,calc(100% - 32px));margin:0 auto;padding:34px 0 64px}
-header{display:flex;gap:18px;align-items:flex-end;justify-content:space-between;border-bottom:1px solid var(--ink);padding-bottom:16px}
-.eyebrow{font-size:11px;letter-spacing:.18em;color:var(--muted);font-weight:700}
-h1{font-family:Georgia,"Times New Roman",serif;font-size:clamp(26px,5vw,42px);font-weight:500;letter-spacing:.02em;margin:5px 0 0}
-.actions{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
-button{appearance:none;border:1px solid var(--line);background:transparent;color:var(--ink);padding:8px 12px;font:inherit;font-size:12px;cursor:pointer}
+main{width:min(1240px,calc(100% - 32px));margin:0 auto;padding:26px 0 48px}
+header{display:flex;gap:18px;align-items:center;justify-content:space-between;border-bottom:1px solid var(--ink);padding-bottom:12px}
+.eyebrow{font-size:10px;letter-spacing:.2em;color:var(--green);font-weight:800}
+h1{font-family:Georgia,"Times New Roman",serif;font-size:clamp(25px,4vw,36px);font-weight:500;letter-spacing:.015em;margin:4px 0 0}
+.actions{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}
+button{appearance:none;border:1px solid var(--line);border-radius:7px;background:var(--card);color:var(--ink);padding:7px 10px;font:inherit;font-size:11px;cursor:pointer}
+button:hover{border-color:var(--green)}
 button.active{background:var(--ink);color:var(--paper);border-color:var(--ink)}
 button.refresh{border-color:var(--ink)}
-.status{display:flex;justify-content:space-between;gap:12px;color:var(--muted);font-size:11px;margin:12px 0 20px}
-.grid{display:grid;grid-template-columns:repeat(12,1fr);gap:12px}
-.card{background:var(--card);border:1px solid var(--line);padding:16px;min-width:0}
+.status{display:flex;justify-content:space-between;gap:12px;color:var(--muted);font-size:10px;margin:9px 0 12px}
+.grid{display:grid;grid-template-columns:repeat(12,1fr);gap:10px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;box-shadow:var(--shadow);padding:14px;min-width:0}
 .kpi{grid-column:span 2}
-.kpi .label,.section-title{font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);font-weight:700}
-.kpi .value{font-family:Georgia,"Times New Roman",serif;font-size:36px;margin-top:7px}
-.delta{font-size:11px;margin-top:4px;color:var(--muted)}
+.kpi .label,.section-title{font-size:9px;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);font-weight:800}
+.kpi .value{font-family:Georgia,"Times New Roman",serif;font-size:30px;line-height:1;margin-top:8px}
+.delta{font-size:10px;margin-top:6px;color:var(--muted)}
 .delta.up{color:#315c3d}.delta.down{color:var(--accent)}
 .pages{grid-column:span 7}.channels{grid-column:span 5}.referrers{grid-column:1/-1}.half{grid-column:span 6}
-.section-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
-table{width:100%;border-collapse:collapse;font-size:12px}
-th,td{text-align:left;padding:9px 6px;border-top:1px solid #ded7cc;vertical-align:top}
-th{font-size:10px;color:var(--muted);font-weight:600}
+.section-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:8px}.section-head>span{font-size:10px;color:var(--muted)}
+table{width:100%;border-collapse:collapse;font-size:11px}
+th,td{text-align:left;padding:7px 5px;border-top:1px solid var(--line);vertical-align:top}
+th{font-size:9px;color:var(--muted);font-weight:700}
 td.num,th.num{text-align:right;font-variant-numeric:tabular-nums}
-.path{display:block;color:var(--muted);font-size:10px;margin-top:2px;overflow-wrap:anywhere}
+.path{display:block;color:var(--muted);font-size:9px;margin-top:2px;overflow-wrap:anywhere}
 .flag{display:inline-block;margin-left:6px;padding:2px 5px;border:1px solid var(--accent);color:var(--accent);font-size:9px;letter-spacing:.08em}
-.flow{grid-column:1/-1}.audit{grid-column:1/-1;border-color:var(--accent);color:var(--accent)}.chart-card{grid-column:1/-1}.chart-half{grid-column:span 6}.chart-wrap{width:100%;overflow:hidden}.chart-legend{display:flex;gap:14px;flex-wrap:wrap;margin:8px 0 0;font-size:10px;color:var(--muted)}.legend-dot{width:8px;height:8px;border-radius:999px;display:inline-block;margin-right:5px}.low-sample{grid-column:1/-1;border-style:dashed;color:var(--accent);display:flex;justify-content:space-between;gap:12px;align-items:center}.entry-bar{display:grid;grid-template-columns:minmax(120px,1fr) 3fr auto;gap:10px;align-items:center;padding:8px 0;border-top:1px solid #ded7cc;font-size:12px}.entry-track,.flow-track{height:7px;background:var(--soft);overflow:hidden}.entry-fill,.flow-fill{height:100%;background:var(--ink)}.donut-grid{display:grid;grid-template-columns:160px minmax(0,1fr);gap:22px;align-items:center}.donut{width:150px;height:150px;border-radius:50%;position:relative;margin:auto}.donut:after{content:"";position:absolute;inset:28px;border-radius:50%;background:var(--card)}.donut-center{position:absolute;inset:0;display:grid;place-items:center;z-index:1;font-family:Georgia,"Times New Roman",serif;font-size:27px}.mix-list{display:grid;gap:7px;font-size:11px}.mix-row{display:grid;grid-template-columns:10px minmax(0,1fr) auto;gap:7px;align-items:center}.flow-viz{display:grid;gap:8px}.flow-viz-row{display:grid;grid-template-columns:minmax(110px,1fr) auto minmax(110px,1fr) 2fr auto;gap:8px;align-items:center;font-size:11px}.campaign{grid-column:1/-1}.campaign-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-top:12px}.funnel-step{border:1px solid var(--line);padding:10px;min-height:74px}.funnel-step strong{display:block;font-family:Georgia,"Times New Roman",serif;font-size:24px;margin-top:5px}.campaign-form{display:grid;grid-template-columns:2fr 1.4fr 1.6fr repeat(4,1fr) auto;gap:7px;margin-top:14px}.campaign-form input,.campaign-form button{min-width:0;border:1px solid var(--line);background:transparent;padding:8px;font:inherit;font-size:11px}.campaign-list{margin-top:10px;display:grid;gap:6px;font-size:11px}.campaign-item{display:flex;justify-content:space-between;gap:10px;border-top:1px solid #ded7cc;padding-top:7px}.muted{color:var(--muted)}details.raw{grid-column:1/-1}details.raw summary{cursor:pointer;font-size:11px;letter-spacing:.1em;color:var(--muted)}
-.bar-row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px;align-items:center;padding:9px 0;border-top:1px solid #ded7cc;font-size:12px}
+.flow{grid-column:1/-1}.audit{grid-column:1/-1;border-color:var(--accent);color:var(--accent)}.chart-card{grid-column:1/-1}.primary-chart{grid-column:span 8}.summary-chart{grid-column:span 4}.chart-half{grid-column:span 6}.chart-wrap{width:100%;overflow:hidden}.chart-wrap svg{display:block;max-height:205px}.chart-legend{display:flex;gap:12px;flex-wrap:wrap;margin:5px 0 0;font-size:9px;color:var(--muted)}.legend-dot{width:7px;height:7px;border-radius:999px;display:inline-block;margin-right:5px}.low-sample{grid-column:1/-1;border-style:dashed;color:var(--accent);display:flex;justify-content:space-between;gap:12px;align-items:center;padding:9px 12px}.entry-bar{display:grid;grid-template-columns:minmax(90px,1fr) 2fr auto;gap:8px;align-items:center;padding:6px 0;border-top:1px solid var(--line);font-size:10px}.entry-track,.flow-track{height:6px;border-radius:99px;background:var(--soft);overflow:hidden}.entry-fill,.flow-fill{height:100%;background:var(--green)}.donut-grid{display:grid;grid-template-columns:112px minmax(0,1fr);gap:14px;align-items:center}.donut{width:106px;height:106px;border-radius:50%;position:relative;margin:auto}.donut:after{content:"";position:absolute;inset:22px;border-radius:50%;background:var(--card)}.donut-center{position:absolute;inset:0;display:grid;place-items:center;z-index:1;font-family:Georgia,"Times New Roman",serif;font-size:22px}.mix-list{display:grid;gap:5px;font-size:9px}.mix-row{display:grid;grid-template-columns:9px minmax(0,1fr) auto;gap:6px;align-items:center}.flow-viz{display:grid;gap:6px}.flow-viz-row{display:grid;grid-template-columns:minmax(100px,1fr) auto minmax(100px,1fr) 2fr auto;gap:7px;align-items:center;font-size:10px}.campaign{grid-column:1/-1}.campaign-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:7px;margin-top:10px}.funnel-step{border:1px solid var(--line);border-radius:8px;padding:9px;min-height:66px}.funnel-step strong{display:block;font-family:Georgia,"Times New Roman",serif;font-size:21px;margin-top:5px}.campaign-form{display:grid;grid-template-columns:2fr 1.4fr 1.6fr repeat(4,1fr) auto;gap:6px;margin-top:12px}.campaign-form input,.campaign-form button{min-width:0;border:1px solid var(--line);border-radius:6px;background:transparent;padding:7px;font:inherit;font-size:10px}.campaign-list{margin-top:9px;display:grid;gap:5px;font-size:10px}.campaign-item{display:flex;justify-content:space-between;gap:10px;border-top:1px solid var(--line);padding-top:6px}.muted{color:var(--muted)}
+details.drawer{grid-column:1/-1;padding:0}details.drawer>summary,details.discovery-shell>summary{list-style:none;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:13px 14px;font-size:10px;letter-spacing:.13em;font-weight:800;color:var(--ink)}details.drawer>summary::-webkit-details-marker,details.discovery-shell>summary::-webkit-details-marker{display:none}details.drawer>summary:after,details.discovery-shell>summary:after{content:"＋";font-size:15px;color:var(--green)}details.drawer[open]>summary:after,details.discovery-shell[open]>summary:after{content:"−"}.drawer-content{padding:0 14px 14px}.drawer-meta{font-size:9px;letter-spacing:0;color:var(--muted);font-weight:600}.detail-grid{display:grid;grid-template-columns:repeat(12,1fr);gap:10px}.detail-grid>.card{box-shadow:none;background:#fff;border-radius:9px}
+.bar-row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px;align-items:center;padding:7px 0;border-top:1px solid var(--line);font-size:10px}
 .bar-wrap{grid-column:1/-1;height:3px;background:#e5ded2;margin-top:-3px}
-.bar{height:100%;background:var(--ink)}
-.discovery{margin-bottom:12px}.discovery .grid{margin-top:0}.discovery-status{grid-column:1/-1}.index-table{grid-column:1/-1}.health{grid-column:span 4}.seo-kpi{grid-column:span 2}.inbox{grid-column:1/-1}.inbox-controls{display:grid;grid-template-columns:180px minmax(0,1fr) auto;gap:8px;align-items:center}.inbox-controls select,.inbox-controls input,.inbox-controls button,.index-select{border:1px solid var(--line);background:transparent;color:var(--ink);padding:8px;font:inherit;font-size:11px}.snapshot-list{display:grid;gap:7px;margin-top:10px}.snapshot-item{display:flex;justify-content:space-between;gap:12px;padding-top:7px;border-top:1px solid #ded7cc;font-size:11px}.drop-note{font-size:10px;color:var(--muted);line-height:1.6;margin-top:8px}.diagnostic{border-left:3px solid var(--accent)}.error{border:1px solid var(--accent);padding:14px;color:var(--accent);background:#fff8f5;white-space:pre-wrap}
-footer{margin-top:22px;color:var(--muted);font-size:10px;line-height:1.6}
-@media(max-width:900px){.kpi,.seo-kpi,.health{grid-column:span 4}.inbox-controls{grid-template-columns:1fr}.campaign-form{grid-template-columns:1fr 1fr}.campaign-grid{grid-template-columns:repeat(3,1fr)}}@media(max-width:760px){main{width:min(100% - 20px,1120px);padding-top:20px}header{align-items:flex-start;flex-direction:column}.actions{justify-content:flex-start}.kpi,.seo-kpi,.health{grid-column:span 6}.pages,.channels,.referrers,.half,.chart-half{grid-column:1/-1}.donut-grid{grid-template-columns:1fr}.campaign-grid{grid-template-columns:repeat(2,1fr)}.campaign-form{grid-template-columns:1fr}.flow-viz-row{grid-template-columns:1fr auto 1fr}.flow-viz-row .flow-track,.flow-viz-row .flow-count{grid-column:1/-1}.status{flex-direction:column}}
+.bar{height:100%;background:var(--green)}
+#discovery{margin-top:10px}.discovery{padding:0 14px 14px}.discovery .grid{margin-top:0}.discovery-shell{background:var(--card);border:1px solid var(--line);border-radius:12px;box-shadow:var(--shadow)}.discovery-status{grid-column:1/-1}.index-table{grid-column:1/-1}.health{grid-column:span 4}.seo-kpi{grid-column:span 2}.seo-kpi .value{font-family:Georgia,"Times New Roman",serif;font-size:24px;margin-top:6px}.inbox{grid-column:1/-1}.inbox-controls{display:grid;grid-template-columns:150px minmax(0,1fr) auto;gap:7px;align-items:center}.inbox-controls select,.inbox-controls input,.inbox-controls button,.index-select{border:1px solid var(--line);border-radius:6px;background:transparent;color:var(--ink);padding:7px;font:inherit;font-size:10px}.snapshot-list{display:grid;gap:6px;margin-top:8px}.snapshot-item{display:flex;justify-content:space-between;gap:12px;padding-top:6px;border-top:1px solid var(--line);font-size:10px}.drop-note{font-size:9px;color:var(--muted);line-height:1.55;margin-top:7px}.diagnostic{border-left:3px solid var(--accent)}.error{border:1px solid var(--accent);border-radius:10px;padding:12px;color:var(--accent);background:#fff8f5;white-space:pre-wrap}
+footer{margin-top:16px;color:var(--muted);font-size:9px;line-height:1.6}
+@media(max-width:980px){.kpi,.seo-kpi{grid-column:span 4}.health{grid-column:span 4}.primary-chart,.summary-chart{grid-column:span 6}.inbox-controls{grid-template-columns:1fr}.campaign-form{grid-template-columns:1fr 1fr}.campaign-grid{grid-template-columns:repeat(3,1fr)}}@media(max-width:760px){main{width:min(100% - 20px,1240px);padding-top:18px}header{align-items:flex-start;flex-direction:column}.actions{justify-content:flex-start}.kpi,.seo-kpi,.health{grid-column:span 6}.pages,.channels,.referrers,.half,.chart-half,.primary-chart,.summary-chart{grid-column:1/-1}.donut-grid{grid-template-columns:100px minmax(0,1fr)}.campaign-grid{grid-template-columns:repeat(2,1fr)}.campaign-form{grid-template-columns:1fr}.flow-viz-row{grid-template-columns:1fr auto 1fr}.flow-viz-row .flow-track,.flow-viz-row .flow-count{grid-column:1/-1}.status{flex-direction:column}.detail-grid>.card{grid-column:1/-1}}@media(max-width:390px){main{width:calc(100% - 14px)}.actions{gap:4px}.actions button{padding:6px 8px}.seo-kpi,.health{grid-column:1/-1}details.drawer>summary,details.discovery-shell>summary{align-items:flex-start;flex-direction:column}.drawer-meta{line-height:1.5}}
 </style>
 </head>
 <body>
@@ -698,8 +700,8 @@ footer{margin-top:22px;color:var(--muted);font-size:10px;line-height:1.6}
 </div>
 </header>
 <div class="status"><span id="period">Loading…</span><span id="updated"></span></div>
-<div id="discovery"></div>
 <div id="content"></div>
+<div id="discovery"></div>
 <footer>Cloudflare Web Analytics / RUM。Page views と Visits は別定義。ページ表の ENTRY VISITS は、そのページが外部流入・直接流入の入口になった回数。内部遷移は0になり得る。検索露出は Search Console と分離して扱う。</footer>
 </main>
 <script>
@@ -740,7 +742,7 @@ function bucketLabel(value){
 }
 function lineChart(points,series,campaigns=[]){
   if(!points?.length)return '<div class="muted">時系列データなし</div>';
-  const w=900,h=250,l=42,r=18,t=18,b=34,iw=w-l-r,ih=h-t-b;
+  const w=900,h=220,l=42,r=18,t=16,b=30,iw=w-l-r,ih=h-t-b;
   const start=new Date(window.__vaWindowStart||points[0].bucket).getTime();
   const end=new Date(window.__vaWindowEnd||points[points.length-1].bucket).getTime();
   const values=points.flatMap(p=>series.map(s=>Number(p[s.key]||0)));
@@ -774,7 +776,7 @@ function lineChart(points,series,campaigns=[]){
   return '<div class="chart-wrap"><svg viewBox="0 0 '+w+' '+h+'" width="100%" role="img">'+grid+lines+markers+ticks+'</svg></div>'+legend;
 }
 function entryBars(pages){
-  const items=[...pages].sort((a,b)=>(b.visits-a.visits)||(b.pageviews-a.pageviews)).slice(0,8);
+  const items=[...pages].sort((a,b)=>(b.visits-a.visits)||(b.pageviews-a.pageviews)).slice(0,6);
   const max=Math.max(1,...items.map(x=>x.visits));
   return items.map(x=>'<div class="entry-bar"><span><strong>'+esc(x.name)+'</strong><span class="path">'+esc(x.path)+'</span></span><div class="entry-track"><div class="entry-fill" style="width:'+((x.visits/max)*100)+'%"></div></div><strong>'+n(x.visits)+'</strong></div>').join("");
 }
@@ -800,7 +802,7 @@ function trafficMix(channels){
   return '<div class="donut-grid"><div class="donut" style="background:conic-gradient('+stops.join(",")+')"><div class="donut-center">'+n(total)+'</div></div><div class="mix-list">'+list+'</div></div>';
 }
 function flowVisual(items){
-  const list=items.slice(0,10);
+  const list=items.slice(0,7);
   const max=Math.max(1,...list.map(x=>x.pageviews));
   if(!list.length)return '<div class="muted">内部遷移データなし</div>';
   return '<div class="flow-viz">'+list.map(x=>'<div class="flow-viz-row"><strong>'+esc(x.sourceName)+'</strong><span>→</span><strong>'+esc(x.destinationName)+'</strong><div class="flow-track"><div class="flow-fill" style="width:'+((x.pageviews/max)*100)+'%"></div></div><span class="flow-count">'+n(x.pageviews)+'</span></div>').join("")+'</div>';
@@ -924,7 +926,7 @@ function render(data){
   const campaigns=getCampaigns();
   const trend=(data.trend||[]).map(x=>({...x,meta:(x.instagram||0)+(x.facebook||0)+(x.otherSns||0)}));
   const pagesPerVisit=c.visits?c.pageviews/c.visits:0;
-  const watchEntry=c.pages.filter(x=>x.name==="Pierce Duofon"||x.name==="Cyma Time-O-Vox").reduce((s,x)=>s+x.visits,0);
+  const watchEntry=c.pages.filter(x=>["Basis Alarm","Pierce Duofon","Cyma Time-O-Vox"].includes(x.name)).reduce((s,x)=>s+x.visits,0);
   const watchShare=c.visits?(watchEntry/c.visits)*100:0;
   const unmapped=c.pages.filter(x=>!x.mapped);
   const audit=unmapped.length
@@ -943,23 +945,24 @@ function render(data){
   const trafficSeries=[{key:"pageviews",label:"Page views",color:COLORS.pageviews},{key:"visits",label:"Visits",color:COLORS.visits}];
   const acquisitionSeries=[{key:"x",label:"X",color:COLORS.X},{key:"search",label:"Search",color:COLORS.Search},{key:"direct",label:"Direct",color:COLORS.Direct},{key:"meta",label:"Meta",color:COLORS.Meta}];
   document.getElementById("content").innerHTML=
-  '<div class="grid">'+audit+lowSample+
+  '<div class="grid analytics-grid">'+audit+lowSample+
     '<section class="card kpi"><div class="label">VISITS</div><div class="value">'+n(c.visits)+'</div>'+delta(c.visits,p.visits)+'</section>'+
     '<section class="card kpi"><div class="label">PAGE VIEWS</div><div class="value">'+n(c.pageviews)+'</div>'+delta(c.pageviews,p.pageviews)+'</section>'+
     '<section class="card kpi"><div class="label">X VISITS</div><div class="value">'+n(xNow)+'</div>'+delta(xNow,xPrev)+'</section>'+
     '<section class="card kpi"><div class="label">ORGANIC SEARCH</div><div class="value">'+n(searchNow)+'</div>'+delta(searchNow,searchPrev)+'</section>'+
     '<section class="card kpi"><div class="label">PAGES / VISIT</div><div class="value">'+pagesPerVisit.toFixed(2)+'</div><div class="delta">回遊の粗い指標</div></section>'+
     '<section class="card kpi"><div class="label">WATCH ENTRY SHARE</div><div class="value">'+watchShare.toFixed(0)+'%</div><div class="delta">'+n(watchEntry)+' watch entries</div></section>'+
-    '<section class="card chart-card"><div class="section-head"><div class="section-title">TRAFFIC TREND</div><span>'+esc(data.trendBucket||"no bucket")+'</span></div>'+lineChart(trend,trafficSeries,campaigns)+(data.trendWarning?'<div class="path">'+esc(data.trendWarning)+'</div>':'')+'</section>'+
-    '<section class="card chart-card"><div class="section-head"><div class="section-title">ACQUISITION TREND</div><span>X / Search / Direct / Meta</span></div>'+lineChart(trend,acquisitionSeries,campaigns)+'</section>'+
-    '<section class="card chart-half"><div class="section-head"><div class="section-title">ENTRY PAGES</div><span>入口回数</span></div>'+entryBars(c.pages)+'</section>'+
-    '<section class="card chart-half"><div class="section-head"><div class="section-title">TRAFFIC MIX</div><span>Visits構成</span></div>'+trafficMix(c.channels)+'</section>'+
+    '<section class="card primary-chart"><div class="section-head"><div class="section-title">TRAFFIC TREND</div><span>'+esc(data.trendBucket||"no bucket")+'</span></div>'+lineChart(trend,trafficSeries,campaigns)+(data.trendWarning?'<div class="path">'+esc(data.trendWarning)+'</div>':'')+'</section>'+
+    '<section class="card summary-chart"><div class="section-head"><div class="section-title">TRAFFIC MIX</div><span>Visits構成</span></div>'+trafficMix(c.channels)+'</section>'+
+    '<section class="card primary-chart"><div class="section-head"><div class="section-title">ACQUISITION TREND</div><span>X / Search / Direct / Meta</span></div>'+lineChart(trend,acquisitionSeries,campaigns)+'</section>'+
+    '<section class="card summary-chart"><div class="section-head"><div class="section-title">ENTRY PAGES</div><span>入口回数</span></div>'+entryBars(c.pages)+'</section>'+
     '<section class="card flow"><div class="section-head"><div class="section-title">SITE FLOW</div><span>内部遷移</span></div>'+flowVisual(internalFlows)+'</section>'+
-    '<section class="card campaign"><div class="section-head"><div class="section-title">CAMPAIGN FUNNEL</div><span>投稿ログはこのブラウザだけに保存</span></div>'+campaignPanel(entryFlows,internalFlows)+'</section>'+
+    '<details class="card drawer campaign"><summary><span>CAMPAIGN FUNNEL</span><span class="drawer-meta">投稿ログはこのブラウザだけに保存</span></summary><div class="drawer-content">'+campaignPanel(entryFlows,internalFlows)+'</div></details>'+
     '<section class="card pages"><div class="section-head"><div class="section-title">PAGES</div><span>'+n(c.pages.length)+' paths</span></div><table><thead><tr><th>PAGE</th><th class="num">PV</th><th class="num">ENTRY VISITS</th></tr></thead><tbody>'+
       c.pages.slice(0,20).map(x=>'<tr><td><strong>'+esc(x.name)+'</strong>'+(!x.mapped?'<span class="flag">UNMAPPED</span>':'')+'<span class="path">'+esc(x.path)+'</span></td><td class="num">'+n(x.pageviews)+'</td><td class="num">'+n(x.visits)+'</td></tr>').join("")+
     '</tbody></table></section>'+
     '<section class="card channels"><div class="section-head"><div class="section-title">CHANNELS / PV</div></div>'+rows(c.channels,10)+'</section>'+
+    '<details class="card drawer raw"><summary><span>RAW / AUDIT TABLES</span><span class="drawer-meta">流入元・内部遷移・国・端末の詳細</span></summary><div class="drawer-content detail-grid">'+
     '<section class="card flow"><div class="section-head"><div class="section-title">ENTRY SOURCE → PAGE</div><span>同一行で取得</span></div><table><thead><tr><th>SOURCE</th><th></th><th>DESTINATION</th><th class="num">PV</th><th class="num">ENTRY VISITS</th></tr></thead><tbody>'+flowRows(entryFlows)+'</tbody></table></section>'+
     '<section class="card flow"><div class="section-head"><div class="section-title">SITE FLOW</div><span>内部遷移</span></div><table><thead><tr><th>FROM</th><th></th><th>TO</th><th class="num">PV</th><th class="num">VISITS</th></tr></thead><tbody>'+flowRows(internalFlows,true)+'</tbody></table></section>'+
     '<section class="card referrers"><div class="section-head"><div class="section-title">REFERRERS</div><span>raw host</span></div><table><thead><tr><th>HOST</th><th class="num">PV</th><th class="num">ENTRY VISITS</th></tr></thead><tbody>'+
@@ -967,6 +970,7 @@ function render(data){
     '</tbody></table></section>'+
     '<section class="card half"><div class="section-head"><div class="section-title">COUNTRIES</div></div>'+rows(c.countries,10)+'</section>'+
     '<section class="card half"><div class="section-head"><div class="section-title">DEVICES</div></div>'+rows(c.devices,10)+'</section>'+
+    '</div></details>'+
   '</div>';
   bindCampaignUi();
 }
@@ -1117,6 +1121,7 @@ function discoveryTopRows(snapshot){
 }
 function renderDiscoveryInbox(){
   const mount=document.getElementById("discovery");
+  const wasOpen=Boolean(mount.querySelector("details.discovery-shell")?.open);
   const seo=latestSnapshots("seo");
   const geo=latestSnapshots("geo");
   const latestSeo=seo[0]||null,prevSeo=seo[1]||null,latestGeo=geo[0]||null,prevGeo=geo[1]||null;
@@ -1132,7 +1137,7 @@ function renderDiscoveryInbox(){
   const history=[...getDiscoverySnapshots()].sort((a,b)=>String(b.importedAt).localeCompare(String(a.importedAt))).slice(0,6);
   const historyHtml=history.map(x=>'<div class="snapshot-item"><span><strong>'+(x.kind==="seo"?"SEO":"GOOGLE AI")+'</strong> · '+new Date(x.importedAt).toLocaleString("ja-JP")+' · '+x.files.length+' files</span><span>IMP '+n(x.summary.impressions)+(x.kind==="seo"?' / CLICK '+n(x.summary.clicks):'')+'</span></div>').join("");
   mount.innerHTML=
-    '<div class="discovery"><div class="grid">'+
+    '<details class="discovery-shell" '+(wasOpen?'open':'')+'><summary><span>DISCOVERY / SEO &amp; GEO TOOLS</span><span class="drawer-meta">INDEX '+indexedCount+'/'+KEY_PAGES.length+' · '+esc(diagnosis.label)+'</span></summary><div class="discovery"><div class="grid">'+
       '<section class="card inbox"><div class="section-head"><div class="section-title">DISCOVERY INBOX / ZERO-COST</div><span>Search Console CSVをローカル保存</span></div>'+
         '<div class="inbox-controls"><select id="discoveryKind"><option value="seo">通常SEO</option><option value="geo">Google生成AI</option></select><input id="discoveryFiles" type="file" accept=".csv,text/csv" multiple><button id="importDiscovery" type="button">IMPORT</button></div>'+
         '<div class="drop-note">Search Consoleで「エクスポート → CSV」。CSVが複数ならまとめて選択。API・Google Cloud・課金経路は使わない。データはこのブラウザのlocalStorageだけに保存。</div>'+
@@ -1150,7 +1155,7 @@ function renderDiscoveryInbox(){
       discoveryTopRows(latestGeo)+
       '<section class="card index-table"><div class="section-head"><div class="section-title">INDEX STATUS / MANUAL</div><span>Search Console URL検査の結果だけ記録</span></div><table><thead><tr><th>PAGE</th><th>STATUS</th><th>CHECKED</th></tr></thead><tbody>'+indexRows+'</tbody></table></section>'+
       '<section class="card inbox"><div class="section-head"><div class="section-title">IMPORT HISTORY</div><button id="clearDiscovery" type="button">CLEAR</button></div><div class="snapshot-list">'+(historyHtml||'<div class="muted">まだImportなし。</div>')+'</div></section>'+
-    '</div></div>';
+    '</div></div></details>';
   bindDiscoveryInbox();
 }
 function bindDiscoveryInbox(){
