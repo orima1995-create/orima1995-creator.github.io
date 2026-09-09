@@ -6,7 +6,7 @@ model: ALARM
 catch:
   - 触って、見て、聴いて楽しむおもちゃ箱。
 ownersNote:
-  image: /images/basis-alarm/owners-note.jpg
+  image: /images/Basis Alarm(BFG90).png
   lead:
     - 触って、見て、聴いて楽しむおもちゃ箱。
     - ベゼルでアラームを合わせて、
@@ -36,12 +36,16 @@ spec:
   winding: 手巻き
   acoustic: ベル式
   notes: 回転ベゼル式アラーム設定、9時位置ON/OFFスライダー、時計用／アラーム用の巻上げ表示窓
+video:
+  xUrl: https://x.com/Rimacroissant/status/2071711307469144447?s=20
 deepDive:
   - number: "01"
     title: Baumgartner BFG 90
     paragraphs:
-      - 1940年代末、Baumgartner Frèresは14リーニュのBFG 90を開発した。『Alarm am Arm』は、2香箱、リングテンプ、平ひげを備える初期のアラーム用ムーブメントとして記録している。
-      - 『The Alarm Wristwatch』でも、Baumgartner BFG 90は戦後初期に市場へ出たアラーム用ムーブメントの一つとして扱われている。
+      - 1940年代末、Baumgartner Frèresは14リーニュのBFG 90を開発した。『Alarm am
+        Arm』は、2香箱、リングテンプ、平ひげを備える初期のアラーム用ムーブメントとして記録している。
+      - 『The Alarm Wristwatch』でも、Baumgartner BFG
+        90は戦後初期に市場へ出たアラーム用ムーブメントの一つとして扱われている。
     citationRefs:
       - "1"
       - "2"
@@ -66,11 +70,13 @@ deepDive:
   - number: "04"
     title: 一つのブランドでは終わらなかった
     paragraphs:
-      - BFG 90はBasis専用ムーブメントではなく、複数ブランドへ供給された。HorlbeckはLantex、Simplon、Tior、Sheffield Alarmを挙げている。
+      - BFG
+        90はBasis専用ムーブメントではなく、複数ブランドへ供給された。HorlbeckはLantex、Simplon、Tior、Sheffield
+        Alarmを挙げている。
       - そのためBFG 90は、一社の代表作というより、戦後初期のアラーム腕時計を複数ブランドへ広げた実用エボーシュとして見る方が実態に近い。
     citationRefs:
       - "2"
-      - "1,2"
+      - 1,2
 sourceMeta:
   - id: "1"
     type: reference
@@ -79,7 +85,9 @@ sourceMeta:
   - id: "3"
     type: owner
 sources:
-  - Leonhard Beitl, 『Alarm am Arm』(2009), p.20, p.87（Baumgartner BFG 90、2香箱、回転ベゼル、9時位置スライダー、Basis）
-  - Michael Philip Horlbeck, 『The Alarm Wristwatch』(Schiffer Publishing, 2007), pp.19, 21, 90–91（Baumgartner BFG 90、搭載ブランド、2つの巻上げ表示）
+  - Leonhard Beitl, 『Alarm am Arm』(2009), p.20, p.87（Baumgartner BFG
+    90、2香箱、回転ベゼル、9時位置スライダー、Basis）
+  - Michael Philip Horlbeck, 『The Alarm Wristwatch』(Schiffer Publishing, 2007),
+    pp.19, 21, 90–91（Baumgartner BFG 90、搭載ブランド、2つの巻上げ表示）
   - 掲載個体の実機観察（1時／5時位置の巻上げ確認窓、ディスクの回転）
 ---
