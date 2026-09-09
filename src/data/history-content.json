@@ -94,15 +94,19 @@
         ]
       },
       {
-        "id": "basis-bfg90",
+        "id": "basis-alarm",
         "group": "owner",
         "sort": 30,
         "meta": "BASIS / BFG 90",
         "name": "BASIS ALARM",
         "hook": "2香箱と、2つの巻上げ表示窓。",
         "cardSummary": "BFG 90を搭載する所有個体。",
-        "cardStatus": "OWNER'S NOTE",
-        "featured": true
+        "cardStatus": "OWNER'S NOTE →",
+        "featured": true,
+        "sourceRefs": [
+          "1",
+          "2"
+        ]
       }
     ]
   },
