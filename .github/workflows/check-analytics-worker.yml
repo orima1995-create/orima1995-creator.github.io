@@ -20,3 +20,5 @@ jobs:
           node-version: "22"
       - name: Check worker JavaScript
         run: node --check cloudflare/analytics-dashboard/worker.js
+      - name: Check generated dashboard JavaScript
+        run: node cloudflare/analytics-dashboard/check-generated-html.mjs

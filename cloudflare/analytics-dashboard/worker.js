@@ -726,7 +726,7 @@ function rows(items,max=8){
 const COLORS={pageviews:"#181716",visits:"#8d2c23",X:"#315c3d",Search:"#365f7d",Direct:"#9a7b4f",Meta:"#7b5674",AI:"#6b6b6b",Other:"#aaa197"};
 function bucketTime(value){
   if(!value)return NaN;
-  if(/^\d{4}-\d{2}-\d{2}$/.test(value))return new Date(value+"T00:00:00Z").getTime();
+  if(/^\\d{4}-\\d{2}-\\d{2}$/.test(value))return new Date(value+"T00:00:00Z").getTime();
   return new Date(value).getTime();
 }
 function bucketLabel(value){
@@ -870,7 +870,7 @@ function bindCampaignUi(){
         postUrl.dataset.authorName=preview.authorName||"";
         postUrl.dataset.postText=preview.text||"";
         if(!form.elements.label.value){
-          const base=(preview.text||"").replace(/\s+/g," ").trim();
+          const base=(preview.text||"").replace(/\\s+/g," ").trim();
           form.elements.label.value=base?base.slice(0,42):(preview.authorName||"X POST");
         }
         postUrl.dataset.state="ready";
@@ -998,7 +998,7 @@ function saveIndexStatus(value){
   localStorage.setItem(INDEX_KEY,JSON.stringify(value));
 }
 function normHeader(value){
-  return String(value||"").trim().toLowerCase().replace(/[\s_\-（）()％%]/g,"");
+  return String(value||"").trim().toLowerCase().replace(/[\\s_\\-（）()％%]/g,"");
 }
 function detectMetric(header){
   const h=normHeader(header);
@@ -1026,7 +1026,7 @@ function parseNumber(value){
 }
 function parseCsv(text){
   const rows=[]; let row=[]; let cell=""; let quoted=false;
-  const src=String(text||"").replace(/^\uFEFF/,"");
+  const src=String(text||"").replace(/^\\uFEFF/,"");
   for(let i=0;i<src.length;i++){
     const ch=src[i];
     if(quoted){
@@ -1036,8 +1036,8 @@ function parseCsv(text){
     }else{
       if(ch==='"')quoted=true;
       else if(ch===","){row.push(cell);cell="";}
-      else if(ch==="\n"){row.push(cell);rows.push(row);row=[];cell="";}
-      else if(ch!=="\r")cell+=ch;
+      else if(ch==="\\n"){row.push(cell);rows.push(row);row=[];cell="";}
+      else if(ch!=="\\r")cell+=ch;
     }
   }
   if(cell.length||row.length){row.push(cell);rows.push(row);}
