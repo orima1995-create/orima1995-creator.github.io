@@ -1,6 +1,18 @@
 {
   "entries": [
     {
+      "ownerNumber": "03",
+      "ownedEra": "1940s",
+      "ownedSortYear": 1948,
+      "brand": "BASIS",
+      "name": "ALARM",
+      "catch": "触って、見て、聴いて楽しむおもちゃ箱。",
+      "image": "/images/Basis Alarm(BFG90).png",
+      "href": "/basis-alarm/#owners-note",
+      "historyId": "basis-alarm",
+      "historyHref": "/history/#1940s"
+    },
+    {
       "ownerNumber": "02",
       "ownedEra": "1950s",
       "ownedSortYear": 1956,
