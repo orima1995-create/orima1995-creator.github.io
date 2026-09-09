@@ -48,6 +48,7 @@ Cloudflare Web Analytics / RUMをGraphQL APIから読み、VINTAGE ALARM用の�
 - ENTRY SOURCE → PAGE
 - SITE FLOW
 - X
+- YouTube
 - Instagram
 - Facebook
 - Other SNS
@@ -139,9 +140,9 @@ PC / スマホなどブラウザごとに設定する。
 
 同じ流入を複数カテゴリへ二重計上しない。
 
-## X導線の検証
+## X / YouTube導線の検証
 
-X AnalyticsとCloudflareを1対1の同一指標として扱わない。
+X Analytics / YouTube StudioとCloudflareを1対1の同一指標として扱わない。
 
 X:
 - Impressions
@@ -150,12 +151,12 @@ X:
 - Link clicks
 
 Cloudflare:
-- X / SNS Entry Visits
+- X / YouTube / SNS Entry Visits
 - Entry destination
 - Referrer host / path
 - その後のSITE FLOW
 
-特定投稿のLink clicksとCloudflareの7日集計を直接比較しない。
+特定投稿のLink clicksやYouTubeの再生回数とCloudflareの7日集計を直接比較しない。YouTubeアプリ等でRefererが渡らない場合はDirect / Unknownになり得る。
 投稿直後の検証には1H / 3H / 24Hを使い、同じ時間帯へ寄せる。
 
 可能な場合はGraphQLの`refererPath`でX投稿のstatus pathを確認する。
@@ -296,7 +297,7 @@ Web Analyticsは既知Botを除外する設定を使うが、アプリ内プリ�
 7. Raw / Audit
 
 時間推移は選択期間に応じて粒度を切り替える。
-Campaign情報は管理者ブラウザのlocalStorageにのみ保存し、GitHubへ分析値をコミットしない。
+Campaign情報は管理者ブラウザのlocalStorageにのみ保存し、GitHubへ分析値をコミットしない。X / YouTubeのプラットフォーム種別を保存し、既存のplatform未指定レコードはXとして扱う。
 
 Campaign FunnelのCloudflare側値は選択期間全体の比較値であり、SNS側Link clicksへの完全帰属とは扱わない。
 投稿時刻は折れ線グラフのマーカーとして利用する。
