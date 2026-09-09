@@ -57,6 +57,57 @@ WorkerはBasic Authで保護する。
 はCloudflare Worker Secretにのみ保存する。
 API token・Account ID・パスワードをGitHubへコミットしない。
 
+## ChatGPT / AI向け read-only export
+
+ダッシュボード本体のBasic AuthやCloudflare API tokenを共有せず、集計データだけを一時的に読み出すための経路を用意する。
+
+流れ:
+
+1. Basic Auth済みのブラウザで `/api/ai-share-link?window=7d` を開く。
+2. Workerが最大7日間だけ有効な署名付き `/api/ai-export` URLを返す。
+3. そのURLをChatGPTへ渡す。
+4. ChatGPT側は通常のGETで集計JSONを読める。
+
+対応window:
+
+- 1h
+- 3h
+- 24h
+- 7d
+- 30d
+
+`ttl` を秒で指定できる。最小5分、最大7日。省略時は24時間。
+
+例:
+
+`/api/ai-share-link?window=7d&ttl=86400`
+
+export対象:
+
+- Page views / Visits
+- Pages / Entry Pages
+- Channels
+- Referrer host / path
+- External entry flow
+- Internal site flow
+- SNS → WATCH entry
+- Country / Device
+- Traffic / Acquisition trend
+- 直前同期間
+
+含めないもの:
+
+- Cloudflare API token
+- Dashboard password
+- IP address
+- Cookie
+- raw User-Agent
+- Search Console / Google生成AIのImport snapshot
+
+Search Console / Google生成AIのCSV Importは現時点でブラウザlocalStorageだけに保存されるため、Worker側exportには含まれない。取得不能なデータを自動取得済みとして扱わない。
+
+署名はWorker Secretの `DASHBOARD_PASSWORD` をHMAC-SHA256の鍵として使い、windowと有効期限に結び付ける。署名付きURLはread-onlyだが、有効期限内はURLを知る相手が閲覧できるため、必要な相手以外へ共有しない。
+
 ## URL表示名
 
 Worker内のPAGE_NAMESで管理する。
