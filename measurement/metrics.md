@@ -63,6 +63,20 @@ Cloudflare Web Analytics / RUMをGraphQL APIから読み、VINTAGE ALARM用の�
 
 Cloudflare API tokenはWorker Secretにのみ保存し、GitHub Pagesやブラウザへ公開しない。
 
+### ChatGPT / AI read-only export
+
+施策判断をChatGPT側でも同じ集計値から行えるように、管理画面とは別に短時間だけ有効なread-only exportを使う。
+
+- `/api/ai-share-link` はBasic Auth必須。
+- WorkerがHMAC署名付きの `/api/ai-export` URLを発行する。
+- 署名はwindowと有効期限に結び付ける。
+- 有効期限は最小5分、最大7日。
+- exportはCloudflare Web Analyticsの集計値だけを返す。
+- Cloudflare API token / Dashboard password / IP / Cookie / raw User-Agentは返さない。
+- Search Console / Google生成AIのCSV ImportはブラウザlocalStorageのためexport対象外。
+
+このexportを使ったChatGPT分析でも、`実装済み / 公開済み / 成果観測済み`を分け、X流入・検索流入・AI Assistant Referrerを混同しない。
+
 ## Visits / Page views / Entryの扱い
 
 Page viewsとVisitsを同一視しない。
