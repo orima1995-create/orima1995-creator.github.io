@@ -15,7 +15,7 @@ if (!response.ok) {
 }
 
 const html = await response.text();
-const scripts = [...html.matchAll(/<script(?:\\s[^>]*)?>([\\s\\S]*?)<\\/script>/gi)]
+const scripts = [...html.matchAll(/<script(?:\s[^>]*)?>([\s\S]*?)<\/script>/gi)]
   .map((match) => match[1])
   .filter((script) => script.trim());
 
