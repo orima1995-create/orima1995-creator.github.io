@@ -54,7 +54,7 @@ deepDive:
       - "2"
       - "2"
   - number: "02"
-    title: 一本のリューズ、一方向、二つの香箱
+    title: 一本のリューズ、一方向で二つの香箱
     paragraphs:
       - BFG
         90は、時計用とアラーム用に2つの香箱を持つ。2香箱そのものは珍しくない。変わっているのは、その巻き方だ。一本のリューズを、同じ方向へ回して2つとも巻く。
@@ -68,6 +68,9 @@ deepDive:
       - "2"
       - "2"
       - "2"
+    images:
+      - src: /images/70957643-C7C5-4A86-B1BF-11AB18A28299.jpeg
+        afterParagraph: 4
   - number: "03"
     title: なぜ、2つの小窓があるのか
     paragraphs:
