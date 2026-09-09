@@ -96,9 +96,9 @@ sourceMeta:
   - id: "5"
     type: owner
 sources:
-  - Leonhard Beitl, 『Alarm am Arm』(2009), p.20, p.87, p.109, pp.172, 308, 398, 419, 622（BFG 90 / BFG 902、Basis / Fabry / Maxor / Triwera、操作・仕様）
-  - Michael Philip Horlbeck, 『The Alarm Wristwatch』(Schiffer Publishing, 2007), pp.88–91, 168–170（BFG 90の柱式構造、滑りクラッチ、巻上げ表示、ケース・ブランド展開）
-  - Ranfft DB, “Baumgartner Frères Calibers”（Baumgartner Frèresの沿革、エボーシュ生産、ピンレバー系ムーブメント）
-  - Tomas Rosputinsky, “#TBT: Unusual Basis Alarm Watch BFG 90”, Fratello (2019)（実機での巻上げ挙動、表示窓、回転ベゼル、スライダー）
-  - 掲載個体の実機観察（1時／5時位置の巻上げ確認窓、ディスクの回転）
+  - "Leonhard Beitl, 『Alarm am Arm』(2009), p.20, p.87, p.109, pp.172, 308, 398, 419, 622（BFG 90 / BFG 902、Basis / Fabry / Maxor / Triwera、操作・仕様）"
+  - "Michael Philip Horlbeck, 『The Alarm Wristwatch』(Schiffer Publishing, 2007), pp.88–91, 168–170（BFG 90の柱式構造、滑りクラッチ、巻上げ表示、ケース・ブランド展開）"
+  - "Ranfft DB, “Baumgartner Frères Calibers”（Baumgartner Frèresの沿革、エボーシュ生産、ピンレバー系ムーブメント）"
+  - "Tomas Rosputinsky, “#TBT: Unusual Basis Alarm Watch BFG 90”, Fratello (2019)（実機での巻上げ挙動、表示窓、回転ベゼル、スライダー）"
+  - "掲載個体の実機観察（1時／5時位置の巻上げ確認窓、ディスクの回転）"
 ---
