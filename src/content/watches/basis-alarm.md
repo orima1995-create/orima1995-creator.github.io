@@ -27,56 +27,62 @@ ownersNote:
     - 高級機のような洗練ではなく、機能をそのまま外に出した実用品。
     - だからこそ、見て、触って、鳴らす楽しさが残っている。
 spec:
-  era: 1940年代末〜1950年代初頭
-  caseSize: 未計測
+  era: 1948年頃（同型資料）
+  caseSize: 37mm（同型資料）
   caliber: Baumgartner BFG 90
-  jewels: 未確認
-  frequency: 未確認
+  jewels: 17石
+  frequency: 18,000振動／時
   barrels: 2香箱
   winding: 手巻き
-  acoustic: ベル式
-  notes: 回転ベゼル式アラーム設定、9時位置ON/OFFスライダー、時計用／アラーム用の巻上げ表示窓
+  acoustic: 底部ベル式
+  notes: 14リーニュ、ムーブメント径33.0mm・厚さ5.95mm、ピンレバー、約45時間パワーリザーブ、アラーム約10秒、回転ベゼル式アラーム設定、9時位置ON/OFFスライダー、1時／5時位置の巻上げ表示窓
 video:
   xUrl: https://x.com/Rimacroissant/status/2071711307469144447?s=20
 deepDive:
   - number: "01"
     title: Baumgartner BFG 90
     paragraphs:
-      - 1940年代末、Baumgartner Frèresは14リーニュのBFG 90を開発した。『Alarm am
-        Arm』は、2香箱、リングテンプ、平ひげを備える初期のアラーム用ムーブメントとして記録している。
-      - 『The Alarm Wristwatch』でも、Baumgartner BFG
-        90は戦後初期に市場へ出たアラーム用ムーブメントの一つとして扱われている。
+      - BFG 90は14リーニュ、直径33.0mm、厚さ5.95mm。17石、18,000振動／時、ピンレバー脱進機、2香箱を備える手巻きアラームムーブメントとして記録されている。
+      - 時計用とアラーム用のゼンマイは同じ巻真から巻き上げる。パワーリザーブはアラームを使わない状態で約45時間、アラームの鳴動時間は約10秒とされる。
+      - ムーブメントは柱構造を採り、文字盤側には巻上げ状態を示す2つの表示機構を持つ。
     citationRefs:
-      - "1"
+      - "2"
+      - "2"
       - "2"
   - number: "02"
     title: ベゼルで合わせ、スライダーで鳴らす
     paragraphs:
-      - BFG 90搭載機では、回転ベゼルでアラーム時刻を設定し、9時位置の外部スライダーでアラームをON／OFFする構成が確認されている。
-      - 操作部を隠さず外に出した構成は、Basis Alarmの見た目そのものを機能表示にしている。
+      - アラーム時刻は回転ベゼルを反時計回りに回して設定する。
+      - 9時位置のスライダーは、上でアラームOFF、下でONとなる。
     citationRefs:
-      - "1"
-      - "1"
+      - "1,2"
+      - "1,2"
   - number: "03"
     title: 2つの香箱と2つの確認窓
     paragraphs:
       - BFG 90は時計用とアラーム用に独立した2つの香箱を持つ。
-      - HorlbeckはBFG 90搭載機の特徴として、文字盤上に時計側とアラーム側、それぞれの巻き上げ状態を示す2つの表示を挙げている。
-      - 掲載個体では、巻き上げ操作に合わせて1時位置と5時位置の小窓内のディスクが回転する様子を確認できる。
+      - 1948年のBasis掲載例では、1時位置の窓が時計用、5時位置の窓がアラーム用の巻上げ状態を示す。各窓のディスクは巻き上げ中に回転し、対応するゼンマイが完全に巻き上がると回転を止める。
+      - 通常のパワーリザーブ表示のように残量を連続表示するものではなく、巻上げ完了を確認するための表示である。
+    citationRefs:
+      - "1,2"
+      - "1,2"
+      - "2"
+  - number: "04"
+    title: 1948年のBasis掲載例
+    paragraphs:
+      - 『Alarm am Arm』には、1948年のBasis Alarmとして、直径37mmのクロームメッキ金属ケース、圧入式スチール裏蓋、銀色文字盤、アラビア夜光数字、Alpha型夜光針を備えた個体が掲載されている。
+      - 同資料の個体は、回転ベゼル、9時位置のON/OFFスライダー、1時と5時の巻上げ表示窓を備える。
     citationRefs:
       - "1"
-      - "2"
-      - "3"
-  - number: "04"
-    title: 一つのブランドでは終わらなかった
+      - "1"
+  - number: "05"
+    title: 複数ブランドへ供給されたBFG 90
     paragraphs:
-      - BFG
-        90はBasis専用ムーブメントではなく、複数ブランドへ供給された。HorlbeckはLantex、Simplon、Tior、Sheffield
-        Alarmを挙げている。
-      - そのためBFG 90は、一社の代表作というより、戦後初期のアラーム腕時計を複数ブランドへ広げた実用エボーシュとして見る方が実態に近い。
+      - BFG 90はBasis専用ではなく、複数ブランドへ供給された。専門文献ではLantex、Simplon、Tior、Sheffield Alarmなどへの搭載例が記録されている。
+      - ケースや文字盤はブランドごとに異なる一方、回転ベゼル、ON/OFFスライダー、2つの巻上げ表示窓というBFG 90特有の構成が共通して見られる。
     citationRefs:
       - "2"
-      - 1,2
+      - "1,2"
 sourceMeta:
   - id: "1"
     type: reference
@@ -85,9 +91,7 @@ sourceMeta:
   - id: "3"
     type: owner
 sources:
-  - Leonhard Beitl, 『Alarm am Arm』(2009), p.20, p.87（Baumgartner BFG
-    90、2香箱、回転ベゼル、9時位置スライダー、Basis）
-  - Michael Philip Horlbeck, 『The Alarm Wristwatch』(Schiffer Publishing, 2007),
-    pp.19, 21, 90–91（Baumgartner BFG 90、搭載ブランド、2つの巻上げ表示）
+  - Leonhard Beitl, 『Alarm am Arm』(2009), p.20, p.87（Baumgartner BFG 90、1948年Basis掲載例、37mmケース、2香箱、回転ベゼル、9時位置スライダー、1時／5時位置の巻上げ表示）
+  - Michael Philip Horlbeck, 『The Alarm Wristwatch』(Schiffer Publishing, 2007), pp.19, 21, 88–91（Baumgartner BFG 90、14リーニュ、33.0×5.95mm、17石、18,000振動／時、2香箱、約45時間、アラーム約10秒、搭載ブランド）
   - 掲載個体の実機観察（1時／5時位置の巻上げ確認窓、ディスクの回転）
 ---
