@@ -37,7 +37,7 @@ const watches = defineCollection({
       alt: z.string().optional()
     })).optional(),
     video: z.object({
-      youtubeId: z.string(),
+      youtubeId: z.string().optional(),
       xUrl: z.string().url().optional()
     }).optional(),
     deepDive: z.array(z.object({
