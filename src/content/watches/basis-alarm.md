@@ -36,6 +36,12 @@ spec:
   winding: 手巻き
   acoustic: 底部ベル式
   notes: アラーム約10秒、回転ベゼル式アラーム設定、9時位置ON/OFFスライダー、1時／5時位置の巻上げ表示窓
+specimenGallery:
+  - image: /images/IMG_8890-1.jpeg
+    label: 正面（リストショット）
+  - image: /images/IMG_9196.jpeg
+    label: アラーム針
+    alt: ベゼルに直接繋がっている
 video:
   youtubeId: https://youtube.com/shorts/MWoqA4L2wdM?si=Y6Z_3_lEy8_hITYM
   xUrl: https://x.com/Rimacroissant/status/2071711307469144447?s=20
