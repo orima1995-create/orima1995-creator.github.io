@@ -917,7 +917,7 @@ footer{margin-top:16px;color:var(--muted);font-size:9px;line-height:1.6}
 <button data-window="24h">24H</button>
 <button data-window="7d" class="active">7D</button>
 <button data-window="30d">30D</button>
-<button class="refresh" id="aiShare">AI LINK</button>
+<button class="refresh" id="aiShare">AI COPY</button>
 <button class="refresh" id="refresh">REFRESH</button>
 </div>
 </header>
@@ -1446,20 +1446,26 @@ document.getElementById("aiShare").addEventListener("click",async()=>{
   button.disabled=true;
   button.textContent="WAIT";
   try{
-    const response=await fetch("/api/ai-share-link?window="+encodeURIComponent(windowKey)+"&ttl=604800",{cache:"no-store"});
-    const data=await response.json();
-    if(!response.ok||data.error)throw new Error(data.error||("HTTP "+response.status));
+    const linkResponse=await fetch("/api/ai-share-link?window="+encodeURIComponent(windowKey)+"&ttl=604800",{cache:"no-store"});
+    const linkData=await linkResponse.json();
+    if(!linkResponse.ok||linkData.error)throw new Error(linkData.error||("HTTP "+linkResponse.status));
+
+    const exportResponse=await fetch(linkData.url,{cache:"no-store"});
+    const exportData=await exportResponse.json();
+    if(!exportResponse.ok||exportData.error)throw new Error(exportData.error||("HTTP "+exportResponse.status));
+
+    const payload=JSON.stringify(exportData);
     try{
-      await navigator.clipboard.writeText(data.url);
+      await navigator.clipboard.writeText(payload);
       button.textContent="COPIED";
     }catch{
-      window.prompt("Copy AI export URL",data.url);
+      window.prompt("Copy analytics JSON",payload);
       button.textContent="READY";
     }
     setTimeout(()=>{button.textContent=original;button.disabled=false;},1800);
   }catch(error){
     button.textContent="ERROR";
-    alert("AI LINK: "+error.message);
+    alert("AI COPY: "+error.message);
     setTimeout(()=>{button.textContent=original;button.disabled=false;},1800);
   }
 });
