@@ -20,10 +20,14 @@ const pageTitle = watch.slug === 'pierce-duofon'
   ? 'Pierce Duofon｜Cal.135・2段階アラーム・実機音｜VINTAGE ALARM'
   : watch.slug === 'cyma-time-o-vox'
     ? 'Cyma Time-O-Vox 18K Chronomètre｜Cal.R.464・1香箱｜VINTAGE ALARM'
-    : `${watch.brand} ${watch.model}｜VINTAGE ALARM`;
+    : watch.slug === 'basis-alarm'
+      ? 'Basis Alarm BFG 90｜2香箱・巻上げ表示窓・実機音｜VINTAGE ALARM'
+      : `${watch.brand} ${watch.model}｜VINTAGE ALARM`;
 const description = watch.slug === 'cyma-time-o-vox'
   ? 'Cyma Time-O-Vox 18K Chronomètre。Cal.R.464、1香箱、2プッシャー、透かしラグ。OWNER\'S NOTE、SPEC、R.464機構とケース仕様のDEEP DIVEを掲載。'
-  : `${watch.brand} ${watch.model}。${watch.spec.caliber}、${watch.spec.barrels}、${watch.spec.acoustic}。OWNER'S NOTE、SPEC、${watch.video ? '実機鳴動、' : ''}資料に基づくDEEP DIVEを掲載。`;
+  : watch.slug === 'basis-alarm'
+    ? 'Basis AlarmとBaumgartner BFG 90。一本の巻真から同じ方向に2香箱を巻く構造、滑りクラッチ、2つの巻上げ表示窓を、実機音と資料から追う。'
+    : `${watch.brand} ${watch.model}。${watch.spec.caliber}、${watch.spec.barrels}、${watch.spec.acoustic}。OWNER'S NOTE、SPEC、${watch.video ? '実機鳴動、' : ''}資料に基づくDEEP DIVEを掲載。`;
 const pagePath = `${watch.slug}/`;
 const pageUrl = new URL(pagePath, siteRoot).href;
 const imageUrl = new URL(watch.ownersNote.image.replace(/^\//, ''), siteRoot).href;
