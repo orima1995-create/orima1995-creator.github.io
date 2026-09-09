@@ -63,10 +63,12 @@ API token・Account ID・パスワードをGitHubへコミットしない。
 
 流れ:
 
-1. Basic Auth済みのブラウザで `/api/ai-share-link?window=7d` を開く。
-2. Workerが最大7日間だけ有効な署名付き `/api/ai-export` URLを返す。
+1. ダッシュボード右上の `AI LINK` を押す。
+2. 現在選択中のwindowに対して、最大7日間だけ有効な署名付き `/api/ai-export` URLが発行され、クリップボードへコピーされる。
 3. そのURLをChatGPTへ渡す。
 4. ChatGPT側は通常のGETで集計JSONを読める。
+
+手動でも、Basic Auth済みのブラウザで `/api/ai-share-link?window=7d` を開けば同じURLを取得できる。
 
 対応window:
 

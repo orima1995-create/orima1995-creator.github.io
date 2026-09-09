@@ -917,6 +917,7 @@ footer{margin-top:16px;color:var(--muted);font-size:9px;line-height:1.6}
 <button data-window="24h">24H</button>
 <button data-window="7d" class="active">7D</button>
 <button data-window="30d">30D</button>
+<button class="refresh" id="aiShare">AI LINK</button>
 <button class="refresh" id="refresh">REFRESH</button>
 </div>
 </header>
@@ -1439,6 +1440,29 @@ document.querySelectorAll("[data-window]").forEach(btn=>btn.addEventListener("cl
   document.querySelectorAll("[data-window]").forEach(x=>x.classList.toggle("active",x===btn));
   load();
 }));
+document.getElementById("aiShare").addEventListener("click",async()=>{
+  const button=document.getElementById("aiShare");
+  const original=button.textContent;
+  button.disabled=true;
+  button.textContent="WAIT";
+  try{
+    const response=await fetch("/api/ai-share-link?window="+encodeURIComponent(windowKey)+"&ttl=604800",{cache:"no-store"});
+    const data=await response.json();
+    if(!response.ok||data.error)throw new Error(data.error||("HTTP "+response.status));
+    try{
+      await navigator.clipboard.writeText(data.url);
+      button.textContent="COPIED";
+    }catch{
+      window.prompt("Copy AI export URL",data.url);
+      button.textContent="READY";
+    }
+    setTimeout(()=>{button.textContent=original;button.disabled=false;},1800);
+  }catch(error){
+    button.textContent="ERROR";
+    alert("AI LINK: "+error.message);
+    setTimeout(()=>{button.textContent=original;button.disabled=false;},1800);
+  }
+});
 document.getElementById("refresh").addEventListener("click",()=>{load();renderDiscoveryInbox();});
 renderDiscoveryInbox();
 load();
