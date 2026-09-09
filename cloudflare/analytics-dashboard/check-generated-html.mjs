@@ -1,5 +1,5 @@
 import vm from "node:vm";
-import worker, { aggregateSnsEntries, campaignWindow, campaignSummary } from "./worker.js";
+import worker, { aggregateSnsEntries, campaignWindow, campaignSummary, parseYouTubeVideoUrl } from "./worker.js";
 import assert from "node:assert/strict";
 
 const start = '2026-09-08T00:00:00Z';
@@ -11,10 +11,35 @@ assert.equal(campaignWindow(start, 24, Date.parse(start) + 48 * 3600000).elapsed
 assert.throws(() => campaignWindow(start, 2));
 assert.throws(() => campaignWindow('invalid', 24));
 assert.throws(() => campaignWindow(start, 24, Date.parse(start) - 1));
+
+const shorts = parseYouTubeVideoUrl("https://youtube.com/shorts/MWoqA4L2wdM?si=test");
+assert.equal(shorts.videoId, "MWoqA4L2wdM");
+assert.equal(shorts.kind, "shorts");
+assert.equal(shorts.canonicalUrl, "https://www.youtube.com/shorts/MWoqA4L2wdM");
+const shortLink = parseYouTubeVideoUrl("https://youtu.be/MWoqA4L2wdM?si=test");
+assert.equal(shortLink.videoId, "MWoqA4L2wdM");
+assert.equal(shortLink.kind, "video");
+assert.equal(shortLink.canonicalUrl, "https://www.youtube.com/watch?v=MWoqA4L2wdM");
+const watchLink = parseYouTubeVideoUrl("https://www.youtube.com/watch?v=MWoqA4L2wdM&feature=share");
+assert.equal(watchLink.videoId, "MWoqA4L2wdM");
+assert.throws(() => parseYouTubeVideoUrl("https://example.com/watch?v=MWoqA4L2wdM"));
 const flow = (destination, source, count) => ({ count, dimensions: { requestPath: destination, refererHost: 'orima1995-create.github.io', refererPath: source }, sum: { visits: 0 } });
 const summary = campaignSummary({ viewer: { accounts: [{ entries: [], flows: [flow('/cyma-time-o-vox/', '/cyma-time-o-vox/', 9), flow('/pierce-duofon/', '/cyma-time-o-vox/', 2)] }] } }, '/cyma-time-o-vox/');
 assert.equal(summary.nextPages, 2);
 assert.equal(summary.xEntries, 0);
+const platformData = { viewer: { accounts: [{ entries: [
+  { dimensions: { requestPath: "/basis-alarm/", refererHost: "youtube.com" }, sum: { visits: 3 } },
+  { dimensions: { requestPath: "/basis-alarm/", refererHost: "t.co" }, sum: { visits: 2 } },
+], flows: [] }] } };
+const youtubeSummary = campaignSummary(platformData, "/basis-alarm/", "YouTube");
+assert.equal(youtubeSummary.platformEntries, 3);
+assert.equal(youtubeSummary.youtubeEntries, 3);
+assert.equal(youtubeSummary.xEntries, 0);
+assert.equal(youtubeSummary.targetEntries, 3);
+const xSummary = campaignSummary(platformData, "/basis-alarm/", "X");
+assert.equal(xSummary.platformEntries, 2);
+assert.equal(xSummary.xEntries, 2);
+assert.equal(xSummary.youtubeEntries, 0);
 assert.throws(() => campaignSummary({}, '/'));
 
 const entry = (requestPath, refererHost, visits) => ({ dimensions: { requestPath, refererHost }, sum: { visits } });
@@ -98,6 +123,9 @@ const requiredLayoutFragments = [
   'class="discovery-shell"',
   '["Basis Alarm","Pierce Duofon","Cyma Time-O-Vox"]',
   '{name:"Basis Alarm",path:"/basis-alarm/"}',
+  'option value="YouTube"',
+  '"/api/youtube-preview"',
+  'key:"youtube",label:"YouTube"',
 ];
 
 for (const fragment of requiredLayoutFragments) {

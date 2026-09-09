@@ -30,6 +30,10 @@ export default {
       return xPreviewResponse(url);
     }
 
+    if (url.pathname === "/api/youtube-preview") {
+      return youtubePreviewResponse(url);
+    }
+
     if (url.pathname === "/" || url.pathname === "/index.html") {
       return htmlResponse(DASHBOARD_HTML);
     }
@@ -106,6 +110,61 @@ async function xPreviewResponse(url) {
       { error: error instanceof Error ? error.message : String(error) },
       400,
     );
+  }
+}
+
+
+export function parseYouTubeVideoUrl(raw) {
+  const parsed = new URL(raw);
+  const host = parsed.hostname.toLowerCase().replace(/^www\./, "");
+  let videoId = "";
+  let kind = "video";
+  if (host === "youtu.be") {
+    videoId = parsed.pathname.split("/").filter(Boolean)[0] || "";
+  } else if (host === "youtube.com" || host === "m.youtube.com") {
+    const parts = parsed.pathname.split("/").filter(Boolean);
+    if (parts[0] === "shorts" && parts[1]) {
+      videoId = parts[1];
+      kind = "shorts";
+    } else if (parts[0] === "embed" && parts[1]) {
+      videoId = parts[1];
+    } else if (parsed.pathname === "/watch") {
+      videoId = parsed.searchParams.get("v") || "";
+    }
+  } else {
+    throw new Error("YouTube URL only.");
+  }
+  if (!/^[A-Za-z0-9_-]{6,20}$/.test(videoId)) {
+    throw new Error("YouTube video URL format could not be recognized.");
+  }
+  return {
+    videoId,
+    kind,
+    canonicalUrl: kind === "shorts"
+      ? "https://www.youtube.com/shorts/" + videoId
+      : "https://www.youtube.com/watch?v=" + videoId,
+  };
+}
+async function youtubePreviewResponse(url) {
+  try {
+    const raw = url.searchParams.get("url") || "";
+    const parsed = parseYouTubeVideoUrl(raw);
+    const endpoint = new URL("https://www.youtube.com/oembed");
+    endpoint.searchParams.set("url", parsed.canonicalUrl);
+    endpoint.searchParams.set("format", "json");
+    const response = await fetch(endpoint.toString(), { headers: { Accept: "application/json" } });
+    if (!response.ok) throw new Error("YouTube oEmbed HTTP " + response.status);
+    const data = await response.json();
+    return jsonResponse({
+      url: parsed.canonicalUrl,
+      videoId: parsed.videoId,
+      kind: parsed.kind,
+      title: data.title || "",
+      authorName: data.author_name || "",
+      authorUrl: data.author_url || "",
+    });
+  } catch (error) {
+    return jsonResponse({ error: error instanceof Error ? error.message : String(error) }, 400);
   }
 }
 
@@ -234,7 +293,7 @@ async function aiExportResponse(request, url, env) {
         privacy:
           "Aggregate Cloudflare Web Analytics only; no IP addresses, cookies, or raw user-agent strings are exported.",
         attribution:
-          "X/SNS referrer paths can help diagnosis but do not guarantee post-level attribution.",
+          "X/YouTube/SNS referrer paths can help diagnosis but do not guarantee post-level attribution.",
       },
     });
   } catch (error) {
@@ -368,19 +427,24 @@ export function campaignWindow(start, hours, now = Date.now()) {
     end: new Date(anchor + elapsed).toISOString(), complete: elapsed === duration, elapsedHours: elapsed / 3600000 };
 }
 
-export function campaignSummary(data, target) {
+export function campaignSummary(data, target, platform = "X") {
   const account = data?.viewer?.accounts?.[0] || {};
   if (!Array.isArray(account.entries) || !Array.isArray(account.flows)) throw new Error("比較データを取得できませんでした。");
+  const channel = platform === "YouTube" ? "YouTube" : "X";
   const entries = account.entries;
   const flows = normalizePeriod(data).flows;
+  const platformEntries = entries.filter(x => classifyReferrer(x.dimensions?.refererHost || "") === channel).reduce((s,x) => s + (x.sum?.visits || 0), 0);
+  const targetEntries = entries.filter(x => classifyReferrer(x.dimensions?.refererHost || "") === channel && cleanPath(x.dimensions?.requestPath || "/") === target).reduce((s,x) => s + (x.sum?.visits || 0), 0);
   return {
-    xEntries: entries.filter(x => classifyReferrer(x.dimensions?.refererHost || "") === "X").reduce((s,x) => s + (x.sum?.visits || 0), 0),
-    targetEntries: entries.filter(x => classifyReferrer(x.dimensions?.refererHost || "") === "X" && cleanPath(x.dimensions?.requestPath || "/") === target).reduce((s,x) => s + (x.sum?.visits || 0), 0),
+    platform,
+    platformEntries,
+    xEntries: channel === "X" ? platformEntries : 0,
+    youtubeEntries: channel === "YouTube" ? platformEntries : 0,
+    targetEntries,
     nextPages: flows.filter(x => x.channel === "Internal Navigation" && x.sourceCleanPath === target && x.destinationPath !== target).reduce((s,x) => s + x.pageviews, 0),
     possiblyTruncated: entries.length >= 1000 || account.flows.length >= 200
   };
 }
-
 async function campaignResponse(url, env) {
   let bounds;
   try { bounds = campaignWindow(url.searchParams.get("start"), url.searchParams.get("hours")); }
@@ -389,11 +453,12 @@ async function campaignResponse(url, env) {
     requireEnv(env, "CF_API_TOKEN"); requireEnv(env, "CF_ACCOUNT_ID");
     const host = env.REQUEST_HOST || DEFAULT_HOST;
     const target = cleanPath(url.searchParams.get("target") || "/");
+    const platform = url.searchParams.get("platform") === "YouTube" ? "YouTube" : "X";
     const [before, after] = await Promise.all([
       fetchPeriod(env, host, new Date(bounds.beforeStart), new Date(Date.parse(bounds.start) - 1)),
       fetchPeriod(env, host, new Date(bounds.start), new Date(Date.parse(bounds.end) - 1))
     ]);
-    return jsonResponse({ ...bounds, target, before: campaignSummary(before, target), after: campaignSummary(after, target) });
+    return jsonResponse({ ...bounds, target, platform, before: campaignSummary(before, target, platform), after: campaignSummary(after, target, platform) });
   } catch (error) { return jsonResponse({ error: error.message }, 500); }
 }
 
@@ -595,6 +660,7 @@ function normalizeTrend(data) {
         pageviews: 0,
         visits: 0,
         x: 0,
+        youtube: 0,
         instagram: 0,
         facebook: 0,
         otherSns: 0,
@@ -619,6 +685,7 @@ function normalizeTrend(data) {
     const visits = row?.sum?.visits || 0;
 
     if (channel === "X") point.x += visits;
+    else if (channel === "YouTube") point.youtube += visits;
     else if (channel === "Instagram") point.instagram += visits;
     else if (channel === "Facebook") point.facebook += visits;
     else if (channel === "Other SNS") point.otherSns += visits;
@@ -794,6 +861,7 @@ function buildFlows(rows) {
 function buildChannels(rows) {
   const channels = {
     "X": { pageviews: 0, visits: 0 },
+    "YouTube": { pageviews: 0, visits: 0 },
     "Instagram": { pageviews: 0, visits: 0 },
     "Facebook": { pageviews: 0, visits: 0 },
     "Other SNS": { pageviews: 0, visits: 0 },
@@ -826,6 +894,14 @@ function classifyReferrer(host) {
     value.endsWith(".twitter.com") ||
     value === "t.co"
   ) return "X";
+
+  if (
+    value === "youtu.be" ||
+    value.endsWith(".youtu.be") ||
+    value === "youtube.com" ||
+    value.endsWith(".youtube.com") ||
+    value.includes("youtube-nocookie.com")
+  ) return "YouTube";
 
   if (value.includes("instagram.com")) return "Instagram";
   if (value.includes("facebook.com")) return "Facebook";
@@ -939,7 +1015,7 @@ th{font-size:9px;color:var(--muted);font-weight:700}
 td.num,th.num{text-align:right;font-variant-numeric:tabular-nums}
 .path{display:block;color:var(--muted);font-size:9px;margin-top:2px;overflow-wrap:anywhere}
 .flag{display:inline-block;margin-left:6px;padding:2px 5px;border:1px solid var(--accent);color:var(--accent);font-size:9px;letter-spacing:.08em}
-.flow{grid-column:1/-1}.audit{grid-column:1/-1;border-color:var(--accent);color:var(--accent)}.chart-card{grid-column:1/-1}.primary-chart{grid-column:span 8}.summary-chart{grid-column:span 4}.chart-half{grid-column:span 6}.chart-wrap{width:100%;overflow:hidden}.chart-wrap svg{display:block;max-height:205px}.chart-legend{display:flex;gap:12px;flex-wrap:wrap;margin:5px 0 0;font-size:9px;color:var(--muted)}.legend-dot{width:7px;height:7px;border-radius:999px;display:inline-block;margin-right:5px}.low-sample{grid-column:1/-1;border-style:dashed;color:var(--accent);display:flex;justify-content:space-between;gap:12px;align-items:center;padding:9px 12px}.entry-bar{display:grid;grid-template-columns:minmax(90px,1fr) 2fr auto;gap:8px;align-items:center;padding:6px 0;border-top:1px solid var(--line);font-size:10px}.entry-track,.flow-track{height:6px;border-radius:99px;background:var(--soft);overflow:hidden}.entry-fill,.flow-fill{height:100%;background:var(--green)}.donut-grid{display:grid;grid-template-columns:112px minmax(0,1fr);gap:14px;align-items:center}.donut{width:106px;height:106px;border-radius:50%;position:relative;margin:auto}.donut:after{content:"";position:absolute;inset:22px;border-radius:50%;background:var(--card)}.donut-center{position:absolute;inset:0;display:grid;place-items:center;z-index:1;font-family:Georgia,"Times New Roman",serif;font-size:22px}.mix-list{display:grid;gap:5px;font-size:9px}.mix-row{display:grid;grid-template-columns:9px minmax(0,1fr) auto;gap:6px;align-items:center}.flow-viz{display:grid;gap:6px}.flow-viz-row{display:grid;grid-template-columns:minmax(100px,1fr) auto minmax(100px,1fr) 2fr auto;gap:7px;align-items:center;font-size:10px}.campaign{grid-column:1/-1}.campaign-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:7px;margin-top:10px}.funnel-step{border:1px solid var(--line);border-radius:8px;padding:9px;min-height:66px}.funnel-step strong{display:block;font-family:Georgia,"Times New Roman",serif;font-size:21px;margin-top:5px}.campaign-form{display:grid;grid-template-columns:2fr 1.4fr 1.6fr repeat(4,1fr) auto;gap:6px;margin-top:12px}.campaign-form input,.campaign-form button{min-width:0;border:1px solid var(--line);border-radius:6px;background:transparent;padding:7px;font:inherit;font-size:10px}.campaign-list{margin-top:9px;display:grid;gap:5px;font-size:10px}.campaign-item{display:flex;justify-content:space-between;gap:10px;border-top:1px solid var(--line);padding-top:6px}.muted{color:var(--muted)}
+.flow{grid-column:1/-1}.audit{grid-column:1/-1;border-color:var(--accent);color:var(--accent)}.chart-card{grid-column:1/-1}.primary-chart{grid-column:span 8}.summary-chart{grid-column:span 4}.chart-half{grid-column:span 6}.chart-wrap{width:100%;overflow:hidden}.chart-wrap svg{display:block;max-height:205px}.chart-legend{display:flex;gap:12px;flex-wrap:wrap;margin:5px 0 0;font-size:9px;color:var(--muted)}.legend-dot{width:7px;height:7px;border-radius:999px;display:inline-block;margin-right:5px}.low-sample{grid-column:1/-1;border-style:dashed;color:var(--accent);display:flex;justify-content:space-between;gap:12px;align-items:center;padding:9px 12px}.entry-bar{display:grid;grid-template-columns:minmax(90px,1fr) 2fr auto;gap:8px;align-items:center;padding:6px 0;border-top:1px solid var(--line);font-size:10px}.entry-track,.flow-track{height:6px;border-radius:99px;background:var(--soft);overflow:hidden}.entry-fill,.flow-fill{height:100%;background:var(--green)}.donut-grid{display:grid;grid-template-columns:112px minmax(0,1fr);gap:14px;align-items:center}.donut{width:106px;height:106px;border-radius:50%;position:relative;margin:auto}.donut:after{content:"";position:absolute;inset:22px;border-radius:50%;background:var(--card)}.donut-center{position:absolute;inset:0;display:grid;place-items:center;z-index:1;font-family:Georgia,"Times New Roman",serif;font-size:22px}.mix-list{display:grid;gap:5px;font-size:9px}.mix-row{display:grid;grid-template-columns:9px minmax(0,1fr) auto;gap:6px;align-items:center}.flow-viz{display:grid;gap:6px}.flow-viz-row{display:grid;grid-template-columns:minmax(100px,1fr) auto minmax(100px,1fr) 2fr auto;gap:7px;align-items:center;font-size:10px}.campaign{grid-column:1/-1}.campaign-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:7px;margin-top:10px}.funnel-step{border:1px solid var(--line);border-radius:8px;padding:9px;min-height:66px}.funnel-step strong{display:block;font-family:Georgia,"Times New Roman",serif;font-size:21px;margin-top:5px}.campaign-form{display:grid;grid-template-columns:1fr 2fr 1.4fr 1.6fr repeat(4,1fr) auto;gap:6px;margin-top:12px}.campaign-form input,.campaign-form select,.campaign-form button{min-width:0;border:1px solid var(--line);border-radius:6px;background:transparent;color:var(--ink);padding:7px;font:inherit;font-size:10px}.campaign-list{margin-top:9px;display:grid;gap:5px;font-size:10px}.campaign-item{display:flex;justify-content:space-between;gap:10px;border-top:1px solid var(--line);padding-top:6px}.muted{color:var(--muted)}
 details.drawer{grid-column:1/-1;padding:0}details.drawer>summary,details.discovery-shell>summary{list-style:none;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:13px 14px;font-size:10px;letter-spacing:.13em;font-weight:800;color:var(--ink)}details.drawer>summary::-webkit-details-marker,details.discovery-shell>summary::-webkit-details-marker{display:none}details.drawer>summary:after,details.discovery-shell>summary:after{content:"＋";font-size:15px;color:var(--green)}details.drawer[open]>summary:after,details.discovery-shell[open]>summary:after{content:"−"}.drawer-content{padding:0 14px 14px}.drawer-meta{font-size:9px;letter-spacing:0;color:var(--muted);font-weight:600}.detail-grid{display:grid;grid-template-columns:repeat(12,1fr);gap:10px}.detail-grid>.card{box-shadow:none;background:#fff;border-radius:9px}
 .bar-row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px;align-items:center;padding:7px 0;border-top:1px solid var(--line);font-size:10px}
 .bar-wrap{grid-column:1/-1;height:3px;background:#e5ded2;margin-top:-3px}
@@ -992,7 +1068,7 @@ function rows(items,max=8){
     return '<div class="bar-row"><span>'+esc(x.name)+'</span><strong>'+n(x.pageviews)+'</strong><div class="bar-wrap"><div class="bar" style="width:'+width+'%"></div></div></div>';
   }).join("");
 }
-const COLORS={pageviews:"#181716",visits:"#8d2c23",X:"#315c3d",Search:"#365f7d",Direct:"#9a7b4f",Meta:"#7b5674",AI:"#6b6b6b",Other:"#aaa197"};
+const COLORS={pageviews:"#181716",visits:"#8d2c23",X:"#315c3d",YouTube:"#a33b32",Search:"#365f7d",Direct:"#9a7b4f",Meta:"#7b5674",AI:"#6b6b6b",Other:"#aaa197"};
 function bucketTime(value){
   if(!value)return NaN;
   if(/^\\d{4}-\\d{2}-\\d{2}$/.test(value))return new Date(value+"T00:00:00Z").getTime();
@@ -1036,7 +1112,10 @@ function lineChart(points,series,campaigns=[]){
     const mt=new Date(item.linkAddedAt).getTime();
     if(!Number.isFinite(mt)||!Number.isFinite(start)||!Number.isFinite(end)||end<=start||mt<start||mt>end)return "";
     const x=l+((mt-start)/(end-start))*iw;
-    return '<line x1="'+x+'" y1="'+t+'" x2="'+x+'" y2="'+(t+ih)+'" stroke="#8d2c23" stroke-width="1" stroke-dasharray="4 4"/><text x="'+Math.min(w-r-4,x+4)+'" y="'+(t+11)+'" font-size="9" fill="#8d2c23">'+esc(item.label||"X POST")+'</text>';
+    const platform=item.platform==="YouTube"?"YouTube":"X";
+    const color=platform==="YouTube"?COLORS.YouTube:COLORS.X;
+    const prefix=platform==="YouTube"?"YT":"X";
+    return '<line x1="'+x+'" y1="'+t+'" x2="'+x+'" y2="'+(t+ih)+'" stroke="'+color+'" stroke-width="1" stroke-dasharray="4 4"/><text x="'+Math.min(w-r-4,x+4)+'" y="'+(t+11)+'" font-size="9" fill="'+color+'">'+esc(prefix+" · "+(item.label||"POST"))+'</text>';
   }).join("");
   const legend='<div class="chart-legend">'+series.map(s=>'<span><i class="legend-dot" style="background:'+s.color+'"></i>'+esc(s.label)+'</span>').join("")+'</div>';
   return '<div class="chart-wrap"><svg viewBox="0 0 '+w+' '+h+'" width="100%" role="img">'+grid+lines+markers+ticks+'</svg></div>'+legend;
@@ -1048,6 +1127,7 @@ function entryBars(pages){
 }
 function channelColor(name){
   if(name==="X")return COLORS.X;
+  if(name==="YouTube")return COLORS.YouTube;
   if(name==="Organic Search")return COLORS.Search;
   if(name==="Direct / Unknown")return COLORS.Direct;
   if(name==="Instagram")return "#925579";
@@ -1085,14 +1165,37 @@ function snsEntryChart(data){
     '<div class="sns-note">入口回数（人数・SNSクリック数ではありません）。Direct / UnknownにSNS由来が含まれる場合があります。Other pagesは上記3ページ以外。</div>';
 }
 const CAMPAIGN_KEY="vaCampaigns";
+function normalizeCampaignRecord(item){
+  const platform=item?.platform==="YouTube"?"YouTube":"X";
+  return {
+    ...item,
+    platform,
+    label:String(item?.label||(platform==="YouTube"?"YOUTUBE VIDEO":"X POST")),
+    postUrl:String(item?.postUrl||""),
+    postId:String(item?.postId||""),
+    authorName:String(item?.authorName||""),
+    postText:String(item?.postText||""),
+    postedAt:String(item?.postedAt||""),
+    linkAddedAt:item?.linkAddedAt||"",
+    measuredAt:item?.measuredAt||null,
+    targetPath:normalizeTargetPath(item?.targetPath||"/"),
+    impressions:item?.impressions===null||item?.impressions===undefined?null:Number(item.impressions),
+    engagements:item?.engagements===null||item?.engagements===undefined?null:Number(item.engagements),
+    details:item?.details===null||item?.details===undefined?null:Number(item.details),
+    linkClicks:item?.linkClicks===null||item?.linkClicks===undefined?null:Number(item.linkClicks),
+    views:item?.views===null||item?.views===undefined?null:Number(item.views),
+    likes:item?.likes===null||item?.likes===undefined?null:Number(item.likes),
+    avgViewPercentage:item?.avgViewPercentage===null||item?.avgViewPercentage===undefined?null:Number(item.avgViewPercentage)
+  };
+}
 function getCampaigns(){
   try{
     const parsed=JSON.parse(localStorage.getItem(CAMPAIGN_KEY)||"[]");
-    return Array.isArray(parsed)?parsed:[];
+    return Array.isArray(parsed)?parsed.map(normalizeCampaignRecord):[];
   }catch{return[]}
 }
 function saveCampaigns(items){
-  localStorage.setItem(CAMPAIGN_KEY,JSON.stringify(items));
+  localStorage.setItem(CAMPAIGN_KEY,JSON.stringify(items.map(normalizeCampaignRecord)));
 }
 function normalizeTargetPath(value){
   let out=String(value||"/").trim();
@@ -1104,26 +1207,48 @@ function campaignPanel(){
   const campaigns=getCampaigns().sort((a,b)=>String(b.postedAt||"").localeCompare(String(a.postedAt||"")));
   const active=campaigns[0]||null;
   if(!active){
-    return '<div class="muted">リンク追加日時を登録すると、施策開始を折れ線に重ね、1・24・72時間の前後比較ができます。X数値は手入力・空欄は未取得です。</div>'+campaignFormHtml();
+    return '<div class="muted">X / YouTubeのリンク追加日時を登録すると、施策開始を折れ線に重ね、1・24・72時間の前後比較ができます。各プラットフォーム数値は手入力・空欄は未取得です。</div>'+campaignFormHtml();
   }
-  const funnel='<div class="muted">Xの数値は手入力の累積値です。未入力は未取得。旧記録の0は入力済みか判別できません。以下の比較は投稿別の帰属・満足度を示すものではありません。</div>';
-  const list='<div class="campaign-list">'+campaigns.map((x,i)=>'<div class="campaign-item"><span><strong>'+esc(x.label)+'</strong> · 開始 '+esc(x.linkAddedAt?new Date(x.linkAddedAt).toLocaleString():"未登録")+' · '+esc(x.targetPath||"/")+(x.authorName?' · '+esc(x.authorName):'')+(x.postUrl?'<span class="path">'+esc(x.postUrl)+'</span>':'')+'</span><button type="button" data-campaign-delete="'+i+'">削除</button></div>').join("")+'</div>';
-  const compare='<form id="campaignCompare"><label>比較する施策 <select name="campaign">'+campaigns.map((x,i)=>'<option value="'+i+'">'+esc(x.label)+'</option>').join('')+'</select></label> <label>期間 <select name="hours"><option value="1">1時間</option><option value="24" selected>24時間</option><option value="72">72時間</option></select></label> <button>前後比較を取得</button></form><div id="campaignResult" aria-live="polite">施策を選んで取得してください。上部の期間選択とは独立しています。</div>';
+  const funnel='<div class="muted">プラットフォーム側の数値は手入力の累積値です。未入力は未取得。旧X記録はplatform未指定でもXとして読み込みます。前後比較は投稿別の完全帰属・満足度を示すものではありません。</div>';
+  const list='<div class="campaign-list">'+campaigns.map((x,i)=>'<div class="campaign-item"><span><strong>['+esc(x.platform)+'] '+esc(x.label)+'</strong> · 開始 '+esc(x.linkAddedAt?new Date(x.linkAddedAt).toLocaleString():"未登録")+' · '+esc(x.targetPath||"/")+(x.authorName?' · '+esc(x.authorName):'')+(x.postUrl?'<span class="path">'+esc(x.postUrl)+'</span>':'')+'</span><button type="button" data-campaign-delete="'+i+'">削除</button></div>').join("")+'</div>';
+  const compare='<form id="campaignCompare"><label>比較する施策 <select name="campaign">'+campaigns.map((x,i)=>'<option value="'+i+'">['+esc(x.platform)+'] '+esc(x.label)+'</option>').join('')+'</select></label> <label>期間 <select name="hours"><option value="1">1時間</option><option value="24" selected>24時間</option><option value="72">72時間</option></select></label> <button>前後比較を取得</button></form><div id="campaignResult" aria-live="polite">施策を選んで取得してください。上部の期間選択とは独立しています。</div>';
   return funnel+compare+campaignFormHtml()+list;
 }
 function campaignFormHtml(){
   return '<form class="campaign-form" id="campaignForm">'+
-    '<input name="postUrl" type="url" aria-label="X投稿URL" placeholder="X URL（本文のみ自動取得）">'+
+    '<select name="platform" aria-label="プラットフォーム"><option value="X">X</option><option value="YouTube">YouTube</option></select>'+
+    '<input name="postUrl" type="url" aria-label="投稿URL" placeholder="X URL（本文のみ自動取得）">'+
     '<input name="label" placeholder="投稿名" required>'+
     '<label>投稿日時（任意・端末の時刻）<input name="postedAt" type="datetime-local"></label>'+
     '<label>リンク追加・施策開始（端末の時刻）<input name="linkAddedAt" type="datetime-local" required></label>'+
-    '<label>X数値を確認した日時（入力時は必須）<input name="measuredAt" type="datetime-local"></label>'+
-    '<input name="targetPath" placeholder="/cyma-time-o-vox/" required>'+
-    '<input name="impressions" aria-label="表示回数" type="number" min="0" placeholder="表示回数（未取得は空欄）">'+
-    '<input name="engagements" aria-label="反応数" type="number" min="0" placeholder="反応数（任意）">'+
-    '<input name="details" aria-label="詳細クリック数" type="number" min="0" placeholder="詳細クリック数（任意）">'+
-    '<input name="linkClicks" aria-label="リンククリック数" type="number" min="0" placeholder="リンククリック数（任意）">'+
+    '<label>数値を確認した日時（入力時は必須）<input name="measuredAt" type="datetime-local"></label>'+
+    '<input name="targetPath" placeholder="/basis-alarm/" required>'+
+    '<input name="impressions" aria-label="指標1" type="number" min="0" step="0.1" placeholder="表示回数（未取得は空欄）">'+
+    '<input name="engagements" aria-label="指標2" type="number" min="0" step="0.1" placeholder="反応数（任意）">'+
+    '<input name="details" aria-label="指標3" type="number" min="0" step="0.1" placeholder="詳細クリック数（任意）">'+
+    '<input name="linkClicks" aria-label="リンククリック数" type="number" min="0" step="0.1" placeholder="リンククリック数（任意）">'+
     '<button type="submit">ADD</button></form>';
+}
+function applyCampaignPlatform(form){
+  const platform=form.elements.platform?.value==="YouTube"?"YouTube":"X";
+  const url=form.elements.postUrl;
+  const metric1=form.elements.impressions;
+  const metric2=form.elements.engagements;
+  const metric3=form.elements.details;
+  const link=form.elements.linkClicks;
+  if(platform==="YouTube"){
+    if(url)url.placeholder="YouTube / Shorts URL（タイトル自動取得）";
+    if(metric1){metric1.placeholder="再生回数（未取得は空欄）";metric1.setAttribute("aria-label","再生回数");}
+    if(metric2){metric2.placeholder="高評価数（任意）";metric2.setAttribute("aria-label","高評価数");}
+    if(metric3){metric3.placeholder="平均視聴率 %（任意）";metric3.setAttribute("aria-label","平均視聴率");}
+    if(link)link.placeholder="リンククリック数（分かる場合のみ）";
+  }else{
+    if(url)url.placeholder="X URL（本文のみ自動取得）";
+    if(metric1){metric1.placeholder="表示回数（未取得は空欄）";metric1.setAttribute("aria-label","表示回数");}
+    if(metric2){metric2.placeholder="反応数（任意）";metric2.setAttribute("aria-label","反応数");}
+    if(metric3){metric3.placeholder="詳細クリック数（任意）";metric3.setAttribute("aria-label","詳細クリック数");}
+    if(link)link.placeholder="リンククリック数（任意）";
+  }
 }
 function bindCampaignUi(){
   const compare=document.getElementById("campaignCompare");
@@ -1135,64 +1260,89 @@ function bindCampaignUi(){
     compare.querySelector('button').disabled=true;
     out.textContent="比較データを取得中…";
     try{
-      const res=await fetch('/api/campaign?start='+encodeURIComponent(active.linkAddedAt)+'&hours='+compare.elements.hours.value+'&target='+encodeURIComponent(active.targetPath),{cache:"no-store"});
+      const res=await fetch('/api/campaign?start='+encodeURIComponent(active.linkAddedAt)+'&hours='+compare.elements.hours.value+'&target='+encodeURIComponent(active.targetPath)+'&platform='+encodeURIComponent(active.platform),{cache:"no-store"});
       const data=await res.json();if(!res.ok||data.error)throw new Error(data.error||("HTTP "+res.status));
       const fmt=value=>new Date(value).toLocaleString();
       const metric=value=>value===null||value===undefined?'未取得':esc(value);
-      out.innerHTML='<p>'+esc(active.label)+' · '+(data.complete?'期間完了':'途中経過：経過時間に合わせて比較')+'（各 '+data.elapsedHours.toFixed(2)+' 時間）</p><p>前：'+esc(fmt(data.beforeStart))+' → '+esc(fmt(data.start))+'<br>後：'+esc(fmt(data.start))+' → '+esc(fmt(data.end))+'</p><table><thead><tr><th>指標</th><th>前</th><th>後</th><th>差</th></tr></thead><tbody>'+[['Xからの入口回数','xEntries'],['X → 対象ページの入口回数','targetEntries'],['対象 → 別ページのPV','nextPages']].map(([label,key])=>'<tr><td>'+label+'</td><td>'+data.before[key]+'</td><td>'+data.after[key]+'</td><td>'+(data.after[key]-data.before[key])+'</td></tr>').join('')+'</tbody></table><p>X手入力累積：表示 '+metric(active.impressions)+' ／ リンククリック '+metric(active.linkClicks)+'<br>確認日時：'+(active.measuredAt?esc(fmt(active.measuredAt)):'未登録')+'</p><p>入口回数は人数・クリック数ではありません。別ページPVは全流入元を含み、同一ページ遷移を除外。X累積値は前後比較に使っていません。'+(data.before.possiblyTruncated||data.after.possiblyTruncated?'取得上限に到達：部分集計の可能性があります。':'')+'</p>';
+      const platform=active.platform==="YouTube"?"YouTube":"X";
+      const rows=[[platform+'からの入口回数','platformEntries'],[platform+' → 対象ページの入口回数','targetEntries'],['対象 → 別ページのPV','nextPages']];
+      const manual=platform==="YouTube"
+        ?'YouTube手入力累積：再生 '+metric(active.views)+' ／ 高評価 '+metric(active.likes)+' ／ 平均視聴率 '+(active.avgViewPercentage===null||active.avgViewPercentage===undefined?'未取得':esc(active.avgViewPercentage)+'%')+' ／ リンククリック '+metric(active.linkClicks)
+        :'X手入力累積：表示 '+metric(active.impressions)+' ／ リンククリック '+metric(active.linkClicks);
+      out.innerHTML='<p>['+esc(platform)+'] '+esc(active.label)+' · '+(data.complete?'期間完了':'途中経過：経過時間に合わせて比較')+'（各 '+data.elapsedHours.toFixed(2)+' 時間）</p><p>前：'+esc(fmt(data.beforeStart))+' → '+esc(fmt(data.start))+'<br>後：'+esc(fmt(data.start))+' → '+esc(fmt(data.end))+'</p><table><thead><tr><th>指標</th><th>前</th><th>後</th><th>差</th></tr></thead><tbody>'+rows.map(([label,key])=>'<tr><td>'+label+'</td><td>'+data.before[key]+'</td><td>'+data.after[key]+'</td><td>'+(data.after[key]-data.before[key])+'</td></tr>').join('')+'</tbody></table><p>'+manual+'<br>確認日時：'+(active.measuredAt?esc(fmt(active.measuredAt)):'未登録')+'</p><p>入口回数は人数・クリック数ではありません。別ページPVは全流入元を含み、同一ページ遷移を除外。プラットフォーム側の累積値は前後比較に使っていません。YouTubeアプリ等でRefererが落ちる場合はDirect / Unknownになり得ます。'+(data.before.possiblyTruncated||data.after.possiblyTruncated?'取得上限に到達：部分集計の可能性があります。':'')+'</p>';
     }catch(error){out.textContent='取得失敗：'+error.message;}finally{compare.querySelector('button').disabled=false;}
   });
   const form=document.getElementById("campaignForm");
   if(form){
+    const platform=form.elements.platform;
     const postUrl=form.elements.postUrl;
+    applyCampaignPlatform(form);
+    if(platform)platform.addEventListener("change",()=>{
+      if(postUrl){
+        postUrl.value="";
+        postUrl.dataset.postId="";
+        postUrl.dataset.authorName="";
+        postUrl.dataset.postText="";
+        postUrl.dataset.state="";
+      }
+      applyCampaignPlatform(form);
+    });
     if(postUrl)postUrl.addEventListener("change",async()=>{
       const value=String(postUrl.value||"").trim();
       if(!value)return;
+      const currentPlatform=form.elements.platform?.value==="YouTube"?"YouTube":"X";
       postUrl.dataset.state="loading";
       try{
-        const res=await fetch('/api/x-preview?url='+encodeURIComponent(value),{cache:"no-store"});
+        const endpoint=currentPlatform==="YouTube"?"/api/youtube-preview":"/api/x-preview";
+        const res=await fetch(endpoint+'?url='+encodeURIComponent(value),{cache:"no-store"});
         const preview=await res.json();
         if(!res.ok||preview.error)throw new Error(preview.error||("HTTP "+res.status));
         postUrl.value=preview.url||value;
-        postUrl.dataset.postId=preview.postId||"";
+        postUrl.dataset.postId=preview.postId||preview.videoId||"";
         postUrl.dataset.authorName=preview.authorName||"";
-        postUrl.dataset.postText=preview.text||"";
+        postUrl.dataset.postText=preview.text||preview.title||"";
         if(!form.elements.label.value){
-          const base=(preview.text||"").replace(/\\s+/g," ").trim();
-          form.elements.label.value=base?base.slice(0,42):(preview.authorName||"X POST");
+          const base=(preview.title||preview.text||"").replace(/\\s+/g," ").trim();
+          form.elements.label.value=base?base.slice(0,60):(preview.authorName||(currentPlatform==="YouTube"?"YOUTUBE VIDEO":"X POST"));
         }
         postUrl.dataset.state="ready";
       }catch(err){
         postUrl.dataset.state="error";
-        alert("X投稿の読込に失敗: "+err.message);
+        alert((currentPlatform==="YouTube"?"YouTube動画":"X投稿")+"の読込に失敗: "+err.message);
       }
     });
     form.addEventListener("submit",event=>{
-    event.preventDefault();
-    const fd=new FormData(form);
-    const numeric=name=>String(fd.get(name)||'').trim()===''?null:Number(fd.get(name));
-    if(['impressions','engagements','details','linkClicks'].some(name=>numeric(name)!==null)&&!fd.get('measuredAt')){alert('X数値を確認した日時を入力してください。');return;}
-    if(new Date(String(fd.get('linkAddedAt'))).getTime()>Date.now()){alert('施策開始日時は過去の日時を入力してください。');return;}
-    const items=getCampaigns();
-    items.push({
-      label:String(fd.get("label")||"X POST"),
-      postUrl:String(fd.get("postUrl")||""),
-      postId:String(form.elements.postUrl?.dataset.postId||""),
-      authorName:String(form.elements.postUrl?.dataset.authorName||""),
-      postText:String(form.elements.postUrl?.dataset.postText||""),
-      postedAt:String(fd.get("postedAt")||""),
-      linkAddedAt:new Date(String(fd.get("linkAddedAt"))).toISOString(),
-      measuredAt:fd.get("measuredAt")?new Date(String(fd.get("measuredAt"))).toISOString():null,
-      schemaVersion:2,
-      targetPath:normalizeTargetPath(fd.get("targetPath")),
-      impressions:numeric("impressions"),
-      engagements:numeric("engagements"),
-      details:numeric("details"),
-      linkClicks:numeric("linkClicks")
-    });
-    saveCampaigns(items);
-    render(window.__vaLastData);
-    document.querySelector('details.campaign').open=true;
+      event.preventDefault();
+      const fd=new FormData(form);
+      const numeric=name=>String(fd.get(name)||'').trim()===''?null:Number(fd.get(name));
+      const currentPlatform=String(fd.get("platform")||"X")==="YouTube"?"YouTube":"X";
+      if(['impressions','engagements','details','linkClicks'].some(name=>numeric(name)!==null)&&!fd.get('measuredAt')){alert(currentPlatform+'数値を確認した日時を入力してください。');return;}
+      if(new Date(String(fd.get('linkAddedAt'))).getTime()>Date.now()){alert('施策開始日時は過去の日時を入力してください。');return;}
+      const items=getCampaigns();
+      const metric1=numeric("impressions"),metric2=numeric("engagements"),metric3=numeric("details");
+      items.push({
+        platform:currentPlatform,
+        label:String(fd.get("label")||(currentPlatform==="YouTube"?"YOUTUBE VIDEO":"X POST")),
+        postUrl:String(fd.get("postUrl")||""),
+        postId:String(form.elements.postUrl?.dataset.postId||""),
+        authorName:String(form.elements.postUrl?.dataset.authorName||""),
+        postText:String(form.elements.postUrl?.dataset.postText||""),
+        postedAt:String(fd.get("postedAt")||""),
+        linkAddedAt:new Date(String(fd.get("linkAddedAt"))).toISOString(),
+        measuredAt:fd.get("measuredAt")?new Date(String(fd.get("measuredAt"))).toISOString():null,
+        schemaVersion:3,
+        targetPath:normalizeTargetPath(fd.get("targetPath")),
+        impressions:currentPlatform==="X"?metric1:null,
+        engagements:currentPlatform==="X"?metric2:null,
+        details:currentPlatform==="X"?metric3:null,
+        views:currentPlatform==="YouTube"?metric1:null,
+        likes:currentPlatform==="YouTube"?metric2:null,
+        avgViewPercentage:currentPlatform==="YouTube"?metric3:null,
+        linkClicks:numeric("linkClicks")
+      });
+      saveCampaigns(items);
+      render(window.__vaLastData);
+      document.querySelector('details.campaign').open=true;
     });
   }
   document.querySelectorAll("[data-campaign-delete]").forEach(btn=>btn.addEventListener("click",()=>{
@@ -1235,7 +1385,7 @@ function render(data){
   ).join("");
   const lowSample=c.visits<30?'<section class="card low-sample"><strong>LOW SAMPLE</strong><span>'+n(c.visits)+' visits · まだ傾向断定は保留</span></section>':'';
   const trafficSeries=[{key:"pageviews",label:"Page views",color:COLORS.pageviews},{key:"visits",label:"Visits",color:COLORS.visits}];
-  const acquisitionSeries=[{key:"x",label:"X",color:COLORS.X},{key:"search",label:"Search",color:COLORS.Search},{key:"direct",label:"Direct",color:COLORS.Direct},{key:"instagram",label:"Instagram",color:channelColor("Instagram")},{key:"facebook",label:"Facebook",color:channelColor("Facebook")},{key:"otherSns",label:"Other SNS",color:channelColor("Other SNS")}];
+  const acquisitionSeries=[{key:"x",label:"X",color:COLORS.X},{key:"youtube",label:"YouTube",color:COLORS.YouTube},{key:"search",label:"Search",color:COLORS.Search},{key:"direct",label:"Direct",color:COLORS.Direct},{key:"instagram",label:"Instagram",color:channelColor("Instagram")},{key:"facebook",label:"Facebook",color:channelColor("Facebook")},{key:"otherSns",label:"Other SNS",color:channelColor("Other SNS")}];
   document.getElementById("content").innerHTML=
   '<div class="grid analytics-grid">'+audit+lowSample+
     '<section class="card kpi"><div class="label">VISITS</div><div class="value">'+n(c.visits)+'</div>'+delta(c.visits,p.visits)+'</section>'+
