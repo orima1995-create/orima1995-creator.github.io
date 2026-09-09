@@ -106,7 +106,7 @@ export対象:
 
 Search Console / Google生成AIのCSV Importは現時点でブラウザlocalStorageだけに保存されるため、Worker側exportには含まれない。取得不能なデータを自動取得済みとして扱わない。
 
-署名はWorker Secretの `DASHBOARD_PASSWORD` をHMAC-SHA256の鍵として使い、windowと有効期限に結び付ける。署名付きURLはread-onlyだが、有効期限内はURLを知る相手が閲覧できるため、必要な相手以外へ共有しない。
+署名鍵はWorker内だけにある `DASHBOARD_PASSWORD` と `CF_API_TOKEN` から専用鍵を導出し、HMAC-SHA256でwindowと有効期限に結び付ける。どちらのSecretもURLやレスポンスには出さない。署名付きURLはread-onlyだが、有効期限内はURLを知る相手が閲覧できるため、必要な相手以外へ共有しない。
 
 ## URL表示名
 
