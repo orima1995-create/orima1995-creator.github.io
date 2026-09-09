@@ -153,8 +153,12 @@ jobs:
           duofon="${root}pierce-duofon/"
           cyma="${root}cyma-time-o-vox/"
           cyma_note="${root}cyma-time-o-vox/owners-note/"
+          sitemap="${root}sitemap.xml"
+          verification="${root}googled3a96ed4c5eb9287.html"
           for attempt in {1..12}; do
             home_html=$(curl -fsSL "$home" || true)
+            sitemap_xml=$(curl -fsSL "$sitemap" || true)
+            verification_html=$(curl -fsSL "$verification" || true)
             history_html=$(curl -fsSL "$history" || true)
             owners_html=$(curl -fsSL "$owners" || true)
             smart_html=$(curl -fsSL "$smart" || true)
@@ -202,8 +206,12 @@ jobs:
               && ! grep -Fq "#index-milestones" <<<"$home_html$history_html" \
               && ! grep -Fq "#index-owners" <<<"$home_html$history_html" \
               && ! grep -Fq "#index-interests" <<<"$home_html$history_html" \
+              && grep -Fq "<urlset" <<<"$sitemap_xml" \
+              && grep -Fq "pierce-duofon/" <<<"$sitemap_xml" \
+              && grep -Fq "cyma-time-o-vox/" <<<"$sitemap_xml" \
+              && grep -Fq "google-site-verification: googled3a96ed4c5eb9287.html" <<<"$verification_html" \
               && [ "$parts_ok" -eq 1 ]; then
-              echo "Verified live navigation, watch videos, owners notes, Cyma media, and smartwatch artwork: $root"
+              echo "Verified live navigation, sitemap, Search Console file, watch videos, owners notes, Cyma media, and smartwatch artwork: $root"
               exit 0
             fi
             sleep 5
