@@ -1,6 +1,21 @@
 import vm from "node:vm";
-import worker, { aggregateSnsEntries } from "./worker.js";
+import worker, { aggregateSnsEntries, campaignWindow, campaignSummary } from "./worker.js";
 import assert from "node:assert/strict";
+
+const start = '2026-09-08T00:00:00Z';
+const partial = campaignWindow(start, 24, Date.parse(start) + 3600000);
+assert.equal(partial.complete, false);
+assert.equal(partial.elapsedHours, 1);
+assert.equal(Date.parse(partial.start) - Date.parse(partial.beforeStart), Date.parse(partial.end) - Date.parse(partial.start));
+assert.equal(campaignWindow(start, 24, Date.parse(start) + 48 * 3600000).elapsedHours, 24);
+assert.throws(() => campaignWindow(start, 2));
+assert.throws(() => campaignWindow('invalid', 24));
+assert.throws(() => campaignWindow(start, 24, Date.parse(start) - 1));
+const flow = (destination, source, count) => ({ count, dimensions: { requestPath: destination, refererHost: 'orima1995-create.github.io', refererPath: source }, sum: { visits: 0 } });
+const summary = campaignSummary({ viewer: { accounts: [{ entries: [], flows: [flow('/cyma-time-o-vox/', '/cyma-time-o-vox/', 9), flow('/pierce-duofon/', '/cyma-time-o-vox/', 2)] }] } }, '/cyma-time-o-vox/');
+assert.equal(summary.nextPages, 2);
+assert.equal(summary.xEntries, 0);
+assert.throws(() => campaignSummary({}, '/'));
 
 const entry = (requestPath, refererHost, visits) => ({ dimensions: { requestPath, refererHost }, sum: { visits } });
 const aggregated = aggregateSnsEntries([

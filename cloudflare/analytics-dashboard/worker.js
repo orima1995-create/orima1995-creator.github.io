@@ -18,6 +18,9 @@ export default {
     if (url.pathname === "/api/analytics") {
       return analyticsResponse(url, env);
     }
+    if (url.pathname === "/api/campaign") {
+      return campaignResponse(url, env);
+    }
 
     if (url.pathname === "/api/ai-share-link") {
       return aiShareLinkResponse(request, url, env);
@@ -352,6 +355,46 @@ async function analyticsResponse(url, env) {
 
 function requireEnv(env, key) {
   if (!env[key]) throw new Error(`${key} is not configured.`);
+}
+
+export function campaignWindow(start, hours, now = Date.now()) {
+  const anchor = Date.parse(start);
+  const duration = Number(hours) * 3600000;
+  if (!Number.isFinite(anchor) || ![1, 24, 72].includes(Number(hours)) || anchor >= now) {
+    throw new Error("施策開始日時は過去の日時、比較期間は1・24・72時間を指定してください。");
+  }
+  const elapsed = Math.min(duration, now - anchor);
+  return { beforeStart: new Date(anchor - elapsed).toISOString(), start: new Date(anchor).toISOString(),
+    end: new Date(anchor + elapsed).toISOString(), complete: elapsed === duration, elapsedHours: elapsed / 3600000 };
+}
+
+export function campaignSummary(data, target) {
+  const account = data?.viewer?.accounts?.[0] || {};
+  if (!Array.isArray(account.entries) || !Array.isArray(account.flows)) throw new Error("比較データを取得できませんでした。");
+  const entries = account.entries;
+  const flows = normalizePeriod(data).flows;
+  return {
+    xEntries: entries.filter(x => classifyReferrer(x.dimensions?.refererHost || "") === "X").reduce((s,x) => s + (x.sum?.visits || 0), 0),
+    targetEntries: entries.filter(x => classifyReferrer(x.dimensions?.refererHost || "") === "X" && cleanPath(x.dimensions?.requestPath || "/") === target).reduce((s,x) => s + (x.sum?.visits || 0), 0),
+    nextPages: flows.filter(x => x.channel === "Internal Navigation" && x.sourceCleanPath === target && x.destinationPath !== target).reduce((s,x) => s + x.pageviews, 0),
+    possiblyTruncated: entries.length >= 1000 || account.flows.length >= 200
+  };
+}
+
+async function campaignResponse(url, env) {
+  let bounds;
+  try { bounds = campaignWindow(url.searchParams.get("start"), url.searchParams.get("hours")); }
+  catch (error) { return jsonResponse({ error: error.message }, 400); }
+  try {
+    requireEnv(env, "CF_API_TOKEN"); requireEnv(env, "CF_ACCOUNT_ID");
+    const host = env.REQUEST_HOST || DEFAULT_HOST;
+    const target = cleanPath(url.searchParams.get("target") || "/");
+    const [before, after] = await Promise.all([
+      fetchPeriod(env, host, new Date(bounds.beforeStart), new Date(Date.parse(bounds.start) - 1)),
+      fetchPeriod(env, host, new Date(bounds.start), new Date(Date.parse(bounds.end) - 1))
+    ]);
+    return jsonResponse({ ...bounds, target, before: campaignSummary(before, target), after: campaignSummary(after, target) });
+  } catch (error) { return jsonResponse({ error: error.message }, 500); }
 }
 
 function normalizeWindow(value) {
@@ -905,6 +948,7 @@ details.drawer{grid-column:1/-1;padding:0}details.drawer>summary,details.discove
 .sns-row{padding:12px 0;border-top:1px solid var(--line)}.sns-heading{display:flex;justify-content:space-between;gap:10px;font-size:13px;margin-bottom:8px}.sns-heading span{font-variant-numeric:tabular-nums}.sns-track{display:flex;height:18px;background:var(--soft);border-radius:4px;overflow:hidden}.sns-track span{height:100%}.sns-breakdown{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:12px;margin-top:7px}.sns-note{font-size:12px;line-height:1.6;color:var(--muted);margin:8px 0}.sns-heading strong{min-width:0}.sns-heading span{flex-shrink:0}@media(max-width:390px){.sns-heading{flex-wrap:wrap}.sns-breakdown{gap:6px 10px}}
 footer{margin-top:16px;color:var(--muted);font-size:9px;line-height:1.6}
 @media(max-width:980px){.kpi,.seo-kpi{grid-column:span 4}.health{grid-column:span 4}.primary-chart,.summary-chart{grid-column:span 6}.inbox-controls{grid-template-columns:1fr}.campaign-form{grid-template-columns:1fr 1fr}.campaign-grid{grid-template-columns:repeat(3,1fr)}}@media(max-width:760px){main{width:min(100% - 20px,1240px);padding-top:18px}header{align-items:flex-start;flex-direction:column}.actions{justify-content:flex-start}.kpi,.seo-kpi,.health{grid-column:span 6}.pages,.channels,.referrers,.half,.chart-half,.primary-chart,.summary-chart{grid-column:1/-1}.donut-grid{grid-template-columns:100px minmax(0,1fr)}.campaign-grid{grid-template-columns:repeat(2,1fr)}.campaign-form{grid-template-columns:1fr}.flow-viz-row{grid-template-columns:1fr auto 1fr}.flow-viz-row .flow-track,.flow-viz-row .flow-count{grid-column:1/-1}.status{flex-direction:column}.detail-grid>.card{grid-column:1/-1}}@media(max-width:390px){main{width:calc(100% - 14px)}.actions{gap:4px}.actions button{padding:6px 8px}.seo-kpi,.health{grid-column:1/-1}details.drawer>summary,details.discovery-shell>summary{align-items:flex-start;flex-direction:column}.drawer-meta{line-height:1.5}}
+.campaign-form{grid-template-columns:repeat(3,minmax(0,1fr))}.campaign-form label{min-width:0;font-size:11px}.campaign-form label input{display:block;width:100%;box-sizing:border-box;margin-top:4px}.campaign-item span{min-width:0;overflow-wrap:anywhere}#campaignCompare{display:flex;flex-wrap:wrap;gap:8px;align-items:end;margin:12px 0}#campaignCompare select{max-width:100%;padding:6px}#campaignCompare label{min-width:0;max-width:100%}#campaignResult{font-size:12px;line-height:1.5;overflow-wrap:anywhere}#campaignResult th,#campaignResult td{padding:7px 4px;white-space:normal}@media(max-width:760px){.campaign-form{grid-template-columns:minmax(0,1fr)}}
 </style>
 </head>
 <body>
@@ -988,8 +1032,8 @@ function lineChart(points,series,campaigns=[]){
   const tickIdx=[0,Math.floor((points.length-1)/4),Math.floor((points.length-1)/2),Math.floor((points.length-1)*3/4),points.length-1].filter((v,i,a)=>v>=0&&a.indexOf(v)===i);
   const ticks=tickIdx.map(i=>'<text x="'+xFor(points[i].bucket,i)+'" y="'+(h-8)+'" text-anchor="middle" font-size="9" fill="#706d67">'+esc(bucketLabel(points[i].bucket))+'</text>').join("");
   const markers=campaigns.map(item=>{
-    if(!item.postedAt)return "";
-    const mt=new Date(item.postedAt).getTime();
+    if(!item.linkAddedAt)return "";
+    const mt=new Date(item.linkAddedAt).getTime();
     if(!Number.isFinite(mt)||!Number.isFinite(start)||!Number.isFinite(end)||end<=start||mt<start||mt>end)return "";
     const x=l+((mt-start)/(end-start))*iw;
     return '<line x1="'+x+'" y1="'+t+'" x2="'+x+'" y2="'+(t+ih)+'" stroke="#8d2c23" stroke-width="1" stroke-dasharray="4 4"/><text x="'+Math.min(w-r-4,x+4)+'" y="'+(t+11)+'" font-size="9" fill="#8d2c23">'+esc(item.label||"X POST")+'</text>';
@@ -1056,40 +1100,48 @@ function normalizeTargetPath(value){
   if(out!=="/"&&!out.endsWith("/"))out+="/";
   return out;
 }
-function campaignPanel(entryFlows,internalFlows){
+function campaignPanel(){
   const campaigns=getCampaigns().sort((a,b)=>String(b.postedAt||"").localeCompare(String(a.postedAt||"")));
   const active=campaigns[0]||null;
   if(!active){
-    return '<div class="muted">投稿を登録すると、折れ線に投稿時刻を重ねてファネル比較できる。</div>'+campaignFormHtml();
+    return '<div class="muted">リンク追加日時を登録すると、施策開始を折れ線に重ね、1・24・72時間の前後比較ができます。X数値は手入力・空欄は未取得です。</div>'+campaignFormHtml();
   }
-  const xEntries=entryFlows.filter(x=>x.channel==="X").reduce((s,x)=>s+x.visits,0);
-  const targetEntries=entryFlows.filter(x=>x.channel==="X"&&x.destinationPath===active.targetPath).reduce((s,x)=>s+x.visits,0);
-  const nextPages=internalFlows.filter(x=>x.sourceCleanPath===active.targetPath).reduce((s,x)=>s+x.pageviews,0);
-  const steps=[
-    ["IMPRESSIONS",active.impressions],
-    ["LINK CLICKS",active.linkClicks],
-    ["X ENTRIES*",xEntries],
-    ["TARGET ENTRIES*",targetEntries],
-    ["NEXT PAGE*",nextPages]
-  ];
-  const funnel='<div class="campaign-grid">'+steps.map(([label,val])=>'<div class="funnel-step"><span class="section-title">'+label+'</span><strong>'+esc(val)+'</strong></div>').join("")+'</div>'+
-    '<div class="path">* Cloudflare側は選択期間の比較値。投稿単位の完全な帰属ではない。</div>';
-  const list='<div class="campaign-list">'+campaigns.slice(0,5).map((x,i)=>'<div class="campaign-item"><span><strong>'+esc(x.label)+'</strong> · '+esc(x.postedAt||"時刻未登録")+' · '+esc(x.targetPath||"/")+(x.authorName?' · '+esc(x.authorName):'')+(x.postUrl?'<span class="path">'+esc(x.postUrl)+'</span>':'')+'</span><button type="button" data-campaign-delete="'+i+'">削除</button></div>').join("")+'</div>';
-  return funnel+campaignFormHtml()+list;
+  const funnel='<div class="muted">Xの数値は手入力の累積値です。未入力は未取得。旧記録の0は入力済みか判別できません。以下の比較は投稿別の帰属・満足度を示すものではありません。</div>';
+  const list='<div class="campaign-list">'+campaigns.map((x,i)=>'<div class="campaign-item"><span><strong>'+esc(x.label)+'</strong> · 開始 '+esc(x.linkAddedAt?new Date(x.linkAddedAt).toLocaleString():"未登録")+' · '+esc(x.targetPath||"/")+(x.authorName?' · '+esc(x.authorName):'')+(x.postUrl?'<span class="path">'+esc(x.postUrl)+'</span>':'')+'</span><button type="button" data-campaign-delete="'+i+'">削除</button></div>').join("")+'</div>';
+  const compare='<form id="campaignCompare"><label>比較する施策 <select name="campaign">'+campaigns.map((x,i)=>'<option value="'+i+'">'+esc(x.label)+'</option>').join('')+'</select></label> <label>期間 <select name="hours"><option value="1">1時間</option><option value="24" selected>24時間</option><option value="72">72時間</option></select></label> <button>前後比較を取得</button></form><div id="campaignResult" aria-live="polite">施策を選んで取得してください。上部の期間選択とは独立しています。</div>';
+  return funnel+compare+campaignFormHtml()+list;
 }
 function campaignFormHtml(){
   return '<form class="campaign-form" id="campaignForm">'+
-    '<input name="postUrl" type="url" placeholder="X post URL（貼ると自動読込）">'+
+    '<input name="postUrl" type="url" aria-label="X投稿URL" placeholder="X URL（本文のみ自動取得）">'+
     '<input name="label" placeholder="投稿名" required>'+
-    '<input name="postedAt" type="datetime-local" required>'+
+    '<label>投稿日時（任意・端末の時刻）<input name="postedAt" type="datetime-local"></label>'+
+    '<label>リンク追加・施策開始（端末の時刻）<input name="linkAddedAt" type="datetime-local" required></label>'+
+    '<label>X数値を確認した日時（入力時は必須）<input name="measuredAt" type="datetime-local"></label>'+
     '<input name="targetPath" placeholder="/cyma-time-o-vox/" required>'+
-    '<input name="impressions" type="number" min="0" placeholder="imp">'+
-    '<input name="engagements" type="number" min="0" placeholder="eng">'+
-    '<input name="details" type="number" min="0" placeholder="detail">'+
-    '<input name="linkClicks" type="number" min="0" placeholder="click">'+
+    '<input name="impressions" aria-label="表示回数" type="number" min="0" placeholder="表示回数（未取得は空欄）">'+
+    '<input name="engagements" aria-label="反応数" type="number" min="0" placeholder="反応数（任意）">'+
+    '<input name="details" aria-label="詳細クリック数" type="number" min="0" placeholder="詳細クリック数（任意）">'+
+    '<input name="linkClicks" aria-label="リンククリック数" type="number" min="0" placeholder="リンククリック数（任意）">'+
     '<button type="submit">ADD</button></form>';
 }
 function bindCampaignUi(){
+  const compare=document.getElementById("campaignCompare");
+  if(compare)compare.addEventListener("submit",async event=>{
+    event.preventDefault();
+    const out=document.getElementById("campaignResult");
+    const active=getCampaigns().sort((a,b)=>String(b.postedAt||"").localeCompare(String(a.postedAt||"")))[Number(compare.elements.campaign.value)];
+    if(!active?.linkAddedAt){out.textContent="旧記録にはリンク追加日時がありません。投稿日時から推定せず、新しく施策を登録してください。";return;}
+    compare.querySelector('button').disabled=true;
+    out.textContent="比較データを取得中…";
+    try{
+      const res=await fetch('/api/campaign?start='+encodeURIComponent(active.linkAddedAt)+'&hours='+compare.elements.hours.value+'&target='+encodeURIComponent(active.targetPath),{cache:"no-store"});
+      const data=await res.json();if(!res.ok||data.error)throw new Error(data.error||("HTTP "+res.status));
+      const fmt=value=>new Date(value).toLocaleString();
+      const metric=value=>value===null||value===undefined?'未取得':esc(value);
+      out.innerHTML='<p>'+esc(active.label)+' · '+(data.complete?'期間完了':'途中経過：経過時間に合わせて比較')+'（各 '+data.elapsedHours.toFixed(2)+' 時間）</p><p>前：'+esc(fmt(data.beforeStart))+' → '+esc(fmt(data.start))+'<br>後：'+esc(fmt(data.start))+' → '+esc(fmt(data.end))+'</p><table><thead><tr><th>指標</th><th>前</th><th>後</th><th>差</th></tr></thead><tbody>'+[['Xからの入口回数','xEntries'],['X → 対象ページの入口回数','targetEntries'],['対象 → 別ページのPV','nextPages']].map(([label,key])=>'<tr><td>'+label+'</td><td>'+data.before[key]+'</td><td>'+data.after[key]+'</td><td>'+(data.after[key]-data.before[key])+'</td></tr>').join('')+'</tbody></table><p>X手入力累積：表示 '+metric(active.impressions)+' ／ リンククリック '+metric(active.linkClicks)+'<br>確認日時：'+(active.measuredAt?esc(fmt(active.measuredAt)):'未登録')+'</p><p>入口回数は人数・クリック数ではありません。別ページPVは全流入元を含み、同一ページ遷移を除外。X累積値は前後比較に使っていません。'+(data.before.possiblyTruncated||data.after.possiblyTruncated?'取得上限に到達：部分集計の可能性があります。':'')+'</p>';
+    }catch(error){out.textContent='取得失敗：'+error.message;}finally{compare.querySelector('button').disabled=false;}
+  });
   const form=document.getElementById("campaignForm");
   if(form){
     const postUrl=form.elements.postUrl;
@@ -1118,6 +1170,9 @@ function bindCampaignUi(){
     form.addEventListener("submit",event=>{
     event.preventDefault();
     const fd=new FormData(form);
+    const numeric=name=>String(fd.get(name)||'').trim()===''?null:Number(fd.get(name));
+    if(['impressions','engagements','details','linkClicks'].some(name=>numeric(name)!==null)&&!fd.get('measuredAt')){alert('X数値を確認した日時を入力してください。');return;}
+    if(new Date(String(fd.get('linkAddedAt'))).getTime()>Date.now()){alert('施策開始日時は過去の日時を入力してください。');return;}
     const items=getCampaigns();
     items.push({
       label:String(fd.get("label")||"X POST"),
@@ -1126,14 +1181,18 @@ function bindCampaignUi(){
       authorName:String(form.elements.postUrl?.dataset.authorName||""),
       postText:String(form.elements.postUrl?.dataset.postText||""),
       postedAt:String(fd.get("postedAt")||""),
+      linkAddedAt:new Date(String(fd.get("linkAddedAt"))).toISOString(),
+      measuredAt:fd.get("measuredAt")?new Date(String(fd.get("measuredAt"))).toISOString():null,
+      schemaVersion:2,
       targetPath:normalizeTargetPath(fd.get("targetPath")),
-      impressions:Number(fd.get("impressions")||0),
-      engagements:Number(fd.get("engagements")||0),
-      details:Number(fd.get("details")||0),
-      linkClicks:Number(fd.get("linkClicks")||0)
+      impressions:numeric("impressions"),
+      engagements:numeric("engagements"),
+      details:numeric("details"),
+      linkClicks:numeric("linkClicks")
     });
     saveCampaigns(items);
     render(window.__vaLastData);
+    document.querySelector('details.campaign').open=true;
     });
   }
   document.querySelectorAll("[data-campaign-delete]").forEach(btn=>btn.addEventListener("click",()=>{
@@ -1155,7 +1214,7 @@ function render(data){
   const searchNow=c.channels.find(x=>x.name==="Organic Search")?.visits||0;
   const searchPrev=p.channels.find(x=>x.name==="Organic Search")?.visits||0;
   const entryFlows=c.flows.filter(x=>x.visits>0 && x.channel!=="Internal Navigation");
-  const internalFlows=c.flows.filter(x=>x.channel==="Internal Navigation");
+  const internalFlows=c.flows.filter(x=>x.channel==="Internal Navigation"&&x.sourceCleanPath!==x.destinationPath);
   const campaigns=getCampaigns();
   const trend=data.trend||[];
   const pagesPerVisit=c.visits?c.pageviews/c.visits:0;
