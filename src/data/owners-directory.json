@@ -2,18 +2,19 @@
   "entries": [
     {
       "ownerNumber": "03",
+      "historyId": "basis-alarm",
       "ownedEra": "1940s",
       "ownedSortYear": 1948,
       "brand": "BASIS",
       "name": "ALARM",
       "catch": "触って、見て、聴いて楽しむおもちゃ箱。",
-      "image": "/images/Basis Alarm(BFG90).png",
+      "image": "/images/IMG_8890.jpeg",
       "href": "/basis-alarm/#owners-note",
-      "historyId": "basis-alarm",
       "historyHref": "/history/#1940s"
     },
     {
       "ownerNumber": "02",
+      "historyId": "cyma-time-o-vox",
       "ownedEra": "1950s",
       "ownedSortYear": 1956,
       "brand": "CYMA",
@@ -21,11 +22,11 @@
       "catch": "鳴る黄金のクロノメーター",
       "image": "/images/owners-thumbnails/cyma-time-o-vox-full.png",
       "href": "/cyma-time-o-vox/#owners-note",
-      "historyId": "cyma-time-o-vox",
       "historyHref": "/history/#1950s"
     },
     {
       "ownerNumber": "01",
+      "historyId": "pierce-duofon",
       "ownedEra": "1960s",
       "ownedSortYear": 1960,
       "brand": "PIERCE",
@@ -33,7 +34,6 @@
       "catch": "1950's通知のオーパーツ。",
       "image": "/images/owners-thumbnails/pierce-duofon-full.png",
       "href": "/pierce-duofon/#owners-note",
-      "historyId": "pierce-duofon",
       "historyHref": "/history/#1950s"
     }
   ]
