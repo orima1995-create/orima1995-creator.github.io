@@ -305,11 +305,23 @@ SEO / GEO / SNS / Analyticsの追加機能は、毎回次の順で進める。
 
 ## Search Console / GEOの現在方針
 
-通常SEOはSearch Console Search Analytics APIで自動化候補とする。
-Query / Page / Date / Hour、Clicks / Impressions / CTR / Average Positionを対象とする。
+追加月額0円を優先し、Google Cloud / Service Account / Search Console APIは現段階では採用しない。
 
-Google検索の生成AIパフォーマンスは、Search Consoleの専用レポートでAI Overviews / AI ModeのImpressions、Page、Country、Device、時系列を確認できる。
+通常SEO:
+- Search Console UIからCSV Export
+- Date / Page / Query / Country / Device等をDISCOVERY INBOXへImport
+- Clicks / Impressions / CTR / Average Positionを保存・比較
 
-ただし専用生成AIレポートの自動取得APIは、実装時点で公式ドキュメント上の専用エンドポイントを確認できていない。
-Search Analytics API接続後に searchAppearance を動的列挙し、生成AIを分離できるか実データで検証する。
-分離できなければ、専用レポートのExportを手動インポートする。
+Google生成AI:
+- 専用Performance ReportからCSV Export
+- Google AI Impressionを通常SEOとは別Snapshotとして保存
+- Date / Page / Country / Deviceを確認
+
+INDEX STATUS:
+- 主要ページだけURL検査を手動確認
+- ダッシュボードへ状態と確認日を記録
+
+Search Consoleの直接Exportは表示中のChartとTableを出力するが、レポートによって構造が異なる。
+全体KPIはDate/Chart系を優先し、Page / Queryは原因調査用に使う。
+
+CSV Import履歴は現在browser localStorageへ保存する。
