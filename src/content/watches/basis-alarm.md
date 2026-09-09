@@ -41,6 +41,12 @@ specimenGallery:
     label: 正面（リストショット）
   - image: /images/IMG_9196.jpeg
     label: アラーム針（ベゼルに直接繋がっている）
+  - image: /images/IMG_1969.jpeg
+    label: 9時側　アラームON/OFF スライダー
+  - image: /images/IMG_1968.jpeg
+    label: ケースバック
+  - image: /images/70957643-C7C5-4A86-B1BF-11AB18A28299-2.jpeg
+    label: ムーブメント全景
 video:
   youtubeId: https://youtube.com/shorts/MWoqA4L2wdM?si=Y6Z_3_lEy8_hITYM
   xUrl: https://x.com/Rimacroissant/status/2071711307469144447?s=20
