@@ -32,11 +32,12 @@ Search Console:
 
 ## INDEX STATUS
 
-主要5ページだけURL検査を行う。
+主要6ページだけURL検査を行う。
 
 - TOP
 - HISTORY
 - OWNER'S NOTES
+- Basis Alarm
 - Pierce Duofon
 - Cyma Time-O-Vox
 
