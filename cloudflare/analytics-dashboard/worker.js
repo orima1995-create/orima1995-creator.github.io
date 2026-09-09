@@ -150,7 +150,7 @@ async function aiShareLinkResponse(request, url, env) {
     );
     const expires = Math.floor(Date.now() / 1000) + ttlSeconds;
     const signature = await signAiExport(
-      env.DASHBOARD_PASSWORD,
+      env,
       windowSpec.key,
       expires,
     );
@@ -200,7 +200,7 @@ async function aiExportResponse(request, url, env) {
     }
 
     const expected = await signAiExport(
-      env.DASHBOARD_PASSWORD,
+      env,
       windowSpec.key,
       expires,
     );
@@ -265,15 +265,31 @@ function aiExportPeriod(period) {
   };
 }
 
-async function signAiExport(secret, windowKey, expires) {
+async function signAiExport(env, windowKey, expires) {
+  requireEnv(env, "DASHBOARD_PASSWORD");
+  requireEnv(env, "CF_API_TOKEN");
+
+  // Derive a dedicated signing key from two Worker-only secrets. This avoids
+  // exposing either secret and prevents a signed URL from becoming a simple
+  // offline oracle for the Basic Auth password alone.
+  const encoder = new TextEncoder();
+  const keyMaterial = await crypto.subtle.digest(
+    "SHA-256",
+    encoder.encode(
+      "vintage-alarm-ai-export-kdf-v1\u0000" +
+      env.DASHBOARD_PASSWORD +
+      "\u0000" +
+      env.CF_API_TOKEN,
+    ),
+  );
   const key = await crypto.subtle.importKey(
     "raw",
-    new TextEncoder().encode(String(secret)),
+    keyMaterial,
     { name: "HMAC", hash: "SHA-256" },
     false,
     ["sign"],
   );
-  const message = new TextEncoder().encode(
+  const message = encoder.encode(
     "vintage-alarm-ai-export:" + windowKey + ":" + expires,
   );
   const signature = await crypto.subtle.sign("HMAC", key, message);
