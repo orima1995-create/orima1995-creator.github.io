@@ -1,5 +1,26 @@
 import vm from "node:vm";
-import worker from "./worker.js";
+import worker, { aggregateSnsEntries } from "./worker.js";
+import assert from "node:assert/strict";
+
+const entry = (requestPath, refererHost, visits) => ({ dimensions: { requestPath, refererHost }, sum: { visits } });
+const aggregated = aggregateSnsEntries([
+  entry("/orima1995-creator.github.io/cyma-time-o-vox/", "t.co", 4),
+  entry("/cyma-time-o-vox", "x.com", 1),
+  entry("/pierce-duofon/", "m.facebook.com", 2),
+  entry("/pierce-duofon/", "m.facebook.com", 2),
+  entry("/pierce-duofon/", "instagram.com", 2),
+  entry("/unknown/", "t.co", 1),
+  entry("/basis-alarm/", "google.com", 9),
+  entry("/basis-alarm/", "", 8),
+  entry("/basis-alarm/", "orima1995-create.github.io", 7),
+]);
+assert.equal(aggregated.total, 12);
+assert.deepEqual(aggregated.pages.map(p => p.total), [5, 6, 0, 1]);
+assert.equal(aggregated.pages[1].values.Facebook, 4);
+assert.equal(aggregateSnsEntries([]).total, 0);
+assert.equal(aggregateSnsEntries([]).complete, true);
+assert.equal(aggregateSnsEntries(undefined).complete, false);
+assert.equal(aggregateSnsEntries(Array.from({ length: 1000 }, () => entry("/", "t.co", 1))).complete, false);
 
 const password = "ci-test-password";
 const auth = Buffer.from(`admin:${password}`).toString("base64");

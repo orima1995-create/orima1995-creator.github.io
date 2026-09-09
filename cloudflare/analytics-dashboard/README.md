@@ -22,6 +22,7 @@ VINTAGE ALARM専用の非公開アクセス解析ダッシュボード。
 - Entry Pages 横棒
 - Traffic Mix ドーナツ
 - Site Flow
+- SNS → WATCH ENTRY（SNS別の入口回数を時計ページごとに集約。全SNSを分母に割合を補助表示）
 - Campaign Funnel（折りたたみ）
 - Referrer host / path
 - Country / Device

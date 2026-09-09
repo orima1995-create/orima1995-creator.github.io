@@ -238,6 +238,14 @@ query VintageAlarmAnalytics(
         sum { visits }
         dimensions { requestPath refererHost refererPath countryName deviceType }
       }
+      entries: rumPageloadEventsAdaptiveGroups(
+        filter: $filter
+        limit: 1000
+        orderBy: [count_DESC]
+      ) {
+        sum { visits }
+        dimensions { requestPath refererHost }
+      }
       countries: rumPageloadEventsAdaptiveGroups(
         filter: $filter
         limit: 100
@@ -452,6 +460,7 @@ function normalizePeriod(data) {
     referrers: rawReferers,
     flows: buildFlows(rawFlows),
     channels: buildChannels(rawReferers),
+    snsEntries: aggregateSnsEntries(account.entries),
     countries: (account.countries || []).map((row) => ({
       name: friendlyCountry(row?.dimensions?.countryName || "Unknown"),
       pageviews: row?.count || 0,
@@ -473,6 +482,26 @@ const PAGE_NAMES = Object.freeze({
   "/cyma-time-o-vox/owners-note/": "Cyma OWNER'S NOTE",
   "/history/smartwatch/": "Smartwatch / HISTORY",
 });
+
+export function aggregateSnsEntries(rows) {
+  const channels = ["X", "Instagram", "Facebook", "Other SNS"];
+  const pages = [
+    ["/cyma-time-o-vox/", "Cyma Time-O-Vox"],
+    ["/pierce-duofon/", "Pierce Duofon"],
+    ["/basis-alarm/", "Basis Alarm"],
+    ["other", "Other pages"],
+  ].map(([path, name]) => ({ path, name, values: Object.fromEntries(channels.map(c => [c, 0])), total: 0 }));
+  for (const row of rows || []) {
+    const channel = classifyReferrer(row?.dimensions?.refererHost);
+    if (!channels.includes(channel)) continue;
+    const path = cleanPath(row?.dimensions?.requestPath);
+    const page = pages.find(p => p.path === path) || pages[3];
+    const value = Number(row?.sum?.visits || 0);
+    page.values[channel] += value;
+    page.total += value;
+  }
+  return { pages, total: pages.reduce((sum, p) => sum + p.total, 0), complete: Array.isArray(rows) && rows.length < 1000 };
+}
 
 function cleanPath(path) {
   let out = String(path || "/").split(/[?#]/)[0];
@@ -682,6 +711,7 @@ details.drawer{grid-column:1/-1;padding:0}details.drawer>summary,details.discove
 .bar-wrap{grid-column:1/-1;height:3px;background:#e5ded2;margin-top:-3px}
 .bar{height:100%;background:var(--green)}
 #discovery{margin-top:10px}.discovery{padding:0 14px 14px}.discovery .grid{margin-top:0}.discovery-shell{background:var(--card);border:1px solid var(--line);border-radius:12px;box-shadow:var(--shadow)}.discovery-status{grid-column:1/-1}.index-table{grid-column:1/-1}.health{grid-column:span 4}.seo-kpi{grid-column:span 2}.seo-kpi .value{font-family:Georgia,"Times New Roman",serif;font-size:24px;margin-top:6px}.inbox{grid-column:1/-1}.inbox-controls{display:grid;grid-template-columns:150px minmax(0,1fr) auto;gap:7px;align-items:center}.inbox-controls select,.inbox-controls input,.inbox-controls button,.index-select{border:1px solid var(--line);border-radius:6px;background:transparent;color:var(--ink);padding:7px;font:inherit;font-size:10px}.snapshot-list{display:grid;gap:6px;margin-top:8px}.snapshot-item{display:flex;justify-content:space-between;gap:12px;padding-top:6px;border-top:1px solid var(--line);font-size:10px}.drop-note{font-size:9px;color:var(--muted);line-height:1.55;margin-top:7px}.diagnostic{border-left:3px solid var(--accent)}.error{border:1px solid var(--accent);border-radius:10px;padding:12px;color:var(--accent);background:#fff8f5;white-space:pre-wrap}
+.sns-row{padding:12px 0;border-top:1px solid var(--line)}.sns-heading{display:flex;justify-content:space-between;gap:10px;font-size:13px;margin-bottom:8px}.sns-heading span{font-variant-numeric:tabular-nums}.sns-track{display:flex;height:18px;background:var(--soft);border-radius:4px;overflow:hidden}.sns-track span{height:100%}.sns-breakdown{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:12px;margin-top:7px}.sns-note{font-size:12px;line-height:1.6;color:var(--muted);margin:8px 0}.sns-heading strong{min-width:0}.sns-heading span{flex-shrink:0}@media(max-width:390px){.sns-heading{flex-wrap:wrap}.sns-breakdown{gap:6px 10px}}
 footer{margin-top:16px;color:var(--muted);font-size:9px;line-height:1.6}
 @media(max-width:980px){.kpi,.seo-kpi{grid-column:span 4}.health{grid-column:span 4}.primary-chart,.summary-chart{grid-column:span 6}.inbox-controls{grid-template-columns:1fr}.campaign-form{grid-template-columns:1fr 1fr}.campaign-grid{grid-template-columns:repeat(3,1fr)}}@media(max-width:760px){main{width:min(100% - 20px,1240px);padding-top:18px}header{align-items:flex-start;flex-direction:column}.actions{justify-content:flex-start}.kpi,.seo-kpi,.health{grid-column:span 6}.pages,.channels,.referrers,.half,.chart-half,.primary-chart,.summary-chart{grid-column:1/-1}.donut-grid{grid-template-columns:100px minmax(0,1fr)}.campaign-grid{grid-template-columns:repeat(2,1fr)}.campaign-form{grid-template-columns:1fr}.flow-viz-row{grid-template-columns:1fr auto 1fr}.flow-viz-row .flow-track,.flow-viz-row .flow-count{grid-column:1/-1}.status{flex-direction:column}.detail-grid>.card{grid-column:1/-1}}@media(max-width:390px){main{width:calc(100% - 14px)}.actions{gap:4px}.actions button{padding:6px 8px}.seo-kpi,.health{grid-column:1/-1}details.drawer>summary,details.discovery-shell>summary{align-items:flex-start;flex-direction:column}.drawer-meta{line-height:1.5}}
 </style>
@@ -784,7 +814,9 @@ function channelColor(name){
   if(name==="X")return COLORS.X;
   if(name==="Organic Search")return COLORS.Search;
   if(name==="Direct / Unknown")return COLORS.Direct;
-  if(name==="Instagram"||name==="Facebook"||name==="Other SNS")return COLORS.Meta;
+  if(name==="Instagram")return "#925579";
+  if(name==="Facebook")return "#426d9b";
+  if(name==="Other SNS")return "#8a763a";
   if(name==="AI Assistant")return COLORS.AI;
   return COLORS.Other;
 }
@@ -806,6 +838,15 @@ function flowVisual(items){
   const max=Math.max(1,...list.map(x=>x.pageviews));
   if(!list.length)return '<div class="muted">内部遷移データなし</div>';
   return '<div class="flow-viz">'+list.map(x=>'<div class="flow-viz-row"><strong>'+esc(x.sourceName)+'</strong><span>→</span><strong>'+esc(x.destinationName)+'</strong><div class="flow-track"><div class="flow-fill" style="width:'+((x.pageviews/max)*100)+'%"></div></div><span class="flow-count">'+n(x.pageviews)+'</span></div>').join("")+'</div>';
+}
+function snsEntryChart(data){
+  if(!data)return '<div class="muted">SNS入口データを取得できませんでした。</div>';
+  const channels=["X","Instagram","Facebook","Other SNS"];
+  const max=Math.max(1,...data.pages.map(p=>p.total));
+  const note=data.complete?'判別できたSNS入口 '+n(data.total)+'件':'取得上限に到達：表示分 '+n(data.total)+'件（全体比は算出保留）';
+  return '<div class="sns-note">'+note+(data.total<30?' · 少数データ：傾向判断は保留':'')+'<br>棒の共通目盛り：0〜'+n(max)+'件</div>'+
+    data.pages.map(p=>'<div class="sns-row"><div class="sns-heading"><strong>'+esc(p.name)+'</strong><span>'+n(p.total)+'件'+(data.complete&&data.total?' · SNS全体の'+(p.total/data.total*100).toFixed(0)+'%':'')+'</span></div><div class="sns-track" role="img" aria-label="'+esc(p.name+' '+channels.map(c=>c+' '+p.values[c]+'件').join('、'))+'">'+channels.map(c=>'<span style="width:'+(p.values[c]/max*100)+'%;background:'+channelColor(c)+'"></span>').join('')+'</div><div class="sns-breakdown">'+channels.map(c=>'<span><i class="legend-dot" style="background:'+channelColor(c)+'"></i>'+esc(c)+' '+n(p.values[c])+'</span>').join('')+'</div></div>').join('')+
+    '<div class="sns-note">入口回数（人数・SNSクリック数ではありません）。Direct / UnknownにSNS由来が含まれる場合があります。Other pagesは上記3ページ以外。</div>';
 }
 const CAMPAIGN_KEY="vaCampaigns";
 function getCampaigns(){
@@ -924,7 +965,7 @@ function render(data){
   const entryFlows=c.flows.filter(x=>x.visits>0 && x.channel!=="Internal Navigation");
   const internalFlows=c.flows.filter(x=>x.channel==="Internal Navigation");
   const campaigns=getCampaigns();
-  const trend=(data.trend||[]).map(x=>({...x,meta:(x.instagram||0)+(x.facebook||0)+(x.otherSns||0)}));
+  const trend=data.trend||[];
   const pagesPerVisit=c.visits?c.pageviews/c.visits:0;
   const watchEntry=c.pages.filter(x=>["Basis Alarm","Pierce Duofon","Cyma Time-O-Vox"].includes(x.name)).reduce((s,x)=>s+x.visits,0);
   const watchShare=c.visits?(watchEntry/c.visits)*100:0;
@@ -943,7 +984,7 @@ function render(data){
   ).join("");
   const lowSample=c.visits<30?'<section class="card low-sample"><strong>LOW SAMPLE</strong><span>'+n(c.visits)+' visits · まだ傾向断定は保留</span></section>':'';
   const trafficSeries=[{key:"pageviews",label:"Page views",color:COLORS.pageviews},{key:"visits",label:"Visits",color:COLORS.visits}];
-  const acquisitionSeries=[{key:"x",label:"X",color:COLORS.X},{key:"search",label:"Search",color:COLORS.Search},{key:"direct",label:"Direct",color:COLORS.Direct},{key:"meta",label:"Meta",color:COLORS.Meta}];
+  const acquisitionSeries=[{key:"x",label:"X",color:COLORS.X},{key:"search",label:"Search",color:COLORS.Search},{key:"direct",label:"Direct",color:COLORS.Direct},{key:"instagram",label:"Instagram",color:channelColor("Instagram")},{key:"facebook",label:"Facebook",color:channelColor("Facebook")},{key:"otherSns",label:"Other SNS",color:channelColor("Other SNS")}];
   document.getElementById("content").innerHTML=
   '<div class="grid analytics-grid">'+audit+lowSample+
     '<section class="card kpi"><div class="label">VISITS</div><div class="value">'+n(c.visits)+'</div>'+delta(c.visits,p.visits)+'</section>'+
@@ -951,11 +992,12 @@ function render(data){
     '<section class="card kpi"><div class="label">X VISITS</div><div class="value">'+n(xNow)+'</div>'+delta(xNow,xPrev)+'</section>'+
     '<section class="card kpi"><div class="label">ORGANIC SEARCH</div><div class="value">'+n(searchNow)+'</div>'+delta(searchNow,searchPrev)+'</section>'+
     '<section class="card kpi"><div class="label">PAGES / VISIT</div><div class="value">'+pagesPerVisit.toFixed(2)+'</div><div class="delta">回遊の粗い指標</div></section>'+
-    '<section class="card kpi"><div class="label">WATCH ENTRY SHARE</div><div class="value">'+watchShare.toFixed(0)+'%</div><div class="delta">'+n(watchEntry)+' watch entries</div></section>'+
+    '<section class="card kpi"><div class="label">WATCH ENTRY SHARE</div><div class="value">'+watchShare.toFixed(0)+'%</div><div class="delta">全流入 '+n(c.visits)+'件中 '+n(watchEntry)+'件</div></section>'+
     '<section class="card primary-chart"><div class="section-head"><div class="section-title">TRAFFIC TREND</div><span>'+esc(data.trendBucket||"no bucket")+'</span></div>'+lineChart(trend,trafficSeries,campaigns)+(data.trendWarning?'<div class="path">'+esc(data.trendWarning)+'</div>':'')+'</section>'+
     '<section class="card summary-chart"><div class="section-head"><div class="section-title">TRAFFIC MIX</div><span>Visits構成</span></div>'+trafficMix(c.channels)+'</section>'+
-    '<section class="card primary-chart"><div class="section-head"><div class="section-title">ACQUISITION TREND</div><span>X / Search / Direct / Meta</span></div>'+lineChart(trend,acquisitionSeries,campaigns)+'</section>'+
+    '<section class="card primary-chart"><div class="section-head"><div class="section-title">ACQUISITION TREND</div><span>流入元別の入口回数</span></div>'+lineChart(trend,acquisitionSeries,campaigns)+'</section>'+
     '<section class="card summary-chart"><div class="section-head"><div class="section-title">ENTRY PAGES</div><span>入口回数</span></div>'+entryBars(c.pages)+'</section>'+
+    '<section class="card flow"><div class="section-head"><div class="section-title">SNS → WATCH ENTRY</div><span>判別できたSNS流入の着地先</span></div>'+snsEntryChart(c.snsEntries)+'</section>'+
     '<section class="card flow"><div class="section-head"><div class="section-title">SITE FLOW</div><span>内部遷移</span></div>'+flowVisual(internalFlows)+'</section>'+
     '<details class="card drawer campaign"><summary><span>CAMPAIGN FUNNEL</span><span class="drawer-meta">投稿ログはこのブラウザだけに保存</span></summary><div class="drawer-content">'+campaignPanel(entryFlows,internalFlows)+'</div></details>'+
     '<section class="card pages"><div class="section-head"><div class="section-title">PAGES</div><span>'+n(c.pages.length)+' paths</span></div><table><thead><tr><th>PAGE</th><th class="num">PV</th><th class="num">ENTRY VISITS</th></tr></thead><tbody>'+
