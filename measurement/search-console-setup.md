@@ -1,102 +1,64 @@
-# Search Console 接続手順 — VINTAGE ALARM ANALYTICS
+# Search Console 無料Import手順 — VINTAGE ALARM ANALYTICS
 
 更新日: 2026-09-09
 
-## 目的
+## 固定条件
 
-VINTAGE ALARM ANALYTICSへ以下を追加する。
+Google Cloud / Billing account / Service Account / Search Console APIは使用しない。
 
-- 主要ページのINDEX STATUS
-- SEO Impressions
-- SEO Clicks
-- CTR
-- Average Position
-- 28日 vs 前28日
-- Page / Query / Date
-- searchAppearance PoC
+Search Console本体の無料Exportだけを使う。
 
-## 実装済み
+## 通常SEO
 
-Worker endpoint:
+Search Console:
+1. 対象propertyを開く
+2. 検索パフォーマンスを開く
+3. 比較したい期間を設定
+4. Clicks / Impressions / CTR / Positionを表示
+5. エクスポート
+6. CSVを選択
+7. ダウンロードされたCSVをVINTAGE ALARM ANALYTICSのDISCOVERY INBOXで「通常SEO」としてImport
 
-- `/api/discovery?days=28`
+複数CSVがある場合はまとめて選択する。
 
-未設定時はダッシュボードに `SEARCH CONSOLE NOT CONNECTED` を表示する。
+## Google生成AI
 
-## Google側
+Search Console:
+1. 生成AI Performance Reportを開く
+2. 期間を設定
+3. エクスポート
+4. CSV
+5. DISCOVERY INBOXで「Google生成AI」としてImport
 
-1. Google Cloudでプロジェクトを作成または選択する
-2. Google Search Console APIを有効化する
-3. Service Accountを作成する
-4. JSON keyを1個作成する
-5. Service Accountのemailを控える
+## INDEX STATUS
 
-秘密鍵JSONはGitHubへ絶対にコミットしない。
+主要5ページだけURL検査を行う。
 
-## Search Console側
+- TOP
+- HISTORY
+- OWNER'S NOTES
+- Pierce Duofon
+- Cyma Time-O-Vox
 
-対象URL-prefix property:
+結果をダッシュボードのManual Index Statusで記録する。
 
-`https://orima1995-create.github.io/orima1995-creator.github.io/`
+## 保存先
 
-プロパティが未作成なら、このURL-prefix propertyを追加・所有権確認する。
+現時点ではブラウザlocalStorage。
 
-既存propertyがある場合:
+- GitHubへ送信しない
+- Google Cloudへ送信しない
+- API token不要
+- Billing account不要
 
-Settings → Users and permissions → Add user
+別ブラウザ/別端末では共有されない。
+永続化は無料条件を監査してから別フェーズで行う。
 
-へService Account emailを追加する。
+## 読み方
 
-まずFull userでPoCする。
-Search Analyticsにはread permissionが必要。
-URL Inspectionも`webmasters.readonly` OAuth scopeで呼び出す。
+Impressions 0 ≠ API失敗。
+INDEX STATUSと分けて判断する。
 
-## Cloudflare側
-
-Worker:
-
-`vintage-alarm-analytics`
-
-runtime variable:
-
-`GSC_SITE_URL=https://orima1995-create.github.io/orima1995-creator.github.io/`
-
-runtime secret:
-
-`GSC_SERVICE_ACCOUNT_JSON`
-
-値はGoogle Cloudから取得したService Account JSON全文。
-
-チャットやGitHubへ秘密鍵を貼らない。
-
-## PoCの成功条件
-
-ダッシュボードのDISCOVERY欄で:
-
-- property accessが通る
-- INDEX STATUSが主要5ページについて返る
-- Search Analyticsが0件でも正常レスポンスになる
-- 0 impressionsとAPI errorを区別できる
-- searchAppearance取得可否が分かる
-
-## 失敗時の切り分け
-
-### 401 Google OAuth
-
-Service Account JSON / private keyを確認。
-
-### 403 Property not accessible
-
-- `GSC_SITE_URL`がSearch Console上のproperty文字列と完全一致しているか
-- URL-prefix末尾`/`があるか
-- Service Account emailにproperty権限があるか
-
-### INDEX STATUS ERRORのみ
-
-Search AnalyticsとURL Inspectionを別々に扱う。
-URL Inspection APIはGoogle Indexにある版を確認するAPIで、Live URL Testではない。
-
-### Impressions = 0
-
-接続失敗とは扱わない。
-まずINDEX STATUSを確認し、indexedなのに0なら「検索露出未発生」として扱う。
+Chart / Dateは全体KPI。
+Page / Queryはドリルダウン。
+両者の集計方法が違う場合があるため、単純合計で一致を要求しない。
