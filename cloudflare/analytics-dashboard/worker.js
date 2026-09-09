@@ -4,19 +4,28 @@ const BASE_PATH = "/orima1995-creator.github.io";
 
 export default {
   async fetch(request, env) {
+    const url = new URL(request.url);
+
+    // Read-only export uses a short-lived signed URL so ChatGPT/web tools can
+    // fetch aggregate analytics without receiving the dashboard password.
+    if (url.pathname === "/api/ai-export") {
+      return aiExportResponse(request, url, env);
+    }
+
     const auth = requireBasicAuth(request, env);
     if (auth) return auth;
-
-    const url = new URL(request.url);
 
     if (url.pathname === "/api/analytics") {
       return analyticsResponse(url, env);
     }
 
+    if (url.pathname === "/api/ai-share-link") {
+      return aiShareLinkResponse(request, url, env);
+    }
+
     if (url.pathname === "/api/x-preview") {
       return xPreviewResponse(url);
     }
-
 
     if (url.pathname === "/" || url.pathname === "/index.html") {
       return htmlResponse(DASHBOARD_HTML);
@@ -117,6 +126,172 @@ function decodeHtmlText(value) {
     .replace(/&nbsp;/g, " ")
     .replace(/&#(\d+);/g, (_, n) => String.fromCodePoint(Number(n)))
     .replace(/&#x([0-9a-f]+);/gi, (_, n) => String.fromCodePoint(parseInt(n, 16)));
+}
+
+const AI_EXPORT_MAX_TTL_SECONDS = 7 * 24 * 60 * 60;
+const AI_EXPORT_MIN_TTL_SECONDS = 5 * 60;
+
+async function aiShareLinkResponse(request, url, env) {
+  if (request.method !== "GET") {
+    return jsonResponse({ error: "GET only." }, 405);
+  }
+
+  try {
+    requireEnv(env, "DASHBOARD_PASSWORD");
+
+    const windowSpec = normalizeWindow(url.searchParams.get("window"));
+    const requestedTtl = Number(url.searchParams.get("ttl") || 24 * 60 * 60);
+    const ttlSeconds = Math.min(
+      AI_EXPORT_MAX_TTL_SECONDS,
+      Math.max(
+        AI_EXPORT_MIN_TTL_SECONDS,
+        Number.isFinite(requestedTtl) ? Math.floor(requestedTtl) : 24 * 60 * 60,
+      ),
+    );
+    const expires = Math.floor(Date.now() / 1000) + ttlSeconds;
+    const signature = await signAiExport(
+      env.DASHBOARD_PASSWORD,
+      windowSpec.key,
+      expires,
+    );
+
+    const shareUrl = new URL("/api/ai-export", url.origin);
+    shareUrl.searchParams.set("window", windowSpec.key);
+    shareUrl.searchParams.set("expires", String(expires));
+    shareUrl.searchParams.set("sig", signature);
+
+    return jsonResponse({
+      url: shareUrl.toString(),
+      windowKey: windowSpec.key,
+      expiresAt: new Date(expires * 1000).toISOString(),
+      ttlSeconds,
+      scope: "aggregate analytics read-only",
+    });
+  } catch (error) {
+    return jsonResponse(
+      { error: error instanceof Error ? error.message : String(error) },
+      500,
+    );
+  }
+}
+
+async function aiExportResponse(request, url, env) {
+  if (request.method !== "GET") {
+    return jsonResponse({ error: "GET only." }, 405);
+  }
+
+  try {
+    requireEnv(env, "DASHBOARD_PASSWORD");
+
+    const windowSpec = normalizeWindow(url.searchParams.get("window"));
+    const expires = Number(url.searchParams.get("expires"));
+    const signature = String(url.searchParams.get("sig") || "");
+
+    if (!Number.isInteger(expires) || !signature) {
+      return jsonResponse({ error: "Signed export URL required." }, 401);
+    }
+
+    const nowSeconds = Math.floor(Date.now() / 1000);
+    if (expires <= nowSeconds) {
+      return jsonResponse({ error: "Signed export URL expired." }, 410);
+    }
+    if (expires - nowSeconds > AI_EXPORT_MAX_TTL_SECONDS) {
+      return jsonResponse({ error: "Signed export URL exceeds maximum TTL." }, 401);
+    }
+
+    const expected = await signAiExport(
+      env.DASHBOARD_PASSWORD,
+      windowSpec.key,
+      expires,
+    );
+    if (!timingSafeHexEqual(signature, expected)) {
+      return jsonResponse({ error: "Invalid export signature." }, 401);
+    }
+
+    const response = await analyticsResponse(url, env);
+    const payload = await response.json();
+    if (!response.ok) return jsonResponse(payload, response.status);
+
+    return jsonResponse({
+      schemaVersion: "vintage-alarm-ai-export-v1",
+      generatedAt: payload.generatedAt,
+      windowKey: payload.windowKey,
+      windowLabel: payload.windowLabel,
+      windowStart: payload.windowStart,
+      windowEnd: payload.windowEnd,
+      host: payload.host,
+      current: aiExportPeriod(payload.current),
+      previous: aiExportPeriod(payload.previous),
+      trend: payload.trend,
+      trendBucket: payload.trendBucket,
+      trendWarning: payload.trendWarning,
+      limitations: {
+        searchConsole:
+          "Not included: Search Console / Google AI snapshots currently live only in dashboard browser localStorage.",
+        privacy:
+          "Aggregate Cloudflare Web Analytics only; no IP addresses, cookies, or raw user-agent strings are exported.",
+        attribution:
+          "X/SNS referrer paths can help diagnosis but do not guarantee post-level attribution.",
+      },
+    });
+  } catch (error) {
+    return jsonResponse(
+      { error: error instanceof Error ? error.message : String(error) },
+      500,
+    );
+  }
+}
+
+function aiExportPeriod(period) {
+  const flows = Array.isArray(period?.flows) ? period.flows : [];
+  return {
+    pageviews: period?.pageviews || 0,
+    visits: period?.visits || 0,
+    pages: period?.pages || [],
+    entryPages: [...(period?.pages || [])]
+      .filter((page) => (page?.visits || 0) > 0)
+      .sort((a, b) => (b.visits - a.visits) || (b.pageviews - a.pageviews)),
+    channels: period?.channels || [],
+    referrers: period?.referrers || [],
+    externalEntryFlows: flows.filter(
+      (flow) => flow.channel !== "Internal Navigation" && (flow.visits || 0) > 0,
+    ),
+    internalFlows: flows.filter(
+      (flow) => flow.channel === "Internal Navigation" && (flow.pageviews || 0) > 0,
+    ),
+    snsEntries: period?.snsEntries || { pages: [], total: 0, complete: false },
+    countries: period?.countries || [],
+    devices: period?.devices || [],
+  };
+}
+
+async function signAiExport(secret, windowKey, expires) {
+  const key = await crypto.subtle.importKey(
+    "raw",
+    new TextEncoder().encode(String(secret)),
+    { name: "HMAC", hash: "SHA-256" },
+    false,
+    ["sign"],
+  );
+  const message = new TextEncoder().encode(
+    "vintage-alarm-ai-export:" + windowKey + ":" + expires,
+  );
+  const signature = await crypto.subtle.sign("HMAC", key, message);
+  return [...new Uint8Array(signature)]
+    .map((byte) => byte.toString(16).padStart(2, "0"))
+    .join("");
+}
+
+function timingSafeHexEqual(left, right) {
+  const a = String(left || "").toLowerCase();
+  const b = String(right || "").toLowerCase();
+  if (!/^[0-9a-f]{64}$/.test(a) || !/^[0-9a-f]{64}$/.test(b)) return false;
+
+  let diff = 0;
+  for (let i = 0; i < a.length; i += 1) {
+    diff |= a.charCodeAt(i) ^ b.charCodeAt(i);
+  }
+  return diff === 0;
 }
 
 async function analyticsResponse(url, env) {
