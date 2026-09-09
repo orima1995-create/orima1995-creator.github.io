@@ -42,6 +42,7 @@ jobs:
             dist/history/index.html \
             dist/history/smartwatch/index.html \
             dist/owners-notes/index.html \
+            dist/basis-alarm/index.html \
             dist/pierce-duofon/index.html \
             dist/cyma-time-o-vox/index.html \
             dist/cyma-time-o-vox/owners-note/index.html \
@@ -49,6 +50,8 @@ jobs:
             dist/images/history/smartwatch-part-2.webp \
             dist/images/history/smartwatch-part-3.webp \
             dist/images/history/smartwatch-part-4.webp \
+            "dist/images/Basis Alarm(BFG90).png" \
+            dist/images/IMG_8890.jpeg \
             "dist/images/cyma-time-o-vox/Cyma timeovox .png" \
             "dist/images/cyma-time-o-vox/ムーブメント.jpg" \
             dist/images/cyma-time-o-vox/wipe.jpg \
@@ -61,6 +64,12 @@ jobs:
             echo "$f: ${bytes} bytes"
             test "$bytes" -gt 4000 || { echo "image too small: $f"; exit 1; }
           done
+          basis_note_bytes=$(wc -c < "dist/images/Basis Alarm(BFG90).png")
+          basis_thumb_bytes=$(wc -c < dist/images/IMG_8890.jpeg)
+          echo "Basis OWNER'S NOTE PNG: ${basis_note_bytes} bytes"
+          echo "Basis thumbnail: ${basis_thumb_bytes} bytes"
+          test "$basis_note_bytes" -gt 100000 || { echo "Basis OWNER'S NOTE PNG is unexpectedly small"; exit 1; }
+          test "$basis_thumb_bytes" -gt 100000 || { echo "Basis thumbnail is unexpectedly small"; exit 1; }
           cyma_bytes=$(wc -c < "dist/images/cyma-time-o-vox/Cyma timeovox .png")
           echo "Cyma OWNER'S NOTE PNG: ${cyma_bytes} bytes"
           test "$cyma_bytes" -gt 100000 || { echo "Cyma OWNER'S NOTE PNG is unexpectedly small"; exit 1; }
@@ -84,6 +93,7 @@ jobs:
           check_text 'id="research"' dist/history/index.html
           check_text 'owners-notes/' dist/history/index.html
           check_text '所有個体から見る。' dist/owners-notes/index.html
+          check_text 'BASIS' dist/owners-notes/index.html
           check_text 'TIME-O-VOX' dist/owners-notes/index.html
           check_text 'DUOFON' dist/owners-notes/index.html
           check_text 'cyma-time-o-vox/#owners-note' dist/owners-notes/index.html
@@ -91,7 +101,13 @@ jobs:
           check_text 'images/owners-thumbnails/pierce-duofon-full.png' dist/owners-notes/index.html
           test -f dist/images/owners-thumbnails/cyma-time-o-vox-full.png
           test -f dist/images/owners-thumbnails/pierce-duofon-full.png
+          check_text 'basis-alarm/#owners-note' dist/owners-notes/index.html
           check_text 'pierce-duofon/#owners-note' dist/owners-notes/index.html
+          check_text 'basis-alarm/' dist/history/index.html
+          check_text 'Baumgartner BFG 90' dist/basis-alarm/index.html
+          check_text 'Basis Alarm(BFG90).png' dist/basis-alarm/index.html
+          check_text 'youtube.com/embed/MWoqA4L2wdM' dist/basis-alarm/index.html
+          check_text '2071711307469144447' dist/basis-alarm/index.html
           check_text 'smartwatch-part-4.webp' dist/history/smartwatch/index.html
           check_text 'もっと静かな時代へ戻る' dist/history/smartwatch/index.html
           check_text 'youtube.com/embed/xkecjZqr7BY' dist/pierce-duofon/index.html
@@ -103,6 +119,7 @@ jobs:
           check_text 'youtube.com/embed/OONH0JZqCK0' dist/cyma-time-o-vox/index.html
           check_text '2085277918473883977' dist/cyma-time-o-vox/index.html
           check_text 'owners-notes' dist/sitemap.xml
+          check_text 'basis-alarm' dist/sitemap.xml
           check_text 'cyma-time-o-vox' dist/sitemap.xml
           if grep -Fq '個体ページへ' dist/owners-notes/index.html; then
             echo "duplicate WATCH link remains in OWNER'S NOTES directory"
@@ -150,6 +167,7 @@ jobs:
           history="${root}history/"
           owners="${root}owners-notes/"
           smart="${root}history/smartwatch/"
+          basis="${root}basis-alarm/"
           duofon="${root}pierce-duofon/"
           cyma="${root}cyma-time-o-vox/"
           cyma_note="${root}cyma-time-o-vox/owners-note/"
@@ -162,6 +180,7 @@ jobs:
             history_html=$(curl -fsSL "$history" || true)
             owners_html=$(curl -fsSL "$owners" || true)
             smart_html=$(curl -fsSL "$smart" || true)
+            basis_html=$(curl -fsSL "$basis" || true)
             duofon_html=$(curl -fsSL "$duofon" || true)
             cyma_html=$(curl -fsSL "$cyma" || true)
             cyma_note_html=$(curl -fsSL "$cyma_note" || true)
@@ -170,9 +189,13 @@ jobs:
               size=$(curl -fsSL "${root}images/history/smartwatch-part-${n}.webp" 2>/dev/null | wc -c || true)
               [ "${size:-0}" -gt 4000 ] || parts_ok=0
             done
+            basis_note_size=$(curl -fsSL "${root}images/Basis%20Alarm(BFG90).png" 2>/dev/null | wc -c || true)
+            basis_thumb_size=$(curl -fsSL "${root}images/IMG_8890.jpeg" 2>/dev/null | wc -c || true)
             cyma_size=$(curl -fsSL "${root}images/cyma-time-o-vox/Cyma%20timeovox%20.png" 2>/dev/null | wc -c || true)
             movement_size=$(curl -fsSL "${root}images/cyma-time-o-vox/%E3%83%A0%E3%83%BC%E3%83%96%E3%83%A1%E3%83%B3%E3%83%88.jpg" 2>/dev/null | wc -c || true)
             wipe_size=$(curl -fsSL "${root}images/cyma-time-o-vox/wipe.jpg" 2>/dev/null | wc -c || true)
+            [ "${basis_note_size:-0}" -gt 100000 ] || parts_ok=0
+            [ "${basis_thumb_size:-0}" -gt 100000 ] || parts_ok=0
             [ "${cyma_size:-0}" -gt 100000 ] || parts_ok=0
             [ "${movement_size:-0}" -gt 100000 ] || parts_ok=0
             [ "${wipe_size:-0}" -gt 100000 ] || parts_ok=0
@@ -186,12 +209,19 @@ jobs:
               && grep -Fq "cyma-time-o-vox/" <<<"$history_html" \
               && grep -Fq "owners-notes/" <<<"$history_html" \
               && grep -Fq "所有個体から見る。" <<<"$owners_html" \
+              && grep -Fq "BASIS" <<<"$owners_html" \
               && grep -Fq "TIME-O-VOX" <<<"$owners_html" \
               && grep -Fq "DUOFON" <<<"$owners_html" \
               && grep -Fq "cyma-time-o-vox/#owners-note" <<<"$owners_html" \
               && grep -Fq "images/owners-thumbnails/cyma-time-o-vox-full.png" <<<"$owners_html" \
               && grep -Fq "images/owners-thumbnails/pierce-duofon-full.png" <<<"$owners_html" \
+              && grep -Fq "basis-alarm/#owners-note" <<<"$owners_html" \
               && grep -Fq "pierce-duofon/#owners-note" <<<"$owners_html" \
+              && grep -Fq "basis-alarm/" <<<"$history_html" \
+              && grep -Fq "Baumgartner BFG 90" <<<"$basis_html" \
+              && grep -Fq "Basis Alarm(BFG90).png" <<<"$basis_html" \
+              && grep -Fq "youtube.com/embed/MWoqA4L2wdM" <<<"$basis_html" \
+              && grep -Fq "2071711307469144447" <<<"$basis_html" \
               && ! grep -Fq "個体ページへ" <<<"$owners_html" \
               && grep -Fq "smartwatch-part-4.webp" <<<"$smart_html" \
               && grep -Fq "もっと静かな時代へ戻る" <<<"$smart_html" \
@@ -208,10 +238,11 @@ jobs:
               && ! grep -Fq "#index-interests" <<<"$home_html$history_html" \
               && grep -Fq "<urlset" <<<"$sitemap_xml" \
               && grep -Fq "pierce-duofon/" <<<"$sitemap_xml" \
+              && grep -Fq "basis-alarm/" <<<"$sitemap_xml" \
               && grep -Fq "cyma-time-o-vox/" <<<"$sitemap_xml" \
               && grep -Fq "google-site-verification: googled3a96ed4c5eb9287.html" <<<"$verification_html" \
               && [ "$parts_ok" -eq 1 ]; then
-              echo "Verified live navigation, sitemap, Search Console file, watch videos, owners notes, Cyma media, and smartwatch artwork: $root"
+              echo "Verified live navigation, sitemap, Search Console file, watch videos, owners notes, Basis/Cyma media, and smartwatch artwork: $root"
               exit 0
             fi
             sleep 5
