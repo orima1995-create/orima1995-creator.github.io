@@ -35,7 +35,7 @@ spec:
   barrels: 2香箱
   winding: 手巻き
   acoustic: 底部ベル式
-  notes: アラーム約10秒、回転ベゼル式アラーム設定、9時位置ON/OFFスライダー、1時／5時位置の巻上げ表示窓
+  notes: アラーム約20秒、回転ベゼル式アラーム設定、9時位置ON/OFFスライダー、1時／5時位置の巻上げ表示窓
 specimenGallery:
   - image: /images/IMG_8890-1.jpeg
     label: 正面（リストショット）
