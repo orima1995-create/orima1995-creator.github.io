@@ -1,6 +1,27 @@
 # VINTAGE ALARM — 計測定義
 
-更新日: 2026-09-09
+更新日: 2026-09-10
+
+## 公開URL移行 / 計器校正
+
+- 2026-09-10以降の正規URL: `https://vintagealarm.github.io/`
+- 旧URL: `https://orima1995-create.github.io/orima1995-creator.github.io/`
+- 新旧は別のCloudflare Web Analytics計測対象として扱う。移行前後のVisits / Page viewsを、同じ母集団の連続値として単純比較しない。
+- 管理ダッシュボードの正規集計ホストは `vintagealarm.github.io`。
+- AI COPY / AI exportを施策判断に使う前に、JSONの `host` が必ず `vintagealarm.github.io` であることを確認する。
+- `host: orima1995-create.github.io` のexportは旧ホストの履歴であり、移行後施策の評価には使わない。
+- 2026-09-10に、正規リポジトリ側のWorkerコードは新ホスト設定済みだった一方、Cloudflare deployment secretsが正規リポジトリ側に無く、Workflowの `Deploy Worker` がskipされていたことを確認した。
+- 現在の本番Workerは、旧リポジトリに残るCloudflare認証済みdeploy経路を一時的なbridgeとして使い、`REQUEST_HOST=vintagealarm.github.io` で再deploy済み。
+- Workflow全体の `success` だけで公開完了と判定しない。必ず `Deploy Worker` stepが実行・成功したかを確認する。
+
+### 校正停止条件
+
+以下のどれかに当たる場合、SEO / SNS施策の成果判定を止め、先に計測系を監査する。
+
+- exportの `host` が正規ホストと一致しない
+- Pages合計 / Channels合計 / Country / Deviceなど、同じ期間の集計が内部で整合しない
+- 同じwindowの表示とexportで説明できない大差がある
+- 計測タグ / host / redirect / bot filterなどの条件変更が期間内に混在する
 
 ## 原則
 
@@ -77,6 +98,8 @@ Cloudflare API tokenはWorker Secretにのみ保存し、GitHub Pagesやブラ�
 - Search Console / Google生成AIのCSV ImportはブラウザlocalStorageのためexport対象外。
 
 このexportを使ったChatGPT分析でも、`実装済み / 公開済み / 成果観測済み`を分け、X流入・検索流入・AI Assistant Referrerを混同しない。
+
+施策分析を開始する前に、exportの `host` を正規ホストと照合する。ホスト不一致時は数値解釈を停止する。
 
 ## Visits / Page views / Entryの扱い
 
@@ -161,6 +184,10 @@ Cloudflare:
 
 可能な場合はGraphQLの`refererPath`でX投稿のstatus pathを確認する。
 ただしX / t.co / WebViewの仕様で完全な投稿単位識別ができない場合は、推測で補わない。
+
+X投稿URLの読込で保存する `postId` / 本文 / 投稿者 / 施策開始時刻は、投稿ログと前後比較の基準に使う。
+Cloudflare側の実データで `refererPath` が `/` までしか残らずstatus IDが取得できない場合、`postId` とEntryを直接JOINしたことにはしない。
+その場合は「投稿単位で確定」ではなく、同時間帯のX → 対象ページEntryとの照合として扱う。
 
 ## ページ単位
 
