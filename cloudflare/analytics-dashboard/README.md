@@ -2,6 +2,22 @@
 
 VINTAGE ALARM専用の非公開アクセス解析ダッシュボード。
 
+## 2026-09-10 host migration / deployment bridge
+
+正規サイトは `https://vintagealarm.github.io/`。本番ダッシュボードもこのhostだけを現行母集団として集計する。
+
+2026-09-10の監査で、正規リポジトリ `vintagealarm/vintagealarm.github.io` のWorkerコードは新host設定済みだった一方、正規リポジトリ側GitHub ActionsにはCloudflare deployment secretsが無く、Workflow自体はsuccessでも `Deploy Worker` stepがskipされていたことを確認した。
+
+そのため現在は、旧リポジトリ側に残る認証済みdeploy経路を一時的なbridgeとして使い、正規リポジトリのWorker内容を同期したうえで `REQUEST_HOST=vintagealarm.github.io` を本番へdeployしている。
+
+判定ルール:
+
+- GitHub Actions全体のsuccessだけで「本番反映済み」としない。
+- `Deploy Worker` stepが実行され、Wranglerログのbindingが `REQUEST_HOST ("vintagealarm.github.io")` であることまで確認する。
+- AI COPYのJSONで `host: vintagealarm.github.io` を確認してから施策分析する。
+- legacy hostのexportは履歴としてのみ扱う。
+- 正規リポジトリへCloudflare secretsを移した後は、このbridgeを廃止する。
+
 ## 現在の目的
 
 アクセス数を眺めるためではなく、
@@ -135,6 +151,7 @@ Worker内のPAGE_NAMESで管理する。
 - Page viewsとVisitsは別定義。
 - Search Consoleの表示回数 / Click / CTR / QueryとCloudflare訪問データを混同しない。
 - Campaign Funnel内のCloudflare側数値は選択期間の比較値であり、投稿単位の完全帰属ではない。
+- X URL読込で保存するstatus IDは投稿ログ用。Cloudflareの `refererPath` にstatus pathが残らない場合、個別投稿のEntryを確定識別したことにはしない。
 - LOW SAMPLE中は数件差を傾向として断定しない。
 
 
