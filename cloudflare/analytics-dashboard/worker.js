@@ -1,6 +1,7 @@
 const GRAPHQL_ENDPOINT = "https://api.cloudflare.com/client/v4/graphql";
-const DEFAULT_HOST = "orima1995-create.github.io";
-const BASE_PATH = "/orima1995-creator.github.io";
+const DEFAULT_HOST = "vintagealarm.github.io";
+const LEGACY_HOST = "orima1995-create.github.io";
+const LEGACY_BASE_PATH = "/orima1995-creator.github.io";
 
 export default {
   async fetch(request, env) {
@@ -807,7 +808,9 @@ export function aggregateSnsEntries(rows) {
 function cleanPath(path) {
   let out = String(path || "/").split(/[?#]/)[0];
   try { out = decodeURIComponent(out); } catch {}
-  if (out.startsWith(BASE_PATH)) out = out.slice(BASE_PATH.length) || "/";
+  if (out === LEGACY_BASE_PATH || out.startsWith(LEGACY_BASE_PATH + "/")) {
+    out = out.slice(LEGACY_BASE_PATH.length) || "/";
+  }
   if (!out.startsWith("/")) out = "/" + out;
   out = out.replace(/\/{2,}/g, "/");
   if (out !== "/" && !out.endsWith("/") && !out.split("/").pop().includes(".")) out += "/";
@@ -885,7 +888,12 @@ function buildChannels(rows) {
 function classifyReferrer(host) {
   const value = String(host || "").toLowerCase();
   if (!value) return "Direct / Unknown";
-  if (value === DEFAULT_HOST || value.endsWith("." + DEFAULT_HOST)) return "Internal Navigation";
+  if (
+    value === DEFAULT_HOST ||
+    value.endsWith("." + DEFAULT_HOST) ||
+    value === LEGACY_HOST ||
+    value.endsWith("." + LEGACY_HOST)
+  ) return "Internal Navigation";
 
   if (
     value === "x.com" ||
