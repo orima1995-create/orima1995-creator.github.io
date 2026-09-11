@@ -99,11 +99,68 @@
 
       if (!best || best.continuity < 0.58 || best.average < threshold * 1.35) return null;
 
-      const padFactor = 1.48;
-      let left = best.cx - best.radius * padFactor;
-      let right = best.cx + best.radius * padFactor;
-      let top = best.cy - best.radius * padFactor;
-      let bottom = best.cy + best.radius * padFactor;
+      // The dial is the most reliable circle. Once found, probe outward from the
+      // same center for the bezel/case edge. This makes different bezel ratios
+      // converge on the perceived size of the whole watch rather than only the dial.
+      let framingRadius = best.radius;
+      let outerBest = null;
+      let outerProbe = null;
+      const outerLimit = Math.min(
+        Math.round(best.radius * 1.55),
+        best.cx - 2,
+        width - best.cx - 3,
+        best.cy - 2,
+        height - best.cy - 3
+      );
+
+      for (let radius = best.radius + 3; radius <= outerLimit; radius += 2) {
+        let sum = 0;
+        let continuous = 0;
+        const angleCount = 36;
+        for (let k = 0; k < angleCount; k++) {
+          const angle = Math.PI * 2 * k / angleCount;
+          const cos = Math.cos(angle);
+          const sin = Math.sin(angle);
+          let strongest = 0;
+          for (const delta of [-2, -1, 0, 1, 2]) {
+            const x = Math.round(best.cx + (radius + delta) * cos);
+            const y = Math.round(best.cy + (radius + delta) * sin);
+            strongest = Math.max(strongest, edge[y * width + x] || 0);
+          }
+          sum += strongest;
+          if (strongest > threshold) continuous++;
+        }
+
+        const continuity = continuous / angleCount;
+        const average = sum / angleCount;
+        const radiusGain = radius / best.radius;
+        const score = average * (0.35 + 0.65 * continuity) * (0.92 + 0.08 * radiusGain);
+        const candidate = { radius, score, continuity, average, radiusGain };
+        if (!outerProbe || score > outerProbe.score) outerProbe = candidate;
+
+        if (continuity < 0.42 || average < threshold * 1.08) continue;
+        if (!outerBest || score > outerBest.score) outerBest = candidate;
+      }
+
+      img.dataset.smartFitOuterProbe = JSON.stringify({
+        dialRadius: best.radius,
+        dialAverage: best.average,
+        dialContinuity: best.continuity,
+        threshold,
+        outerProbe
+      });
+
+      if (outerBest && outerBest.radius >= best.radius * 1.08) {
+        framingRadius = outerBest.radius;
+      }
+
+      // The case circle still needs room for crown/lugs. Keep that safety margin
+      // explicit instead of blindly filling the thumbnail.
+      const padFactor = framingRadius > best.radius ? 1.24 : 1.48;
+      let left = best.cx - framingRadius * padFactor;
+      let right = best.cx + framingRadius * padFactor;
+      let top = best.cy - framingRadius * padFactor;
+      let bottom = best.cy + framingRadius * padFactor;
 
       left = Math.max(0, left);
       right = Math.min(width, right);

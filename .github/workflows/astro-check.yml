@@ -130,3 +130,22 @@ jobs:
             sleep 1
           done
           node scripts/check-layout.mjs
+      - name: Capture visual audit
+        run: |
+          npm run preview -- --host 127.0.0.1 --port 4321 > /tmp/vintage-alarm-visual.log 2>&1 &
+          preview_pid=$!
+          trap 'kill "$preview_pid" 2>/dev/null || true' EXIT
+          for attempt in {1..20}; do
+            if curl -fsS http://127.0.0.1:4321/orima1995-creator.github.io/ >/dev/null; then
+              break
+            fi
+            sleep 1
+          done
+          node scripts/capture-visual-audit.mjs
+      - name: Upload visual audit screenshots
+        uses: actions/upload-artifact@v4
+        with:
+          name: visual-audit
+          path: visual-audit
+          if-no-files-found: error
+          retention-days: 7
