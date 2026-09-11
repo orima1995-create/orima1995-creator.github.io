@@ -1,0 +1,61 @@
+name: Deploy AI Readable Relay
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "cloudflare/ai-relay/**"
+      - ".github/workflows/deploy-ai-relay-pages.yml"
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: cloudflare/ai-relay
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Check relay JavaScript
+        run: |
+          node --check functions/index.js
+          node check-relay.mjs
+
+      - name: Require Cloudflare deployment credentials
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          test -n "$CLOUDFLARE_API_TOKEN" || { echo "CLOUDFLARE_API_TOKEN is missing"; exit 1; }
+          test -n "$CLOUDFLARE_ACCOUNT_ID" || { echo "CLOUDFLARE_ACCOUNT_ID is missing"; exit 1; }
+
+      - name: Ensure Pages project exists
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          npx --yes wrangler@4 pages project list --json > /tmp/pages-projects.json
+          if node -e 'const fs=require("fs");const x=JSON.parse(fs.readFileSync("/tmp/pages-projects.json","utf8"));process.exit(x.some(p=>p.name==="vintage-alarm-ai-relay")?0:1)'; then
+            echo "Pages project already exists"
+          else
+            npx --yes wrangler@4 pages project create vintage-alarm-ai-relay --production-branch main
+          fi
+
+      - name: Deploy Pages relay
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          npx --yes wrangler@4 pages deploy public \
+            --project-name vintage-alarm-ai-relay \
+            --branch main \
+            --commit-hash "$GITHUB_SHA" \
+            --commit-message "VINTAGE ALARM AI readable analytics relay"
