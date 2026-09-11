@@ -5,7 +5,6 @@ on:
   push:
     branches: ["main"]
     paths:
-      - "cloudflare/analytics-dashboard/**"
       - ".github/workflows/deploy-analytics-worker.yml"
 
 permissions:
@@ -16,10 +15,20 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: cloudflare/analytics-dashboard
+        working-directory: canonical/cloudflare/analytics-dashboard
     steps:
-      - name: Checkout
+      - name: Checkout deployment bridge
         uses: actions/checkout@v4
+        with:
+          path: bridge
+
+      - name: Checkout canonical VINTAGE ALARM source
+        uses: actions/checkout@v4
+        with:
+          repository: vintagealarm/vintagealarm.github.io
+          ref: main
+          path: canonical
+          persist-credentials: false
 
       - name: Setup Node
         uses: actions/setup-node@v4
@@ -29,29 +38,22 @@ jobs:
       - name: Install
         run: npm install
 
-      - name: Check worker JavaScript
-        run: node --check worker.js
+      - name: Check canonical analytics source
+        run: |
+          node --check worker.js
+          node --check profile-worker.js
+          node check-generated-html.mjs
+          node check-profile-wrapper.mjs
 
-      - name: Check generated dashboard JavaScript
-        run: node check-generated-html.mjs
-
-      - name: Check deployment credentials
-        id: deploy_config
-        shell: bash
+      - name: Require deployment credentials
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
         run: |
-          set -euo pipefail
-          if [ -n "$CLOUDFLARE_API_TOKEN" ] && [ -n "$CLOUDFLARE_ACCOUNT_ID" ]; then
-            echo "ready=true" >> "$GITHUB_OUTPUT"
-          else
-            echo "ready=false" >> "$GITHUB_OUTPUT"
-            echo "::warning::Analytics Worker deploy skipped: configure CLOUDFLARE_API_TOKEN and CLOUDFLARE_ACCOUNT_ID repository secrets."
-          fi
+          test -n "$CLOUDFLARE_API_TOKEN" || { echo "CLOUDFLARE_API_TOKEN is missing"; exit 1; }
+          test -n "$CLOUDFLARE_ACCOUNT_ID" || { echo "CLOUDFLARE_ACCOUNT_ID is missing"; exit 1; }
 
-      - name: Deploy Worker
-        if: steps.deploy_config.outputs.ready == 'true'
+      - name: Deploy canonical Analytics Worker
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
