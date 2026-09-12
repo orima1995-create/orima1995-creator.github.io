@@ -14,10 +14,15 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: cloudflare/ai-relay
+        working-directory: canonical/cloudflare/ai-relay
     steps:
-      - name: Checkout
+      - name: Checkout canonical relay
         uses: actions/checkout@v4
+        with:
+          repository: vintagealarm/vintagealarm.github.io
+          ref: f6974dfbcda3522a0aee1da6cf72c244aaa6f3f5
+          path: canonical
+          persist-credentials: false
 
       - name: Setup Node
         uses: actions/setup-node@v4
@@ -59,3 +64,8 @@ jobs:
             --branch main \
             --commit-hash "$GITHUB_SHA" \
             --commit-message "VINTAGE ALARM AI readable analytics relay"
+
+      - name: Verify public relay landing page
+        run: |
+          curl --fail --silent --show-error --retry 3 --max-time 30 https://vintage-alarm-ai-relay.pages.dev/ -o /tmp/relay.html
+          node -e 'const fs=require("fs");const body=fs.readFileSync("/tmp/relay.html","utf8");if(!body.includes("<!doctype html>")||!body.includes("No analytics data"))process.exit(1)'
