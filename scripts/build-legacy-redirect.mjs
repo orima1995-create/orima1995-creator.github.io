@@ -14,6 +14,8 @@ const routes = [
   '/pierce-duofon/',
   '/cyma-time-o-vox/',
   '/cyma-time-o-vox/owners-note/',
+  '/citizen-alarm/',
+  '/westclox-watchlarm/',
   '/lab/council/'
 ];
 

@@ -5,6 +5,7 @@ on:
     branches: ["main"]
     paths:
       - "scripts/build-legacy-redirect.mjs"
+      - "scripts/check-live-legacy-redirects.mjs"
       - ".github/workflows/deploy-pages.yml"
   workflow_dispatch:
 
@@ -45,6 +46,8 @@ jobs:
             legacy-dist/pierce-duofon/index.html \
             legacy-dist/cyma-time-o-vox/index.html \
             legacy-dist/cyma-time-o-vox/owners-note/index.html \
+            legacy-dist/citizen-alarm/index.html \
+            legacy-dist/westclox-watchlarm/index.html \
             legacy-dist/lab/council/index.html \
             legacy-dist/robots.txt \
             legacy-dist/sitemap.xml \
@@ -52,6 +55,8 @@ jobs:
             test -f "$f" || { echo "missing redirect artifact: $f"; exit 1; }
           done
           grep -Fq 'https://vintagealarm.github.io/pierce-duofon/' legacy-dist/pierce-duofon/index.html
+          grep -Fq 'https://vintagealarm.github.io/citizen-alarm/' legacy-dist/citizen-alarm/index.html
+          grep -Fq 'https://vintagealarm.github.io/westclox-watchlarm/' legacy-dist/westclox-watchlarm/index.html
           grep -Fq 'location.search + location.hash' legacy-dist/pierce-duofon/index.html
           grep -Fq 'noindex,follow' legacy-dist/pierce-duofon/index.html
           grep -Fq '/orima1995-creator.github.io' legacy-dist/404.html
@@ -64,3 +69,7 @@ jobs:
       - name: Deploy
         id: deployment
         uses: actions/deploy-pages@v4
+      - name: Verify live legacy redirects
+        env:
+          LEGACY_SITE_ROOT: ${{ steps.deployment.outputs.page_url }}
+        run: node scripts/check-live-legacy-redirects.mjs
