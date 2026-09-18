@@ -1,5 +1,7 @@
 name: Deploy Analytics Worker
 
+# Redeploy bridge: Cyma 3x band fix (2026-09-18)
+
 # Redeploy bridge: Cyma collapsible anonymized matrix (2026-09-18)
 
 # Redeploy bridge: Cyma full observed matrix (2026-09-18)
