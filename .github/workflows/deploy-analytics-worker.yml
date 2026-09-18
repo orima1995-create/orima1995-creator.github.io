@@ -1,5 +1,7 @@
 name: Deploy Analytics Worker
 
+# Redeploy bridge: Cyma full observed matrix (2026-09-18)
+
 # Redeploy bridge: private Cyma research preview (2026-09-18)
 
 on:
