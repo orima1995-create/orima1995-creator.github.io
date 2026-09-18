@@ -1,8 +1,6 @@
-name: Astro foundation check
+name: Legacy host redirect check
 
 on:
-  push:
-    branches: ["refactor/astro-foundation"]
   pull_request:
     branches: ["main"]
 
@@ -22,111 +20,38 @@ jobs:
         run: npm ci
       - name: Build
         run: npm run build
-      - name: Verify OWNER'S NOTES directory
-        run: node scripts/check-owner-directory.mjs
-      - name: Verify site output
+      - name: Verify legacy migration contract
         run: |
           set -e
-          test -f dist/index.html
-          test -f dist/owners-notes/index.html
-          test -f dist/pierce-duofon/index.html
-          test -f dist/cyma-time-o-vox/index.html
-          test -f dist/cyma-time-o-vox/owners-note/index.html
-          test -f dist/history/index.html
-          test -f dist/history/smartwatch/index.html
-          test -f dist/images/history/smartwatch-part-4.webp
-          test -f "dist/images/cyma-time-o-vox/Cyma timeovox .png"
-          test -f "dist/images/cyma-time-o-vox/ムーブメント.jpg"
-          test -f dist/images/cyma-time-o-vox/wipe.jpg
 
-          cyma_bytes=$(wc -c < "dist/images/cyma-time-o-vox/Cyma timeovox .png")
-          movement_bytes=$(wc -c < "dist/images/cyma-time-o-vox/ムーブメント.jpg")
-          wipe_bytes=$(wc -c < dist/images/cyma-time-o-vox/wipe.jpg)
-          test "$cyma_bytes" -gt 100000 || { echo "Cyma OWNER'S NOTE PNG is unexpectedly small"; exit 1; }
-          test "$movement_bytes" -gt 100000 || { echo "Cyma movement image is unexpectedly small"; exit 1; }
-          test "$wipe_bytes" -gt 100000 || { echo "Cyma Wippe image is unexpectedly small"; exit 1; }
-
-          check_text() {
-            needle="$1"
-            file="$2"
-            grep -Fq "$needle" "$file" || { echo "missing text [$needle] in $file"; exit 1; }
+          check_legacy_page() {
+            file="$1"
+            canonical="$2"
+            test -f "$file"
+            grep -Fq 'name="robots" content="noindex,follow,noarchive"' "$file" || { echo "missing noindex in $file"; exit 1; }
+            grep -Fq "rel=\"canonical\" href=\"$canonical\"" "$file" || { echo "wrong canonical in $file"; exit 1; }
+            grep -Fq "http-equiv=\"refresh\" content=\"0;url=$canonical\"" "$file" || { echo "missing redirect in $file"; exit 1; }
           }
 
-          check_text "PIERCE" dist/pierce-duofon/index.html
-          check_text "DUOFON" dist/pierce-duofon/index.html
-          check_text "マナーモードの祖先!?" dist/pierce-duofon/index.html
-          check_text "① 動力巻き上げ" dist/pierce-duofon/index.html
-          check_text "youtube.com/embed/xkecjZqr7BY" dist/pierce-duofon/index.html
-          check_text "Pierce Cal.135" dist/pierce-duofon/index.html
-          check_text "Gruen Duotoneとの関係" dist/pierce-duofon/index.html
-          check_text "history/#1950s" dist/pierce-duofon/index.html
+          check_legacy_page dist/index.html "https://vintagealarm.github.io/"
+          check_legacy_page dist/history/index.html "https://vintagealarm.github.io/history/"
+          check_legacy_page dist/owners-notes/index.html "https://vintagealarm.github.io/owners-notes/"
+          check_legacy_page dist/pierce-duofon/index.html "https://vintagealarm.github.io/pierce-duofon/"
+          check_legacy_page dist/cyma-time-o-vox/index.html "https://vintagealarm.github.io/cyma-time-o-vox/"
+          check_legacy_page dist/basis-alarm/index.html "https://vintagealarm.github.io/basis-alarm/"
+          check_legacy_page dist/history/smartwatch/index.html "https://vintagealarm.github.io/history/smartwatch/"
 
-          check_text "cyma-time-o-vox/#owners-note" dist/owners-notes/index.html
-          check_text "images/owners-thumbnails/cyma-time-o-vox-full.png" dist/owners-notes/index.html
-          check_text "images/owners-thumbnails/pierce-duofon-full.png" dist/owners-notes/index.html
-          test -f dist/images/owners-thumbnails/cyma-time-o-vox-full.png
-          test -f dist/images/owners-thumbnails/pierce-duofon-full.png
-
-          check_text 'id="1950s"' dist/history/index.html
-          check_text "CITIZEN CRYSTRON LC ALARM" dist/history/index.html
-          check_text "量産・小型化・自動巻き・用途の拡張。" dist/history/index.html
-          check_text "PIERCE DUOFON" dist/history/index.html
-          check_text "TIME-O-VOX" dist/history/index.html
-          check_text "cyma-time-o-vox/" dist/history/index.html
-          check_text 'id="milestones"' dist/history/index.html
-          check_text 'id="research"' dist/history/index.html
-          check_text "owners-notes/" dist/history/index.html
-          check_text 'id="current"' dist/history/index.html
-          check_text "history/smartwatch/" dist/history/index.html
-
-          check_text "smartwatch-part-4.webp" dist/history/smartwatch/index.html
-          check_text "もっと静かな時代へ戻る" dist/history/smartwatch/index.html
-
-          check_text "Cal.R.464" dist/cyma-time-o-vox/index.html
-          check_text "ムーブメント.jpg" dist/cyma-time-o-vox/index.html
-          check_text "wipe.jpg" dist/cyma-time-o-vox/index.html
-          check_text "Cyma timeovox .png" dist/cyma-time-o-vox/index.html
-          check_text "Cyma timeovox .png" dist/cyma-time-o-vox/owners-note/index.html
-          check_text "youtube.com/embed/OONH0JZqCK0" dist/cyma-time-o-vox/index.html
-          check_text "2085277918473883977" dist/cyma-time-o-vox/index.html
-
-          grep -Fq "label: HISTORY 本文・MILESTONES" .pages.yml || { echo "Pages CMS HISTORY label/schema drifted"; exit 1; }
-          grep -Fq "name: coverMilestones" .pages.yml || { echo "Pages CMS cover milestones field missing"; exit 1; }
-          grep -Fq "HISTORY・一覧サムネ画像" .pages.yml || { echo "Pages CMS owner thumbnail field missing"; exit 1; }
-
-          if find dist -name '*.html' -print0 | xargs -0 grep -q "data:image/.*base64"; then
-            echo "Embedded base64 image remains in generated HTML"
-            find dist -name '*.html' -print0 | xargs -0 grep -l "data:image/.*base64"
+          grep -Fq '旧CMSです' .pages.yml || { echo "legacy CMS migration notice missing"; exit 1; }
+          grep -Fq 'Allow: /' public/robots.txt || { echo "legacy host must remain crawlable for noindex discovery"; exit 1; }
+          if grep -Fq 'Sitemap:' public/robots.txt; then
+            echo "legacy robots.txt still advertises a sitemap"
             exit 1
           fi
-          if grep -R -q "word-break:[[:space:]]*break-all" dist; then
-            echo "Unsafe mobile break-all rule found"
+          if grep -R -Fq '<loc>https://orima1995-create.github.io/orima1995-creator.github.io/' public/sitemap*.xml; then
+            echo "legacy sitemap still advertises old URLs"
             exit 1
           fi
-          for dead in '#index-milestones' '#index-owners' '#index-interests'; do
-            if grep -R -Fq "$dead" dist; then
-              echo "Removed navigation target remains in generated output: $dead"
-              exit 1
-            fi
-          done
-          if grep -R -Fq "runtime-menu" dist; then
-            echo "Legacy runtime navigation remains in generated output"
+          if grep -R -Fq 'static.cloudflareinsights.com/beacon.min.js' dist; then
+            echo "legacy pages still load analytics"
             exit 1
           fi
-
-      - name: Install browser for layout check
-        run: |
-          npm install --no-save --package-lock=false playwright@1.55.0
-          npx playwright install --with-deps chromium
-      - name: Verify rendered mobile layouts
-        run: |
-          npm run preview -- --host 127.0.0.1 --port 4321 > /tmp/vintage-alarm-preview.log 2>&1 &
-          preview_pid=$!
-          trap 'kill "$preview_pid" 2>/dev/null || true' EXIT
-          for attempt in {1..20}; do
-            if curl -fsS http://127.0.0.1:4321/orima1995-creator.github.io/ >/dev/null; then
-              break
-            fi
-            sleep 1
-          done
-          node scripts/check-layout.mjs
