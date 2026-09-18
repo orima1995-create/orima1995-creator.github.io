@@ -13,20 +13,20 @@ const {
   description,
   path = '',
   image,
-  type = 'website',
-  schema
+  type = 'website'
 } = Astro.props;
 
-const siteRoot = 'https://orima1995-create.github.io/orima1995-creator.github.io/';
-const canonical = new URL(path.replace(/^\//, ''), siteRoot).toString();
+const canonicalRoot = 'https://vintagealarm.github.io/';
+const canonical = new URL(path.replace(/^\//, ''), canonicalRoot).toString();
 const ogImage = image
-  ? (image.startsWith('http') ? image : new URL(image.replace(/^\//, ''), siteRoot).toString())
+  ? (image.startsWith('http') ? image : new URL(image.replace(/^\//, ''), canonicalRoot).toString())
   : undefined;
 ---
 <title>{title}</title>
 <meta name="description" content={description} />
-<meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1" />
+<meta name="robots" content="noindex,follow,noarchive" />
 <link rel="canonical" href={canonical} />
+<meta http-equiv="refresh" content={`0;url=${canonical}`} />
 <meta property="og:locale" content="ja_JP" />
 <meta property="og:site_name" content="VINTAGE ALARM" />
 <meta property="og:type" content={type} />
@@ -38,34 +38,13 @@ const ogImage = image
 <meta name="twitter:title" content={title} />
 <meta name="twitter:description" content={description} />
 {ogImage && <meta name="twitter:image" content={ogImage} />}
-{schema && <script type="application/ld+json" set:html={JSON.stringify(schema)} />}
 
-<!-- Performance / visitor analytics. Admin browsers can opt out with ?__va_analytics=off -->
+<!-- Legacy host: keep crawlers able to see noindex/canonical, then route visitors to the current host. -->
 <script is:inline>
   (() => {
-    const key = 'vintageAlarmAnalyticsOptOut';
-    try {
-      const url = new URL(window.location.href);
-      const toggle = url.searchParams.get('__va_analytics');
-
-      if (toggle === 'off') localStorage.setItem(key, '1');
-      if (toggle === 'on') localStorage.removeItem(key);
-
-      if (toggle === 'off' || toggle === 'on') {
-        url.searchParams.delete('__va_analytics');
-        history.replaceState(null, '', url.pathname + url.search + url.hash);
-      }
-
-      if (localStorage.getItem(key) === '1') {
-        document.documentElement.dataset.vaAnalytics = 'off';
-        return;
-      }
-    } catch {}
-
-    const beacon = document.createElement('script');
-    beacon.defer = true;
-    beacon.src = 'https://static.cloudflareinsights.com/beacon.min.js';
-    beacon.dataset.cfBeacon = '{"token":"3f7f9454e132415ebf8ffa04122e16e3"}';
-    document.head.appendChild(beacon);
+    const canonical = document.querySelector('link[rel="canonical"]')?.href;
+    if (!canonical) return;
+    const target = canonical + window.location.hash;
+    if (window.location.href !== target) window.location.replace(target);
   })();
 </script>
