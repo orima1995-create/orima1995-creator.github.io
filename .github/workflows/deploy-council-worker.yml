@@ -29,21 +29,69 @@ jobs:
       - name: Install
         run: npm install
 
+      - name: Discover existing Council Vector Store
+        id: vector_store
+        shell: bash
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        run: |
+          set -euo pipefail
+          test -n "$OPENAI_API_KEY"
+          node <<'NODE'
+          const fs = require("fs");
+          const headers = { Authorization: "Bearer " + process.env.OPENAI_API_KEY };
+          async function get(url) {
+            const r = await fetch(url, { headers });
+            if (!r.ok) throw new Error("OpenAI " + r.status + ": " + await r.text());
+            return r.json();
+          }
+          const list = await get("https://api.openai.com/v1/vector_stores?limit=100");
+          const matches = (list.data || []).filter(v => v.name === "TypeC Council Project Mirror");
+          console.log("VECTOR_STORE_MATCHES=" + matches.length);
+          let best = null;
+          for (const v of matches) {
+            let score = 0;
+            try {
+              const vf = await get("https://api.openai.com/v1/vector_stores/" + v.id + "/files?limit=100");
+              for (const item of (vf.data || [])) {
+                const fid = item.file_id || item.id;
+                if (!fid) continue;
+                try {
+                  const f = await get("https://api.openai.com/v1/files/" + fid);
+                  const name = String(f.filename || "").toLowerCase();
+                  if (name.includes("alarm am arm")) score += 2;
+                  if (name.includes("the alarm wrist watch") || name.includes("the alarm wristwatch")) score += 2;
+                } catch {}
+              }
+            } catch {}
+            const candidate = { id: v.id, score, created_at: Number(v.created_at || 0) };
+            if (!best || candidate.score > best.score || (candidate.score === best.score && candidate.created_at > best.created_at)) best = candidate;
+          }
+          if (best) {
+            fs.appendFileSync(process.env.GITHUB_OUTPUT, "vector_store_id=" + best.id + "\n");
+            console.log("VECTOR_STORE_SELECTED=true");
+            console.log("VECTOR_STORE_SOURCE_SCORE=" + best.score);
+          } else {
+            fs.appendFileSync(process.env.GITHUB_OUTPUT, "vector_store_id=\n");
+            console.log("VECTOR_STORE_SELECTED=false");
+          }
+          NODE
+
       - name: Check deployment credentials
         id: deploy_config
         shell: bash
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-          COUNCIL_VECTOR_STORE_ID: ${{ secrets.COUNCIL_VECTOR_STORE_ID }}
+          COUNCIL_VECTOR_STORE_ID: ${{ steps.vector_store.outputs.vector_store_id || secrets.COUNCIL_VECTOR_STORE_ID }}
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
         run: |
           set -euo pipefail
-          if [ -n "$OPENAI_API_KEY" ] && [ -n "$COUNCIL_VECTOR_STORE_ID" ] && [ -n "$CLOUDFLARE_API_TOKEN" ] && [ -n "$CLOUDFLARE_ACCOUNT_ID" ]; then
+          if [ -n "$OPENAI_API_KEY" ] && [ -n "$CLOUDFLARE_API_TOKEN" ] && [ -n "$CLOUDFLARE_ACCOUNT_ID" ]; then
             echo "ready=true" >> "$GITHUB_OUTPUT"
           else
             echo "ready=false" >> "$GITHUB_OUTPUT"
-            echo "::warning::Council Worker deploy skipped: configure COUNCIL_VECTOR_STORE_ID, CLOUDFLARE_API_TOKEN, and CLOUDFLARE_ACCOUNT_ID repository secrets."
+            echo "::warning::Council Worker deploy skipped: configure OPENAI_API_KEY, CLOUDFLARE_API_TOKEN, and CLOUDFLARE_ACCOUNT_ID repository secrets."
           fi
 
       - name: Set Worker secrets
@@ -57,7 +105,9 @@ jobs:
         run: |
           set -euo pipefail
           printf '%s' "$OPENAI_API_KEY" | npx wrangler secret put OPENAI_API_KEY
-          printf '%s' "$COUNCIL_VECTOR_STORE_ID" | npx wrangler secret put COUNCIL_VECTOR_STORE_ID
+          if [ -n "$COUNCIL_VECTOR_STORE_ID" ]; then
+            printf '%s' "$COUNCIL_VECTOR_STORE_ID" | npx wrangler secret put COUNCIL_VECTOR_STORE_ID
+          fi
 
       - name: Deploy Worker
         if: steps.deploy_config.outputs.ready == 'true'
