@@ -39,11 +39,11 @@ jobs:
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
         run: |
           set -euo pipefail
-          if [ -n "$OPENAI_API_KEY" ] && [ -n "$CLOUDFLARE_API_TOKEN" ] && [ -n "$CLOUDFLARE_ACCOUNT_ID" ]; then
+          if [ -n "$OPENAI_API_KEY" ] && [ -n "$COUNCIL_VECTOR_STORE_ID" ] && [ -n "$CLOUDFLARE_API_TOKEN" ] && [ -n "$CLOUDFLARE_ACCOUNT_ID" ]; then
             echo "ready=true" >> "$GITHUB_OUTPUT"
           else
             echo "ready=false" >> "$GITHUB_OUTPUT"
-            echo "::warning::Council Worker deploy skipped: configure OPENAI_API_KEY, CLOUDFLARE_API_TOKEN, and CLOUDFLARE_ACCOUNT_ID repository secrets."
+            echo "::warning::Council Worker deploy skipped: configure COUNCIL_VECTOR_STORE_ID, CLOUDFLARE_API_TOKEN, and CLOUDFLARE_ACCOUNT_ID repository secrets."
           fi
 
       - name: Set Worker secrets
@@ -57,9 +57,7 @@ jobs:
         run: |
           set -euo pipefail
           printf '%s' "$OPENAI_API_KEY" | npx wrangler secret put OPENAI_API_KEY
-          if [ -n "$COUNCIL_VECTOR_STORE_ID" ]; then
-            printf '%s' "$COUNCIL_VECTOR_STORE_ID" | npx wrangler secret put COUNCIL_VECTOR_STORE_ID
-          fi
+          printf '%s' "$COUNCIL_VECTOR_STORE_ID" | npx wrangler secret put COUNCIL_VECTOR_STORE_ID
 
       - name: Deploy Worker
         if: steps.deploy_config.outputs.ready == 'true'
